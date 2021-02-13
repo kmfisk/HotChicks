@@ -10,6 +10,7 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.ChickenEntity;
+import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
@@ -55,5 +56,6 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
 
+    @Override
     public double getMaleToFemaleChance() { return 0.333; }
 }

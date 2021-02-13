@@ -3,8 +3,10 @@ package com.ryanhcode.hotchicks.entity.base;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.passive.PigEntity;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -39,4 +41,14 @@ public abstract class LivestockEntity extends AnimalEntity {
         return Sex.getSex(dataManager.get(SEX));
     }
 
+
+    public void writeAdditional(CompoundNBT compound) {
+        super.writeAdditional(compound);
+        compound.putBoolean("sex", Sex.getSex(getSex()));
+    }
+
+    public void readAdditional(CompoundNBT compound) {
+        super.readAdditional(compound);
+        setSex(compound.getBoolean("sex"));
+    }
 }
