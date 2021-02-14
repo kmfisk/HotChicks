@@ -1,10 +1,13 @@
 package com.ryanhcode.hotchicks;
 
 import com.ryanhcode.hotchicks.client.renderer.entity.HotChickenRenderer;
+import com.ryanhcode.hotchicks.registry.BlockRegistry;
 import com.ryanhcode.hotchicks.registry.EntityRegistry;
+import com.ryanhcode.hotchicks.registry.TileEntityRegistry;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -25,6 +28,8 @@ public class Main
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         EntityRegistry.ENTITIES.register(bus);
+        TileEntityRegistry.ENTITIES.register(bus);
+        BlockRegistry.BLOCKS.register(bus);
 
         bus.addListener(this::setup);
         bus.addListener(this::registerRenderers);
