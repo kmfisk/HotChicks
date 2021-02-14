@@ -1,9 +1,7 @@
 package com.ryanhcode.hotchicks;
 
-import com.ryanhcode.hotchicks.client.renderer.entity.TestRenderer;
+import com.ryanhcode.hotchicks.client.renderer.entity.HotChickenRenderer;
 import com.ryanhcode.hotchicks.registry.EntityRegistry;
-import net.minecraft.client.renderer.entity.ChickenRenderer;
-import net.minecraft.client.renderer.entity.SquidRenderer;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
@@ -17,7 +15,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(HotChicks.MODID)
+@Mod(HotChickens.MODID)
 public class Main
 {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -42,6 +40,6 @@ public class Main
     }
 
     public void registerRenderers(final FMLClientSetupEvent event){
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HOT_CHICKEN.get(), TestRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HOT_CHICKEN.get(), HotChickenRenderer::new);
     }
 }

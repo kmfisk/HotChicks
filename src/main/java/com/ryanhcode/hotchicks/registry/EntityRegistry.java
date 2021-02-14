@@ -1,6 +1,6 @@
 package com.ryanhcode.hotchicks.registry;
 
-import com.ryanhcode.hotchicks.HotChicks;
+import com.ryanhcode.hotchicks.HotChickens;
 import com.ryanhcode.hotchicks.entity.chicken.HotChickenEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
@@ -10,7 +10,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class EntityRegistry {
-    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, HotChicks.MODID);
+    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, HotChickens.MODID);
 
     public static RegistryObject<EntityType<HotChickenEntity>> HOT_CHICKEN = buildEntity(HotChickenEntity::new, HotChickenEntity.class,0.4f,0.7f, "hot_chicken");
 
