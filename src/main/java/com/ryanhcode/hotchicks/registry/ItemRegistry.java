@@ -17,7 +17,7 @@ public class ItemRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, HotChickens.MODID);
 
 
-    public static final RegistryObject<Item> TANG_BARB = ITEMS.register("white_egg", () -> new HotEggItem((new Item.Properties()).group(ItemGroup.MISC)));
+    public static final RegistryObject<Item> WHITE_EGG = ITEMS.register("white_egg", () -> new HotEggItem((new Item.Properties()).maxStackSize(16).group(ItemGroup.MISC)));
 
 
 }

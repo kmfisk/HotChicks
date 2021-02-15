@@ -1,5 +1,6 @@
 package com.ryanhcode.hotchicks.block;
 
+import com.ryanhcode.hotchicks.item.HotEggItem;
 import com.ryanhcode.hotchicks.registry.BlockRegistry;
 import com.ryanhcode.hotchicks.registry.TileEntityRegistry;
 import net.minecraft.block.BlockState;
@@ -8,6 +9,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.HopperContainer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.*;
@@ -18,7 +20,7 @@ import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
-public class NestTileEntity extends LockableLootTileEntity {
+public class NestTileEntity extends LockableLootTileEntity implements ITickableTileEntity {
     private NonNullList<ItemStack> barrelContents = NonNullList.withSize(5, ItemStack.EMPTY);
     private int numPlayersUsing;
 
@@ -69,7 +71,7 @@ public class NestTileEntity extends LockableLootTileEntity {
     }
 
     protected Container createMenu(int id, PlayerInventory player) {
-        return new HopperContainer(id, player, this);
+        return new NestContainer(id, player, this);
         //return ChestContainer.createGeneric9X1(id, player);
     }
 
@@ -87,6 +89,7 @@ public class NestTileEntity extends LockableLootTileEntity {
     }
 
     private void scheduleTick() {
+
         this.world.getPendingBlockTicks().scheduleTick(this.getPos(), this.getBlockState().getBlock(), 5);
     }
 
@@ -106,6 +109,7 @@ public class NestTileEntity extends LockableLootTileEntity {
 
         }
 
+
     }
 
     public void closeInventory(PlayerEntity player) {
@@ -121,5 +125,15 @@ public class NestTileEntity extends LockableLootTileEntity {
         double d1 = (double)this.pos.getY() + 0.5D + (double)vector3i.getY() / 2.0D;
         double d2 = (double)this.pos.getZ() + 0.5D + (double)vector3i.getZ() / 2.0D;
         this.world.playSound((PlayerEntity)null, d0, d1, d2, sound, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+    }
+
+    @Override
+    public void tick() {
+        NonNullList<ItemStack> items = getItems();
+        for(ItemStack item : items){
+            if (item.getItem() instanceof HotEggItem && !item.isEmpty()) {
+                HotEggItem.tick(item);
+            }
+        }
     }
 }

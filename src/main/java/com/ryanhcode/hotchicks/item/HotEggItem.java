@@ -15,6 +15,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -30,15 +31,16 @@ public class HotEggItem extends Item {
     }
 
     public static void setStats(ItemStack stack, int carcass_quality, int growth_rate, int egg_speed){
-        CompoundNBT compoundnbt = stack.getOrCreateTag();
+        CompoundNBT compoundnbt = stack.getTag();
         compoundnbt.putInt("carcass_quality", carcass_quality);
         compoundnbt.putInt("growth_rate", growth_rate);
         compoundnbt.putInt("egg_speed", egg_speed);
+        compoundnbt.putInt("time_left", 48000);
     }
 
 
     public static void setBreed(ItemStack stack, String breed){
-        CompoundNBT compoundnbt = stack.getOrCreateTag();
+        CompoundNBT compoundnbt = stack.getTag();
         compoundnbt.putString("breed", breed);
     }
 
@@ -48,17 +50,32 @@ public class HotEggItem extends Item {
         CompoundNBT tag = stack.getOrCreateTag();
 
         TextFormatting gray = TextFormatting.GRAY;
+        if(tag.getBoolean("infertile")) {
+            tooltip.add(new StringTextComponent(gray + "Infertile"));
+            super.addInformation(stack, worldIn, tooltip, flagIn);
+            return;
+        }
         tooltip.add(new StringTextComponent(gray + "Carcass quality: " + tag.getInt("carcass_quality")));
         tooltip.add(new StringTextComponent(gray + "Growth rate: " + tag.getInt("growth_rate")));
         tooltip.add(new StringTextComponent(gray + "Egg speed: " + tag.getInt("egg_speed")));
-        tooltip.add(new StringTextComponent(gray + "Breed: " + tag.getString("breed")));
+        tooltip.add(new StringTextComponent(gray + "Seconds Left: " + tag.getInt("time_left")/20));
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
+
+    @Nullable
     @Override
-    public void onCreated(ItemStack stack, World worldIn, PlayerEntity playerIn) {
-        setBreed(stack, "Junglefowl");
-        setStats(stack, new ChickenStats(0,0,0));
-        super.onCreated(stack, worldIn, playerIn);
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+        CompoundNBT tag = stack.getOrCreateTag();
+        if(!tag.contains("carcass_quality")) {
+            setBreed(stack, "Junglefowl");
+            setStats(stack, new ChickenStats(0, 0, 0));
+        }
+        return super.initCapabilities(stack, nbt);
+    }
+
+    public static void tick(ItemStack stack){
+        CompoundNBT tag = stack.getOrCreateTag();
+        tag.putInt("time_left", tag.getInt("time_left") - 1);
     }
 }
