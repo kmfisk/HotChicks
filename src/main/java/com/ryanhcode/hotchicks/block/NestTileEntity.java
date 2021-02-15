@@ -3,13 +3,10 @@ package com.ryanhcode.hotchicks.block;
 import com.ryanhcode.hotchicks.registry.BlockRegistry;
 import com.ryanhcode.hotchicks.registry.TileEntityRegistry;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.ChestContainer;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.CraftingResultSlot;
 import net.minecraft.inventory.container.HopperContainer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -17,11 +14,9 @@ import net.minecraft.tileentity.*;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
 
 public class NestTileEntity extends LockableLootTileEntity {
     private NonNullList<ItemStack> barrelContents = NonNullList.withSize(5, ItemStack.EMPTY);
@@ -74,7 +69,7 @@ public class NestTileEntity extends LockableLootTileEntity {
     }
 
     protected Container createMenu(int id, PlayerInventory player) {
-        return new NestContainer(id, player, this);
+        return new HopperContainer(id, player, this);
         //return ChestContainer.createGeneric9X1(id, player);
     }
 
@@ -104,7 +99,7 @@ public class NestTileEntity extends LockableLootTileEntity {
             this.scheduleTick();
         } else {
             BlockState blockstate = this.getBlockState();
-            if (!blockstate.isIn(BlockRegistry.NEST.get())) {
+            if (!blockstate.isIn(BlockRegistry.NEST_BOX.get())) {
                 this.remove();
                 return;
             }

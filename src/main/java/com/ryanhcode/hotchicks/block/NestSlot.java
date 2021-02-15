@@ -9,8 +9,4 @@ public class NestSlot extends Slot {
         super(inventoryIn, index, xPosition, yPosition);
     }
 
-    @Override
-    public boolean isItemValid(ItemStack stack) {
-        return false;
-    }
 }

@@ -3,6 +3,7 @@ package com.ryanhcode.hotchicks;
 import com.ryanhcode.hotchicks.client.renderer.entity.HotChickenRenderer;
 import com.ryanhcode.hotchicks.registry.BlockRegistry;
 import com.ryanhcode.hotchicks.registry.EntityRegistry;
+import com.ryanhcode.hotchicks.registry.ItemRegistry;
 import com.ryanhcode.hotchicks.registry.TileEntityRegistry;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -30,6 +31,7 @@ public class Main
         EntityRegistry.ENTITIES.register(bus);
         TileEntityRegistry.ENTITIES.register(bus);
         BlockRegistry.BLOCKS.register(bus);
+        ItemRegistry.ITEMS.register(bus);
 
         bus.addListener(this::setup);
         bus.addListener(this::registerRenderers);

@@ -9,8 +9,10 @@ import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.stats.Stats;
@@ -19,6 +21,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.IBooleanFunction;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -28,11 +34,62 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 public class NestBlock extends ContainerBlock {
+    public static final BooleanProperty eggs = BooleanProperty.create("eggs");
+
     public static final DirectionProperty PROPERTY_FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty PROPERTY_EGGS = eggs;
+
+
+    protected static final VoxelShape WEST_SHAPE = VoxelShapes.combineAndSimplify(
+            VoxelShapes.fullCube(),
+            makeCuboidShape(1.0D, 1.0D, 1.0D, 16.0D, 15.0D, 15.0D),
+            IBooleanFunction.ONLY_FIRST
+    );
+    protected static final VoxelShape EAST_SHAPE = VoxelShapes.combineAndSimplify(
+            VoxelShapes.fullCube(),
+            makeCuboidShape(0.0D, 1.0D, 1.0D, 15.0D, 15.0D, 15.0D),
+            IBooleanFunction.ONLY_FIRST
+    );
+    protected static final VoxelShape NORTH_SHAPE = VoxelShapes.combineAndSimplify(
+            VoxelShapes.fullCube(),
+            makeCuboidShape(1.0D, 1.0D, 1.0D, 15.0D, 15.0D, 16.0D),
+            IBooleanFunction.ONLY_FIRST
+    );
+    protected static final VoxelShape SOUTH_SHAPE = VoxelShapes.combineAndSimplify(
+            VoxelShapes.fullCube(),
+            makeCuboidShape(1.0D, 1.0D, 0.0D, 15.0D, 15.0D, 15.0D),
+            IBooleanFunction.ONLY_FIRST
+    );
+
+    public VoxelShape shape(BlockState state) {
+        switch ((Direction) state.get(PROPERTY_FACING)) {
+            case UP :
+            case DOWN :
+            case SOUTH :
+            default :
+                return SOUTH_SHAPE;
+            case NORTH :
+                return NORTH_SHAPE;
+            case WEST :
+                return WEST_SHAPE;
+            case EAST :
+                return EAST_SHAPE;
+        }
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos) {
+        return shape(state);
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return shape(state);
+    }
 
     public NestBlock(AbstractBlock.Properties properties) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(PROPERTY_FACING, Direction.NORTH));
+        this.setDefaultState(this.stateContainer.getBaseState().with(PROPERTY_FACING, Direction.NORTH).with(PROPERTY_EGGS, false));
     }
 
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand
@@ -49,6 +106,8 @@ public class NestBlock extends ContainerBlock {
             return ActionResultType.CONSUME;
         }
     }
+
+
 
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.isIn(newState.getBlock())) {
@@ -67,6 +126,20 @@ public class NestBlock extends ContainerBlock {
         if (tileentity instanceof NestTileEntity) {
             ((NestTileEntity)tileentity).barrelTick();
         }
+
+        NonNullList<ItemStack> items = ((NestTileEntity) tileentity).getItems();
+
+        boolean hasItems = false;
+        for(ItemStack i : items){
+            if(i!=ItemStack.EMPTY){
+                hasItems = true;
+            }else{
+
+            }
+        }
+        worldIn.setBlockState(pos, state.with(eggs,
+                !hasItems
+        ));
 
     }
 
@@ -130,11 +203,12 @@ public class NestBlock extends ContainerBlock {
 
     protected void fillStateContainer(StateContainer.Builder< Block, BlockState> builder) {
         builder.add(PROPERTY_FACING);
+        builder.add(PROPERTY_EGGS);
     }
 
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         IWorld iworld = context.getWorld();
         BlockPos blockpos = context.getPos();
-        return this.getDefaultState().with(PROPERTY_FACING, context.getPlacementHorizontalFacing());
+        return this.getDefaultState().with(PROPERTY_FACING, context.getPlacementHorizontalFacing()).with(PROPERTY_EGGS, false);
     }
 }
