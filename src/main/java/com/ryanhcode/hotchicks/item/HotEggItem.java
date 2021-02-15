@@ -27,15 +27,15 @@ public class HotEggItem extends Item {
     }
 
     public static void setStats(ItemStack stack, ChickenStats chickenStats){
-        setStats(stack, chickenStats.carcass_quality, chickenStats.growth_rate, chickenStats.egg_speed);
+        setStats(stack, chickenStats.carcass_quality, chickenStats.growth_rate, chickenStats.egg_speed, 50);
     }
 
-    public static void setStats(ItemStack stack, int carcass_quality, int growth_rate, int egg_speed){
+    public static void setStats(ItemStack stack, int carcass_quality, int growth_rate, int egg_speed, int tameness){
         CompoundNBT compoundnbt = stack.getTag();
         compoundnbt.putInt("carcass_quality", carcass_quality);
         compoundnbt.putInt("growth_rate", growth_rate);
         compoundnbt.putInt("egg_speed", egg_speed);
-        compoundnbt.putInt("time_left", 48000);
+        compoundnbt.putInt("tameness", tameness);
     }
 
 
@@ -43,6 +43,17 @@ public class HotEggItem extends Item {
         CompoundNBT compoundnbt = stack.getTag();
         compoundnbt.putString("breed", breed);
     }
+
+    public static void setVariant(ItemStack stack, String variant){
+        CompoundNBT compoundnbt = stack.getTag();
+        compoundnbt.putString("variant", variant);
+    }
+
+    public static void setTameness(ItemStack stack, int v) {
+        CompoundNBT compoundnbt = stack.getTag();
+        compoundnbt.putInt("tameness", v);
+    }
+
 
 
     @Override
@@ -58,7 +69,9 @@ public class HotEggItem extends Item {
         tooltip.add(new StringTextComponent(gray + "Carcass quality: " + tag.getInt("carcass_quality")));
         tooltip.add(new StringTextComponent(gray + "Growth rate: " + tag.getInt("growth_rate")));
         tooltip.add(new StringTextComponent(gray + "Egg speed: " + tag.getInt("egg_speed")));
-        tooltip.add(new StringTextComponent(gray + "Seconds Left: " + tag.getInt("time_left")/20));
+        tooltip.add(new StringTextComponent(gray + "Tameness: " + tag.getInt("tameness")));
+        tooltip.add(new StringTextComponent(gray + "Breed: " + tag.getString("breed")));
+        tooltip.add(new StringTextComponent(gray + "Time Left: " + tag.getInt("time_left")/20));
         super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
@@ -68,14 +81,27 @@ public class HotEggItem extends Item {
     public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
         CompoundNBT tag = stack.getOrCreateTag();
         if(!tag.contains("carcass_quality")) {
-            setBreed(stack, "Junglefowl");
+            //setBreed(stack, "Junglefowl");
             setStats(stack, new ChickenStats(0, 0, 0));
+            tag.putInt("time_left", 200);
+        }
+
+        if(!tag.contains("variant")) {
+            tag.putString("variant", "not_set");
         }
         return super.initCapabilities(stack, nbt);
     }
 
     public static void tick(ItemStack stack){
+
+    }
+
+    public static ChickenStats getStats(ItemStack stack) {
         CompoundNBT tag = stack.getOrCreateTag();
-        tag.putInt("time_left", tag.getInt("time_left") - 1);
+        return new ChickenStats(
+                tag.getInt("carcass_quality"),
+                tag.getInt("growth_rate"),
+                tag.getInt("egg_speed")
+        );
     }
 }

@@ -1,13 +1,15 @@
 package com.ryanhcode.hotchicks;
 
+import com.ryanhcode.hotchicks.block.NestContainer;
+import com.ryanhcode.hotchicks.block.NestScreen;
 import com.ryanhcode.hotchicks.client.renderer.entity.HotChickenRenderer;
-import com.ryanhcode.hotchicks.registry.BlockRegistry;
-import com.ryanhcode.hotchicks.registry.EntityRegistry;
-import com.ryanhcode.hotchicks.registry.ItemRegistry;
-import com.ryanhcode.hotchicks.registry.TileEntityRegistry;
+import com.ryanhcode.hotchicks.registry.*;
+import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.gui.screen.HopperScreen;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -32,6 +34,7 @@ public class Main
         TileEntityRegistry.ENTITIES.register(bus);
         BlockRegistry.BLOCKS.register(bus);
         ItemRegistry.ITEMS.register(bus);
+        ContainerRegistry.CONTAINERS.register(bus);
 
         bus.addListener(this::setup);
         bus.addListener(this::registerRenderers);
@@ -47,6 +50,9 @@ public class Main
     }
 
     public void registerRenderers(final FMLClientSetupEvent event){
+
+        ScreenManager.registerFactory(ContainerRegistry.NEST.get(), NestScreen::new);
+
         RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HOT_CHICKEN.get(), HotChickenRenderer::new);
     }
 }

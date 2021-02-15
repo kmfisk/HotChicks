@@ -1,5 +1,9 @@
 package com.ryanhcode.hotchicks.block;
 
+import com.ryanhcode.hotchicks.item.HotEggItem;
+import com.ryanhcode.hotchicks.registry.ContainerRegistry;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -9,6 +13,8 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraftforge.common.extensions.IForgeContainerType;
 
 public class NestContainer extends Container {
     private final IInventory hopperInventory;
@@ -18,7 +24,7 @@ public class NestContainer extends Container {
     }
 
     public NestContainer(int id, PlayerInventory playerInventory, IInventory inventory) {
-        super(ContainerType.HOPPER, id);
+        super(ContainerRegistry.NEST.get(), id);
         this.hopperInventory = inventory;
         assertInventorySize(inventory, 5);
         inventory.openInventory(playerInventory.player);
@@ -30,12 +36,12 @@ public class NestContainer extends Container {
 
         for(int l = 0; l < 3; ++l) {
             for(int k = 0; k < 9; ++k) {
-                this.addSlot(new NestSlot(playerInventory, k + l * 9 + 9, 8 + k * 18, l * 18 + 51));
+                this.addSlot(new Slot(playerInventory, k + l * 9 + 9, 8 + k * 18, l * 18 + 51));
             }
         }
 
         for(int i1 = 0; i1 < 9; ++i1) {
-            this.addSlot(new NestSlot(playerInventory, i1, 8 + i1 * 18, 109));
+            this.addSlot(new Slot(playerInventory, i1, 8 + i1 * 18, 109));
         }
 
     }
@@ -54,12 +60,22 @@ public class NestContainer extends Container {
     public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
+        slot.onSlotChanged();
         if (slot != null && slot.getHasStack()) {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
+
+
+            if(itemstack1.getItem() instanceof HotEggItem) {
+                itemstack1.setTag(new CompoundNBT());
+                itemstack1.getOrCreateTag().putBoolean("infertile", true);
+            }
+
             if (index < this.hopperInventory.getSizeInventory()) {
-                if (!this.mergeItemStack(itemstack1, this.hopperInventory.getSizeInventory(), this.inventorySlots.size(), true)) {
+                int size = this.inventorySlots.size();
+                if (!this.mergeItemStack(itemstack1, this.hopperInventory.getSizeInventory(), size, true)) {
                     return ItemStack.EMPTY;
+
                 }
             } else if (!this.mergeItemStack(itemstack1, 0, this.hopperInventory.getSizeInventory(), false)) {
                 return ItemStack.EMPTY;
@@ -67,12 +83,19 @@ public class NestContainer extends Container {
 
             if (itemstack1.isEmpty()) {
                 slot.putStack(ItemStack.EMPTY);
+                slot.onSlotChanged();
             } else {
                 slot.onSlotChanged();
             }
         }
 
+        for(int i = 0; i < inventorySlots.size()-1; i++){
+            inventorySlots.get(i).onSlotChanged();
+        }
+        slot.onSlotChanged();
         return itemstack;
+
+        //return super.transferStackInSlot(playerIn, index);
     }
 
     /**
@@ -81,5 +104,14 @@ public class NestContainer extends Container {
     public void onContainerClosed(PlayerEntity playerIn) {
         super.onContainerClosed(playerIn);
         this.hopperInventory.closeInventory(playerIn);
+    }
+
+    public static ContainerType<NestContainer> createCraftingContainer() {
+        return IForgeContainerType.create((windowId, inv, data) -> {
+            //PlayerEntity player = McJtyLib.proxy.getClientPlayer();
+            ClientPlayerEntity player = Minecraft.getInstance().player;
+            NestContainer container = new NestContainer(windowId, player.inventory);
+            return container;
+        });
     }
 }

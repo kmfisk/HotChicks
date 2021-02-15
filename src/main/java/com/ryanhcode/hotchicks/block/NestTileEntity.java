@@ -1,9 +1,13 @@
 package com.ryanhcode.hotchicks.block;
 
+import com.ryanhcode.hotchicks.entity.base.ChickenBreed;
+import com.ryanhcode.hotchicks.entity.chicken.HotChickenEntity;
 import com.ryanhcode.hotchicks.item.HotEggItem;
 import com.ryanhcode.hotchicks.registry.BlockRegistry;
+import com.ryanhcode.hotchicks.registry.EntityRegistry;
 import com.ryanhcode.hotchicks.registry.TileEntityRegistry;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ItemStackHelper;
@@ -20,8 +24,10 @@ import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
+import java.util.Locale;
+
 public class NestTileEntity extends LockableLootTileEntity implements ITickableTileEntity {
-    private NonNullList<ItemStack> barrelContents = NonNullList.withSize(5, ItemStack.EMPTY);
+    public NonNullList<ItemStack> barrelContents = NonNullList.withSize(5, ItemStack.EMPTY);
     private int numPlayersUsing;
 
 
@@ -58,11 +64,11 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
         return 5;
     }
 
-    protected NonNullList<ItemStack> getItems() {
+    public NonNullList<ItemStack> getItems() {
         return this.barrelContents;
     }
 
-    protected void setItems(NonNullList<ItemStack> itemsIn) {
+    public void setItems(NonNullList<ItemStack> itemsIn) {
         this.barrelContents = itemsIn;
     }
 
@@ -70,7 +76,7 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
         return new StringTextComponent("Nest");
     }
 
-    protected Container createMenu(int id, PlayerInventory player) {
+    public Container createMenu(int id, PlayerInventory player) {
         return new NestContainer(id, player, this);
         //return ChestContainer.createGeneric9X1(id, player);
     }
@@ -130,10 +136,45 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
     @Override
     public void tick() {
         NonNullList<ItemStack> items = getItems();
+        int counter = 0;
+
+        boolean hasEgg = false;
         for(ItemStack item : items){
             if (item.getItem() instanceof HotEggItem && !item.isEmpty()) {
-                HotEggItem.tick(item);
+                hasEgg = true;
+                CompoundNBT tag = item.getOrCreateTag();
+                int time_left = tag.getInt("time_left") - 1;
+                if(time_left <= 0){
+
+                    HotChickenEntity chicken = new HotChickenEntity(EntityRegistry.HOT_CHICKEN.get(), world);
+                    chicken.setPosition(getPos().getX()+0.5, getPos().getY()+0.2, getPos().getZ()+0.5);
+                    world.addEntity(
+                            chicken
+                    );
+
+                    chicken.setChild(true);
+                    chicken.setStats(HotEggItem.getStats(item));
+                    chicken.breed = ChickenBreed.valueOf(tag.getString("breed").toUpperCase());
+
+                    barrelContents.set(counter, ItemStack.EMPTY);
+                }else {
+                    tag.putInt("time_left", time_left);
+                }
             }
+            counter+=1;
         }
+
+        /*boolean hasItems = false;
+        for(ItemStack i : items){
+            if(i!=ItemStack.EMPTY){
+                hasItems = true;
+            }else{
+
+            }
+        }*/
+        world.setBlockState(getPos(), world.getBlockState(getPos()).with(NestBlock.eggs,
+                hasEgg
+        ));
     }
+
 }

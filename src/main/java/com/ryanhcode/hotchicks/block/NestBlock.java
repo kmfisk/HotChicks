@@ -129,17 +129,7 @@ public class NestBlock extends ContainerBlock {
 
         NonNullList<ItemStack> items = ((NestTileEntity) tileentity).getItems();
 
-        boolean hasItems = false;
-        for(ItemStack i : items){
-            if(i!=ItemStack.EMPTY){
-                hasItems = true;
-            }else{
 
-            }
-        }
-        worldIn.setBlockState(pos, state.with(eggs,
-                !hasItems
-        ));
 
     }
 
