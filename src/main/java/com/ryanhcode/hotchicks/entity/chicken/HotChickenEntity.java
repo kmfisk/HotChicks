@@ -47,6 +47,9 @@ public class HotChickenEntity extends LivestockEntity {
     private static final DataParameter<String> breed_data = makeStat(DataSerializers.STRING);
     private static final DataParameter<String> variant = makeStat(DataSerializers.STRING);
 
+    public int getTameness(){
+        return dataManager.get(tameness);
+    }
 
     public HotChickenEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
 
@@ -191,7 +194,7 @@ public class HotChickenEntity extends LivestockEntity {
         this.dataManager.register(carcass_quality, 1);
         this.dataManager.register(growth_rate, 2);
         this.dataManager.register(egg_speed, 3);
-        this.dataManager.register(variant, "default");
+        this.dataManager.register(variant, "not_set");
         this.dataManager.register(breed_data, "not_set");
         this.dataManager.register(tameness, 50);
     }

@@ -3,6 +3,7 @@ package com.ryanhcode.hotchicks.registry;
 import com.ryanhcode.hotchicks.HotChickens;
 import com.ryanhcode.hotchicks.block.NestBlock;
 import com.ryanhcode.hotchicks.item.HotEggItem;
+import com.ryanhcode.hotchicks.item.StudBookItem;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -18,6 +19,7 @@ public class ItemRegistry {
 
 
     public static final RegistryObject<Item> WHITE_EGG = ITEMS.register("white_egg", () -> new HotEggItem((new Item.Properties()).maxStackSize(16).group(ItemGroup.MISC)));
+    public static final RegistryObject<Item> STUD_BOOK = ITEMS.register("stud_book", () -> new StudBookItem((new Item.Properties()).maxStackSize(1).group(ItemGroup.MISC)));
 
 
 }
