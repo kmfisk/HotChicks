@@ -1,20 +1,18 @@
 {
   "type": "minecraft:crafting_shaped",
-  "group": "hotchicksgroup",
   "pattern": [
     "WWW",
     "WSW",
     "WWW"
   ],
   "key": {
-    "W": [
-      { "tag": "minecraft:planks"  },
-      {
+    "W": {
+      "tag": "minecraft:planks"
+    },
+    "S":{
       "item": "minecraft:hay_block",
       "count": 1
     }
-    ]
-
   },
   "result": {
     "item": "hotchicks:nest_box",
