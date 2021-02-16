@@ -59,7 +59,11 @@ public class HotChickenRenderer<T extends LivestockEntity, M extends EntityModel
             if (isChild) {
                 path = "textures/entity/chicken/" + (breed.childTextures.get(chicken.getChildType())) + ".png";
             } else {
-                path = "textures/entity/chicken/" + ((ChickenBreed.ChickenVariant) breed.textureMap.get(chicken.getVariant())).get(chicken.getSex()) + ".png";
+                if (chicken.getVariant().equals("not_set")) {
+                    path =
+                } else {
+                    path = "textures/entity/chicken/" + ((ChickenBreed.ChickenVariant) breed.textureMap.get(chicken.getVariant())).get(chicken.getSex()) + ".png";
+                }
             }
 
             return new ResourceLocation(HotChickens.MODID, path);
