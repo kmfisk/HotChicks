@@ -41,12 +41,12 @@ public enum ChickenBreed {
             new ArrayList<String>() {{
                 add("chicks/chick_8");
             }}, BaseChickenStats.BARRED_ROCK),
-    OPRINGTON("Oprington", "oprington",
+    OPRINGTON("Oprington", "orpington",
             new HashMap<String, ChickenVariant>() {{
-                put("black", new ChickenVariant("opringtons/oprington_black_rooster", "opringtons/oprington_black_hen"));
-                put("blue", new ChickenVariant("opringtons/oprington_blue_rooster", "opringtons/oprington_blue_hen"));
-                put("buff", new ChickenVariant("opringtons/oprington_buff_rooster", "opringtons/oprington_buff_hen"));
-                put("white", new ChickenVariant("opringtons/oprington_white_rooster", "opringtons/oprington_white_hen"));
+                put("black", new ChickenVariant("orpingtons/orpington_black_rooster", "orpingtons/orpington_black_hen"));
+                put("blue", new ChickenVariant("orpingtons/orpington_blue_rooster", "orpingtons/orpington_blue_hen"));
+                put("buff", new ChickenVariant("orpingtons/orpington_buff_rooster", "orpingtons/orpington_buff_hen"));
+                put("white", new ChickenVariant("orpingtons/orpington_white_rooster", "orpingtons/orpington_white_hen"));
             }},
             new ArrayList<String>() {{
                 add("chicks/chick_7");
