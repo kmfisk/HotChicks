@@ -10,6 +10,5 @@ public class BaseChickenStats {
             AMERAUCANA = new ChickenStats(2,1,4),
             OLIVE_EGGER = new ChickenStats(2,1,4),
             MARANS = new ChickenStats(3,1,4),
-            WYANDOTTE = new ChickenStats(2,2,4),
             SILKIE = new ChickenStats(3,1,3);
 }

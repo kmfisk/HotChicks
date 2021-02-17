@@ -357,6 +357,17 @@ public class TroughBlock extends ContainerBlock {
             } else if (item == Items.BUCKET && contains == TroughFillType.WATER) {
                 player.setHeldItem(handIn, new ItemStack(Items.WATER_BUCKET));
                 worldIn.setBlockState(pos, state.with(CONTAINS, TroughFillType.NONE));
+
+                TroughFillType troughFillType = state.get(TroughBlock.CONTAINS);
+
+
+                if(state.get(TroughBlock.TYPE) != ChestType.SINGLE && troughFillType == TroughFillType.WATER){
+                    BlockPos connectedSlot = pos.add(new BlockPos(state.get(TroughBlock.FACING).getDirectionVec()).rotate(state.get(TroughBlock.TYPE) == ChestType.LEFT ? Rotation.CLOCKWISE_90 : Rotation.COUNTERCLOCKWISE_90));
+
+                    BlockState connectedState = worldIn.getBlockState(connectedSlot);
+                    worldIn.setBlockState(connectedSlot, connectedState.with(TroughBlock.CONTAINS, TroughFillType.NONE));
+                }
+
                 worldIn.playSound((PlayerEntity) null, pos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
                 return ActionResultType.func_233537_a_(worldIn.isRemote);
