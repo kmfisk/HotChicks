@@ -1,22 +1,26 @@
 package com.ryanhcode.hotchicks.block;
 
+import com.ryanhcode.hotchicks.entity.base.ChickenBreed;
+import com.ryanhcode.hotchicks.entity.chicken.HotChickenEntity;
+import com.ryanhcode.hotchicks.item.HotEggItem;
 import com.ryanhcode.hotchicks.registry.BlockRegistry;
+import com.ryanhcode.hotchicks.registry.EntityRegistry;
 import com.ryanhcode.hotchicks.registry.TileEntityRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ChestBlock;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.DoubleSidedInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.item.AirItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.ChestType;
-import net.minecraft.tileentity.ChestTileEntity;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.LockableLootTileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.tileentity.*;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3i;
@@ -177,12 +181,13 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
 
 
     public boolean hasItems(){
-        for(ItemStack i : contents){
+        boolean has = false;
+        for(ItemStack i : getItems()){
             if(!i.isEmpty()){
-                return true;
+                has = true;
             }
         }
-        return false;
+        return has;
     }
     @Override
     public void tick() {
@@ -191,20 +196,18 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
         //world.setBlockState(getPos(), world.getBlockState(getPos()).with(NestBlock.eggs,
         //        hasEgg
         //));
-
+        if(world == null) return;
+        if(world.isRemote()) return;
 
         BlockState state =  world.getBlockState(getPos());
 
         TroughFillType troughFillType = state.get(TroughBlock.CONTAINS);
 
+       // if(troughFillType != TroughFillType.WATER) {
+            TroughFillType setState = state.get(TroughBlock.CONTAINS);
 
-        if(troughFillType != TroughFillType.WATER) {
-            if(!hasItems()){
-                world.setBlockState(pos, state.with(TroughBlock.CONTAINS, TroughFillType.NONE));
-            }else{
-                world.setBlockState(pos, state.with(TroughBlock.CONTAINS, TroughFillType.FEED));
-            }
-        }
+
+
 
         if(state.get(TroughBlock.TYPE) != ChestType.SINGLE && troughFillType == TroughFillType.WATER){
             BlockPos connectedSlot = pos.add(new BlockPos(state.get(TroughBlock.FACING).getDirectionVec()).rotate(state.get(TroughBlock.TYPE) == ChestType.LEFT ? Rotation.CLOCKWISE_90 : Rotation.COUNTERCLOCKWISE_90));
@@ -214,7 +217,21 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
         }
 
 
+        if(state.get(TroughBlock.TYPE) != ChestType.SINGLE) {
+            BlockPos connectedSlot = pos.add(new BlockPos(state.get(TroughBlock.FACING).getDirectionVec()).rotate(state.get(TroughBlock.TYPE) == ChestType.LEFT ? Rotation.CLOCKWISE_90 : Rotation.COUNTERCLOCKWISE_90));
 
+            BlockState connectedState = world.getBlockState(connectedSlot);
+            if (state.get(TroughBlock.CONTAINS) != TroughFillType.WATER) {
+                TroughFillType value = isEmpty() && ((TroughTileEntity)(world.getTileEntity(connectedSlot))).isEmpty() ? TroughFillType.NONE : TroughFillType.FEED;
+                world.setBlockState(pos, state.with(TroughBlock.CONTAINS, value));
+            }
+
+        }else {
+            if (state.get(TroughBlock.CONTAINS) != TroughFillType.WATER) {
+                TroughFillType value = isEmpty() ? TroughFillType.NONE : TroughFillType.FEED;
+                world.setBlockState(pos, state.with(TroughBlock.CONTAINS, value));
+            }
+        }
 
     }
 

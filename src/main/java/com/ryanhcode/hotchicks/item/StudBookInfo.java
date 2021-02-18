@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.ryanhcode.hotchicks.entity.base.ChickenBreed;
 import com.ryanhcode.hotchicks.entity.base.ChickenStats;
 import com.ryanhcode.hotchicks.entity.chicken.HotChickenEntity;
+import net.minecraft.block.SweetBerryBushBlock;
 import net.minecraft.client.gui.screen.ReadBookScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.WrittenBookItem;
@@ -50,6 +51,7 @@ public class StudBookInfo implements ReadBookScreen.IBookInfo {
     }
 
     /**
+
      * Returns the size of the book
      */
     public int getPageCount() {

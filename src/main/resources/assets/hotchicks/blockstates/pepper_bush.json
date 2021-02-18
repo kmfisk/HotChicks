@@ -1,0 +1,29 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "hotchicks:block/pepper_berry_bush_stage0"
+    },
+    "age=1": {
+      "model": "hotchicks:block/pepper_berry_bush_stage1"
+    },
+    "age=2": {
+      "model": "hotchicks:block/pepper_berry_bush_stage2"
+    },
+
+    "age=3,variant=default": {
+      "model": "hotchicks:block/pepper_berry_bush_stage3"
+    },
+
+    "age=3,variant=red": {
+      "model": "hotchicks:block/pepper_berry_bush_stage3_red"
+    },
+
+    "age=3,variant=yellow": {
+      "model": "hotchicks:block/pepper_berry_bush_stage3_yellow"
+    },
+
+    "age=3,variant=orange": {
+      "model": "hotchicks:block/pepper_berry_bush_stage3_orange"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "hotchicks:block/corn/corn_middle_4"
+  }
+}

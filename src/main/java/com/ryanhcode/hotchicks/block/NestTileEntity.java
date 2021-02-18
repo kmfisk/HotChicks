@@ -135,6 +135,9 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
 
     @Override
     public void tick() {
+        if(world == null) return;
+        if(world.isRemote()) return;
+
         NonNullList<ItemStack> items = getItems();
         int counter = 0;
 

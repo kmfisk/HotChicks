@@ -3,6 +3,7 @@ package com.ryanhcode.hotchicks.block;
 import com.mojang.serialization.Codec;
 import com.ryanhcode.hotchicks.registry.TileEntityRegistry;
 import net.minecraft.block.*;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.piglin.PiglinTasks;
 import net.minecraft.entity.player.PlayerEntity;
@@ -234,9 +235,10 @@ public class TroughBlock extends ContainerBlock {
         if (tileentity instanceof TroughTileEntity) {
             TroughTileEntity te = ((TroughTileEntity)tileentity);
             te.barrelTick();
-        }
 
+        }
     }
+
 
     /**
      * Returns a facing pointing from the given state to its attached double chest
@@ -331,61 +333,60 @@ public class TroughBlock extends ContainerBlock {
         return false;
     }
 
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand
+            handIn, BlockRayTraceResult hit) {
         ItemStack itemstack = player.getHeldItem(handIn);
-        if (itemstack.isEmpty()) {
-            return ActionResultType.PASS;
-        } else {
-            Item item = itemstack.getItem();
-            TroughFillType contains = state.get(CONTAINS);
-            if (item == Items.WATER_BUCKET && contains == TroughFillType.NONE) {
-                if (!player.abilities.isCreativeMode) {
-                    player.setHeldItem(handIn, new ItemStack(Items.BUCKET));
-                }
 
-                worldIn.setBlockState(pos, state.with(CONTAINS, TroughFillType.WATER));
-                if(state.get(TYPE) != ChestType.SINGLE){
-                    BlockPos connectedSlot = pos.add(new BlockPos(state.get(FACING).getDirectionVec()).rotate(state.get(TYPE) == ChestType.LEFT ? Rotation.CLOCKWISE_90 : Rotation.COUNTERCLOCKWISE_90));
-
-                    BlockState connectedState = worldIn.getBlockState(connectedSlot);
-                    worldIn.setBlockState(connectedSlot, connectedState.with(CONTAINS, TroughFillType.WATER));
-                }
-
-                worldIn.playSound((PlayerEntity) null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
-
-                return ActionResultType.func_233537_a_(worldIn.isRemote);
-            } else if (item == Items.BUCKET && contains == TroughFillType.WATER) {
-                player.setHeldItem(handIn, new ItemStack(Items.WATER_BUCKET));
-                worldIn.setBlockState(pos, state.with(CONTAINS, TroughFillType.NONE));
-
-                TroughFillType troughFillType = state.get(TroughBlock.CONTAINS);
-
-
-                if(state.get(TroughBlock.TYPE) != ChestType.SINGLE && troughFillType == TroughFillType.WATER){
-                    BlockPos connectedSlot = pos.add(new BlockPos(state.get(TroughBlock.FACING).getDirectionVec()).rotate(state.get(TroughBlock.TYPE) == ChestType.LEFT ? Rotation.CLOCKWISE_90 : Rotation.COUNTERCLOCKWISE_90));
-
-                    BlockState connectedState = worldIn.getBlockState(connectedSlot);
-                    worldIn.setBlockState(connectedSlot, connectedState.with(TroughBlock.CONTAINS, TroughFillType.NONE));
-                }
-
-                worldIn.playSound((PlayerEntity) null, pos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
-
-                return ActionResultType.func_233537_a_(worldIn.isRemote);
-            } else if (contains != TroughFillType.WATER) {
-                if (worldIn.isRemote) {
-                    return ActionResultType.SUCCESS;
-                } else {
-                    INamedContainerProvider inamedcontainerprovider = this.getContainer(state, worldIn, pos);
-                    if (inamedcontainerprovider != null) {
-                        player.openContainer(inamedcontainerprovider);
-                    }
-
-                    return ActionResultType.CONSUME;
-                }
+        Item item = itemstack.getItem();
+        TroughFillType contains = state.get(CONTAINS);
+        if (item == Items.WATER_BUCKET && contains == TroughFillType.NONE) {
+            if (!player.abilities.isCreativeMode) {
+                player.setHeldItem(handIn, new ItemStack(Items.BUCKET));
             }
 
+            worldIn.setBlockState(pos, state.with(CONTAINS, TroughFillType.WATER));
+            if(state.get(TYPE) != ChestType.SINGLE){
+                BlockPos connectedSlot = pos.add(new BlockPos(state.get(FACING).getDirectionVec()).rotate(state.get(TYPE) == ChestType.LEFT ? Rotation.CLOCKWISE_90 : Rotation.COUNTERCLOCKWISE_90));
+
+                BlockState connectedState = worldIn.getBlockState(connectedSlot);
+                worldIn.setBlockState(connectedSlot, connectedState.with(CONTAINS, TroughFillType.WATER));
+            }
+
+            worldIn.playSound((PlayerEntity) null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
+
             return ActionResultType.func_233537_a_(worldIn.isRemote);
+        } else if (item == Items.BUCKET && contains == TroughFillType.WATER) {
+            player.setHeldItem(handIn, new ItemStack(Items.WATER_BUCKET));
+            worldIn.setBlockState(pos, state.with(CONTAINS, TroughFillType.NONE));
+
+            TroughFillType troughFillType = state.get(TroughBlock.CONTAINS);
+
+
+            if(state.get(TroughBlock.TYPE) != ChestType.SINGLE && troughFillType == TroughFillType.WATER){
+                BlockPos connectedSlot = pos.add(new BlockPos(state.get(TroughBlock.FACING).getDirectionVec()).rotate(state.get(TroughBlock.TYPE) == ChestType.LEFT ? Rotation.CLOCKWISE_90 : Rotation.COUNTERCLOCKWISE_90));
+
+                BlockState connectedState = worldIn.getBlockState(connectedSlot);
+                worldIn.setBlockState(connectedSlot, connectedState.with(TroughBlock.CONTAINS, TroughFillType.NONE));
+            }
+
+            worldIn.playSound((PlayerEntity) null, pos, SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+
+            return ActionResultType.func_233537_a_(worldIn.isRemote);
+        } else if (contains != TroughFillType.WATER) {
+            if (worldIn.isRemote) {
+                return ActionResultType.SUCCESS;
+            } else {
+                INamedContainerProvider inamedcontainerprovider = this.getContainer(state, worldIn, pos);
+                if (inamedcontainerprovider != null) {
+                    player.openContainer(inamedcontainerprovider);
+                }
+
+                return ActionResultType.CONSUME;
+            }
+
         }
+        return ActionResultType.func_233537_a_(worldIn.isRemote);
     }
 
     @Nullable

@@ -5,22 +5,37 @@ import com.ryanhcode.hotchicks.block.NestScreen;
 import com.ryanhcode.hotchicks.block.TroughScreen;
 import com.ryanhcode.hotchicks.client.renderer.entity.HotChickenRenderer;
 import com.ryanhcode.hotchicks.registry.*;
+import com.ryanhcode.hotchicks.worldgen.MilletPlacer;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DoublePlantBlock;
+import net.minecraft.block.TallGrassBlock;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.gui.screen.HopperScreen;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.item.Items;
 import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.tileentity.HopperTileEntity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.biome.BiomeColors;
+import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.blockplacer.ColumnBlockPlacer;
+import net.minecraft.world.gen.blockplacer.SimpleBlockPlacer;
+import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
+import net.minecraft.world.gen.feature.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -53,12 +68,49 @@ public class Main {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    public static ConfiguredFeature<?,?> MILLET;
+
+
     private void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
+
+            //FEATURES
+
+            MILLET = Feature.RANDOM_PATCH.withConfiguration(
+
+                    (new BlockClusterFeatureConfig.Builder(
+                            new SimpleBlockStateProvider(BlockRegistry.MILLET.get().getDefaultState()),
+                            new MilletPlacer(0,0))).tries(30).xSpread(10).ySpread(0).zSpread(10).func_227317_b_().requiresWater().build()
+
+            ).withPlacement(Features.Placements.PATCH_PLACEMENT).func_242731_b(20);
+
+            Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MODID, "millet_patches"), MILLET);
+
+
+            RenderTypeLookup.setRenderLayer(BlockRegistry.STRAWBERRY_BUSH.get(), RenderType.getCutout());
+            RenderTypeLookup.setRenderLayer(BlockRegistry.BLUEBERRY_BUSH.get(), RenderType.getCutout());
+            RenderTypeLookup.setRenderLayer(BlockRegistry.COTTON_BUSH.get(), RenderType.getCutout());
+            RenderTypeLookup.setRenderLayer(BlockRegistry.PEPPER_BUSH.get(), RenderType.getCutout());
+            RenderTypeLookup.setRenderLayer(BlockRegistry.OKRA_BUSH.get(), RenderType.getCutout());
+            RenderTypeLookup.setRenderLayer(BlockRegistry.OATS_BLOCK.get(), RenderType.getCutout());
+            RenderTypeLookup.setRenderLayer(BlockRegistry.GARLIC_BLOCK.get(), RenderType.getCutout());
+            RenderTypeLookup.setRenderLayer(BlockRegistry.LETTUCE_BLOCK.get(), RenderType.getCutout());
+            RenderTypeLookup.setRenderLayer(BlockRegistry.CORN.get(), RenderType.getCutout());
+            RenderTypeLookup.setRenderLayer(BlockRegistry.MILLET.get(), RenderType.getCutout());
             GlobalEntityTypeAttributes.put(EntityRegistry.HOT_CHICKEN.get(), MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 10.0D).createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25).create());
         });
     }
 
+
+    @SubscribeEvent
+    public void biomeLoad(BiomeLoadingEvent event) {
+        System.out.println("Processing biome load event");
+        ResourceLocation biomeName = event.getName();
+        if (biomeName.equals(Biomes.SAVANNA.getLocation()) || biomeName.equals(Biomes.SHATTERED_SAVANNA.getLocation())) {
+            System.out.println("Adding feature...");
+            event.getGeneration().getFeatures(GenerationStage.Decoration.LAKES).add(() -> MILLET);
+        }
+    }
     public void registerRenderers(final FMLClientSetupEvent event) {
 
         ScreenManager.registerFactory(ContainerRegistry.NEST.get(), NestScreen::new);
