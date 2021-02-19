@@ -14,4 +14,5 @@ public class TileEntityRegistry {
 
     public static RegistryObject<TileEntityType<NestTileEntity>> NEST = ENTITIES.register("nest_tile_entity",()->TileEntityType.Builder.create(NestTileEntity::new, BlockRegistry.NEST_BOX.get()).build(null));
     public static RegistryObject<TileEntityType<TroughTileEntity>> TROUGH = ENTITIES.register("trough_tile_entity",()->TileEntityType.Builder.create(TroughTileEntity::new, BlockRegistry.TROUGH_BLOCK.get()).build(null));
+    public static RegistryObject<TileEntityType<TroughTileEntity>> METAL_TROUGH = ENTITIES.register("metal_trough_tile_entity",()->TileEntityType.Builder.create(TroughTileEntity::new, BlockRegistry.METAL_TROUGH_BLOCK.get()).build(null));
 }

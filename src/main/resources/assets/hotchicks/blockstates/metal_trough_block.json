@@ -1,0 +1,124 @@
+{
+  "variants": {
+    "type=single,contains=none": {
+      "model": "hotchicks:block/trough_metal_empty"
+    },
+    "type=single,contains=feed": {
+      "model": "hotchicks:block/trough_metal_feed"
+    },
+    "type=single,contains=water": {
+      "model": "hotchicks:block/trough_metal_water"
+    },
+
+
+    "type=left,facing=north,contains=none": {
+      "model": "hotchicks:block/trough_metal_empty_connected",
+      "y": 180
+    },
+    "type=right,facing=north,contains=none": {
+      "model": "hotchicks:block/trough_metal_empty_connected",
+      "y": 0
+    },
+
+
+    "type=left,facing=south,contains=none": {
+      "model": "hotchicks:block/trough_metal_empty_connected",
+      "y": 0
+    },
+    "type=right,facing=south,contains=none": {
+      "model": "hotchicks:block/trough_metal_empty_connected",
+      "y": 180
+    },
+
+    "type=left,facing=west,contains=none": {
+      "model": "hotchicks:block/trough_metal_empty_connected",
+      "y": 90
+    },
+    "type=right,facing=west,contains=none": {
+      "model": "hotchicks:block/trough_metal_empty_connected",
+      "y": 270
+    },
+
+    "type=left,facing=east,contains=none": {
+      "model": "hotchicks:block/trough_metal_empty_connected",
+      "y": 270
+    },
+    "type=right,facing=east,contains=none": {
+      "model": "hotchicks:block/trough_metal_empty_connected",
+      "y": 90
+    },
+
+
+
+
+    "type=left,facing=north,contains=water": {
+      "model": "hotchicks:block/trough_metal_water_connected",
+      "y": 180
+    },
+    "type=right,facing=north,contains=water": {
+      "model": "hotchicks:block/trough_metal_water_connected",
+      "y": 0
+    },
+    "type=left,facing=south,contains=water": {
+      "model": "hotchicks:block/trough_metal_water_connected",
+      "y": 0
+    },
+    "type=right,facing=south,contains=water": {
+      "model": "hotchicks:block/trough_metal_water_connected",
+      "y": 180
+    },
+
+    "type=left,facing=west,contains=water": {
+      "model": "hotchicks:block/trough_metal_water_connected",
+      "y": 90
+    },
+    "type=right,facing=west,contains=water": {
+      "model": "hotchicks:block/trough_metal_water_connected",
+      "y": 270
+    },
+
+    "type=left,facing=east,contains=water": {
+      "model": "hotchicks:block/trough_metal_water_connected",
+      "y": 270
+    },
+    "type=right,facing=east,contains=water": {
+      "model": "hotchicks:block/trough_metal_water_connected",
+      "y": 90
+    },
+
+    "type=left,facing=north,contains=feed": {
+      "model": "hotchicks:block/trough_metal_feed_connected",
+      "y": 180
+    },
+    "type=right,facing=north,contains=feed": {
+      "model": "hotchicks:block/trough_metal_feed_connected",
+      "y": 0
+    },
+    "type=left,facing=south,contains=feed": {
+      "model": "hotchicks:block/trough_metal_feed_connected",
+      "y": 0
+    },
+    "type=right,facing=south,contains=feed": {
+      "model": "hotchicks:block/trough_metal_feed_connected",
+      "y": 180
+    },
+
+    "type=left,facing=west,contains=feed": {
+      "model": "hotchicks:block/trough_metal_feed_connected",
+      "y": 90
+    },
+    "type=right,facing=west,contains=feed": {
+      "model": "hotchicks:block/trough_metal_feed_connected",
+      "y": 270
+    },
+
+    "type=left,facing=east,contains=feed": {
+      "model": "hotchicks:block/trough_metal_feed_connected",
+      "y": 270
+    },
+    "type=right,facing=east,contains=feed": {
+      "model": "hotchicks:block/trough_metal_feed_connected",
+      "y": 90
+    }
+  }
+}

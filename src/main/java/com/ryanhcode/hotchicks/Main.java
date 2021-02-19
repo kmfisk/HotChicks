@@ -1,11 +1,14 @@
 package com.ryanhcode.hotchicks;
 
+import com.google.common.collect.ImmutableSet;
 import com.ryanhcode.hotchicks.block.NestContainer;
 import com.ryanhcode.hotchicks.block.NestScreen;
 import com.ryanhcode.hotchicks.block.TroughScreen;
 import com.ryanhcode.hotchicks.client.renderer.entity.HotChickenRenderer;
 import com.ryanhcode.hotchicks.registry.*;
+import com.ryanhcode.hotchicks.worldgen.LowLightPlacer;
 import com.ryanhcode.hotchicks.worldgen.MilletPlacer;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DoublePlantBlock;
 import net.minecraft.block.TallGrassBlock;
@@ -30,6 +33,7 @@ import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.blockplacer.ColumnBlockPlacer;
 import net.minecraft.world.gen.blockplacer.SimpleBlockPlacer;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
+import net.minecraft.world.gen.blockstateprovider.WeightedBlockStateProvider;
 import net.minecraft.world.gen.feature.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -68,13 +72,23 @@ public class Main {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
+    public static ConfiguredFeature<?,?> CORN;
     public static ConfiguredFeature<?,?> MILLET;
+    public static ConfiguredFeature<?,?> BLUEBERRY_PATCHES;
 
 
     private void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
 
             //FEATURES
+
+            CORN = Feature.RANDOM_PATCH.withConfiguration(
+
+                    (new BlockClusterFeatureConfig.Builder(
+                            new SimpleBlockStateProvider(BlockRegistry.CORN.get().getDefaultState()),
+                            new MilletPlacer(0,0))).tries(30).xSpread(4).ySpread(0).zSpread(4).func_227317_b_().requiresWater().build()
+
+            ).withPlacement(Features.Placements.PATCH_PLACEMENT).func_242731_b(20);
 
             MILLET = Feature.RANDOM_PATCH.withConfiguration(
 
@@ -84,7 +98,14 @@ public class Main {
 
             ).withPlacement(Features.Placements.PATCH_PLACEMENT).func_242731_b(20);
 
+            BLUEBERRY_PATCHES = Feature.RANDOM_PATCH.withConfiguration(
+
+                    (new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(BlockRegistry.BLUEBERRY_BUSH.get().getDefaultState()), new LowLightPlacer())).tries(200).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK.getBlock())).func_227317_b_().build()
+
+            );
             Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MODID, "millet_patches"), MILLET);
+            Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MODID, "corn_patches"), CORN);
+            Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MODID, "blueberry_patches"), BLUEBERRY_PATCHES);
 
 
             RenderTypeLookup.setRenderLayer(BlockRegistry.STRAWBERRY_BUSH.get(), RenderType.getCutout());
@@ -101,14 +122,19 @@ public class Main {
         });
     }
 
-
     @SubscribeEvent
     public void biomeLoad(BiomeLoadingEvent event) {
-        System.out.println("Processing biome load event");
+
         ResourceLocation biomeName = event.getName();
         if (biomeName.equals(Biomes.SAVANNA.getLocation()) || biomeName.equals(Biomes.SHATTERED_SAVANNA.getLocation())) {
-            System.out.println("Adding feature...");
             event.getGeneration().getFeatures(GenerationStage.Decoration.LAKES).add(() -> MILLET);
+        }
+        if (biomeName.equals(Biomes.PLAINS.getLocation()) || biomeName.equals(Biomes.SUNFLOWER_PLAINS.getLocation())) {
+            event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> CORN);
+        }
+
+        if (biomeName.equals(Biomes.TAIGA_HILLS.getLocation()) || biomeName.equals(Biomes.TAIGA.getLocation()) || biomeName.equals(Biomes.TAIGA_MOUNTAINS.getLocation())) {
+            event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> BLUEBERRY_PATCHES);
         }
     }
     public void registerRenderers(final FMLClientSetupEvent event) {
@@ -124,6 +150,6 @@ public class Main {
         BlockColors blockcolors = event.getBlockColors();
         blockcolors.register((state, reader, pos, color) -> {
             return reader != null && pos != null ? BiomeColors.getWaterColor(reader, pos) : -1;
-        },  BlockRegistry.TROUGH_BLOCK.get());
+        },  BlockRegistry.TROUGH_BLOCK.get(), BlockRegistry.METAL_TROUGH_BLOCK.get());
     }
 }

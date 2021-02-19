@@ -35,7 +35,7 @@ public class CornBlock extends BushBlock implements IGrowable {
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         BlockState state = context.getWorld().getBlockState(context.getPos().down());
-        if(context.getPlayer() != null && !( state.isIn(Blocks.GRASS_BLOCK) || state.isIn(Blocks.DIRT) || state.isIn(Blocks.COARSE_DIRT) || state.isIn(Blocks.PODZOL) || state.isIn(Blocks.FARMLAND))){
+        if(context.getPlayer() != null && !(state.isIn(Blocks.FARMLAND))){
             return null;
         }
         return super.getStateForPlacement(context);

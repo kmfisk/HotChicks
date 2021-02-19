@@ -6,6 +6,7 @@ import com.ryanhcode.hotchicks.item.HotEggItem;
 import com.ryanhcode.hotchicks.registry.BlockRegistry;
 import com.ryanhcode.hotchicks.registry.EntityRegistry;
 import com.ryanhcode.hotchicks.registry.TileEntityRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.client.Minecraft;
@@ -110,7 +111,7 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
             this.scheduleTick();
         } else {
             BlockState blockstate = this.getBlockState();
-            if (!blockstate.isIn(BlockRegistry.TROUGH_BLOCK.get())) {
+            if (!(blockstate.isIn(BlockRegistry.TROUGH_BLOCK.get()) || blockstate.isIn(BlockRegistry.METAL_TROUGH_BLOCK.get()))) {
                 this.remove();
                 return;
             }

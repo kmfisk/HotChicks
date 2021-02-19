@@ -42,6 +42,11 @@ public class BlockRegistry {
     public static final RegistryObject<Block> GARLIC_BLOCK = BLOCKS.register("garlic", () -> new StandardCropBlock(AbstractBlock.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().zeroHardnessAndResistance().sound(SoundType.CROP), ItemRegistry.GARLIC));
 
     public static final RegistryObject<Block> TROUGH_BLOCK = BLOCKS.register("trough_block", () -> new TroughBlock(AbstractBlock.Properties.create(Material.WOOD).hardnessAndResistance(2.5F).sound(SoundType.WOOD)));
+    public static final RegistryObject<Item> TROUGH_BLOCK_ITEM = ItemRegistry.ITEMS.register("trough_block", () -> new BlockItem(TROUGH_BLOCK.get(), new Item.Properties().group(ItemGroup.DECORATIONS)));
+
+
+    public static final RegistryObject<Block> METAL_TROUGH_BLOCK = BLOCKS.register("metal_trough_block", () -> new TroughBlock(AbstractBlock.Properties.create(Material.WOOD).hardnessAndResistance(2.5F).sound(SoundType.WOOD)));
+    public static final RegistryObject<Item> METAL_TROUGH_BLOCK_ITEM = ItemRegistry.ITEMS.register("metal_trough_block", () -> new BlockItem(METAL_TROUGH_BLOCK.get(), new Item.Properties().group(ItemGroup.DECORATIONS)));
 
 
     //public static final RegistryObject<Block> METAL_TROUGH_BLOCK = BLOCKS.register("metal_trough_block", () -> new TroughBlock(AbstractBlock.Properties.create(Material.WOOD).hardnessAndResistance(2.5F).sound(SoundType.WOOD)));

@@ -412,5 +412,4 @@ public class TroughBlock extends ContainerBlock {
         return BlockRenderType.MODEL;
     }
 
-
 }
