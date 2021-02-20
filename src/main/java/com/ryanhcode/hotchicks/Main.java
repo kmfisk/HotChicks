@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableSet;
 import com.ryanhcode.hotchicks.block.NestContainer;
 import com.ryanhcode.hotchicks.block.NestScreen;
 import com.ryanhcode.hotchicks.block.TroughScreen;
+import com.ryanhcode.hotchicks.block.trellis.TrellisModelLoader;
 import com.ryanhcode.hotchicks.client.renderer.entity.HotChickenRenderer;
 import com.ryanhcode.hotchicks.registry.*;
 import com.ryanhcode.hotchicks.worldgen.LowLightPlacer;
@@ -38,6 +39,8 @@ import net.minecraft.world.gen.feature.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -67,6 +70,7 @@ public class Main {
         bus.addListener(this::setup);
         bus.addListener(this::registerRenderers);
         bus.addListener(this::registerColorHandlerBlocks);
+        bus.addListener(this::modelLoad);
 
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -137,6 +141,11 @@ public class Main {
             event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> BLUEBERRY_PATCHES);
         }
     }
+
+    public void modelLoad(ModelRegistryEvent event){
+        ModelLoaderRegistry.registerLoader(new ResourceLocation(HotChickens.MODID, "trellisloader"), new TrellisModelLoader());
+    }
+
     public void registerRenderers(final FMLClientSetupEvent event) {
 
         ScreenManager.registerFactory(ContainerRegistry.NEST.get(), NestScreen::new);

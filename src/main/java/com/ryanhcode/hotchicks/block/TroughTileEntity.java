@@ -33,7 +33,7 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
     private int numPlayersUsing;
 
 
-    private TroughTileEntity(TileEntityType<?> barrelType) {
+    public TroughTileEntity(TileEntityType<?> barrelType) {
         super(barrelType);
     }
 
