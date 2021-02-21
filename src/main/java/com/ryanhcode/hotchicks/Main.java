@@ -112,6 +112,7 @@ public class Main {
             Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MODID, "blueberry_patches"), BLUEBERRY_PATCHES);
 
 
+            RenderTypeLookup.setRenderLayer(BlockRegistry.TRELLIS_BLOCK.get(), RenderType.getCutoutMipped());
             RenderTypeLookup.setRenderLayer(BlockRegistry.STRAWBERRY_BUSH.get(), RenderType.getCutout());
             RenderTypeLookup.setRenderLayer(BlockRegistry.BLUEBERRY_BUSH.get(), RenderType.getCutout());
             RenderTypeLookup.setRenderLayer(BlockRegistry.COTTON_BUSH.get(), RenderType.getCutout());

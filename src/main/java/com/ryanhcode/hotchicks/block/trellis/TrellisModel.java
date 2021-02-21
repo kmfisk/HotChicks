@@ -1,7 +1,9 @@
 package com.ryanhcode.hotchicks.block.trellis;
 
 import com.google.common.collect.ImmutableList;
+import com.ryanhcode.hotchicks.HotChickens;
 import com.ryanhcode.hotchicks.block.TrellisBlock;
+import com.ryanhcode.hotchicks.block.crop.TrellisCrop;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -29,12 +31,18 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class TrellisModel implements IDynamicBakedModel {
-    public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "block/ladder");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(HotChickens.MODID, "block/trellis/none/none");
 
 
 
-    private TextureAtlasSprite getTexture() {
-        return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(TEXTURE);
+    private TextureAtlasSprite getTexture(BlockState state) {
+        String crop = state.get(TrellisBlock.CROP).name;
+        int stage = state.get(TrellisBlock.AGE);
+        return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(
+
+                new ResourceLocation(HotChickens.MODID, crop.equals("none") ? "block/trellis/none/none" : "block/trellis/" + crop + "/" + crop + "_stage" + stage)
+
+        );
     }
 
     private void putVertex(BakedQuadBuilder builder, Vector3d normal,
@@ -76,24 +84,37 @@ public class TrellisModel implements IDynamicBakedModel {
     }
 
     private BakedQuad createQuad(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite) {
-
-
-
-
         Vector3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize().mul(-1.0,-1.0,-1.0);
         int tw = sprite.getWidth();
         int th = sprite.getHeight();
 
         BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
-        Direction facingFromVector = Direction.getFacingFromVector(normal.getX(), normal.getY(), normal.getZ());
-        //here
-        //facingFromVector = Direction.re
+        Direction facingFromVector = Direction.getFacingFromVector(normal.getX(), normal.getY(), normal.getZ()).getOpposite();
         builder.setQuadOrientation(facingFromVector);
+        builder.setContractUVs(true);
         putVertex(builder, normal, v1.getX(), v1.getY(), v1.getZ(), 0, 0, sprite, 1.0f, 1.0f, 1.0f);
         putVertex(builder, normal, v2.getX(), v2.getY(), v2.getZ(), 0, th, sprite, 1.0f, 1.0f, 1.0f);
         putVertex(builder, normal, v3.getX(), v3.getY(), v3.getZ(), tw, th, sprite, 1.0f, 1.0f, 1.0f);
         putVertex(builder, normal, v4.getX(), v4.getY(), v4.getZ(), tw, 0, sprite, 1.0f, 1.0f, 1.0f);
-        return builder.build();
+        BakedQuad built = builder.build();
+        return built;
+    }
+
+    private BakedQuad createQuadRev(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite) {
+        Vector3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize().mul(-1.0,-1.0,-1.0);
+        int tw = sprite.getWidth();
+        int th = sprite.getHeight();
+
+        BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
+        Direction facingFromVector = Direction.getFacingFromVector(normal.getX(), normal.getY(), normal.getZ()).getOpposite();
+        builder.setQuadOrientation(facingFromVector);
+        builder.setContractUVs(true);
+        putVertex(builder, normal, v1.getX(), v1.getY(), v1.getZ(), 0, 0, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v2.getX(), v2.getY(), v2.getZ(), 0, th, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v3.getX(), v3.getY(), v3.getZ(), tw, th, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v4.getX(), v4.getY(), v4.getZ(), tw, 0, sprite, 1.0f, 1.0f, 1.0f);
+        BakedQuad built = builder.build();
+        return built;
     }
 
     private static Vector3d v(double x, double y, double z) {
@@ -103,30 +124,52 @@ public class TrellisModel implements IDynamicBakedModel {
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
-        TextureAtlasSprite texture = getTexture();
+        TextureAtlasSprite texture = getTexture(state);
         List<BakedQuad> quads = new ArrayList<>();
         double l = 0.9999;
         double r = 0.0001;
 
         Direction direction = state.get(TrellisBlock.FACING);
         double angle = direction.getHorizontalAngle() + 90.0;
+        float rad = (float) Math.toRadians(angle);
         if(angle == 0.0 || angle == 360 || angle == 180) {
             quads.add(
                     createQuad(
-                            v(r, r, r).subtract(0.5, 0.0, 0.5).rotateYaw((float) Math.toRadians(angle)).add(0.5, 0.0, 0.5),
-                            v(r, l, r).subtract(0.5, 0.0, 0.5).rotateYaw((float) Math.toRadians(angle)).add(0.5, 0.0, 0.5),
-                            v(r, l, l).subtract(0.5, 0.0, 0.5).rotateYaw((float) Math.toRadians(angle)).add(0.5, 0.0, 0.5),
-                            v(r, r, l).subtract(0.5, 0.0, 0.5).rotateYaw((float) Math.toRadians(angle)).add(0.5, 0.0, 0.5),
+                            v(r, r, r).subtract(0.5, 0.0, 0.5).rotateYaw(rad).add(0.5, 0.0, 0.5),
+                            v(r, l, r).subtract(0.5, 0.0, 0.5).rotateYaw(rad).add(0.5, 0.0, 0.5),
+                            v(r, l, l).subtract(0.5, 0.0, 0.5).rotateYaw(rad).add(0.5, 0.0, 0.5),
+                            v(r, r, l).subtract(0.5, 0.0, 0.5).rotateYaw(rad).add(0.5, 0.0, 0.5),
                             texture));
-        }else{
             quads.add(
                     createQuad(
-                            v(r, r, r).subtract(0.5, 0, 0.5).rotateYaw((float) Math.toRadians(angle+180)).add(0.5, 0, 0.5),
-                            v(r, l, r).subtract(0.5, 0, 0.5).rotateYaw((float) Math.toRadians(angle+180)).add(0.5, 0, 0.5),
-                            v(r, l, l).subtract(0.5, 0, 0.5).rotateYaw((float) Math.toRadians(angle+180)).add(0.5, 0, 0.5),
-                            v(r, r, l).subtract(0.5, 0, 0.5).rotateYaw((float) Math.toRadians(angle+180)).add(0.5, 0, 0.5),
+                            v(r, r, l).subtract(0.5, 0.0, 0.5).rotateYaw(rad).add(0.5, 0.0, 0.5),
+                            v(r, l, l).subtract(0.5, 0.0, 0.5).rotateYaw(rad).add(0.5, 0.0, 0.5),
+                            v(r, l, r).subtract(0.5, 0.0, 0.5).rotateYaw(rad).add(0.5, 0.0, 0.5),
+                            v(r, r, r).subtract(0.5, 0.0, 0.5).rotateYaw(rad).add(0.5, 0.0, 0.5),
                             texture));
+        }else{
+            float radp180 = (float) Math.toRadians(angle + 180);
+            quads.add(
+                    createQuad(
+                            v(r, r, r).subtract(0.5, 0, 0.5).rotateYaw(radp180).add(0.5, 0, 0.5),
+                            v(r, l, r).subtract(0.5, 0, 0.5).rotateYaw(radp180).add(0.5, 0, 0.5),
+                            v(r, l, l).subtract(0.5, 0, 0.5).rotateYaw(radp180).add(0.5, 0, 0.5),
+                            v(r, r, l).subtract(0.5, 0, 0.5).rotateYaw(radp180).add(0.5, 0, 0.5),
+                            texture));
+
+            if(rad == 90) {
+                quads.add(
+                        createQuadRev(
+                                v(r, l, r).subtract(0.5, 0, 0.5).rotateYaw(radp180).add(0.5, 0.0, 0.5).rotateRoll((float) Math.toRadians(-90)).add(1.0, 0.0, 0.0),
+                                v(r, r, r).subtract(0.5, 0, 0.5).rotateYaw(radp180).add(0.5, 0.0, 0.5).rotateRoll((float) Math.toRadians(-90)).add(1.0, 0.0, 0.0),
+                                v(r, r, l).subtract(0.5, 0, 0.5).rotateYaw(radp180).add(0.5, 0.0, 0.5).rotateRoll((float) Math.toRadians(-90)).add(1.0, 0.0, 0.0),
+                                v(r, l, l).subtract(0.5, 0, 0.5).rotateYaw(radp180).add(0.5, 0.0, 0.5).rotateRoll((float) Math.toRadians(-90)).add(1.0, 0.0, 0.0),
+                                texture));
+            }
+
         }
+
+
 
         return quads;
     }
@@ -153,7 +196,7 @@ public class TrellisModel implements IDynamicBakedModel {
 
     @Override
     public TextureAtlasSprite getParticleTexture() {
-        return getTexture();
+        return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(TEXTURE);
     }
 
     @Override

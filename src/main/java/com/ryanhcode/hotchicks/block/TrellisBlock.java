@@ -1,12 +1,12 @@
 package com.ryanhcode.hotchicks.block;
 
+import com.ryanhcode.hotchicks.block.crop.PepperType;
+import com.ryanhcode.hotchicks.block.crop.TrellisCrop;
 import net.minecraft.block.*;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
+import net.minecraft.state.*;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
@@ -21,6 +21,8 @@ import net.minecraft.world.IWorldReader;
 import javax.annotation.Nullable;
 
 public class TrellisBlock extends Block {
+    public static final IntegerProperty AGE = BlockStateProperties.AGE_0_5;
+    public static final EnumProperty<TrellisCrop> CROP = EnumProperty.create("crop", TrellisCrop.class);
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
     protected static final VoxelShape LADDER_EAST_AABB = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D);
     protected static final VoxelShape LADDER_WEST_AABB = Block.makeCuboidShape(13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
@@ -29,7 +31,7 @@ public class TrellisBlock extends Block {
 
     public TrellisBlock(AbstractBlock.Properties builder) {
         super(builder);
-        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH));
+        this.setDefaultState(this.stateContainer.getBaseState().with(FACING, Direction.NORTH).with(AGE, 0).with(CROP, TrellisCrop.NONE));
     }
 
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
@@ -46,25 +48,8 @@ public class TrellisBlock extends Block {
         }
     }
 
-    private boolean canAttachTo(IBlockReader blockReader, BlockPos pos, Direction direction) {
-        BlockState blockstate = blockReader.getBlockState(pos);
-        return blockstate.isSolidSide(blockReader, pos, direction);
-    }
 
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
-        Direction direction = state.get(FACING);
-        return this.canAttachTo(worldIn, pos.offset(direction.getOpposite()), direction);
-    }
 
-    /**
-     * Update the provided state given the provided neighbor facing and neighbor state, returning a new state.
-     * For example, fences make their connections to the passed in state if possible, and wet concrete powder immediately
-     * returns its solidified counterpart.
-     * Note that this method should ideally consider only the specific face passed in.
-     */
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
-    }
 
     @Nullable
     public BlockState getStateForPlacement(BlockItemUseContext context) {
@@ -111,7 +96,7 @@ public class TrellisBlock extends Block {
     }
 
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, AGE, CROP);
     }
 
 }
