@@ -109,10 +109,10 @@ public class TrellisModel implements IDynamicBakedModel {
         Direction facingFromVector = Direction.getFacingFromVector(normal.getX(), normal.getY(), normal.getZ()).getOpposite();
         builder.setQuadOrientation(facingFromVector);
         builder.setContractUVs(true);
-        putVertex(builder, normal, v1.getX(), v1.getY(), v1.getZ(), 0, 0, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v2.getX(), v2.getY(), v2.getZ(), 0, th, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v3.getX(), v3.getY(), v3.getZ(), tw, th, sprite, 1.0f, 1.0f, 1.0f);
-        putVertex(builder, normal, v4.getX(), v4.getY(), v4.getZ(), tw, 0, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v1.getX(), v1.getY(), v1.getZ(), 0, th, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v2.getX(), v2.getY(), v2.getZ(), 0, 0, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v3.getX(), v3.getY(), v3.getZ(), tw, 0, sprite, 1.0f, 1.0f, 1.0f);
+        putVertex(builder, normal, v4.getX(), v4.getY(), v4.getZ(), tw, th, sprite, 1.0f, 1.0f, 1.0f);
         BakedQuad built = builder.build();
         return built;
     }
@@ -124,15 +124,25 @@ public class TrellisModel implements IDynamicBakedModel {
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
+        TextureAtlasSprite none = getTexture(state.with(TrellisBlock.CROP, TrellisCrop.NONE));
         TextureAtlasSprite texture = getTexture(state);
         List<BakedQuad> quads = new ArrayList<>();
-        double l = 0.9999;
-        double r = 0.0001;
+        double l = 1.0;
+        double r = 0.0;
 
-        Direction direction = state.get(TrellisBlock.FACING);
-        double angle = direction.getHorizontalAngle() + 90.0;
-        float rad = (float) Math.toRadians(angle);
-        if(angle == 0.0 || angle == 360 || angle == 180) {
+        draw(state, none, quads);
+        draw(state, texture, quads);
+
+
+        /*quads.add(
+                createQuad(
+                        v(0.5, 0, 0).add(vec).rotateYaw(toRad2),
+                        v(0.5, 1, 0).add(vec).rotateYaw(toRad2),
+                        v(0.5, 1, 1).add(vec).rotateYaw(toRad2),
+                        v(0.5, 0, 1).add(vec).rotateYaw(toRad2),
+                        texture));*/
+
+        /*if(angle == 0.0 || angle == 360 || angle == 180) {
             quads.add(
                     createQuad(
                             v(r, r, r).subtract(0.5, 0.0, 0.5).rotateYaw(rad).add(0.5, 0.0, 0.5),
@@ -167,11 +177,70 @@ public class TrellisModel implements IDynamicBakedModel {
                                 texture));
             }
 
-        }
+        }*/
 
 
 
         return quads;
+    }
+
+    private void draw(BlockState state, TextureAtlasSprite texture, List<BakedQuad> quads) {
+        Direction direction = state.get(TrellisBlock.FACING);
+        double angle = direction.getHorizontalAngle() + 90.0;
+
+        float rad = (float) Math.toRadians(angle);
+
+        //.rotateYaw(rad)
+        float toRad = (float) Math.toRadians(15);
+        float toRad3 = (float) Math.toRadians(180);
+        float toRad2 = (float) Math.toRadians(90);
+
+        Vector3d vec = new Vector3d(-0.5,0.0,-0.5);
+        Vector3d v = new Vector3d(0.45, 0, 0).rotateYaw(rad).inverse();
+        Vector3d v2 = new Vector3d(-0.45, 0, -1).rotateYaw(rad).inverse();
+        Vector3d v3 = new Vector3d(0, 1.0, 1.0);
+        if(direction == Direction.WEST || direction == Direction.EAST) {
+            quads.add(
+                    createQuad(
+                            v(0.5, 0, 0).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v),
+                            v(0.5, 1, 0).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v),
+                            v(0.5, 1, 1).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v),
+                            v(0.5, 0, 1).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v),
+                            texture));
+
+            quads.add(
+                    createQuadRev(
+                            v(0.5, 0, 1).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v).rotatePitch(toRad3).add(v3),
+                            v(0.5, 1, 1).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v).rotatePitch(toRad3).add(v3),
+                            v(0.5, 1, 0).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v).rotatePitch(toRad3).add(v3),
+                            v(0.5, 0, 0).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v).rotatePitch(toRad3).add(v3),
+                            texture));
+        }else{
+            if(direction == Direction.NORTH) {
+                quads.add(
+                        createQuad(
+                                v(0.5, 0, 0).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v2).rotateYaw(toRad3).add(new Vector3d(2, 0, 0).rotateYaw(rad)),
+                                v(0.5, 1, 0).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v2).rotateYaw(toRad3).add(new Vector3d(2, 0, 0).rotateYaw(rad)),
+                                v(0.5, 1, 1).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v2).rotateYaw(toRad3).add(new Vector3d(2, 0, 0).rotateYaw(rad)),
+                                v(0.5, 0, 1).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v2).rotateYaw(toRad3).add(new Vector3d(2, 0, 0).rotateYaw(rad)),
+                                texture));
+            }else {
+                quads.add(
+                        createQuad(
+                                v(0.5, 0, 0).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v2).rotateYaw(toRad3).add(new Vector3d(2, 0, 0).rotateYaw(rad)).add(2,0,2.1),
+                                v(0.5, 1, 0).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v2).rotateYaw(toRad3).add(new Vector3d(2, 0, 0).rotateYaw(rad)).add(2,0,2.1),
+                                v(0.5, 1, 1).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v2).rotateYaw(toRad3).add(new Vector3d(2, 0, 0).rotateYaw(rad)).add(2,0,2.1),
+                                v(0.5, 0, 1).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v2).rotateYaw(toRad3).add(new Vector3d(2, 0, 0).rotateYaw(rad)).add(2,0,2.1),
+                                texture));
+            }
+            quads.add(
+                    createQuadRev(
+                            v(0.5, 0, 1).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v).rotatePitch(toRad3).add(v3),
+                            v(0.5, 1, 1).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v).rotatePitch(toRad3).add(v3),
+                            v(0.5, 1, 0).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v).rotatePitch(toRad3).add(v3),
+                            v(0.5, 0, 0).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v).rotatePitch(toRad3).add(v3),
+                            texture));
+        }
     }
 
     @Override
