@@ -1,23 +1,20 @@
 package com.ryanhcode.hotchicks.block;
 
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ContainerBlock;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.piglin.PiglinTasks;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.state.BooleanProperty;
 import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.stats.Stats;
-import net.minecraft.tileentity.BarrelTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -34,53 +31,20 @@ import net.minecraft.world.server.ServerWorld;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class NestBlock extends ContainerBlock {
+public class StickNestBlock extends NestBlock {
     public static final BooleanProperty eggs = BooleanProperty.create("eggs");
 
     public static final DirectionProperty PROPERTY_FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty PROPERTY_EGGS = eggs;
 
-
-    protected static final VoxelShape WEST_SHAPE = VoxelShapes.combineAndSimplify(
-            VoxelShapes.fullCube(),
-            makeCuboidShape(1.0D, 1.0D, 1.0D, 16.0D, 15.0D, 15.0D),
-            IBooleanFunction.ONLY_FIRST
-    );
-    protected static final VoxelShape EAST_SHAPE = VoxelShapes.combineAndSimplify(
-            VoxelShapes.fullCube(),
-            makeCuboidShape(0.0D, 1.0D, 1.0D, 15.0D, 15.0D, 15.0D),
-            IBooleanFunction.ONLY_FIRST
-    );
-    protected static final VoxelShape NORTH_SHAPE = VoxelShapes.combineAndSimplify(
-            VoxelShapes.fullCube(),
-            makeCuboidShape(1.0D, 1.0D, 1.0D, 15.0D, 15.0D, 16.0D),
-            IBooleanFunction.ONLY_FIRST
-    );
-    protected static final VoxelShape SOUTH_SHAPE = VoxelShapes.combineAndSimplify(
-            VoxelShapes.fullCube(),
-            makeCuboidShape(1.0D, 1.0D, 0.0D, 15.0D, 15.0D, 15.0D),
-            IBooleanFunction.ONLY_FIRST
-    );
-
     public VoxelShape shape(BlockState state) {
-        switch ((Direction) state.get(PROPERTY_FACING)) {
-            case UP :
-            case DOWN :
-            case SOUTH :
-            default :
-                return SOUTH_SHAPE;
-            case NORTH :
-                return NORTH_SHAPE;
-            case WEST :
-                return WEST_SHAPE;
-            case EAST :
-                return EAST_SHAPE;
-        }
+        return makeCuboidShape(3,0,3,13,3,13);
     }
+
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, IBlockReader reader, BlockPos pos) {
-        return shape(state);
+        return VoxelShapes.empty();
     }
 
     @Override
@@ -88,7 +52,7 @@ public class NestBlock extends ContainerBlock {
         return shape(state);
     }
 
-    public NestBlock(AbstractBlock.Properties properties) {
+    public StickNestBlock(Properties properties) {
         super(properties);
         this.setDefaultState(this.stateContainer.getBaseState().with(PROPERTY_FACING, Direction.NORTH).with(PROPERTY_EGGS, false));
     }
@@ -107,6 +71,7 @@ public class NestBlock extends ContainerBlock {
             return ActionResultType.CONSUME;
         }
     }
+
 
 
 
@@ -202,5 +167,4 @@ public class NestBlock extends ContainerBlock {
         BlockPos blockpos = context.getPos();
         return this.getDefaultState().with(PROPERTY_FACING, context.getPlacementHorizontalFacing()).with(PROPERTY_EGGS, false);
     }
-
 }

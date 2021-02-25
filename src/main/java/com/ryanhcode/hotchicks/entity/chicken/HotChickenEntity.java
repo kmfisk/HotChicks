@@ -50,9 +50,16 @@ public class HotChickenEntity extends LivestockEntity {
     public int getTameness(){
         return dataManager.get(tameness);
     }
+    public void setTameness(int tameness){
+        dataManager.set(this.tameness, tameness);
+    }
+
+    @Override
+    public void setChild(boolean childZombie) {
+        super.setChild(childZombie);
+    }
 
     public HotChickenEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
-
         super(type, worldIn, 0.333);
     }
 
@@ -268,7 +275,15 @@ public class HotChickenEntity extends LivestockEntity {
 
         ChickenStats stats = this.getStats().average(other.getStats()).mutate(0.15);
         HotEggItem.setStats(stack, stats);
-        HotEggItem.setTameness(stack, (int)(dataManager.get(tameness)*1.1));
+        int avgtmness = ((getTameness() + other.getTameness())) / 2;
+        int tameness = (int) (avgtmness * 1.1);
+        if(tameness < 80){
+            HotEggItem.setBreed(stack, ChickenBreed.JUNGLEFOWL.toString());
+        }
+        if(tameness > 80 && avgtmness <= 80){
+            HotEggItem.setBreed(stack, ChickenBreed.randomBasedOnBiome(getBiome()).toString());
+        }
+        HotEggItem.setTameness(stack, tameness);
 
 
         this.setHeldItem(Hand.MAIN_HAND, stack);
@@ -285,5 +300,10 @@ public class HotChickenEntity extends LivestockEntity {
 
     public void setEggTimer(int i) {
         dataManager.set(egg_timer, i);
+    }
+
+    public void setBreed(ChickenBreed breed) {
+        this.breed = breed;
+        dataManager.set(breed_data, this.breed.toString());
     }
 }

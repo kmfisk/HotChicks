@@ -10,6 +10,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.HopperContainer;
@@ -17,6 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.*;
+import net.minecraft.util.Direction;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
@@ -24,9 +26,11 @@ import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
+import javax.annotation.Nullable;
 import java.util.Locale;
+import java.util.stream.IntStream;
 
-public class NestTileEntity extends LockableLootTileEntity implements ITickableTileEntity {
+public class NestTileEntity extends LockableLootTileEntity implements ITickableTileEntity, ISidedInventory {
     public NonNullList<ItemStack> barrelContents = NonNullList.withSize(5, ItemStack.EMPTY);
     private int numPlayersUsing;
 
@@ -108,7 +112,7 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
             this.scheduleTick();
         } else {
             BlockState blockstate = this.getBlockState();
-            if (!blockstate.isIn(BlockRegistry.NEST_BOX.get())) {
+            if (!(blockstate.isIn(BlockRegistry.NEST_BOX.get()) || blockstate.isIn(BlockRegistry.NEST.get()))) {
                 this.remove();
                 return;
             }
@@ -123,7 +127,18 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
             --this.numPlayersUsing;
         }
 
+
+
     }
+
+
+
+    @Override
+    public boolean isItemValidForSlot(int index, ItemStack stack) {
+        return false;
+    }
+
+
 
     private void playSound(BlockState state, SoundEvent sound) {
         Vector3i vector3i = state.get(NestBlock.PROPERTY_FACING).getDirectionVec();
@@ -156,8 +171,10 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
                     );
 
                     chicken.setChild(true);
+                    chicken.setGrowingAge(-100);
+                    chicken.setTameness(HotEggItem.getTameness(item));
                     chicken.setStats(HotEggItem.getStats(item));
-                    chicken.breed = ChickenBreed.valueOf(tag.getString("breed").toUpperCase());
+                    chicken.setBreed(ChickenBreed.valueOf(tag.getString("breed").toUpperCase()));
 
                     barrelContents.set(counter, ItemStack.EMPTY);
                 }else {
@@ -180,4 +197,24 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
         ));
     }
 
+    @Override
+    public int[] getSlotsForFace(Direction side) {
+        return IntStream.range(0, 3).toArray();
+    }
+
+    @Override
+    public boolean canInsertItem(int index, ItemStack itemStackIn, @Nullable Direction direction) {
+        return false;
+    }
+
+    @Override
+    public boolean canExtractItem(int index, ItemStack stack, Direction direction) {
+        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        return false;
+    }
+
+    @Override
+    protected net.minecraftforge.items.IItemHandler createUnSidedHandler() {
+        return new net.minecraftforge.items.wrapper.SidedInvWrapper(this, Direction.UP);
+    }
 }

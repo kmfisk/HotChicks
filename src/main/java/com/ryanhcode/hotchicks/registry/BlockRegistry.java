@@ -1,10 +1,7 @@
 package com.ryanhcode.hotchicks.registry;
 
 import com.ryanhcode.hotchicks.HotChickens;
-import com.ryanhcode.hotchicks.block.MetalTroughBlock;
-import com.ryanhcode.hotchicks.block.NestBlock;
-import com.ryanhcode.hotchicks.block.TrellisBlock;
-import com.ryanhcode.hotchicks.block.TroughBlock;
+import com.ryanhcode.hotchicks.block.*;
 import com.ryanhcode.hotchicks.block.crop.BerryBush;
 import com.ryanhcode.hotchicks.block.crop.CornBlock;
 import com.ryanhcode.hotchicks.block.crop.PepperBerryBush;
@@ -30,6 +27,9 @@ public class BlockRegistry {
     public static final RegistryObject<Block> NEST_BOX = BLOCKS.register("nest_box", () -> new NestBlock(AbstractBlock.Properties.create(Material.WOOD).hardnessAndResistance(2.5F).sound(SoundType.WOOD)));
     public static final RegistryObject<Item> NEST_BOX_ITEM = ItemRegistry.ITEMS.register("nest_box", () -> new BlockItem(NEST_BOX.get(), new Item.Properties().group(ItemGroup.DECORATIONS)));
 
+    public static final RegistryObject<Block> NEST = BLOCKS.register("nest", () -> new StickNestBlock(AbstractBlock.Properties.create(Material.ORGANIC).hardnessAndResistance(0.5F).sound(SoundType.PLANT).notSolid()));
+    public static final RegistryObject<Item> NEST_ITEM = ItemRegistry.ITEMS.register("nest", () -> new BlockItem(NEST.get(), new Item.Properties().group(ItemGroup.DECORATIONS)));
+
     public static final RegistryObject<Block> STRAWBERRY_BUSH = BLOCKS.register("strawberry_bush", () -> new BerryBush(AbstractBlock.Properties.create(Material.PLANTS).tickRandomly().doesNotBlockMovement().sound(SoundType.SWEET_BERRY_BUSH), ItemRegistry.STRAWBERRY));
     public static final RegistryObject<Block> BLUEBERRY_BUSH = BLOCKS.register("blueberry_bush", () -> new BerryBush(AbstractBlock.Properties.create(Material.PLANTS).tickRandomly().doesNotBlockMovement().sound(SoundType.SWEET_BERRY_BUSH), ItemRegistry.BLUEBERRIES));
     public static final RegistryObject<Block> COTTON_BUSH = BLOCKS.register("cotton_bush", () -> new BerryBush(AbstractBlock.Properties.create(Material.PLANTS).tickRandomly().doesNotBlockMovement().sound(SoundType.SWEET_BERRY_BUSH), ItemRegistry.COTTON));
@@ -46,7 +46,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> TROUGH_BLOCK = BLOCKS.register("trough_block", () -> new TroughBlock(AbstractBlock.Properties.create(Material.WOOD).hardnessAndResistance(2.5F).sound(SoundType.WOOD)));
     public static final RegistryObject<Item> TROUGH_BLOCK_ITEM = ItemRegistry.ITEMS.register("trough_block", () -> new BlockItem(TROUGH_BLOCK.get(), new Item.Properties().group(ItemGroup.DECORATIONS)));
 
-    public static final RegistryObject<Block> TRELLIS_BLOCK = BLOCKS.register("trellis", () -> new TrellisBlock(AbstractBlock.Properties.create(Material.WOOD).hardnessAndResistance(2.5F).sound(SoundType.WOOD)));
+    public static final RegistryObject<Block> TRELLIS_BLOCK = BLOCKS.register("trellis", () -> new TrellisBlock(AbstractBlock.Properties.create(Material.WOOD).hardnessAndResistance(0.8F).sound(SoundType.WOOD).notSolid()));
     public static final RegistryObject<Item> TRELLIS_BLOCK_ITEM = ItemRegistry.ITEMS.register("trellis", () -> new BlockItem(TRELLIS_BLOCK.get(), new Item.Properties().group(ItemGroup.DECORATIONS)));
 
     public static final RegistryObject<Block> METAL_TROUGH_BLOCK = BLOCKS.register("metal_trough_block", () -> new MetalTroughBlock(AbstractBlock.Properties.create(Material.WOOD).hardnessAndResistance(2.5F).sound(SoundType.WOOD)));

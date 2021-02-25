@@ -54,6 +54,12 @@ public class HotEggItem extends Item {
         compoundnbt.putInt("tameness", v);
     }
 
+    public static int getTameness(ItemStack item) {
+        CompoundNBT compoundnbt = item.getTag();
+        return compoundnbt.getInt("tameness");
+    }
+
+
 
 
     @Override

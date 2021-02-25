@@ -171,13 +171,13 @@ public class LayEggsGoal extends MoveToBlockGoal {
 
     @Nullable
     private BlockPos findTarget(BlockPos pos, IBlockReader worldIn) {
-        if (worldIn.getBlockState(pos).isIn(this.block)) {
+        if (worldIn.getBlockState(pos).isIn(this.block) || worldIn.getBlockState(pos).isIn(BlockRegistry.NEST.get())) {
             return pos;
         } else {
             BlockPos[] ablockpos = new BlockPos[]{pos.down(), pos.west(), pos.east(), pos.north(), pos.south(), pos.down().down()};
 
             for(BlockPos blockpos : ablockpos) {
-                if (worldIn.getBlockState(blockpos).isIn(this.block)) {
+                if (worldIn.getBlockState(blockpos).isIn(this.block) || worldIn.getBlockState(blockpos).isIn(BlockRegistry.NEST.get())) {
                     return blockpos;
                 }
             }
@@ -194,7 +194,7 @@ public class LayEggsGoal extends MoveToBlockGoal {
         if (ichunk == null) {
             return false;
         } else {
-            return ichunk.getBlockState(pos).isIn(this.block) && ichunk.getBlockState(pos.up()).isAir() && ichunk.getBlockState(pos.up(2)).isAir();
+            return (ichunk.getBlockState(pos).isIn(this.block) || ichunk.getBlockState(pos).isIn(BlockRegistry.NEST.get())) && ichunk.getBlockState(pos.up()).isAir() && ichunk.getBlockState(pos.up(2)).isAir();
         }
     }
 }

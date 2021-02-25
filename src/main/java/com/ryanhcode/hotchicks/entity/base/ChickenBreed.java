@@ -1,5 +1,8 @@
 package com.ryanhcode.hotchicks.entity.base;
 
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biomes;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +44,7 @@ public enum ChickenBreed {
             new ArrayList<String>() {{
                 add("chicks/chick_8");
             }}, BaseChickenStats.BARRED_ROCK),
-    OPRINGTON("Oprington", "orpington",
+    ORPINGTON("Orpington", "orpington",
             new HashMap<String, ChickenVariant>() {{
                 put("black", new ChickenVariant("orpingtons/orpington_black_rooster", "orpingtons/orpington_black_hen"));
                 put("blue", new ChickenVariant("orpingtons/orpington_blue_rooster", "orpingtons/orpington_blue_hen"));
@@ -97,9 +100,17 @@ public enum ChickenBreed {
             }}, BaseChickenStats.MARANS),
     SILKIE("Silkie", "silkie",
             new HashMap<String, ChickenVariant>() {{
-                put("default", new ChickenVariant("junglefowl/junglefowl_rooster", "junglefowl/junglefowl_hen"));
+                put("black", new ChickenVariant("silkies/silkie_black", true));
+                put("blue", new ChickenVariant("silkies/silkie_blue", true));
+                put("buff", new ChickenVariant("silkies/silkie_buff", true));
+                put("patridge", new ChickenVariant("silkies/silkie_patridge", true));
+                put("white", new ChickenVariant("silkies/silkie_white", true));
             }},
             new ArrayList<String>() {{
+                add("chicks/chick_7");
+                add("chicks/chick_5");
+                add("chicks/chick_4");
+                add("chicks/chick_2");
                 add("chicks/chick_1");
             }},
             BaseChickenStats.SILKIE);
@@ -116,6 +127,58 @@ public enum ChickenBreed {
         this.textureMap = textureMap;
         this.childTextures = childTextures;
         this.stats = stats;
+    }
+
+
+    public static ChickenBreed breedFromBiome(Biome biome){
+        String path = biome.getRegistryName().getPath();
+        if(path.equals(Biomes.PLAINS.getRegistryName().getPath())){
+            return LEGHORN;
+        }
+        if(path.contains("forest") && !path.contains("dark") && !path.contains("roofed")){
+            return RHODE_ISLAND_RED;
+        }
+
+        if(path.equals(Biomes.DARK_FOREST.getRegistryName().getPath()) || path.equals(Biomes.DARK_FOREST_HILLS.getRegistryName().getPath())){
+            return BARRED_ROCK;
+        }
+        if(path.equals(Biomes.DESERT.getRegistryName().getPath())){
+            return ORPINGTON;
+        }
+        if(path.equals(Biomes.TAIGA_MOUNTAINS.getRegistryName().getPath()) || path.equals(Biomes.MOUNTAINS.getRegistryName().getPath()) || path.equals(Biomes.MOUNTAIN_EDGE.getRegistryName().getPath())){
+            return AMERAUCANA;
+        }
+        if(path.contains("jungle")){
+            return OLIVE_EGGER;
+        }
+        if(path.equals(Biomes.SWAMP.getRegistryName().getPath())){
+            return MARANS;
+        }
+        if(path.contains("snow")){
+            return SILKIE;
+        }
+
+        return random(JUNGLEFOWL);
+    }
+
+    public static ChickenBreed randomBasedOnBiome(Biome biome) {
+        Random rand = new Random();
+        if(rand.nextFloat() < 0.8){
+            return breedFromBiome(biome);
+        }else{
+            return random(JUNGLEFOWL);
+        }
+    }
+
+    public static ChickenBreed random(ChickenBreed... not){
+        Random random = new Random();
+        ChickenBreed value = values()[random.nextInt(values().length)];
+        for(ChickenBreed c : not){
+            if(value == c){
+                return random(not);
+            }
+        }
+        return value;
     }
 
     public String randomChick(){

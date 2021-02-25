@@ -38,6 +38,14 @@ public class TroughContainer extends Container {
         return new TroughContainer(ContainerRegistry.TROUGH_DOUBLE.get(), id, new Inventory(6), player, 6);
     }
 
+    public static TroughContainer createGenericDoubleMetal(int id, PlayerInventory player) {
+        return new TroughContainer(ContainerRegistry.TROUGH_DOUBLE_METAL.get(), id, new Inventory(12), player, 12);
+    }
+
+    public static TroughContainer createGenericDoubleMetal(int id, PlayerInventory player, IInventory blockEntity) {
+        return new TroughContainer(ContainerRegistry.TROUGH_DOUBLE_METAL.get(), id, blockEntity, player, 12);
+    }
+
     private TroughContainer(ContainerType<?> type, int id, IInventory blockEntity, PlayerInventory player, int slots) {
         this(type, id, player, blockEntity, slots);
     }
@@ -57,20 +65,32 @@ public class TroughContainer extends Container {
 
         double offset = 0;
         offset = slots == 3 ? 1 : -0.5;
-        for(int j = 0; j < slots; j+=1) {
-            this.addSlot(new TroughSlot(inventory, j, (int)(44 + j * 18 + offset * 18), 20));
+        if(slots == 12){
+            for (int j = 0; j < slots/2; j += 1) {
+                this.addSlot(new TroughSlot(inventory, j, (int) (44 + j * 18 + offset * 18), 20));
+            }
+            for (int j = slots/2; j < slots; j += 1) {
+                this.addSlot(new TroughSlot(inventory, j, (int) (44 + (j-6) * 18 + offset * 18), 20+18));
+            }
+        }else {
+            for (int j = 0; j < slots; j += 1) {
+                this.addSlot(new TroughSlot(inventory, j, (int) (44 + j * 18 + offset * 18), 20));
+            }
         }
+        int mod = slots == 12 ? 14 : 0;
         for(int l = 0; l < 3; ++l) {
             for(int k = 0; k < 9; ++k) {
-                this.addSlot(new Slot(playerInventory, k + l * 9 + 9, 8 + k * 18, l * 18 + 51));
+                this.addSlot(new Slot(playerInventory, k + l * 9 + 9, 8 + k * 18, l * 18 + 51 + mod));
             }
         }
 
         for(int i1 = 0; i1 < 9; ++i1) {
-            this.addSlot(new Slot(playerInventory, i1, 8 + i1 * 18, 109));
+            this.addSlot(new Slot(playerInventory, i1, 8 + i1 * 18 , 109 + mod));
         }
 
     }
+
+
 
     /**
      * Determines whether supplied player can use this container

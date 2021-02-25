@@ -21,7 +21,7 @@ public class TroughScreen extends ContainerScreen<TroughContainer> {
         super(container, playerInventory, title);
         this.container = container;
         this.passEvents = false;
-        this.ySize = 133;
+        this.ySize = container.slots == 12 ? 133 + 17 : 133;
         this.playerInventoryTitleY = this.ySize - 94;
     }
 
@@ -33,13 +33,20 @@ public class TroughScreen extends ContainerScreen<TroughContainer> {
 
     protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int x, int y) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        int mod = 0;
         if(container.slots == 3){
             this.minecraft.getTextureManager().bindTexture(SINGLE_TEXTURE);
-        }else {
+        }else if(container.slots == 6){
+            this.minecraft.getTextureManager().bindTexture(DOUBLE_TEXTURE);
+        }else if(container.slots == 12) {
+            mod = 0;
+            this.minecraft.getTextureManager().bindTexture(new ResourceLocation(HotChickens.MODID, "textures/gui/trough_large_metal.png"));
+        }
+        else {
             this.minecraft.getTextureManager().bindTexture(DOUBLE_TEXTURE);
         }
         int i = (this.width - this.xSize) / 2;
-        int j = (this.height - this.ySize) / 2;
+        int j = (this.height - ySize + mod) / 2;
         this.blit(matrixStack, i, j, 0, 0, this.xSize, this.ySize);
     }
 }

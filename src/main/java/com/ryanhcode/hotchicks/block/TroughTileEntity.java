@@ -29,6 +29,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
 public class TroughTileEntity extends LockableLootTileEntity implements ITickableTileEntity {
+    public int size = 3;
     public NonNullList<ItemStack> contents = NonNullList.withSize(3, ItemStack.EMPTY);
     private int numPlayersUsing;
 
@@ -39,6 +40,12 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
 
     public TroughTileEntity() {
         this(TileEntityRegistry.TROUGH.get());
+    }
+
+    public TroughTileEntity(int size){
+        this();
+        contents = NonNullList.withSize(size, ItemStack.EMPTY);
+        this.size = size;
     }
 
     public CompoundNBT write(CompoundNBT compound) {
@@ -63,7 +70,7 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
      * Returns the number of slots in the inventory.
      */
     public int getSizeInventory() {
-        return 3;
+        return size;
     }
 
     public NonNullList<ItemStack> getItems() {
@@ -80,9 +87,16 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
 
     @Override
     protected Container createMenu(int id, PlayerInventory player) {
+        if(size == 6){
+            return TroughContainer.createGenericDouble(id, player, this);
+        }
         return TroughContainer.createGenericSingle(id, player, this);
     }
 
+    @Override
+    public boolean isItemValidForSlot(int index, ItemStack stack) {
+        return world.getBlockState(getPos()).get(TroughBlock.CONTAINS) != TroughFillType.WATER && stack.getItem() == Items.WHEAT;
+    }
 
     public void openInventory(PlayerEntity player) {
         if (!player.isSpectator()) {

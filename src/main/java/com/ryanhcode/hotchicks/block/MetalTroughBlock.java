@@ -29,6 +29,7 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.state.properties.ChestType;
 import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.ChestTileEntity;
+import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityMerger;
 import net.minecraft.util.*;
@@ -137,10 +138,11 @@ public class MetalTroughBlock extends ContainerBlock {
             return Optional.of(new INamedContainerProvider() {
                 @Nullable
                 public Container createMenu(int p_createMenu_1_, PlayerInventory p_createMenu_2_, PlayerEntity p_createMenu_3_) {
+                    System.out.println("crate manu");
                     if (p_225539_1_.canOpen(p_createMenu_3_) && p_225539_2_.canOpen(p_createMenu_3_)) {
                         p_225539_1_.fillWithLoot(p_createMenu_2_.player);
                         p_225539_2_.fillWithLoot(p_createMenu_2_.player);
-                        return TroughContainer.createGenericDouble(p_createMenu_1_, p_createMenu_2_, iinventory);
+                        return TroughContainer.createGenericDoubleMetal(p_createMenu_1_, p_createMenu_2_, iinventory);
                     } else {
                         return null;
                     }
@@ -232,8 +234,8 @@ public class MetalTroughBlock extends ContainerBlock {
     }
     public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
         TileEntity tileentity = worldIn.getTileEntity(pos);
-        if (tileentity instanceof MetalTroughTileEntity) {
-            MetalTroughTileEntity te = ((MetalTroughTileEntity)tileentity);
+        if (tileentity instanceof TroughTileEntity) {
+            TroughTileEntity te = ((TroughTileEntity)tileentity);
             te.barrelTick();
 
         }
@@ -289,8 +291,8 @@ public class MetalTroughBlock extends ContainerBlock {
             stack) {
         if (stack.hasDisplayName()) {
             TileEntity tileentity = worldIn.getTileEntity(pos);
-            if (tileentity instanceof MetalTroughTileEntity) {
-                ((MetalTroughTileEntity)tileentity).setCustomName(stack.getDisplayName());
+            if (tileentity instanceof TroughTileEntity) {
+                ((TroughTileEntity)tileentity).setCustomName(stack.getDisplayName());
             }
         }
 
@@ -379,6 +381,7 @@ public class MetalTroughBlock extends ContainerBlock {
             } else {
                 INamedContainerProvider inamedcontainerprovider = this.getContainer(state, worldIn, pos);
                 if (inamedcontainerprovider != null) {
+
                     player.openContainer(inamedcontainerprovider);
                 }
 
@@ -391,11 +394,12 @@ public class MetalTroughBlock extends ContainerBlock {
 
     @Nullable
     public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new MetalTroughTileEntity();
+        return new TroughTileEntity(6);
     }
 
 
     /**
+     *
      * is fine.
      */
     public boolean hasComparatorInputOverride(BlockState state) {
@@ -411,5 +415,7 @@ public class MetalTroughBlock extends ContainerBlock {
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
     }
+
+
 
 }

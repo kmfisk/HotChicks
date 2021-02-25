@@ -1,6 +1,9 @@
 {
+  "itemGroup.hot_chicks_group": "Hot Chickens",
   "block.hotchicks.nest_box": "Nest Box",
   "block.hotchicks.trough_block": "Wooden Trough",
+  "block.hotchicks.metal_trough_block": "Metal Trough",
+  "block.hotchicks.trellis": "Trellis",
   "item.hotchicks.white_egg": "White Egg",
   "item.hotchicks.stud_book": "Stud Book",
   "item.hotchicks.peppers":  "Peppers",
@@ -16,5 +19,16 @@
   "item.hotchicks.okra":  "Okra",
   "item.hotchicks.peas":  "Peas",
   "item.hotchicks.strawberry":  "Strawberry",
-  "item.hotchicks.tomato":  "Tomato"
+  "item.hotchicks.tomato":  "Tomato",
+  "item.hotchicks.trellis":  "Trellis",
+
+  "item.hotchicks.silkie_spawn_egg":  "Silkie Chicken Spawn Egg",
+  "item.hotchicks.rhode_island_spawn_egg": "Rhode Island Red Chicken Spawn Egg",
+  "item.hotchicks.orpington_spawn_egg":  "Orpington Chicken Spawn Egg",
+  "item.hotchicks.olive_egger_spawn_egg": "Olive Egger Chicken Spawn Egg",
+  "item.hotchicks.marans_spawn_egg":  "Marans Chicken Spawn Egg",
+  "item.hotchicks.leghorn_spawn_egg": "Leghorn Chicken Spawn Egg",
+  "item.hotchicks.junglefowl_spawn_egg":  "Junglefowl Chicken Spawn Egg",
+  "item.hotchicks.barred_rock_spawn_egg": "Barred Rock Chicken Spawn Egg",
+  "item.hotchicks.ameraucana_spawn_egg":  "Ameraucana Chicken Spawn Egg"
 }

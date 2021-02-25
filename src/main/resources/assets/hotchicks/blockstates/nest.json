@@ -1,0 +1,36 @@
+{
+  "variants": {
+
+
+    "facing=east,eggs=false": {
+      "model": "hotchicks:block/nest_empty",
+      "y": 270
+    },
+    "facing=north,eggs=false": {
+      "model": "hotchicks:block/nest_empty",
+      "y": 180
+    },
+    "facing=south,eggs=false": {
+      "model": "hotchicks:block/nest_empty"
+    },
+    "facing=west,eggs=false": {
+      "model": "hotchicks:block/nest_empty",
+      "y": 90
+    },
+    "facing=east,eggs=true": {
+      "model": "hotchicks:block/nest_eggs",
+      "y": 270
+    },
+    "facing=north,eggs=true": {
+      "model": "hotchicks:block/nest_eggs",
+      "y": 180
+    },
+    "facing=south,eggs=true": {
+      "model": "hotchicks:block/nest_eggs"
+    },
+    "facing=west,eggs=true": {
+      "model": "hotchicks:block/nest_eggs",
+      "y": 90
+    }
+  }
+}

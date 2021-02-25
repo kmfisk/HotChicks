@@ -219,10 +219,10 @@ public class TrellisModel implements IDynamicBakedModel {
             if(direction == Direction.NORTH) {
                 quads.add(
                         createQuad(
-                                v(0.5, 0, 0).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v2).rotateYaw(toRad3).add(new Vector3d(2, 0, 0).rotateYaw(rad)),
-                                v(0.5, 1, 0).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v2).rotateYaw(toRad3).add(new Vector3d(2, 0, 0).rotateYaw(rad)),
-                                v(0.5, 1, 1).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v2).rotateYaw(toRad3).add(new Vector3d(2, 0, 0).rotateYaw(rad)),
-                                v(0.5, 0, 1).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v2).rotateYaw(toRad3).add(new Vector3d(2, 0, 0).rotateYaw(rad)),
+                                v(0.5, 0, 0).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v2).rotateYaw(toRad3).add(new Vector3d(1.9, 0, 0).rotateYaw(rad)),
+                                v(0.5, 1, 0).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v2).rotateYaw(toRad3).add(new Vector3d(1.9, 0, 0).rotateYaw(rad)),
+                                v(0.5, 1, 1).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v2).rotateYaw(toRad3).add(new Vector3d(1.9, 0, 0).rotateYaw(rad)),
+                                v(0.5, 0, 1).add(vec).rotateYaw(rad).add(0.5, 0, 0.5).add(v2).rotateYaw(toRad3).add(new Vector3d(1.9, 0, 0).rotateYaw(rad)),
                                 texture));
             }else {
                 quads.add(

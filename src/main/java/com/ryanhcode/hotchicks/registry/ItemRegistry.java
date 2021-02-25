@@ -1,9 +1,12 @@
 package com.ryanhcode.hotchicks.registry;
 
 import com.ryanhcode.hotchicks.HotChickens;
+import com.ryanhcode.hotchicks.Main;
 import com.ryanhcode.hotchicks.block.NestBlock;
+import com.ryanhcode.hotchicks.entity.base.ChickenBreed;
 import com.ryanhcode.hotchicks.item.Foods;
 import com.ryanhcode.hotchicks.item.HotEggItem;
+import com.ryanhcode.hotchicks.item.HotSpawnEggItem;
 import com.ryanhcode.hotchicks.item.StudBookItem;
 import net.minecraft.item.BlockNamedItem;
 import net.minecraft.item.Item;
@@ -55,5 +58,15 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> PEPPERS = ITEMS.register("peppers",
             () -> new BlockNamedItem(BlockRegistry.PEPPER_BUSH.get(), (new Item.Properties()).group(ItemGroup.FOOD)));
+
+    public static final RegistryObject<Item> SILKIE_SPAWN_EGG = ITEMS.register("silkie_spawn_egg", () -> new HotSpawnEggItem(new Item.Properties().group(Main.HOT_CHICKS_GROUP), ChickenBreed.SILKIE));
+    public static final RegistryObject<Item> RHODE_ISLAND_SPAWN_EGG = ITEMS.register("rhode_island_spawn_egg", () -> new HotSpawnEggItem(new Item.Properties().group(Main.HOT_CHICKS_GROUP), ChickenBreed.RHODE_ISLAND_RED));
+    public static final RegistryObject<Item> ORPINGTON_SPAWN_EGG = ITEMS.register("orpington_spawn_egg", () -> new HotSpawnEggItem(new Item.Properties().group(Main.HOT_CHICKS_GROUP), ChickenBreed.ORPINGTON));
+    public static final RegistryObject<Item> OLIVE_EGGER_SPAWN_EGG = ITEMS.register("olive_egger_spawn_egg", () -> new HotSpawnEggItem(new Item.Properties().group(Main.HOT_CHICKS_GROUP), ChickenBreed.OLIVE_EGGER));
+    public static final RegistryObject<Item> MARANS_SPAWN_EGG = ITEMS.register("marans_spawn_egg", () -> new HotSpawnEggItem(new Item.Properties().group(Main.HOT_CHICKS_GROUP), ChickenBreed.MARANS));
+    public static final RegistryObject<Item> LEGHORN_SPAWN_EGG = ITEMS.register("leghorn_spawn_egg", () -> new HotSpawnEggItem(new Item.Properties().group(Main.HOT_CHICKS_GROUP), ChickenBreed.LEGHORN));
+    public static final RegistryObject<Item> JUNGLEFOWL_SPAWN_EGG = ITEMS.register("junglefowl_spawn_egg", () -> new HotSpawnEggItem(new Item.Properties().group(Main.HOT_CHICKS_GROUP), ChickenBreed.JUNGLEFOWL));
+    public static final RegistryObject<Item> BARRED_ROCK_SPAWN_EGG = ITEMS.register("barred_rock_spawn_egg", () -> new HotSpawnEggItem(new Item.Properties().group(Main.HOT_CHICKS_GROUP), ChickenBreed.BARRED_ROCK));
+    public static final RegistryObject<Item> AMERAUCANA_SPAWN_EGG = ITEMS.register("ameraucana_spawn_egg", () -> new HotSpawnEggItem(new Item.Properties().group(Main.HOT_CHICKS_GROUP), ChickenBreed.AMERAUCANA));
 
 }

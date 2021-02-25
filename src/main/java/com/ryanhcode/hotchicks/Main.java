@@ -22,6 +22,8 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.tileentity.HopperTileEntity;
@@ -56,6 +58,7 @@ import org.apache.logging.log4j.Logger;
 @Mod(HotChickens.MODID)
 public class Main {
     private static final Logger LOGGER = LogManager.getLogger();
+    public static ItemGroup HOT_CHICKS_GROUP;
 
     public Main() {
         // Register the setup method for modloading
@@ -71,6 +74,15 @@ public class Main {
         bus.addListener(this::registerRenderers);
         bus.addListener(this::registerColorHandlerBlocks);
         bus.addListener(this::modelLoad);
+
+        HOT_CHICKS_GROUP = new ItemGroup(ItemGroup.getGroupCountSafe(), "hot_chicks_group")
+        {
+            @Override
+            public ItemStack createIcon()
+            {
+                return new ItemStack(ItemRegistry.WHITE_EGG.get());
+            }
+        };
 
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -150,6 +162,7 @@ public class Main {
     public void registerRenderers(final FMLClientSetupEvent event) {
 
         ScreenManager.registerFactory(ContainerRegistry.NEST.get(), NestScreen::new);
+        ScreenManager.registerFactory(ContainerRegistry.TROUGH_DOUBLE_METAL.get(), TroughScreen::new);
         ScreenManager.registerFactory(ContainerRegistry.TROUGH_DOUBLE.get(), TroughScreen::new);
         ScreenManager.registerFactory(ContainerRegistry.TROUGH_SINGLE.get(), TroughScreen::new);
 

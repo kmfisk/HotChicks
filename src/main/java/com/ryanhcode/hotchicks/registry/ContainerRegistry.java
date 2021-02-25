@@ -20,4 +20,7 @@ public class ContainerRegistry {
     public static RegistryObject<ContainerType<TroughContainer>> TROUGH_DOUBLE = CONTAINERS.register("trough_double", () -> {
         return new ContainerType<TroughContainer>(TroughContainer::createGenericDouble);
     });
+    public static RegistryObject<ContainerType<TroughContainer>> TROUGH_DOUBLE_METAL = CONTAINERS.register("trough_double_metal", () -> {
+        return new ContainerType<TroughContainer>(TroughContainer::createGenericDoubleMetal);
+    });
 }
