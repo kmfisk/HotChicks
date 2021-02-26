@@ -132,6 +132,7 @@ public enum ChickenBreed {
 
     public static ChickenBreed breedFromBiome(Biome biome){
         String path = biome.getRegistryName().getPath();
+        System.out.println("bpath: " + path);
         if(path.equals(Biomes.PLAINS.getRegistryName().getPath())){
             return LEGHORN;
         }
@@ -158,13 +159,18 @@ public enum ChickenBreed {
             return SILKIE;
         }
 
+        System.out.println("made it here@");
         return random(JUNGLEFOWL);
     }
 
     public static ChickenBreed randomBasedOnBiome(Biome biome) {
-        Random rand = new Random();
+        Random rand = new Random(System.currentTimeMillis()
+        );
         if(rand.nextFloat() < 0.8){
-            return breedFromBiome(biome);
+            System.out.println("from biome");
+            ChickenBreed chickenBreed = breedFromBiome(biome);
+            System.out.println("chickenBreed from biome = " + chickenBreed);
+            return chickenBreed;
         }else{
             return random(JUNGLEFOWL);
         }

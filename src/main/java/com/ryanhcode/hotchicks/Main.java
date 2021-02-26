@@ -1,5 +1,6 @@
 package com.ryanhcode.hotchicks;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.ryanhcode.hotchicks.block.NestContainer;
 import com.ryanhcode.hotchicks.block.NestScreen;
@@ -38,6 +39,10 @@ import net.minecraft.world.gen.blockplacer.SimpleBlockPlacer;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.blockstateprovider.WeightedBlockStateProvider;
 import net.minecraft.world.gen.feature.*;
+import net.minecraft.world.gen.foliageplacer.AcaciaFoliagePlacer;
+import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
+import net.minecraft.world.gen.placement.Placement;
+import net.minecraft.world.gen.trunkplacer.ForkyTrunkPlacer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -91,12 +96,19 @@ public class Main {
     public static ConfiguredFeature<?,?> CORN;
     public static ConfiguredFeature<?,?> MILLET;
     public static ConfiguredFeature<?,?> BLUEBERRY_PATCHES;
+    public static ConfiguredFeature<?,?> MANDARIN_TREES;
+
 
 
     private void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
 
+
+            ConfiguredFeature<BaseTreeFeatureConfig, ?> mandarin = Feature.TREE.withConfiguration((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.ACACIA_LOG.getDefaultState()), new SimpleBlockStateProvider(Blocks.ACACIA_LEAVES.getDefaultState()), new AcaciaFoliagePlacer(FeatureSpread.func_242252_a(2), FeatureSpread.func_242252_a(0)), new ForkyTrunkPlacer(5, 2, 2), new TwoLayerFeature(1, 0, 2))).setIgnoreVines().build());
             //FEATURES
+
+            MANDARIN_TREES = Feature.RANDOM_SELECTOR.withConfiguration(new MultipleRandomFeatureConfig(mandarin.withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT).withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(1, 0.1F, 1)))));
+
 
             CORN = Feature.RANDOM_PATCH.withConfiguration(
 
@@ -172,7 +184,7 @@ public class Main {
     public void registerColorHandlerBlocks(ColorHandlerEvent.Block event) {
         BlockColors blockcolors = event.getBlockColors();
         blockcolors.register((state, reader, pos, color) -> {
-            return reader != null && pos != null ? BiomeColors.getWaterColor(reader, pos) : -1;
+            return reader != null && pos != null ? BiomeColors.getFo(reader, pos) : -1;
         },  BlockRegistry.TROUGH_BLOCK.get(), BlockRegistry.METAL_TROUGH_BLOCK.get());
     }
 }

@@ -281,7 +281,11 @@ public class HotChickenEntity extends LivestockEntity {
             HotEggItem.setBreed(stack, ChickenBreed.JUNGLEFOWL.toString());
         }
         if(tameness > 80 && avgtmness <= 80){
-            HotEggItem.setBreed(stack, ChickenBreed.randomBasedOnBiome(getBiome()).toString());
+            Biome biome = getBiome();
+            System.out.println("biome = " + biome);
+            ChickenBreed breed = ChickenBreed.randomBasedOnBiome(biome);
+            HotEggItem.setStats(stack, breed.stats);
+            HotEggItem.setBreed(stack, breed.toString());
         }
         HotEggItem.setTameness(stack, tameness);
 
