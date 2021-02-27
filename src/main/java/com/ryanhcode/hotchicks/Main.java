@@ -34,14 +34,17 @@ import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.biome.BiomeColors;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.GenerationStage;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.blockplacer.ColumnBlockPlacer;
 import net.minecraft.world.gen.blockplacer.SimpleBlockPlacer;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.blockstateprovider.WeightedBlockStateProvider;
 import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.gen.foliageplacer.AcaciaFoliagePlacer;
+import net.minecraft.world.gen.foliageplacer.FancyFoliagePlacer;
 import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
 import net.minecraft.world.gen.placement.Placement;
+import net.minecraft.world.gen.trunkplacer.FancyTrunkPlacer;
 import net.minecraft.world.gen.trunkplacer.ForkyTrunkPlacer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -59,6 +62,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.OptionalInt;
 
 @Mod(HotChickens.MODID)
 public class Main {
@@ -96,18 +101,21 @@ public class Main {
     public static ConfiguredFeature<?,?> CORN;
     public static ConfiguredFeature<?,?> MILLET;
     public static ConfiguredFeature<?,?> BLUEBERRY_PATCHES;
-    public static ConfiguredFeature<?,?> MANDARIN_TREES;
-
+    public static ConfiguredFeature<BaseTreeFeatureConfig,?> MANDARIN_TREES =
+            Feature.TREE.withConfiguration((new BaseTreeFeatureConfig.Builder(
+                    new SimpleBlockStateProvider(Blocks.OAK_LOG.getDefaultState()),
+                    new SimpleBlockStateProvider(Blocks.SPONGE.getDefaultState()),
+                    new FancyFoliagePlacer(FeatureSpread.func_242252_a(2), FeatureSpread.func_242252_a(4), 4),
+                    new FancyTrunkPlacer(2
+                            , 10, 4),
+                    new TwoLayerFeature(0, 0, 0, OptionalInt.of(4))))
+                    .setIgnoreVines()
+                    .func_236702_a_(Heightmap.Type.MOTION_BLOCKING).build());
 
 
     private void setup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> {
+        event.enqueueWork(() -> {//FEATURES
 
-
-            ConfiguredFeature<BaseTreeFeatureConfig, ?> mandarin = Feature.TREE.withConfiguration((new BaseTreeFeatureConfig.Builder(new SimpleBlockStateProvider(Blocks.ACACIA_LOG.getDefaultState()), new SimpleBlockStateProvider(Blocks.ACACIA_LEAVES.getDefaultState()), new AcaciaFoliagePlacer(FeatureSpread.func_242252_a(2), FeatureSpread.func_242252_a(0)), new ForkyTrunkPlacer(5, 2, 2), new TwoLayerFeature(1, 0, 2))).setIgnoreVines().build());
-            //FEATURES
-
-            MANDARIN_TREES = Feature.RANDOM_SELECTOR.withConfiguration(new MultipleRandomFeatureConfig(mandarin.withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT).withPlacement(Placement.COUNT_EXTRA.configure(new AtSurfaceWithExtraConfig(1, 0.1F, 1)))));
 
 
             CORN = Feature.RANDOM_PATCH.withConfiguration(
@@ -131,6 +139,7 @@ public class Main {
                     (new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(BlockRegistry.BLUEBERRY_BUSH.get().getDefaultState()), new LowLightPlacer())).tries(200).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK.getBlock())).func_227317_b_().build()
 
             );
+            Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MODID, "mandarin_trees"), MANDARIN_TREES);
             Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MODID, "millet_patches"), MILLET);
             Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MODID, "corn_patches"), CORN);
             Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MODID, "blueberry_patches"), BLUEBERRY_PATCHES);
@@ -160,6 +169,7 @@ public class Main {
         }
         if (biomeName.equals(Biomes.PLAINS.getLocation()) || biomeName.equals(Biomes.SUNFLOWER_PLAINS.getLocation())) {
             event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> CORN);
+            event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> MANDARIN_TREES);
         }
 
         if (biomeName.equals(Biomes.TAIGA_HILLS.getLocation()) || biomeName.equals(Biomes.TAIGA.getLocation()) || biomeName.equals(Biomes.TAIGA_MOUNTAINS.getLocation())) {
@@ -184,7 +194,7 @@ public class Main {
     public void registerColorHandlerBlocks(ColorHandlerEvent.Block event) {
         BlockColors blockcolors = event.getBlockColors();
         blockcolors.register((state, reader, pos, color) -> {
-            return reader != null && pos != null ? BiomeColors.getFo(reader, pos) : -1;
+            return reader != null && pos != null ? BiomeColors.getWaterColor(reader, pos) : -1;
         },  BlockRegistry.TROUGH_BLOCK.get(), BlockRegistry.METAL_TROUGH_BLOCK.get());
     }
 }
