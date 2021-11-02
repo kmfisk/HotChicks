@@ -7,25 +7,28 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.gen.blockplacer.BlockPlacer;
 import net.minecraft.world.gen.blockplacer.BlockPlacerType;
-import net.minecraft.world.gen.blockplacer.SimpleBlockPlacer;
+import net.minecraft.world.gen.feature.Features;
 
 import java.util.Random;
 
 public class LowLightPlacer extends BlockPlacer {
-    public static final Codec<SimpleBlockPlacer> CODEC;
-    public static final SimpleBlockPlacer PLACER = new SimpleBlockPlacer();
 
-    @Override
-    protected BlockPlacerType<?> type() {
-        return BlockPlacerType.SIMPLE_BLOCK_PLACER;
+
+
+    public static final Codec<net.minecraft.world.gen.blockplacer.SimpleBlockPlacer> CODEC;
+    public static final net.minecraft.world.gen.blockplacer.SimpleBlockPlacer PLACER = new net.minecraft.world.gen.blockplacer.SimpleBlockPlacer();
+
+    protected BlockPlacerType<?> getBlockPlacerType() {
+        return BlockPlacerType.SIMPLE_BLOCK;
     }
 
-    @Override
     public void place(IWorld world, BlockPos pos, BlockState state, Random random) {
-        world.setBlock(pos, state.setValue(BerryBush.AGE, 3), 2);
+        world.setBlockState(pos, state.with(BerryBush.AGE, 3), 2);
     }
 
     static {
-        CODEC = Codec.unit(() -> PLACER);
+        CODEC = Codec.unit(() -> {
+            return PLACER;
+        });
     }
 }
