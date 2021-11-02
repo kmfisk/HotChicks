@@ -16,6 +16,7 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
@@ -32,6 +33,7 @@ import net.minecraft.world.gen.trunkplacer.ForkyTrunkPlacer;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -41,6 +43,8 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
+import java.util.Set;
 
 @Mod(HotChickens.MODID)
 public class Main {
@@ -114,18 +118,20 @@ public class Main {
 
     @SubscribeEvent
     public void biomeLoad(BiomeLoadingEvent event) {
-        ResourceLocation biomeName = event.getName();
-        if (biomeName.equals(Biomes.SAVANNA.location()) || biomeName.equals(Biomes.SHATTERED_SAVANNA.location()))
-            event.getGeneration().getFeatures(GenerationStage.Decoration.LAKES).add(() -> MILLET);
+        Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(RegistryKey.create(Registry.BIOME_REGISTRY, event.getName()));
+        if (biomeTypes.contains(BiomeDictionary.Type.OVERWORLD)) {
+            if (biomeTypes.contains(BiomeDictionary.Type.MOUNTAIN) && !biomeTypes.contains(BiomeDictionary.Type.DRY))
+                event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> MANDARIN_TREES);
 
-        if (biomeName.equals(Biomes.PLAINS.location()) || biomeName.equals(Biomes.SUNFLOWER_PLAINS.location()))
-            event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> CORN);
+            if (biomeTypes.contains(BiomeDictionary.Type.SAVANNA))
+                event.getGeneration().getFeatures(GenerationStage.Decoration.LAKES).add(() -> MILLET);
 
-        if (biomeName.equals(Biomes.MOUNTAINS.location()))
-            event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> MANDARIN_TREES);
+            if (biomeTypes.contains(BiomeDictionary.Type.PLAINS) && !biomeTypes.contains(BiomeDictionary.Type.HOT))
+                event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> CORN);
 
-        if (biomeName.equals(Biomes.TAIGA_HILLS.location()) || biomeName.equals(Biomes.TAIGA.location()) || biomeName.equals(Biomes.TAIGA_MOUNTAINS.location()))
-            event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> BLUEBERRY_PATCHES);
+            if (biomeTypes.contains(BiomeDictionary.Type.CONIFEROUS) && !biomeTypes.contains(BiomeDictionary.Type.SNOWY))
+                event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> BLUEBERRY_PATCHES);
+        }
     }
 
     public void modelLoad(ModelRegistryEvent event) {
