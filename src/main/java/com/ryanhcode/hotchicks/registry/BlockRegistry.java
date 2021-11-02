@@ -21,7 +21,6 @@ public class BlockRegistry {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, HotChickens.MODID);
     //public static final DeferredRegister<BlockPlacerType<?>> BLOCK_PLACER_TYPE = DeferredRegister.create(ForgeRegistries.BLOCK_PLACER_TYPES, HotChickens.MODID);
 
-
     public static final RegistryObject<Block> NEST_BOX = BLOCKS.register("nest_box", () -> new NestBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD)));
     public static final RegistryObject<Item> NEST_BOX_ITEM = ItemRegistry.ITEMS.register("nest_box", () -> new BlockItem(NEST_BOX.get(), new Item.Properties().tab(ItemGroup.TAB_DECORATIONS)));
 
@@ -33,6 +32,9 @@ public class BlockRegistry {
     public static final RegistryObject<Block> COTTON_BUSH = BLOCKS.register("cotton_bush", () -> new BerryBush(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH), ItemRegistry.COTTON));
     public static final RegistryObject<Block> OKRA_BUSH = BLOCKS.register("okra_bush", () -> new BerryBush(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH), ItemRegistry.OKRA));
     public static final RegistryObject<Block> PEPPER_BUSH = BLOCKS.register("pepper_bush", () -> new PepperBerryBush(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH), ItemRegistry.PEPPERS));
+
+    public static final RegistryObject<Block> MANDARIN_LEAVES = BLOCKS.register("mandarin_leaves", FruitLeavesBlock::new);
+    public static final RegistryObject<Item> MANDARIN_LEAVES_ITEM = ItemRegistry.ITEMS.register("mandarin_leaves", () -> new BlockItem(MANDARIN_LEAVES.get(), new Item.Properties().tab(ItemGroup.TAB_DECORATIONS)));
 
     public static final RegistryObject<Block> CORN = BLOCKS.register("corn", () -> new CornBlock(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH), ItemRegistry.CORN));
     public static final RegistryObject<Block> MILLET = BLOCKS.register("millet", () -> new CornBlock(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH), ItemRegistry.MILLET));
@@ -49,7 +51,6 @@ public class BlockRegistry {
 
     public static final RegistryObject<Block> METAL_TROUGH_BLOCK = BLOCKS.register("metal_trough_block", () -> new MetalTroughBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD)));
     public static final RegistryObject<Item> METAL_TROUGH_BLOCK_ITEM = ItemRegistry.ITEMS.register("metal_trough_block", () -> new BlockItem(METAL_TROUGH_BLOCK.get(), new Item.Properties().tab(ItemGroup.TAB_DECORATIONS)));
-
 
     //public static final RegistryObject<Block> METAL_TROUGH_BLOCK = BLOCKS.register("metal_trough_block", () -> new TroughBlock(AbstractBlock.Properties.create(Material.WOOD).hardnessAndResistance(2.5F).sound(SoundType.WOOD)));
     //public static final RegistryObject<Item> METAL_TROUGH_BLOCK_ITEM = ItemRegistry.ITEMS.register("metal_trough_block", () -> new BlockItem(METAL_TROUGH_BLOCK.get(), new Item.Properties().group(ItemGroup.DECORATIONS)));

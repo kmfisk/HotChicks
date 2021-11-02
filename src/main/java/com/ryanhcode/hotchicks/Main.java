@@ -21,14 +21,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
+import net.minecraft.world.FoliageColors;
 import net.minecraft.world.biome.BiomeColors;
 import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
+import net.minecraft.world.gen.blockstateprovider.WeightedBlockStateProvider;
 import net.minecraft.world.gen.feature.*;
-import net.minecraft.world.gen.foliageplacer.FancyFoliagePlacer;
-import net.minecraft.world.gen.trunkplacer.FancyTrunkPlacer;
+import net.minecraft.world.gen.foliageplacer.AcaciaFoliagePlacer;
+import net.minecraft.world.gen.trunkplacer.ForkyTrunkPlacer;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
@@ -41,18 +43,17 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.util.OptionalInt;
 
 @Mod(HotChickens.MODID)
 public class Main {
-    private static final Logger LOGGER = LogManager.getLogger();
-    public static ItemGroup HOT_CHICKS_GROUP;
+    public static ItemGroup HOT_CHICKS_GROUP = new ItemGroup(HotChickens.MODID + ".hot_chicks_group") {
+        @Override
+        public ItemStack makeIcon() {
+            return new ItemStack(ItemRegistry.WHITE_EGG.get());
+        }
+    };
 
     public Main() {
-        // Register the setup method for modloading
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
         EntityRegistry.ENTITIES.register(bus);
@@ -66,62 +67,48 @@ public class Main {
         bus.addListener(this::registerColorHandlerBlocks);
         bus.addListener(this::modelLoad);
 
-        HOT_CHICKS_GROUP = new ItemGroup(ItemGroup.getGroupCountSafe(), "hot_chicks_group") {
-            @Override
-            public ItemStack makeIcon() {
-                return new ItemStack(ItemRegistry.WHITE_EGG.get());
-            }
-        };
-
-
         MinecraftForge.EVENT_BUS.register(this);
     }
 
     public static ConfiguredFeature<?, ?> CORN;
     public static ConfiguredFeature<?, ?> MILLET;
     public static ConfiguredFeature<?, ?> BLUEBERRY_PATCHES;
-    public static ConfiguredFeature<BaseTreeFeatureConfig, ?> MANDARIN_TREES =
-            Feature.TREE.configured((new BaseTreeFeatureConfig.Builder(
-                    new SimpleBlockStateProvider(Blocks.OAK_LOG.defaultBlockState()),
-                    new SimpleBlockStateProvider(Blocks.SPONGE.defaultBlockState()),
-                    new FancyFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(4), 4),
-                    new FancyTrunkPlacer(2
-                            , 10, 4),
-                    new TwoLayerFeature(0, 0, 0, OptionalInt.of(4))))
-                    .ignoreVines()
-                    .heightmap(Heightmap.Type.MOTION_BLOCKING).build());
-
+    public static ConfiguredFeature<BaseTreeFeatureConfig, ?> MANDARIN_TREES;
 
     private void setup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> {//FEATURES
-
-
+        event.enqueueWork(() -> {
             CORN = Feature.RANDOM_PATCH.configured(
-
                     (new BlockClusterFeatureConfig.Builder(
                             new SimpleBlockStateProvider(BlockRegistry.CORN.get().defaultBlockState()),
                             new MilletPlacer(0, 0))).tries(30).xspread(4).yspread(0).zspread(4).noProjection().needWater().build()
-
             ).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
 
             MILLET = Feature.RANDOM_PATCH.configured(
-
                     (new BlockClusterFeatureConfig.Builder(
                             new SimpleBlockStateProvider(BlockRegistry.MILLET.get().defaultBlockState()),
                             new MilletPlacer(0, 0))).tries(30).xspread(10).yspread(0).zspread(10).noProjection().needWater().build()
-
             ).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
 
             BLUEBERRY_PATCHES = Feature.RANDOM_PATCH.configured(
-
-                    (new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(BlockRegistry.BLUEBERRY_BUSH.get().defaultBlockState()), new LowLightPlacer())).tries(200).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK.getBlock())).noProjection().build()
-
+                    (new BlockClusterFeatureConfig.Builder(
+                            new SimpleBlockStateProvider(BlockRegistry.BLUEBERRY_BUSH.get().defaultBlockState()),
+                            new LowLightPlacer())).tries(200).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK.getBlock())).noProjection().build()
             );
-            Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MODID, "mandarin_trees"), MANDARIN_TREES);
-            Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MODID, "millet_patches"), MILLET);
-            Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MODID, "corn_patches"), CORN);
-            Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MODID, "blueberry_patches"), BLUEBERRY_PATCHES);
 
+            MANDARIN_TREES = Feature.TREE.configured((new BaseTreeFeatureConfig.Builder(
+                    new SimpleBlockStateProvider(Blocks.OAK_LOG.defaultBlockState()),
+                    new WeightedBlockStateProvider().add(BlockRegistry.MANDARIN_LEAVES.get().defaultBlockState(), 2).add(Blocks.OAK_LEAVES.defaultBlockState(), 5),
+                    new AcaciaFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(1)),
+                    new ForkyTrunkPlacer(3, 2, 2),
+                    new TwoLayerFeature(1, 0, 2)))
+                    .ignoreVines()
+                    .heightmap(Heightmap.Type.MOTION_BLOCKING).build()
+            );
+
+            Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MODID, "corn_patches"), CORN);
+            Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MODID, "millet_patches"), MILLET);
+            Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MODID, "blueberry_patches"), BLUEBERRY_PATCHES);
+            Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MODID, "mandarin_trees"), MANDARIN_TREES);
 
             RenderTypeLookup.setRenderLayer(BlockRegistry.TRELLIS_BLOCK.get(), RenderType.cutoutMipped());
             RenderTypeLookup.setRenderLayer(BlockRegistry.STRAWBERRY_BUSH.get(), RenderType.cutout());
@@ -134,13 +121,14 @@ public class Main {
             RenderTypeLookup.setRenderLayer(BlockRegistry.LETTUCE_BLOCK.get(), RenderType.cutout());
             RenderTypeLookup.setRenderLayer(BlockRegistry.CORN.get(), RenderType.cutout());
             RenderTypeLookup.setRenderLayer(BlockRegistry.MILLET.get(), RenderType.cutout());
+            RenderTypeLookup.setRenderLayer(BlockRegistry.MANDARIN_LEAVES.get(), RenderType.cutoutMipped());
+
             GlobalEntityTypeAttributes.put(EntityRegistry.HOT_CHICKEN.get(), MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.MOVEMENT_SPEED, 0.25).build());
         });
     }
 
     @SubscribeEvent
     public void biomeLoad(BiomeLoadingEvent event) {
-
         ResourceLocation biomeName = event.getName();
         if (biomeName.equals(Biomes.SAVANNA.location()) || biomeName.equals(Biomes.SHATTERED_SAVANNA.location())) {
             event.getGeneration().getFeatures(GenerationStage.Decoration.LAKES).add(() -> MILLET);
@@ -160,7 +148,6 @@ public class Main {
     }
 
     public void registerRenderers(final FMLClientSetupEvent event) {
-
         ScreenManager.register(ContainerRegistry.NEST.get(), NestScreen::new);
         ScreenManager.register(ContainerRegistry.TROUGH_DOUBLE_METAL.get(), TroughScreen::new);
         ScreenManager.register(ContainerRegistry.TROUGH_DOUBLE.get(), TroughScreen::new);
@@ -174,5 +161,9 @@ public class Main {
         blockcolors.register((state, reader, pos, color) -> {
             return reader != null && pos != null ? BiomeColors.getAverageWaterColor(reader, pos) : -1;
         }, BlockRegistry.TROUGH_BLOCK.get(), BlockRegistry.METAL_TROUGH_BLOCK.get());
+
+        blockcolors.register((state, reader, pos, color) -> {
+            return reader != null && pos != null ? BiomeColors.getAverageFoliageColor(reader, pos) : FoliageColors.getDefaultColor();
+        }, BlockRegistry.MANDARIN_LEAVES.get());
     }
 }
