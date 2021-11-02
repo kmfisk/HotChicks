@@ -1,8 +1,9 @@
 package com.ryanhcode.hotchicks.item;
 
+import com.ryanhcode.hotchicks.Main;
 import com.ryanhcode.hotchicks.entity.base.ChickenBreed;
-import com.ryanhcode.hotchicks.entity.chicken.HotChickenEntity;
-import com.ryanhcode.hotchicks.registry.EntityRegistry;
+import com.ryanhcode.hotchicks.entity.HotChickenEntity;
+import com.ryanhcode.hotchicks.registry.HotEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.entity.EntityType;
@@ -26,12 +27,10 @@ import net.minecraft.world.server.ServerWorld;
 import java.util.Objects;
 
 public class HotSpawnEggItem extends Item {
-
-
     private final ChickenBreed breed;
 
-    public HotSpawnEggItem(Properties properties, ChickenBreed breed) {
-        super(properties);
+    public HotSpawnEggItem(ChickenBreed breed) {
+        super(new Item.Properties().tab(Main.HOT_CHICKS_GROUP));
         this.breed = breed;
     }
 
@@ -51,7 +50,7 @@ public class HotSpawnEggItem extends Item {
                 blockpos1 = blockpos.relative(direction);
             }
 
-            EntityType<?> entitytype = EntityRegistry.HOT_CHICKEN.get();
+            EntityType<?> entitytype = HotEntities.HOT_CHICKEN.get();
             HotChickenEntity e = (HotChickenEntity) entitytype.spawn((ServerWorld) world, itemstack, context.getPlayer(), blockpos1, SpawnReason.SPAWN_EGG, true, !Objects.equals(blockpos, blockpos1) && direction == Direction.UP);
 
             if (e != null) {
@@ -63,10 +62,6 @@ public class HotSpawnEggItem extends Item {
         }
     }
 
-    /**
-     * Called to trigger the item's "innate" right click behavior. To handle when this item is used on a Block, see
-     * {@link #onItemUse}.
-     */
     public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
         ItemStack itemstack = playerIn.getItemInHand(handIn);
         RayTraceResult raytraceresult = getPlayerPOVHitResult(worldIn, playerIn, RayTraceContext.FluidMode.SOURCE_ONLY);
@@ -81,7 +76,7 @@ public class HotSpawnEggItem extends Item {
                 return ActionResult.pass(itemstack);
             } else if (worldIn.mayInteract(playerIn, blockpos) && playerIn.mayUseItemAt(blockpos, blockraytraceresult.getDirection(), itemstack)) {
 
-                EntityType<?> entitytype = EntityRegistry.HOT_CHICKEN.get();
+                EntityType<?> entitytype = HotEntities.HOT_CHICKEN.get();
 
                 HotChickenEntity e = (HotChickenEntity) entitytype.spawn((ServerWorld) worldIn, itemstack, playerIn, blockpos, SpawnReason.SPAWN_EGG, false, false);
                 if (e == null) {

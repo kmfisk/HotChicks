@@ -1,8 +1,10 @@
-package com.ryanhcode.hotchicks.entity.chicken;
+package com.ryanhcode.hotchicks.entity;
 
 import com.ryanhcode.hotchicks.entity.base.*;
+import com.ryanhcode.hotchicks.entity.goal.ChickenBreedGoal;
+import com.ryanhcode.hotchicks.entity.goal.LayEggsGoal;
 import com.ryanhcode.hotchicks.item.HotEggItem;
-import com.ryanhcode.hotchicks.registry.ItemRegistry;
+import com.ryanhcode.hotchicks.registry.HotItems;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
@@ -32,7 +34,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 
 public class HotChickenEntity extends LivestockEntity {
-
     public ChickenBreed breed = ChickenBreed.JUNGLEFOWL;
 
     private static final Ingredient TEMPTATION_ITEMS = Ingredient.of(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);
@@ -264,7 +265,7 @@ public class HotChickenEntity extends LivestockEntity {
             return;
         }
 
-        ItemStack stack = new ItemStack(ItemRegistry.WHITE_EGG.get());
+        ItemStack stack = new ItemStack(HotItems.WHITE_EGG.get());
 
         if (other.breed == this.breed) {
             HotEggItem.setBreed(stack, this.breed.toString());

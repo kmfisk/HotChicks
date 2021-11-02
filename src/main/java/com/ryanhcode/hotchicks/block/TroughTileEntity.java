@@ -1,7 +1,7 @@
 package com.ryanhcode.hotchicks.block;
 
-import com.ryanhcode.hotchicks.registry.BlockRegistry;
-import com.ryanhcode.hotchicks.registry.TileEntityRegistry;
+import com.ryanhcode.hotchicks.registry.HotBlocks;
+import com.ryanhcode.hotchicks.registry.HotTileEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -33,7 +33,7 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
     }
 
     public TroughTileEntity() {
-        this(TileEntityRegistry.TROUGH.get());
+        this(HotTileEntities.TROUGH.get());
     }
 
     public TroughTileEntity(int size) {
@@ -119,7 +119,7 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
             this.scheduleTick();
         } else {
             BlockState blockstate = this.getBlockState();
-            if (!(blockstate.is(BlockRegistry.TROUGH_BLOCK.get()) || blockstate.is(BlockRegistry.METAL_TROUGH_BLOCK.get()))) {
+            if (!(blockstate.is(HotBlocks.TROUGH_BLOCK.get()) || blockstate.is(HotBlocks.METAL_TROUGH_BLOCK.get()))) {
                 this.setRemoved();
                 return;
             }

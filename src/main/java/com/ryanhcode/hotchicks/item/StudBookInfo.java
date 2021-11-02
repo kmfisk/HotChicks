@@ -3,7 +3,7 @@ package com.ryanhcode.hotchicks.item;
 
 import com.ryanhcode.hotchicks.entity.base.ChickenBreed;
 import com.ryanhcode.hotchicks.entity.base.ChickenStats;
-import com.ryanhcode.hotchicks.entity.chicken.HotChickenEntity;
+import com.ryanhcode.hotchicks.entity.HotChickenEntity;
 import net.minecraft.client.gui.screen.ReadBookScreen;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;

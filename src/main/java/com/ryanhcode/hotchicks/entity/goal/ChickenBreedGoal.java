@@ -1,7 +1,8 @@
-package com.ryanhcode.hotchicks.entity.base;
+package com.ryanhcode.hotchicks.entity.goal;
 
 
-import com.ryanhcode.hotchicks.entity.chicken.HotChickenEntity;
+import com.ryanhcode.hotchicks.entity.HotChickenEntity;
+import com.ryanhcode.hotchicks.entity.base.Sex;
 import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.world.World;

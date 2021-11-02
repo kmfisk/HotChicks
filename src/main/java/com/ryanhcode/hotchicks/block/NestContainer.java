@@ -1,7 +1,7 @@
 package com.ryanhcode.hotchicks.block;
 
 import com.ryanhcode.hotchicks.item.HotEggItem;
-import com.ryanhcode.hotchicks.registry.ContainerRegistry;
+import com.ryanhcode.hotchicks.registry.HotContainers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,7 +23,7 @@ public class NestContainer extends Container {
     }
 
     public NestContainer(int id, PlayerInventory playerInventory, IInventory inventory) {
-        super(ContainerRegistry.NEST.get(), id);
+        super(HotContainers.NEST.get(), id);
         this.hopperInventory = inventory;
         checkContainerSize(inventory, 5);
         inventory.startOpen(playerInventory.player);

@@ -1,7 +1,7 @@
 package com.ryanhcode.hotchicks.block;
 
 import com.ryanhcode.hotchicks.block.crop.TrellisCrop;
-import com.ryanhcode.hotchicks.registry.ItemRegistry;
+import com.ryanhcode.hotchicks.registry.HotItems;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -47,25 +47,25 @@ public class TrellisBlock extends Block implements IGrowable {
         ItemStack stack = player.getItemInHand(handIn);
         if (stack.isEmpty()) {
 
-        } else if (stack.getItem() == ItemRegistry.GRAPES.get() && state.getValue(CROP) == TrellisCrop.NONE) {
+        } else if (stack.getItem() == HotItems.GRAPES.get() && state.getValue(CROP) == TrellisCrop.NONE) {
             worldIn.setBlockAndUpdate(pos, state.setValue(CROP, TrellisCrop.GRAPES));
             stack.setCount(stack.getCount() - 1);
             player.setItemInHand(handIn, stack);
             player.swing(handIn, false);
             return ActionResultType.CONSUME;
-        } else if (stack.getItem() == ItemRegistry.KIWI.get() && state.getValue(CROP) == TrellisCrop.NONE) {
+        } else if (stack.getItem() == HotItems.KIWI.get() && state.getValue(CROP) == TrellisCrop.NONE) {
             worldIn.setBlockAndUpdate(pos, state.setValue(CROP, TrellisCrop.KIWI));
             stack.setCount(stack.getCount() - 1);
             player.setItemInHand(handIn, stack);
             player.swing(handIn, false);
             return ActionResultType.CONSUME;
-        } else if (stack.getItem() == ItemRegistry.PEAS.get() && state.getValue(CROP) == TrellisCrop.NONE) {
+        } else if (stack.getItem() == HotItems.PEAS.get() && state.getValue(CROP) == TrellisCrop.NONE) {
             worldIn.setBlockAndUpdate(pos, state.setValue(CROP, TrellisCrop.PEAS));
             stack.setCount(stack.getCount() - 1);
             player.setItemInHand(handIn, stack);
             player.swing(handIn, false);
             return ActionResultType.CONSUME;
-        } else if (stack.getItem() == ItemRegistry.TOMATO.get() && state.getValue(CROP) == TrellisCrop.NONE) {
+        } else if (stack.getItem() == HotItems.TOMATO.get() && state.getValue(CROP) == TrellisCrop.NONE) {
             worldIn.setBlockAndUpdate(pos, state.setValue(CROP, TrellisCrop.TOMATO));
             stack.setCount(stack.getCount() - 1);
             player.setItemInHand(handIn, stack);
@@ -77,19 +77,19 @@ public class TrellisBlock extends Block implements IGrowable {
             TrellisCrop crop = state.getValue(CROP);
             player.swing(handIn, false);
             if (crop == TrellisCrop.GRAPES) {
-                drop(state, worldIn, pos, ItemRegistry.TOMATO);
+                drop(state, worldIn, pos, HotItems.TOMATO);
                 return ActionResultType.CONSUME;
             }
             if (crop == TrellisCrop.KIWI) {
-                drop(state, worldIn, pos, ItemRegistry.KIWI);
+                drop(state, worldIn, pos, HotItems.KIWI);
                 return ActionResultType.CONSUME;
             }
             if (crop == TrellisCrop.PEAS) {
-                drop(state, worldIn, pos, ItemRegistry.PEAS);
+                drop(state, worldIn, pos, HotItems.PEAS);
                 return ActionResultType.CONSUME;
             }
             if (crop == TrellisCrop.TOMATO) {
-                drop(state, worldIn, pos, ItemRegistry.TOMATO);
+                drop(state, worldIn, pos, HotItems.TOMATO);
                 return ActionResultType.CONSUME;
             }
         }

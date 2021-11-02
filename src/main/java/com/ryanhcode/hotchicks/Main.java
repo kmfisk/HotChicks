@@ -10,8 +10,6 @@ import com.ryanhcode.hotchicks.worldgen.LowLightPlacer;
 import com.ryanhcode.hotchicks.worldgen.MilletPlacer;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -49,23 +47,23 @@ public class Main {
     public static ItemGroup HOT_CHICKS_GROUP = new ItemGroup(HotChickens.MODID + ".hot_chicks_group") {
         @Override
         public ItemStack makeIcon() {
-            return new ItemStack(ItemRegistry.WHITE_EGG.get());
+            return new ItemStack(HotItems.WHITE_EGG.get());
         }
     };
 
     public Main() {
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+        IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        EntityRegistry.ENTITIES.register(bus);
-        TileEntityRegistry.ENTITIES.register(bus);
-        BlockRegistry.BLOCKS.register(bus);
-        ItemRegistry.ITEMS.register(bus);
-        ContainerRegistry.CONTAINERS.register(bus);
+        HotEntities.ENTITIES.register(modBus);
+        HotTileEntities.ENTITIES.register(modBus);
+        HotBlocks.REGISTRAR.register(modBus);
+        HotItems.ITEMS.register(modBus);
+        HotContainers.CONTAINERS.register(modBus);
 
-        bus.addListener(this::setup);
-        bus.addListener(this::registerRenderers);
-        bus.addListener(this::registerColorHandlerBlocks);
-        bus.addListener(this::modelLoad);
+        modBus.addListener(this::setup);
+        modBus.addListener(this::registerRenderers);
+        modBus.addListener(this::registerColorHandlerBlocks);
+        modBus.addListener(this::modelLoad);
 
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -79,25 +77,25 @@ public class Main {
         event.enqueueWork(() -> {
             CORN = Feature.RANDOM_PATCH.configured(
                     (new BlockClusterFeatureConfig.Builder(
-                            new SimpleBlockStateProvider(BlockRegistry.CORN.get().defaultBlockState()),
+                            new SimpleBlockStateProvider(HotBlocks.CORN_CROP.get().defaultBlockState()),
                             new MilletPlacer(0, 0))).tries(30).xspread(4).yspread(0).zspread(4).noProjection().needWater().build()
             ).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
 
             MILLET = Feature.RANDOM_PATCH.configured(
                     (new BlockClusterFeatureConfig.Builder(
-                            new SimpleBlockStateProvider(BlockRegistry.MILLET.get().defaultBlockState()),
+                            new SimpleBlockStateProvider(HotBlocks.MILLET_CROP.get().defaultBlockState()),
                             new MilletPlacer(0, 0))).tries(30).xspread(10).yspread(0).zspread(10).noProjection().needWater().build()
             ).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
 
             BLUEBERRY_PATCHES = Feature.RANDOM_PATCH.configured(
                     (new BlockClusterFeatureConfig.Builder(
-                            new SimpleBlockStateProvider(BlockRegistry.BLUEBERRY_BUSH.get().defaultBlockState()),
+                            new SimpleBlockStateProvider(HotBlocks.BLUEBERRY_BUSH.get().defaultBlockState()),
                             new LowLightPlacer())).tries(200).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK.getBlock())).noProjection().build()
             );
 
             MANDARIN_TREES = Feature.TREE.configured((new BaseTreeFeatureConfig.Builder(
                     new SimpleBlockStateProvider(Blocks.OAK_LOG.defaultBlockState()),
-                    new WeightedBlockStateProvider().add(BlockRegistry.MANDARIN_LEAVES.get().defaultBlockState(), 2).add(Blocks.OAK_LEAVES.defaultBlockState(), 5),
+                    new WeightedBlockStateProvider().add(HotBlocks.MANDARIN_LEAVES.get().defaultBlockState(), 2).add(Blocks.OAK_LEAVES.defaultBlockState(), 5),
                     new AcaciaFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(1)),
                     new ForkyTrunkPlacer(3, 2, 2),
                     new TwoLayerFeature(1, 0, 2)))
@@ -110,37 +108,24 @@ public class Main {
             Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MODID, "blueberry_patches"), BLUEBERRY_PATCHES);
             Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MODID, "mandarin_trees"), MANDARIN_TREES);
 
-            RenderTypeLookup.setRenderLayer(BlockRegistry.TRELLIS_BLOCK.get(), RenderType.cutoutMipped());
-            RenderTypeLookup.setRenderLayer(BlockRegistry.STRAWBERRY_BUSH.get(), RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(BlockRegistry.BLUEBERRY_BUSH.get(), RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(BlockRegistry.COTTON_BUSH.get(), RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(BlockRegistry.PEPPER_BUSH.get(), RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(BlockRegistry.OKRA_BUSH.get(), RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(BlockRegistry.OATS_BLOCK.get(), RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(BlockRegistry.GARLIC_BLOCK.get(), RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(BlockRegistry.LETTUCE_BLOCK.get(), RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(BlockRegistry.CORN.get(), RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(BlockRegistry.MILLET.get(), RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(BlockRegistry.MANDARIN_LEAVES.get(), RenderType.cutoutMipped());
-
-            GlobalEntityTypeAttributes.put(EntityRegistry.HOT_CHICKEN.get(), MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.MOVEMENT_SPEED, 0.25).build());
+            GlobalEntityTypeAttributes.put(HotEntities.HOT_CHICKEN.get(), MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.MOVEMENT_SPEED, 0.25).build());
         });
     }
 
     @SubscribeEvent
     public void biomeLoad(BiomeLoadingEvent event) {
         ResourceLocation biomeName = event.getName();
-        if (biomeName.equals(Biomes.SAVANNA.location()) || biomeName.equals(Biomes.SHATTERED_SAVANNA.location())) {
+        if (biomeName.equals(Biomes.SAVANNA.location()) || biomeName.equals(Biomes.SHATTERED_SAVANNA.location()))
             event.getGeneration().getFeatures(GenerationStage.Decoration.LAKES).add(() -> MILLET);
-        }
-        if (biomeName.equals(Biomes.PLAINS.location()) || biomeName.equals(Biomes.SUNFLOWER_PLAINS.location())) {
-            event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> CORN);
-            event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> MANDARIN_TREES);
-        }
 
-        if (biomeName.equals(Biomes.TAIGA_HILLS.location()) || biomeName.equals(Biomes.TAIGA.location()) || biomeName.equals(Biomes.TAIGA_MOUNTAINS.location())) {
+        if (biomeName.equals(Biomes.PLAINS.location()) || biomeName.equals(Biomes.SUNFLOWER_PLAINS.location()))
+            event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> CORN);
+
+        if (biomeName.equals(Biomes.MOUNTAINS.location()))
+            event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> MANDARIN_TREES);
+
+        if (biomeName.equals(Biomes.TAIGA_HILLS.location()) || biomeName.equals(Biomes.TAIGA.location()) || biomeName.equals(Biomes.TAIGA_MOUNTAINS.location()))
             event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> BLUEBERRY_PATCHES);
-        }
     }
 
     public void modelLoad(ModelRegistryEvent event) {
@@ -148,22 +133,22 @@ public class Main {
     }
 
     public void registerRenderers(final FMLClientSetupEvent event) {
-        ScreenManager.register(ContainerRegistry.NEST.get(), NestScreen::new);
-        ScreenManager.register(ContainerRegistry.TROUGH_DOUBLE_METAL.get(), TroughScreen::new);
-        ScreenManager.register(ContainerRegistry.TROUGH_DOUBLE.get(), TroughScreen::new);
-        ScreenManager.register(ContainerRegistry.TROUGH_SINGLE.get(), TroughScreen::new);
+        ScreenManager.register(HotContainers.NEST.get(), NestScreen::new);
+        ScreenManager.register(HotContainers.TROUGH_DOUBLE_METAL.get(), TroughScreen::new);
+        ScreenManager.register(HotContainers.TROUGH_DOUBLE.get(), TroughScreen::new);
+        ScreenManager.register(HotContainers.TROUGH_SINGLE.get(), TroughScreen::new);
 
-        RenderingRegistry.registerEntityRenderingHandler(EntityRegistry.HOT_CHICKEN.get(), HotChickenRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(HotEntities.HOT_CHICKEN.get(), HotChickenRenderer::new);
     }
 
     public void registerColorHandlerBlocks(ColorHandlerEvent.Block event) {
         BlockColors blockcolors = event.getBlockColors();
         blockcolors.register((state, reader, pos, color) -> {
             return reader != null && pos != null ? BiomeColors.getAverageWaterColor(reader, pos) : -1;
-        }, BlockRegistry.TROUGH_BLOCK.get(), BlockRegistry.METAL_TROUGH_BLOCK.get());
+        }, HotBlocks.TROUGH_BLOCK.get(), HotBlocks.METAL_TROUGH_BLOCK.get());
 
         blockcolors.register((state, reader, pos, color) -> {
             return reader != null && pos != null ? BiomeColors.getAverageFoliageColor(reader, pos) : FoliageColors.getDefaultColor();
-        }, BlockRegistry.MANDARIN_LEAVES.get());
+        }, HotBlocks.MANDARIN_LEAVES.get());
     }
 }

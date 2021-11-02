@@ -2,7 +2,7 @@ package com.ryanhcode.hotchicks.item;
 
 import net.minecraft.item.Food;
 
-public class Foods {
+public class HotFoods {
     public static final Food LETTUCE = (new Food.Builder()).nutrition(3).saturationMod(0.3F).build();
     public static final Food GARLIC = (new Food.Builder()).nutrition(1).saturationMod(0.3F).build();
     public static final Food GRAPES = (new Food.Builder()).nutrition(2).saturationMod(0.3F).build();

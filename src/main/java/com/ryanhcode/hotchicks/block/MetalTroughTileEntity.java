@@ -1,6 +1,6 @@
 package com.ryanhcode.hotchicks.block;
 
-import com.ryanhcode.hotchicks.registry.TileEntityRegistry;
+import com.ryanhcode.hotchicks.registry.HotTileEntities;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 
@@ -10,6 +10,6 @@ public class MetalTroughTileEntity extends TroughTileEntity implements ITickable
     }
 
     public MetalTroughTileEntity() {
-        this(TileEntityRegistry.METAL_TROUGH.get());
+        this(HotTileEntities.METAL_TROUGH.get());
     }
 }

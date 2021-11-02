@@ -1,11 +1,11 @@
 package com.ryanhcode.hotchicks.block;
 
 import com.ryanhcode.hotchicks.entity.base.ChickenBreed;
-import com.ryanhcode.hotchicks.entity.chicken.HotChickenEntity;
+import com.ryanhcode.hotchicks.entity.HotChickenEntity;
 import com.ryanhcode.hotchicks.item.HotEggItem;
-import com.ryanhcode.hotchicks.registry.BlockRegistry;
-import com.ryanhcode.hotchicks.registry.EntityRegistry;
-import com.ryanhcode.hotchicks.registry.TileEntityRegistry;
+import com.ryanhcode.hotchicks.registry.HotBlocks;
+import com.ryanhcode.hotchicks.registry.HotEntities;
+import com.ryanhcode.hotchicks.registry.HotTileEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -39,7 +39,7 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
     }
 
     public NestTileEntity() {
-        this(TileEntityRegistry.NEST.get());
+        this(HotTileEntities.NEST.get());
     }
 
     public CompoundNBT save(CompoundNBT compound) {
@@ -111,7 +111,7 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
             this.scheduleTick();
         } else {
             BlockState blockstate = this.getBlockState();
-            if (!(blockstate.is(BlockRegistry.NEST_BOX.get()) || blockstate.is(BlockRegistry.NEST.get()))) {
+            if (!(blockstate.is(HotBlocks.NEST_BOX.get()) || blockstate.is(HotBlocks.NEST.get()))) {
                 this.setRemoved();
                 return;
             }
@@ -160,7 +160,7 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
                 int time_left = tag.getInt("time_left") - 1;
                 if (time_left <= 0) {
 
-                    HotChickenEntity chicken = new HotChickenEntity(EntityRegistry.HOT_CHICKEN.get(), level);
+                    HotChickenEntity chicken = new HotChickenEntity(HotEntities.HOT_CHICKEN.get(), level);
                     chicken.setPos(getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.2, getBlockPos().getZ() + 0.5);
                     level.addFreshEntity(
                             chicken

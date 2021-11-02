@@ -1,6 +1,6 @@
 package com.ryanhcode.hotchicks.block;
 
-import com.ryanhcode.hotchicks.registry.TileEntityRegistry;
+import com.ryanhcode.hotchicks.registry.HotTileEntities;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -176,7 +176,7 @@ public class TroughBlock extends ContainerBlock {
             bipredicate = ChestBlock::isChestBlockedAt;
         }
 
-        return TileEntityMerger.combineWithNeigbour(TileEntityRegistry.TROUGH.get(), TroughBlock::getChestMergerType, TroughBlock::getDirectionToAttached, FACING, state, world, pos, bipredicate);
+        return TileEntityMerger.combineWithNeigbour(HotTileEntities.TROUGH.get(), TroughBlock::getChestMergerType, TroughBlock::getDirectionToAttached, FACING, state, world, pos, bipredicate);
     }
 
 

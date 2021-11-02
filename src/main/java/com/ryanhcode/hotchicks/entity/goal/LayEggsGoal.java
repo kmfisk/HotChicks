@@ -1,8 +1,8 @@
-package com.ryanhcode.hotchicks.entity.base;
+package com.ryanhcode.hotchicks.entity.goal;
 
 import com.ryanhcode.hotchicks.block.NestTileEntity;
-import com.ryanhcode.hotchicks.entity.chicken.HotChickenEntity;
-import com.ryanhcode.hotchicks.registry.BlockRegistry;
+import com.ryanhcode.hotchicks.entity.HotChickenEntity;
+import com.ryanhcode.hotchicks.registry.HotBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.item.ItemStack;
@@ -32,7 +32,7 @@ public class LayEggsGoal extends MoveToBlockGoal {
     public LayEggsGoal(HotChickenEntity creature) {
 
         super(creature, 1.3, 24, 3);
-        this.block = BlockRegistry.NEST_BOX.get();
+        this.block = HotBlocks.NEST_BOX.get();
         this.entity = creature;
     }
 
@@ -161,13 +161,13 @@ public class LayEggsGoal extends MoveToBlockGoal {
 
     @Nullable
     private BlockPos findTarget(BlockPos pos, IBlockReader worldIn) {
-        if (worldIn.getBlockState(pos).is(this.block) || worldIn.getBlockState(pos).is(BlockRegistry.NEST.get())) {
+        if (worldIn.getBlockState(pos).is(this.block) || worldIn.getBlockState(pos).is(HotBlocks.NEST.get())) {
             return pos;
         } else {
             BlockPos[] ablockpos = new BlockPos[]{pos.below(), pos.west(), pos.east(), pos.north(), pos.south(), pos.below().below()};
 
             for (BlockPos blockpos : ablockpos) {
-                if (worldIn.getBlockState(blockpos).is(this.block) || worldIn.getBlockState(blockpos).is(BlockRegistry.NEST.get())) {
+                if (worldIn.getBlockState(blockpos).is(this.block) || worldIn.getBlockState(blockpos).is(HotBlocks.NEST.get())) {
                     return blockpos;
                 }
             }
@@ -184,7 +184,7 @@ public class LayEggsGoal extends MoveToBlockGoal {
         if (ichunk == null) {
             return false;
         } else {
-            return (ichunk.getBlockState(pos).is(this.block) || ichunk.getBlockState(pos).is(BlockRegistry.NEST.get())) && ichunk.getBlockState(pos.above()).isAir() && ichunk.getBlockState(pos.above(2)).isAir();
+            return (ichunk.getBlockState(pos).is(this.block) || ichunk.getBlockState(pos).is(HotBlocks.NEST.get())) && ichunk.getBlockState(pos.above()).isAir() && ichunk.getBlockState(pos.above(2)).isAir();
         }
     }
 }
