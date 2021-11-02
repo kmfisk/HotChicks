@@ -14,10 +14,10 @@ public enum TroughFillType implements IStringSerializable {
     }
 
     public String toString() {
-        return this.getString();
+        return this.getSerializedName();
     }
 
-    public String getString() {
+    public String getSerializedName() {
         return this.name;
     }
 }

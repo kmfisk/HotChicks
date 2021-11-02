@@ -1,7 +1,5 @@
 package com.ryanhcode.hotchicks.entity.base;
 
-import net.minecraft.entity.passive.PigEntity;
-
 public enum Sex {
     MALE,
     FEMALE;

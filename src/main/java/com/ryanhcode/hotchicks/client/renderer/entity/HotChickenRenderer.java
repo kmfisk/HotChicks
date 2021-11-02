@@ -7,11 +7,9 @@ import com.ryanhcode.hotchicks.entity.base.LivestockEntity;
 import com.ryanhcode.hotchicks.entity.base.Sex;
 import com.ryanhcode.hotchicks.entity.chicken.HotChickenEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.ChickenRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.client.renderer.entity.LivingRenderer;
 import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -28,31 +26,31 @@ public class HotChickenRenderer<T extends LivestockEntity, M extends EntityModel
     }
 
     @Override
-    protected boolean canRenderName(T entity) {
+    protected boolean shouldShowName(T entity) {
         return false;
     }
 
     @Override
     public void render(T entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
         HotChickenEntity chicken = (HotChickenEntity) entityIn;
-        boolean isChild = chicken.isChild();
+        boolean isChild = chicken.isBaby();
 
         if (isChild) {
-            entityModel = (M) chickModel;
+            model = (M) chickModel;
         } else {
-            entityModel = chicken.getSex() == Sex.MALE ? (M) roosterModel : (M) henModel;
+            model = chicken.getSex() == Sex.MALE ? (M) roosterModel : (M) henModel;
         }
 
         super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
     @Override
-    public ResourceLocation getEntityTexture(T entity) {
+    public ResourceLocation getTextureLocation(T entity) {
 
         if (entity instanceof HotChickenEntity) {
             HotChickenEntity chicken = (HotChickenEntity) entity;
 
-            boolean isChild = chicken.isChild();
+            boolean isChild = chicken.isBaby();
             String path;
 
             ChickenBreed breed = chicken.getBreed().equals("not_set") ? ChickenBreed.LEGHORN : ChickenBreed.valueOf(chicken.getBreed());

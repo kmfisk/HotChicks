@@ -14,7 +14,7 @@ public class ChickenStats {
         this.egg_speed = egg_speed;
     }
 
-    public ChickenStats copy(){
+    public ChickenStats copy() {
         return new ChickenStats(carcass_quality, growth_rate, egg_speed);
     }
 
@@ -31,14 +31,14 @@ public class ChickenStats {
         ChickenStats stats = copy();
 
         Random rand = new Random(System.currentTimeMillis());
-        if(rand.nextFloat() < chance){
-            stats.carcass_quality+=rand.nextFloat() < 0.5 ? 1 : -1;
+        if (rand.nextFloat() < chance) {
+            stats.carcass_quality += rand.nextFloat() < 0.5 ? 1 : -1;
         }
-        if(rand.nextFloat() < chance){
-            stats.growth_rate+=rand.nextFloat() < 0.5 ? 1 : -1;
+        if (rand.nextFloat() < chance) {
+            stats.growth_rate += rand.nextFloat() < 0.5 ? 1 : -1;
         }
-        if(rand.nextFloat() < chance){
-            stats.egg_speed+=rand.nextFloat() < 0.5 ? 1 : -1;
+        if (rand.nextFloat() < chance) {
+            stats.egg_speed += rand.nextFloat() < 0.5 ? 1 : -1;
         }
 
         return stats;

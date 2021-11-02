@@ -1,9 +1,9 @@
 package com.ryanhcode.hotchicks.block.trellis;
 
-import net.minecraftforge.client.model.IModelLoader;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import net.minecraft.resources.IResourceManager;
+import net.minecraftforge.client.model.IModelLoader;
 
 public class TrellisModelLoader implements IModelLoader<TrellisGeometry> {
 

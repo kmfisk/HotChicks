@@ -3,10 +3,13 @@ package com.ryanhcode.hotchicks.entity.chicken;
 import com.ryanhcode.hotchicks.entity.base.*;
 import com.ryanhcode.hotchicks.item.HotEggItem;
 import com.ryanhcode.hotchicks.registry.ItemRegistry;
-import net.minecraft.entity.*;
+import net.minecraft.entity.AgeableEntity;
+import net.minecraft.entity.EntitySize;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.Pose;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.passive.*;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -20,8 +23,6 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.server.ServerWorld;
@@ -34,29 +35,30 @@ public class HotChickenEntity extends LivestockEntity {
 
     public ChickenBreed breed = ChickenBreed.JUNGLEFOWL;
 
-    private static final Ingredient TEMPTATION_ITEMS = Ingredient.fromItems(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);
+    private static final Ingredient TEMPTATION_ITEMS = Ingredient.of(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);
 
-    private static final DataParameter<Integer> egg_timer = makeStat(DataSerializers.VARINT);
+    private static final DataParameter<Integer> egg_timer = makeStat(DataSerializers.INT);
 
-    private static final DataParameter<Integer> chick_type = makeStat(DataSerializers.VARINT);
-    private static final DataParameter<Integer> tameness = makeStat(DataSerializers.VARINT);
-    private static final DataParameter<Integer> carcass_quality = makeStat(DataSerializers.VARINT);
-    private static final DataParameter<Integer> growth_rate = makeStat(DataSerializers.VARINT);
-    private static final DataParameter<Integer> egg_speed = makeStat(DataSerializers.VARINT);
+    private static final DataParameter<Integer> chick_type = makeStat(DataSerializers.INT);
+    private static final DataParameter<Integer> tameness = makeStat(DataSerializers.INT);
+    private static final DataParameter<Integer> carcass_quality = makeStat(DataSerializers.INT);
+    private static final DataParameter<Integer> growth_rate = makeStat(DataSerializers.INT);
+    private static final DataParameter<Integer> egg_speed = makeStat(DataSerializers.INT);
 
     private static final DataParameter<String> breed_data = makeStat(DataSerializers.STRING);
     private static final DataParameter<String> variant = makeStat(DataSerializers.STRING);
 
-    public int getTameness(){
-        return dataManager.get(tameness);
+    public int getTameness() {
+        return entityData.get(tameness);
     }
-    public void setTameness(int tameness){
-        dataManager.set(this.tameness, tameness);
+
+    public void setTameness(int tameness) {
+        entityData.set(this.tameness, tameness);
     }
 
     @Override
-    public void setChild(boolean childZombie) {
-        super.setChild(childZombie);
+    public void setBaby(boolean childZombie) {
+        super.setBaby(childZombie);
     }
 
     public HotChickenEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
@@ -64,8 +66,8 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
 
-    public String getBreed(){
-        return dataManager.get(breed_data);
+    public String getBreed() {
+        return entityData.get(breed_data);
     }
 
     protected void registerGoals() {
@@ -81,142 +83,145 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     protected float getStandingEyeHeight(Pose poseIn, EntitySize sizeIn) {
-        return this.isChild() ? sizeIn.height * 0.85F : sizeIn.height * 0.92F;
+        return this.isBaby() ? sizeIn.height * 0.85F : sizeIn.height * 0.92F;
     }
 
-    public boolean isBreedingItem(ItemStack stack) {
+    public boolean isFood(ItemStack stack) {
         return TEMPTATION_ITEMS.test(stack);
     }
 
 
     @Override
-    public double getMaleToFemaleChance() { return 0.333; }
-
-    private Biome getBiome() {
-        int x = MathHelper.floor(this.getPosX());
-        int z = MathHelper.floor(this.getPosZ());
-        return this.world.getBiome(new BlockPos(x, 0, z));
+    public double getMaleToFemaleChance() {
+        return 0.333;
     }
 
-    public static DataParameter makeStat(IDataSerializer dataSerializer){
-        return EntityDataManager.createKey(HotChickenEntity.class, dataSerializer);
+    private Biome getBiome() {
+        int x = MathHelper.floor(this.getX());
+        int z = MathHelper.floor(this.getZ());
+        return this.level.getBiome(new BlockPos(x, 0, z));
+    }
+
+    public static DataParameter makeStat(IDataSerializer dataSerializer) {
+        return EntityDataManager.defineId(HotChickenEntity.class, dataSerializer);
     }
 
     @Override
-    public void livingTick() {
-        super.livingTick();
+    public void aiStep() {
+        super.aiStep();
 
-        if(dataManager.get(breed_data).equals("not_set")){
+        if (entityData.get(breed_data).equals("not_set")) {
             ChickenBreed breed = ChickenBreed.JUNGLEFOWL;
             this.breed = breed;
 
-            dataManager.set(breed_data, breed.toString());
-            dataManager.set(chick_type, breed.randomChickIndex());
+            entityData.set(breed_data, breed.toString());
+            entityData.set(chick_type, breed.randomChickIndex());
         }
-        if(dataManager.get(variant).equals("not_set")){
+        if (entityData.get(variant).equals("not_set")) {
             setVariant(breed.randomVariant());
         }
 
-        if(!getHeldItemMainhand().isEmpty()){
-            int timer = dataManager.get(egg_timer) + 1;
-            if(timer < getMaxEggTimer()+1) {
-                dataManager.set(egg_timer, timer);
+        if (!getMainHandItem().isEmpty()) {
+            int timer = entityData.get(egg_timer) + 1;
+            if (timer < getMaxEggTimer() + 1) {
+                entityData.set(egg_timer, timer);
             }
         }
     }
 
-    public int getMaxEggTimer(){
+    public int getMaxEggTimer() {
         return 200;
     }
 
 
-    public int getEggTimer(){
-        return dataManager.get(egg_timer);
+    public int getEggTimer() {
+        return entityData.get(egg_timer);
     }
 
-    public ChickenStats getStats(){
+    public ChickenStats getStats() {
         return new ChickenStats(
-                dataManager.get(carcass_quality),
-                dataManager.get(growth_rate),
-                dataManager.get(egg_speed)
+                entityData.get(carcass_quality),
+                entityData.get(growth_rate),
+                entityData.get(egg_speed)
         );
     }
-    public void setStats(int carcass_quality, int growth_rate, int egg_speed){
-        dataManager.set(this.carcass_quality, carcass_quality);
-        dataManager.set(this.growth_rate, growth_rate);
-        dataManager.set(this.egg_speed, egg_speed);
+
+    public void setStats(int carcass_quality, int growth_rate, int egg_speed) {
+        entityData.set(this.carcass_quality, carcass_quality);
+        entityData.set(this.growth_rate, growth_rate);
+        entityData.set(this.egg_speed, egg_speed);
     }
 
-    public void setStats(ChickenStats stats){
-        dataManager.set(this.carcass_quality, stats.carcass_quality);
-        dataManager.set(this.growth_rate, stats.growth_rate);
-        dataManager.set(this.egg_speed, stats.egg_speed);
+    public void setStats(ChickenStats stats) {
+        entityData.set(this.carcass_quality, stats.carcass_quality);
+        entityData.set(this.growth_rate, stats.growth_rate);
+        entityData.set(this.egg_speed, stats.egg_speed);
     }
 
 
-    public void setVariant(String v){
-        dataManager.set(this.variant, v);
+    public void setVariant(String v) {
+        entityData.set(this.variant, v);
     }
 
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
-        compound.putInt("egg_timer", dataManager.get(egg_timer));
-        compound.putInt("tameness", dataManager.get(tameness));
-        compound.putInt("carcass_quality", dataManager.get(carcass_quality));
-        compound.putInt("growth_rate", dataManager.get(growth_rate));
-        compound.putInt("egg_speed", dataManager.get(egg_speed));
+    public void addAdditionalSaveData(CompoundNBT compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putInt("egg_timer", entityData.get(egg_timer));
+        compound.putInt("tameness", entityData.get(tameness));
+        compound.putInt("carcass_quality", entityData.get(carcass_quality));
+        compound.putInt("growth_rate", entityData.get(growth_rate));
+        compound.putInt("egg_speed", entityData.get(egg_speed));
         compound.putString("breed", breed.toString());
-        compound.putString("variant", dataManager.get(variant));
+        compound.putString("variant", entityData.get(variant));
     }
 
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
-        if(compound.contains("carcass_quality")) {
-            dataManager.set(egg_timer, compound.getInt("egg_timer"));
-            dataManager.set(tameness, compound.getInt("tameness"));
-            dataManager.set(carcass_quality, compound.getInt("carcass_quality"));
-            dataManager.set(growth_rate, compound.getInt("growth_rate"));
-            dataManager.set(egg_speed, compound.getInt("egg_speed"));
-            dataManager.set(variant, compound.getString("variant"));
-            dataManager.set(chick_type, compound.getInt("chick_type"));
+    public void readAdditionalSaveData(CompoundNBT compound) {
+        super.readAdditionalSaveData(compound);
+        if (compound.contains("carcass_quality")) {
+            entityData.set(egg_timer, compound.getInt("egg_timer"));
+            entityData.set(tameness, compound.getInt("tameness"));
+            entityData.set(carcass_quality, compound.getInt("carcass_quality"));
+            entityData.set(growth_rate, compound.getInt("growth_rate"));
+            entityData.set(egg_speed, compound.getInt("egg_speed"));
+            entityData.set(variant, compound.getString("variant"));
+            entityData.set(chick_type, compound.getInt("chick_type"));
         }
-        if(compound.contains("breed")){
+        if (compound.contains("breed")) {
             String breed = compound.getString("breed");
             this.breed = ChickenBreed.valueOf(breed);
-            dataManager.set(breed_data, this.breed.toString());
+            entityData.set(breed_data, this.breed.toString());
         }
     }
 
 
     @Nullable
     @Override
-    public AgeableEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
+    public AgeableEntity getBreedOffspring(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
         return null;
     }
 
-    public void registerData() {
-        super.registerData();
-        this.dataManager.register(egg_timer, 0);
-        this.dataManager.register(chick_type, 0);
-        this.dataManager.register(carcass_quality, 1);
-        this.dataManager.register(growth_rate, 2);
-        this.dataManager.register(egg_speed, 3);
-        this.dataManager.register(variant, "not_set");
-        this.dataManager.register(breed_data, "not_set");
-        this.dataManager.register(tameness, 50);
+    public void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(egg_timer, 0);
+        this.entityData.define(chick_type, 0);
+        this.entityData.define(carcass_quality, 1);
+        this.entityData.define(growth_rate, 2);
+        this.entityData.define(egg_speed, 3);
+        this.entityData.define(variant, "not_set");
+        this.entityData.define(breed_data, "not_set");
+        this.entityData.define(tameness, 50);
     }
 
 
     public String getVariant() {
-        return dataManager.get(variant);
+        return entityData.get(variant);
     }
 
     public int getChildType() {
-        return dataManager.get(chick_type);
+        return entityData.get(chick_type);
     }
 
     @Override
-    public boolean canMateWith(AnimalEntity otherAnimal) {
+    public boolean canMate(AnimalEntity otherAnimal) {
         HotChickenEntity other = (HotChickenEntity) otherAnimal;
         if (other == this) {
             return false;
@@ -228,59 +233,57 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void handleStatusUpdate(byte id) {
+    public void handleEntityEvent(byte id) {
         if (id == 18) {
-            for(int i = 0; i < 7; ++i) {
-                double d0 = this.rand.nextGaussian() * 0.02D;
-                double d1 = this.rand.nextGaussian() * 0.02D;
-                double d2 = this.rand.nextGaussian() * 0.02D;
-                this.world.addParticle(ParticleTypes.HEART, this.getPosXRandom(1.0D), this.getPosYRandom() + 0.5D, this.getPosZRandom(1.0D), d0, d1, d2);
+            for (int i = 0; i < 7; ++i) {
+                double d0 = this.random.nextGaussian() * 0.02D;
+                double d1 = this.random.nextGaussian() * 0.02D;
+                double d2 = this.random.nextGaussian() * 0.02D;
+                this.level.addParticle(ParticleTypes.HEART, this.getRandomX(1.0D), this.getRandomY() + 0.5D, this.getRandomZ(1.0D), d0, d1, d2);
             }
-        } else if(id == 19){
-            for(int i = 0; i < 7; ++i) {
-                double d0 = this.rand.nextGaussian() * 0.02D;
-                double d1 = this.rand.nextGaussian() * 0.02D;
-                double d2 = this.rand.nextGaussian() * 0.02D;
-                this.world.addParticle(ParticleTypes.ANGRY_VILLAGER, this.getPosXRandom(1.0D), this.getPosYRandom() + 0.5D, this.getPosZRandom(1.0D), d0, d1, d2);
+        } else if (id == 19) {
+            for (int i = 0; i < 7; ++i) {
+                double d0 = this.random.nextGaussian() * 0.02D;
+                double d1 = this.random.nextGaussian() * 0.02D;
+                double d2 = this.random.nextGaussian() * 0.02D;
+                this.level.addParticle(ParticleTypes.ANGRY_VILLAGER, this.getRandomX(1.0D), this.getRandomY() + 0.5D, this.getRandomZ(1.0D), d0, d1, d2);
             }
-        }
-        else {
-            super.handleStatusUpdate(id);
+        } else {
+            super.handleEntityEvent(id);
         }
 
     }
 
-    public void func_234177_a_(ServerWorld world, AnimalEntity animal) {
-
+    public void spawnChildFromBreeding(ServerWorld world, AnimalEntity animal) {
 
 
         HotChickenEntity other = (HotChickenEntity) animal;
 
-        if(!this.getHeldItemMainhand().isEmpty()){
-            world.setEntityState(this, (byte)19);
+        if (!this.getMainHandItem().isEmpty()) {
+            world.broadcastEntityEvent(this, (byte) 19);
             return;
         }
 
         ItemStack stack = new ItemStack(ItemRegistry.WHITE_EGG.get());
 
-        if(other.breed == this.breed) {
+        if (other.breed == this.breed) {
             HotEggItem.setBreed(stack, this.breed.toString());
-            boolean isMotherOrFathers = getRNG().nextFloat() < 0.6;
-            if(isMotherOrFathers) {
+            boolean isMotherOrFathers = getRandom().nextFloat() < 0.6;
+            if (isMotherOrFathers) {
                 HotEggItem.setVariant(stack, isMotherOrFathers ? this.getVariant() : other.getVariant());
             }
-        }else{
-            HotEggItem.setBreed(stack, getRNG().nextFloat() < 0.5 ? this.breed.toString() : other.breed.toString());
+        } else {
+            HotEggItem.setBreed(stack, getRandom().nextFloat() < 0.5 ? this.breed.toString() : other.breed.toString());
         }
 
         ChickenStats stats = this.getStats().average(other.getStats()).mutate(0.15);
         HotEggItem.setStats(stack, stats);
         int avgtmness = ((getTameness() + other.getTameness())) / 2;
         int tameness = (int) (avgtmness * 1.1);
-        if(tameness < 80){
+        if (tameness < 80) {
             HotEggItem.setBreed(stack, ChickenBreed.JUNGLEFOWL.toString());
         }
-        if(tameness > 80 && avgtmness <= 80){
+        if (tameness > 80 && avgtmness <= 80) {
             Biome biome = getBiome();
             System.out.println("biome = " + biome);
             ChickenBreed breed = ChickenBreed.randomBasedOnBiome(biome);
@@ -290,24 +293,24 @@ public class HotChickenEntity extends LivestockEntity {
         HotEggItem.setTameness(stack, tameness);
 
 
-        this.setHeldItem(Hand.MAIN_HAND, stack);
+        this.setItemInHand(Hand.MAIN_HAND, stack);
 
-        this.setGrowingAge(6000);
-        animal.setGrowingAge(6000);
-        this.resetInLove();
-        animal.resetInLove();
+        this.setAge(6000);
+        animal.setAge(6000);
+        this.resetLove();
+        animal.resetLove();
 
-        world.setEntityState(this, (byte)18);
-        world.addEntity(new ExperienceOrbEntity(world, this.getPosX(), this.getPosY(), this.getPosZ(), this.getRNG().nextInt(7) + 1));
+        world.broadcastEntityEvent(this, (byte) 18);
+        world.addFreshEntity(new ExperienceOrbEntity(world, this.getX(), this.getY(), this.getZ(), this.getRandom().nextInt(7) + 1));
     }
 
 
     public void setEggTimer(int i) {
-        dataManager.set(egg_timer, i);
+        entityData.set(egg_timer, i);
     }
 
     public void setBreed(ChickenBreed breed) {
         this.breed = breed;
-        dataManager.set(breed_data, this.breed.toString());
+        entityData.set(breed_data, this.breed.toString());
     }
 }

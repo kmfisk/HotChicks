@@ -2,8 +2,6 @@ package com.ryanhcode.hotchicks.block.crop;
 
 import net.minecraft.util.IStringSerializable;
 
-import java.util.Random;
-
 public enum TrellisCrop implements IStringSerializable {
     NONE("none"),
     GRAPES("grapes"),
@@ -18,10 +16,10 @@ public enum TrellisCrop implements IStringSerializable {
     }
 
     public String toString() {
-        return this.getString();
+        return this.getSerializedName();
     }
 
-    public String getString() {
+    public String getSerializedName() {
         return this.name;
     }
 }

@@ -3,7 +3,6 @@ package com.ryanhcode.hotchicks.registry;
 import com.ryanhcode.hotchicks.HotChickens;
 import com.ryanhcode.hotchicks.block.NestContainer;
 import com.ryanhcode.hotchicks.block.TroughContainer;
-import net.minecraft.client.gui.screen.inventory.ChestScreen;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;

@@ -121,7 +121,7 @@ public enum ChickenBreed {
     public final ArrayList<String> childTextures;
     public final ChickenStats stats;
 
-    ChickenBreed(String name, String id, Map<String, ChickenVariant> textureMap, ArrayList<String> childTextures, ChickenStats stats){
+    ChickenBreed(String name, String id, Map<String, ChickenVariant> textureMap, ArrayList<String> childTextures, ChickenStats stats) {
         this.name = name;
         this.id = id;
         this.textureMap = textureMap;
@@ -130,32 +130,32 @@ public enum ChickenBreed {
     }
 
 
-    public static ChickenBreed breedFromBiome(Biome biome){
+    public static ChickenBreed breedFromBiome(Biome biome) {
         String path = biome.getRegistryName().getPath();
         System.out.println("bpath: " + path);
-        if(path.equals(Biomes.PLAINS.getRegistryName().getPath())){
+        if (path.equals(Biomes.PLAINS.getRegistryName().getPath())) {
             return LEGHORN;
         }
-        if(path.contains("forest") && !path.contains("dark") && !path.contains("roofed")){
+        if (path.contains("forest") && !path.contains("dark") && !path.contains("roofed")) {
             return RHODE_ISLAND_RED;
         }
 
-        if(path.equals(Biomes.DARK_FOREST.getRegistryName().getPath()) || path.equals(Biomes.DARK_FOREST_HILLS.getRegistryName().getPath())){
+        if (path.equals(Biomes.DARK_FOREST.getRegistryName().getPath()) || path.equals(Biomes.DARK_FOREST_HILLS.getRegistryName().getPath())) {
             return BARRED_ROCK;
         }
-        if(path.equals(Biomes.DESERT.getRegistryName().getPath())){
+        if (path.equals(Biomes.DESERT.getRegistryName().getPath())) {
             return ORPINGTON;
         }
-        if(path.equals(Biomes.TAIGA_MOUNTAINS.getRegistryName().getPath()) || path.equals(Biomes.MOUNTAINS.getRegistryName().getPath()) || path.equals(Biomes.MOUNTAIN_EDGE.getRegistryName().getPath())){
+        if (path.equals(Biomes.TAIGA_MOUNTAINS.getRegistryName().getPath()) || path.equals(Biomes.MOUNTAINS.getRegistryName().getPath()) || path.equals(Biomes.MOUNTAIN_EDGE.getRegistryName().getPath())) {
             return AMERAUCANA;
         }
-        if(path.contains("jungle")){
+        if (path.contains("jungle")) {
             return OLIVE_EGGER;
         }
-        if(path.equals(Biomes.SWAMP.getRegistryName().getPath())){
+        if (path.equals(Biomes.SWAMP.getRegistryName().getPath())) {
             return MARANS;
         }
-        if(path.contains("snow")){
+        if (path.contains("snow")) {
             return SILKIE;
         }
 
@@ -166,36 +166,36 @@ public enum ChickenBreed {
     public static ChickenBreed randomBasedOnBiome(Biome biome) {
         Random rand = new Random(System.currentTimeMillis()
         );
-        if(rand.nextFloat() < 0.8){
+        if (rand.nextFloat() < 0.8) {
             System.out.println("from biome");
             ChickenBreed chickenBreed = breedFromBiome(biome);
             System.out.println("chickenBreed from biome = " + chickenBreed);
             return chickenBreed;
-        }else{
+        } else {
             return random(JUNGLEFOWL);
         }
     }
 
-    public static ChickenBreed random(ChickenBreed... not){
+    public static ChickenBreed random(ChickenBreed... not) {
         Random random = new Random();
         ChickenBreed value = values()[random.nextInt(values().length)];
-        for(ChickenBreed c : not){
-            if(value == c){
+        for (ChickenBreed c : not) {
+            if (value == c) {
                 return random(not);
             }
         }
         return value;
     }
 
-    public String randomChick(){
+    public String randomChick() {
         return childTextures.get(randomChickIndex());
     }
 
-    public int randomChickIndex(){
+    public int randomChickIndex() {
         return new Random(System.currentTimeMillis()).nextInt(childTextures.size());
     }
 
-    public String randomVariant(){
+    public String randomVariant() {
         Object[] textures = textureMap.keySet().toArray();
         return (String) textures[new Random().nextInt(textures.length)];
     }
@@ -204,21 +204,21 @@ public enum ChickenBreed {
     public static class ChickenVariant {
         private final String male, female;
 
-        public String get(Sex sex){
+        public String get(Sex sex) {
             return sex == Sex.MALE ? male : female;
         }
 
-        public ChickenVariant(String male, String female){
+        public ChickenVariant(String male, String female) {
             this.male = male;
             this.female = female;
         }
 
-        public ChickenVariant(String all){
+        public ChickenVariant(String all) {
             this.male = all;
             this.female = all;
         }
 
-        public ChickenVariant(String all, boolean rh){
+        public ChickenVariant(String all, boolean rh) {
             this.male = all + "_rooster";
             this.female = all + "_hen";
         }

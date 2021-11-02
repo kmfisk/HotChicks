@@ -1,27 +1,21 @@
 package com.ryanhcode.hotchicks.block;
 
-import com.ryanhcode.hotchicks.entity.base.ChickenBreed;
-import com.ryanhcode.hotchicks.entity.chicken.HotChickenEntity;
-import com.ryanhcode.hotchicks.item.HotEggItem;
 import com.ryanhcode.hotchicks.registry.BlockRegistry;
-import com.ryanhcode.hotchicks.registry.EntityRegistry;
 import com.ryanhcode.hotchicks.registry.TileEntityRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.ChestBlock;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.DoubleSidedInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.item.AirItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.state.properties.ChestType;
-import net.minecraft.tileentity.*;
+import net.minecraft.tileentity.ChestTileEntity;
+import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.LockableLootTileEntity;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3i;
@@ -42,25 +36,25 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
         this(TileEntityRegistry.TROUGH.get());
     }
 
-    public TroughTileEntity(int size){
+    public TroughTileEntity(int size) {
         this();
         contents = NonNullList.withSize(size, ItemStack.EMPTY);
         this.size = size;
     }
 
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
-        if (!this.checkLootAndWrite(compound)) {
+    public CompoundNBT save(CompoundNBT compound) {
+        super.save(compound);
+        if (!this.trySaveLootTable(compound)) {
             ItemStackHelper.saveAllItems(compound, this.contents);
         }
 
         return compound;
     }
 
-    public void read(BlockState state, CompoundNBT nbt) {
-        super.read(state, nbt);
-        this.contents = NonNullList.withSize(this.getSizeInventory(), ItemStack.EMPTY);
-        if (!this.checkLootAndRead(nbt)) {
+    public void load(BlockState state, CompoundNBT nbt) {
+        super.load(state, nbt);
+        this.contents = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        if (!this.tryLoadLootTable(nbt)) {
             ItemStackHelper.loadAllItems(nbt, this.contents);
         }
 
@@ -69,7 +63,7 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
     /**
      * Returns the number of slots in the inventory.
      */
-    public int getSizeInventory() {
+    public int getContainerSize() {
         return size;
     }
 
@@ -87,18 +81,18 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
 
     @Override
     protected Container createMenu(int id, PlayerInventory player) {
-        if(size == 6){
+        if (size == 6) {
             return TroughContainer.createGenericDouble(id, player, this);
         }
         return TroughContainer.createGenericSingle(id, player, this);
     }
 
     @Override
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-        return world.getBlockState(getPos()).get(TroughBlock.CONTAINS) != TroughFillType.WATER && stack.getItem() == Items.WHEAT;
+    public boolean canPlaceItem(int index, ItemStack stack) {
+        return level.getBlockState(getBlockPos()).getValue(TroughBlock.CONTAINS) != TroughFillType.WATER && stack.getItem() == Items.WHEAT;
     }
 
-    public void openInventory(PlayerEntity player) {
+    public void startOpen(PlayerEntity player) {
         if (!player.isSpectator()) {
             if (this.numPlayersUsing < 0) {
                 this.numPlayersUsing = 0;
@@ -113,20 +107,20 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
 
     private void scheduleTick() {
 
-        this.world.getPendingBlockTicks().scheduleTick(this.getPos(), this.getBlockState().getBlock(), 5);
+        this.level.getBlockTicks().scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
     }
 
     public void barrelTick() {
-        int i = this.pos.getX();
-        int j = this.pos.getY();
-        int k = this.pos.getZ();
-        this.numPlayersUsing = ChestTileEntity.calculatePlayersUsing(this.world, this, i, j, k);
+        int i = this.worldPosition.getX();
+        int j = this.worldPosition.getY();
+        int k = this.worldPosition.getZ();
+        this.numPlayersUsing = ChestTileEntity.getOpenCount(this.level, this, i, j, k);
         if (this.numPlayersUsing > 0) {
             this.scheduleTick();
         } else {
             BlockState blockstate = this.getBlockState();
-            if (!(blockstate.isIn(BlockRegistry.TROUGH_BLOCK.get()) || blockstate.isIn(BlockRegistry.METAL_TROUGH_BLOCK.get()))) {
-                this.remove();
+            if (!(blockstate.is(BlockRegistry.TROUGH_BLOCK.get()) || blockstate.is(BlockRegistry.METAL_TROUGH_BLOCK.get()))) {
+                this.setRemoved();
                 return;
             }
 
@@ -135,7 +129,7 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
 
     }
 
-    public void closeInventory(PlayerEntity player) {
+    public void stopOpen(PlayerEntity player) {
         if (!player.isSpectator()) {
             --this.numPlayersUsing;
         }
@@ -143,11 +137,11 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
     }
 
     private void playSound(BlockState state, SoundEvent sound) {
-        Vector3i vector3i = state.get(TroughBlock.FACING).getDirectionVec();
-        double d0 = (double)this.pos.getX() + 0.5D + (double)vector3i.getX() / 2.0D;
-        double d1 = (double)this.pos.getY() + 0.5D + (double)vector3i.getY() / 2.0D;
-        double d2 = (double)this.pos.getZ() + 0.5D + (double)vector3i.getZ() / 2.0D;
-        this.world.playSound((PlayerEntity)null, d0, d1, d2, sound, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F);
+        Vector3i vector3i = state.getValue(TroughBlock.FACING).getNormal();
+        double d0 = (double) this.worldPosition.getX() + 0.5D + (double) vector3i.getX() / 2.0D;
+        double d1 = (double) this.worldPosition.getY() + 0.5D + (double) vector3i.getY() / 2.0D;
+        double d2 = (double) this.worldPosition.getZ() + 0.5D + (double) vector3i.getZ() / 2.0D;
+        this.level.playSound((PlayerEntity) null, d0, d1, d2, sound, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
     }
 
 
@@ -156,11 +150,12 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
         chest.setItems(otherChest.getItems());
         otherChest.setItems(nonnulllist);
     }
+
     private net.minecraftforge.common.util.LazyOptional<net.minecraftforge.items.IItemHandlerModifiable> chestHandler;
 
     @Override
-    public void updateContainingBlockInfo() {
-        super.updateContainingBlockInfo();
+    public void clearCache() {
+        super.clearCache();
         if (this.chestHandler != null) {
             this.chestHandler.invalidate();
             this.chestHandler = null;
@@ -170,7 +165,7 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
 
     @Override
     public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> cap, Direction side) {
-        if (!this.removed && cap == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+        if (!this.remove && cap == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
             if (this.chestHandler == null)
                 this.chestHandler = net.minecraftforge.common.util.LazyOptional.of(this::createHandler);
             return this.chestHandler.cast();
@@ -183,7 +178,7 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
         if (!(state.getBlock() instanceof TroughBlock)) {
             return new net.minecraftforge.items.wrapper.InvWrapper(this);
         }
-        IInventory inv = TroughBlock.getChestInventory((TroughBlock) state.getBlock(), state, getWorld(), getPos(), true);
+        IInventory inv = TroughBlock.getChestInventory((TroughBlock) state.getBlock(), state, getLevel(), getBlockPos(), true);
         return new net.minecraftforge.items.wrapper.InvWrapper(inv == null ? this : inv);
     }
 
@@ -195,15 +190,16 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
     }
 
 
-    public boolean hasItems(){
+    public boolean hasItems() {
         boolean has = false;
-        for(ItemStack i : getItems()){
-            if(!i.isEmpty()){
+        for (ItemStack i : getItems()) {
+            if (!i.isEmpty()) {
                 has = true;
             }
         }
         return has;
     }
+
     @Override
     public void tick() {
         //NonNullList<ItemStack> items = getItems();
@@ -211,40 +207,38 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
         //world.setBlockState(getPos(), world.getBlockState(getPos()).with(NestBlock.eggs,
         //        hasEgg
         //));
-        if(world == null) return;
-        if(world.isRemote()) return;
+        if (level == null) return;
+        if (level.isClientSide()) return;
 
-        BlockState state =  world.getBlockState(getPos());
+        BlockState state = level.getBlockState(getBlockPos());
 
-        TroughFillType troughFillType = state.get(TroughBlock.CONTAINS);
+        TroughFillType troughFillType = state.getValue(TroughBlock.CONTAINS);
 
-       // if(troughFillType != TroughFillType.WATER) {
-            TroughFillType setState = state.get(TroughBlock.CONTAINS);
-
-
+        // if(troughFillType != TroughFillType.WATER) {
+        TroughFillType setState = state.getValue(TroughBlock.CONTAINS);
 
 
-        if(state.get(TroughBlock.TYPE) != ChestType.SINGLE && troughFillType == TroughFillType.WATER){
-            BlockPos connectedSlot = pos.add(new BlockPos(state.get(TroughBlock.FACING).getDirectionVec()).rotate(state.get(TroughBlock.TYPE) == ChestType.LEFT ? Rotation.CLOCKWISE_90 : Rotation.COUNTERCLOCKWISE_90));
+        if (state.getValue(TroughBlock.TYPE) != ChestType.SINGLE && troughFillType == TroughFillType.WATER) {
+            BlockPos connectedSlot = worldPosition.offset(new BlockPos(state.getValue(TroughBlock.FACING).getNormal()).rotate(state.getValue(TroughBlock.TYPE) == ChestType.LEFT ? Rotation.CLOCKWISE_90 : Rotation.COUNTERCLOCKWISE_90));
 
-            BlockState connectedState = world.getBlockState(connectedSlot);
-            world.setBlockState(connectedSlot, connectedState.with(TroughBlock.CONTAINS, TroughFillType.WATER));
+            BlockState connectedState = level.getBlockState(connectedSlot);
+            level.setBlockAndUpdate(connectedSlot, connectedState.setValue(TroughBlock.CONTAINS, TroughFillType.WATER));
         }
 
 
-        if(state.get(TroughBlock.TYPE) != ChestType.SINGLE) {
-            BlockPos connectedSlot = pos.add(new BlockPos(state.get(TroughBlock.FACING).getDirectionVec()).rotate(state.get(TroughBlock.TYPE) == ChestType.LEFT ? Rotation.CLOCKWISE_90 : Rotation.COUNTERCLOCKWISE_90));
+        if (state.getValue(TroughBlock.TYPE) != ChestType.SINGLE) {
+            BlockPos connectedSlot = worldPosition.offset(new BlockPos(state.getValue(TroughBlock.FACING).getNormal()).rotate(state.getValue(TroughBlock.TYPE) == ChestType.LEFT ? Rotation.CLOCKWISE_90 : Rotation.COUNTERCLOCKWISE_90));
 
-            BlockState connectedState = world.getBlockState(connectedSlot);
-            if (state.get(TroughBlock.CONTAINS) != TroughFillType.WATER) {
-                TroughFillType value = isEmpty() && ((TroughTileEntity)(world.getTileEntity(connectedSlot))).isEmpty() ? TroughFillType.NONE : TroughFillType.FEED;
-                world.setBlockState(pos, state.with(TroughBlock.CONTAINS, value));
+            BlockState connectedState = level.getBlockState(connectedSlot);
+            if (state.getValue(TroughBlock.CONTAINS) != TroughFillType.WATER) {
+                TroughFillType value = isEmpty() && ((TroughTileEntity) (level.getBlockEntity(connectedSlot))).isEmpty() ? TroughFillType.NONE : TroughFillType.FEED;
+                level.setBlockAndUpdate(worldPosition, state.setValue(TroughBlock.CONTAINS, value));
             }
 
-        }else {
-            if (state.get(TroughBlock.CONTAINS) != TroughFillType.WATER) {
+        } else {
+            if (state.getValue(TroughBlock.CONTAINS) != TroughFillType.WATER) {
                 TroughFillType value = isEmpty() ? TroughFillType.NONE : TroughFillType.FEED;
-                world.setBlockState(pos, state.with(TroughBlock.CONTAINS, value));
+                level.setBlockAndUpdate(worldPosition, state.setValue(TroughBlock.CONTAINS, value));
             }
         }
 

@@ -1,6 +1,5 @@
 package com.ryanhcode.hotchicks.block.crop;
 
-import com.ryanhcode.hotchicks.block.TroughFillType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BushBlock;
@@ -32,32 +31,32 @@ import net.minecraftforge.fml.RegistryObject;
 
 import java.util.Random;
 
-
 public class PepperBerryBush extends BushBlock implements IGrowable {
-    public static final IntegerProperty AGE = BlockStateProperties.AGE_0_3;
+    public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
 
     // a
     public static final EnumProperty<PepperType> VARIANT = EnumProperty.create("variant", PepperType.class);
 
-    private static final VoxelShape BUSHLING_SHAPE = Block.makeCuboidShape(3.0D, 0.0D, 3.0D, 13.0D, 8.0D, 13.0D);
-    private static final VoxelShape GROWING_SHAPE = Block.makeCuboidShape(1.0D, 0.0D, 1.0D, 15.0D, 16.0D, 15.0D);
+    private static final VoxelShape BUSHLING_SHAPE = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 8.0D, 13.0D);
+    private static final VoxelShape GROWING_SHAPE = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 16.0D, 15.0D);
 
     RegistryObject<Item> item;
+
     public PepperBerryBush(Properties properties, RegistryObject<Item> item) {
         super(properties);
-        this.setDefaultState(this.stateContainer.getBaseState().with(AGE, Integer.valueOf(0)).with(VARIANT, PepperType.getRandom()));
+        this.registerDefaultState(this.stateDefinition.any().setValue(AGE, Integer.valueOf(0)).setValue(VARIANT, PepperType.getRandom()));
         this.item = item;
     }
 
-    public ItemStack getItem(IBlockReader worldIn, BlockPos pos, BlockState state) {
+    public ItemStack getCloneItemStack(IBlockReader worldIn, BlockPos pos, BlockState state) {
         return new ItemStack(item.get());
     }
 
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        if (state.get(AGE) == 0) {
+        if (state.getValue(AGE) == 0) {
             return BUSHLING_SHAPE;
         } else {
-            return state.get(AGE) < 3 ? GROWING_SHAPE : super.getShape(state, worldIn, pos, context);
+            return state.getValue(AGE) < 3 ? GROWING_SHAPE : super.getShape(state, worldIn, pos, context);
         }
     }
 
@@ -65,29 +64,29 @@ public class PepperBerryBush extends BushBlock implements IGrowable {
      * Returns whether or not this block is of a type that needs random ticking. Called for ref-counting purposes by
      * ExtendedBlockStorage in order to broadly cull a chunk from the random chunk update list for efficiency's sake.
      */
-    public boolean ticksRandomly(BlockState state) {
-        return state.get(AGE) < 3;
+    public boolean isRandomlyTicking(BlockState state) {
+        return state.getValue(AGE) < 3;
     }
 
     /**
      * Performs a random tick on a block.
      */
     public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
-        int i = state.get(AGE);
-        if (i < 3 && worldIn.getLightSubtracted(pos.up(), 0) >= 9 && net.minecraftforge.common.ForgeHooks.onCropsGrowPre(worldIn, pos, state,random.nextInt(5) == 0)) {
-            worldIn.setBlockState(pos, state.with(AGE, Integer.valueOf(i + 1)), 2);
+        int i = state.getValue(AGE);
+        if (i < 3 && worldIn.getRawBrightness(pos.above(), 0) >= 9 && net.minecraftforge.common.ForgeHooks.onCropsGrowPre(worldIn, pos, state, random.nextInt(5) == 0)) {
+            worldIn.setBlock(pos, state.setValue(AGE, Integer.valueOf(i + 1)), 2);
             net.minecraftforge.common.ForgeHooks.onCropsGrowPost(worldIn, pos, state);
         }
 
     }
 
-    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
+    public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
         if (entityIn instanceof LivingEntity && entityIn.getType() != EntityType.FOX && entityIn.getType() != EntityType.BEE) {
-            entityIn.setMotionMultiplier(state, new Vector3d((double)0.8F, 0.75D, (double)0.8F));
-            if (!worldIn.isRemote && state.get(AGE) > 0 && (entityIn.lastTickPosX != entityIn.getPosX() || entityIn.lastTickPosZ != entityIn.getPosZ())) {
-                double d0 = Math.abs(entityIn.getPosX() - entityIn.lastTickPosX);
-                double d1 = Math.abs(entityIn.getPosZ() - entityIn.lastTickPosZ);
-                if (d0 >= (double)0.003F || d1 >= (double)0.003F) {
+            entityIn.makeStuckInBlock(state, new Vector3d((double) 0.8F, 0.75D, (double) 0.8F));
+            if (!worldIn.isClientSide && state.getValue(AGE) > 0 && (entityIn.xOld != entityIn.getX() || entityIn.zOld != entityIn.getZ())) {
+                double d0 = Math.abs(entityIn.getX() - entityIn.xOld);
+                double d1 = Math.abs(entityIn.getZ() - entityIn.zOld);
+                if (d0 >= (double) 0.003F || d1 >= (double) 0.003F) {
                     //entityIn.attackEntityFrom(DamageSource.SWEET_BERRY_BUSH, 1.0F);
                 }
             }
@@ -95,23 +94,23 @@ public class PepperBerryBush extends BushBlock implements IGrowable {
         }
     }
 
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        int i = state.get(AGE);
+    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        int i = state.getValue(AGE);
         boolean flag = i == 3;
-        if (!flag && player.getHeldItem(handIn).getItem() == Items.BONE_MEAL) {
+        if (!flag && player.getItemInHand(handIn).getItem() == Items.BONE_MEAL) {
             return ActionResultType.PASS;
         } else if (i > 2) {
-            int j = 1 + worldIn.rand.nextInt(2);
-            spawnAsEntity(worldIn, pos, new ItemStack(item.get(), j + (flag ? 1 : 0)));
-            worldIn.playSound((PlayerEntity)null, pos, SoundEvents.ITEM_SWEET_BERRIES_PICK_FROM_BUSH, SoundCategory.BLOCKS, 1.0F, 0.8F + worldIn.rand.nextFloat() * 0.4F);
-            worldIn.setBlockState(pos, state.with(AGE, Integer.valueOf(2)).with(VARIANT, PepperType.getRandom()), 2);
-            return ActionResultType.func_233537_a_(worldIn.isRemote);
+            int j = 1 + worldIn.random.nextInt(2);
+            popResource(worldIn, pos, new ItemStack(item.get(), j + (flag ? 1 : 0)));
+            worldIn.playSound((PlayerEntity) null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + worldIn.random.nextFloat() * 0.4F);
+            worldIn.setBlock(pos, state.setValue(AGE, Integer.valueOf(2)).setValue(VARIANT, PepperType.getRandom()), 2);
+            return ActionResultType.sidedSuccess(worldIn.isClientSide);
         } else {
-            return super.onBlockActivated(state, worldIn, pos, player, handIn, hit);
+            return super.use(state, worldIn, pos, player, handIn, hit);
         }
     }
 
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(AGE);
         builder.add(VARIANT);
     }
@@ -119,16 +118,16 @@ public class PepperBerryBush extends BushBlock implements IGrowable {
     /**
      * Whether this IGrowable can grow
      */
-    public boolean canGrow(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
-        return state.get(AGE) < 3;
+    public boolean isValidBonemealTarget(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
+        return state.getValue(AGE) < 3;
     }
 
-    public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, BlockState state) {
+    public boolean isBonemealSuccess(World worldIn, Random rand, BlockPos pos, BlockState state) {
         return true;
     }
 
-    public void grow(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
-        int i = Math.min(3, state.get(AGE) + 1);
-        worldIn.setBlockState(pos, state.with(AGE, Integer.valueOf(i)).with(VARIANT, PepperType.getRandom()), 2);
+    public void performBonemeal(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
+        int i = Math.min(3, state.getValue(AGE) + 1);
+        worldIn.setBlock(pos, state.setValue(AGE, Integer.valueOf(i)).setValue(VARIANT, PepperType.getRandom()), 2);
     }
 }
