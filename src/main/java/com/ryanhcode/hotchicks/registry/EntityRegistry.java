@@ -12,13 +12,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class EntityRegistry {
     public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(ForgeRegistries.ENTITIES, HotChickens.MODID);
 
-    public static RegistryObject<EntityType<HotChickenEntity>> HOT_CHICKEN = buildEntity(HotChickenEntity::new, HotChickenEntity.class,0.4f,0.7f, "hot_chicken");
-
-
+    public static RegistryObject<EntityType<HotChickenEntity>> HOT_CHICKEN = buildEntity(HotChickenEntity::new, HotChickenEntity.class, 0.4f, 0.7f, "hot_chicken");
 
     public static <T extends Entity> RegistryObject<EntityType<T>> buildEntity(EntityType.IFactory<T> entity, Class<T> entityClass, float width, float height, String name) {
-        return ENTITIES.register(name, () -> {
-            return EntityType.Builder.create(entity, EntityClassification.CREATURE).size(width, height).build(name);
-        });
+        return ENTITIES.register(name, () -> EntityType.Builder.of(entity, EntityClassification.CREATURE).sized(width, height).build(name));
     }
 }
