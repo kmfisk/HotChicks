@@ -38,7 +38,7 @@ public class PepperBerryBush extends BerryBush implements IGrowable {
             return ActionResultType.PASS;
         else if (i > 2) {
             int j = 1 + worldIn.random.nextInt(2);
-            popResource(worldIn, pos, new ItemStack(item, j + (flag ? 1 : 0)));
+            popResource(worldIn, pos, new ItemStack(item, j));
             worldIn.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + worldIn.random.nextFloat() * 0.4F);
             worldIn.setBlock(pos, state.setValue(AGE, 2).setValue(VARIANT, PepperType.getRandom()), 2);
             return ActionResultType.sidedSuccess(worldIn.isClientSide);
