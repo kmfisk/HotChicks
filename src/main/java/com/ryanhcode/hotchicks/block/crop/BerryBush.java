@@ -1,6 +1,9 @@
 package com.ryanhcode.hotchicks.block.crop;
 
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.BushBlock;
+import net.minecraft.block.IGrowable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -11,18 +14,18 @@ import net.minecraft.item.Items;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.RegistryObject;
 
 import java.util.Random;
 
@@ -31,9 +34,9 @@ public class BerryBush extends BushBlock implements IGrowable {
     private static final VoxelShape BUSHLING_SHAPE = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 8.0D, 13.0D);
     private static final VoxelShape GROWING_SHAPE = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 16.0D, 15.0D);
 
-    RegistryObject<Item> item;
+    Item item;
 
-    public BerryBush(Properties properties, RegistryObject<Item> item) {
+    public BerryBush(Properties properties, Item item) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
         this.item = item;
@@ -41,7 +44,7 @@ public class BerryBush extends BushBlock implements IGrowable {
 
     @Override
     public ItemStack getCloneItemStack(IBlockReader worldIn, BlockPos pos, BlockState state) {
-        return new ItemStack(item.get());
+        return new ItemStack(item);
     }
 
     @Override
@@ -80,7 +83,7 @@ public class BerryBush extends BushBlock implements IGrowable {
             return ActionResultType.PASS;
         else if (i > 2) {
             int j = 1 + worldIn.random.nextInt(2);
-            popResource(worldIn, pos, new ItemStack(item.get(), j + (flag ? 1 : 0)));
+            popResource(worldIn, pos, new ItemStack(item, j + (flag ? 1 : 0)));
             worldIn.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + worldIn.random.nextFloat() * 0.4F);
             worldIn.setBlock(pos, state.setValue(AGE, 2), 2);
             return ActionResultType.sidedSuccess(worldIn.isClientSide);

@@ -17,16 +17,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.RegistryObject;
 
 import java.util.Random;
 
 public class PepperBerryBush extends BerryBush implements IGrowable {
     public static final EnumProperty<PepperType> VARIANT = EnumProperty.create("variant", PepperType.class);
 
-    RegistryObject<Item> item;
+    Item item;
 
-    public PepperBerryBush(Properties properties, RegistryObject<Item> item) {
+    public PepperBerryBush(Properties properties, Item item) {
         super(properties, item);
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0).setValue(VARIANT, PepperType.getRandom()));
     }
@@ -39,7 +38,7 @@ public class PepperBerryBush extends BerryBush implements IGrowable {
             return ActionResultType.PASS;
         else if (i > 2) {
             int j = 1 + worldIn.random.nextInt(2);
-            popResource(worldIn, pos, new ItemStack(item.get(), j + (flag ? 1 : 0)));
+            popResource(worldIn, pos, new ItemStack(item, j + (flag ? 1 : 0)));
             worldIn.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + worldIn.random.nextFloat() * 0.4F);
             worldIn.setBlock(pos, state.setValue(AGE, 2).setValue(VARIANT, PepperType.getRandom()), 2);
             return ActionResultType.sidedSuccess(worldIn.isClientSide);
