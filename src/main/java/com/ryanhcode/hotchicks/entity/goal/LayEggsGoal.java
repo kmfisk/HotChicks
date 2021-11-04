@@ -2,7 +2,7 @@ package com.ryanhcode.hotchicks.entity.goal;
 
 import com.ryanhcode.hotchicks.block.NestTileEntity;
 import com.ryanhcode.hotchicks.entity.HotChickenEntity;
-import com.ryanhcode.hotchicks.registry.HotBlocks;
+import com.ryanhcode.hotchicks.block.HotBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.item.ItemStack;

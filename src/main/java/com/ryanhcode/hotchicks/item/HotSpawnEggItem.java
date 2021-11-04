@@ -1,9 +1,9 @@
 package com.ryanhcode.hotchicks.item;
 
-import com.ryanhcode.hotchicks.Main;
-import com.ryanhcode.hotchicks.entity.base.ChickenBreed;
+import com.ryanhcode.hotchicks.HotChickens;
 import com.ryanhcode.hotchicks.entity.HotChickenEntity;
-import com.ryanhcode.hotchicks.registry.HotEntities;
+import com.ryanhcode.hotchicks.entity.HotEntities;
+import com.ryanhcode.hotchicks.entity.base.ChickenBreed;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.entity.EntityType;
@@ -30,7 +30,7 @@ public class HotSpawnEggItem extends Item {
     private final ChickenBreed breed;
 
     public HotSpawnEggItem(ChickenBreed breed) {
-        super(new Item.Properties().tab(Main.HOT_CHICKS_GROUP));
+        super(new Item.Properties().tab(HotChickens.HOT_CHICKS_GROUP));
         this.breed = breed;
     }
 

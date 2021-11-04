@@ -4,7 +4,7 @@ import com.ryanhcode.hotchicks.entity.base.*;
 import com.ryanhcode.hotchicks.entity.goal.ChickenBreedGoal;
 import com.ryanhcode.hotchicks.entity.goal.LayEggsGoal;
 import com.ryanhcode.hotchicks.item.HotEggItem;
-import com.ryanhcode.hotchicks.registry.HotItems;
+import com.ryanhcode.hotchicks.item.HotItems;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;

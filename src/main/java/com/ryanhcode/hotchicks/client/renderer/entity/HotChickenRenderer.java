@@ -61,6 +61,6 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
             }
         }
 
-        return new ResourceLocation(HotChickens.MODID, path);
+        return new ResourceLocation(HotChickens.MOD_ID, path);
     }
 }

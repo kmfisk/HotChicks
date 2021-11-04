@@ -1,6 +1,5 @@
 package com.ryanhcode.hotchicks.block;
 
-import com.ryanhcode.hotchicks.registry.HotBlocks;
 import com.ryanhcode.hotchicks.registry.HotTileEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;

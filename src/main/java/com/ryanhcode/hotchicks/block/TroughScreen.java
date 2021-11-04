@@ -15,8 +15,8 @@ public class TroughScreen extends ContainerScreen<TroughContainer> {
     /**
      * The ResourceLocation containing the gui texture for the hopper
      */
-    private static final ResourceLocation SINGLE_TEXTURE = new ResourceLocation(HotChickens.MODID, "textures/gui/trough.png");
-    private static final ResourceLocation DOUBLE_TEXTURE = new ResourceLocation(HotChickens.MODID, "textures/gui/trough_large.png");
+    private static final ResourceLocation SINGLE_TEXTURE = new ResourceLocation(HotChickens.MOD_ID, "textures/gui/trough.png");
+    private static final ResourceLocation DOUBLE_TEXTURE = new ResourceLocation(HotChickens.MOD_ID, "textures/gui/trough_large.png");
 
     TroughContainer container;
 
@@ -43,7 +43,7 @@ public class TroughScreen extends ContainerScreen<TroughContainer> {
             this.minecraft.getTextureManager().bind(DOUBLE_TEXTURE);
         } else if (container.slot == 12) {
             mod = 0;
-            this.minecraft.getTextureManager().bind(new ResourceLocation(HotChickens.MODID, "textures/gui/trough_large_metal.png"));
+            this.minecraft.getTextureManager().bind(new ResourceLocation(HotChickens.MOD_ID, "textures/gui/trough_large_metal.png"));
         } else {
             this.minecraft.getTextureManager().bind(DOUBLE_TEXTURE);
         }

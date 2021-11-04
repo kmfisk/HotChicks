@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Random;
 
 public class TrellisModel implements IDynamicBakedModel {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(HotChickens.MODID, "block/trellis/none/none");
+    public static final ResourceLocation TEXTURE = new ResourceLocation(HotChickens.MOD_ID, "block/trellis/none/none");
 
 
     private TextureAtlasSprite getTexture(BlockState state) {
@@ -34,7 +34,7 @@ public class TrellisModel implements IDynamicBakedModel {
         int stage = state.getValue(TrellisBlock.AGE);
         return Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(
 
-                new ResourceLocation(HotChickens.MODID, crop.equals("none") ? "block/trellis/none/none" : "block/trellis/" + crop + "/" + crop + "_stage" + stage)
+                new ResourceLocation(HotChickens.MOD_ID, crop.equals("none") ? "block/trellis/none/none" : "block/trellis/" + crop + "/" + crop + "_stage" + stage)
 
         );
     }

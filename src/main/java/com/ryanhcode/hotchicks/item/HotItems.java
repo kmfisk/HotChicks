@@ -1,11 +1,8 @@
-package com.ryanhcode.hotchicks.registry;
+package com.ryanhcode.hotchicks.item;
 
 import com.ryanhcode.hotchicks.HotChickens;
+import com.ryanhcode.hotchicks.block.HotBlocks;
 import com.ryanhcode.hotchicks.entity.base.ChickenBreed;
-import com.ryanhcode.hotchicks.item.HotFoods;
-import com.ryanhcode.hotchicks.item.HotEggItem;
-import com.ryanhcode.hotchicks.item.HotSpawnEggItem;
-import com.ryanhcode.hotchicks.item.StudBookItem;
 import net.minecraft.item.BlockNamedItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -14,7 +11,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class HotItems {
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, HotChickens.MODID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, HotChickens.MOD_ID);
 
     public static final RegistryObject<Item> WHITE_EGG = ITEMS.register("white_egg", () -> new HotEggItem((new Item.Properties()).stacksTo(16).tab(ItemGroup.TAB_MISC)));
     public static final RegistryObject<Item> STUD_BOOK = ITEMS.register("stud_book", () -> new StudBookItem((new Item.Properties()).stacksTo(1).tab(ItemGroup.TAB_MISC)));

@@ -9,8 +9,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class HotContainers {
-
-    public static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, HotChickens.MODID);
+    public static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, HotChickens.MOD_ID);
 
     public static RegistryObject<ContainerType<NestContainer>> NEST = CONTAINERS.register("nest_container", NestContainer::createCraftingContainer);
     public static RegistryObject<ContainerType<TroughContainer>> TROUGH_SINGLE = CONTAINERS.register("trough_single", () -> {

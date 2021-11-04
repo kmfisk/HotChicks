@@ -25,15 +25,15 @@ public class TrellisGeometry implements IModelGeometry<TrellisGeometry> {
     @Override
     public Collection<RenderMaterial> getTextures(IModelConfiguration owner, Function<ResourceLocation, IUnbakedModel> modelGetter, Set<Pair<String, String>> missingTextureErrors) {
         return new ArrayList<RenderMaterial>() {{
-            add(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(HotChickens.MODID, "block/trellis/none/none")));
+            add(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(HotChickens.MOD_ID, "block/trellis/none/none")));
             for (TrellisCrop t : TrellisCrop.values()) {
                 if (t == TrellisCrop.NONE) continue;
-                add(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(HotChickens.MODID, "block/trellis/" + t.name + "/" + t.name + "_stage0")));
-                add(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(HotChickens.MODID, "block/trellis/" + t.name + "/" + t.name + "_stage1")));
-                add(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(HotChickens.MODID, "block/trellis/" + t.name + "/" + t.name + "_stage2")));
-                add(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(HotChickens.MODID, "block/trellis/" + t.name + "/" + t.name + "_stage3")));
-                add(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(HotChickens.MODID, "block/trellis/" + t.name + "/" + t.name + "_stage4")));
-                add(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(HotChickens.MODID, "block/trellis/" + t.name + "/" + t.name + "_stage5")));
+                add(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(HotChickens.MOD_ID, "block/trellis/" + t.name + "/" + t.name + "_stage0")));
+                add(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(HotChickens.MOD_ID, "block/trellis/" + t.name + "/" + t.name + "_stage1")));
+                add(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(HotChickens.MOD_ID, "block/trellis/" + t.name + "/" + t.name + "_stage2")));
+                add(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(HotChickens.MOD_ID, "block/trellis/" + t.name + "/" + t.name + "_stage3")));
+                add(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(HotChickens.MOD_ID, "block/trellis/" + t.name + "/" + t.name + "_stage4")));
+                add(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, new ResourceLocation(HotChickens.MOD_ID, "block/trellis/" + t.name + "/" + t.name + "_stage5")));
             }
         }};
     }

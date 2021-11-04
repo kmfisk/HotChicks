@@ -1,12 +1,11 @@
-package com.ryanhcode.hotchicks.registry;
+package com.ryanhcode.hotchicks.block;
 
 import com.ryanhcode.hotchicks.HotChickens;
-import com.ryanhcode.hotchicks.Main;
-import com.ryanhcode.hotchicks.block.*;
 import com.ryanhcode.hotchicks.block.crop.BerryBush;
 import com.ryanhcode.hotchicks.block.crop.CornBlock;
 import com.ryanhcode.hotchicks.block.crop.PepperBerryBush;
 import com.ryanhcode.hotchicks.block.crop.StandardCropBlock;
+import com.ryanhcode.hotchicks.item.HotItems;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -28,7 +27,7 @@ import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class HotBlocks {
-    public static final DeferredRegister<Block> REGISTRAR = DeferredRegister.create(ForgeRegistries.BLOCKS, HotChickens.MODID);
+    public static final DeferredRegister<Block> REGISTRAR = DeferredRegister.create(ForgeRegistries.BLOCKS, HotChickens.MOD_ID);
 
     public static final RegistryObject<Block> NEST_BOX = registerWithItem("nest_box", () -> new NestBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD)));
     public static final RegistryObject<Block> NEST = registerWithItem("nest", () -> new StickNestBlock(AbstractBlock.Properties.of(Material.GRASS).strength(0.5F).sound(SoundType.GRASS).noOcclusion()));
@@ -41,7 +40,20 @@ public class HotBlocks {
     public static final RegistryObject<Block> OKRA_BUSH = registerWithItem("okra_bush", () -> new BerryBush(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH), HotItems.OKRA));
     public static final RegistryObject<Block> PEPPER_BUSH = registerWithItem("pepper_bush", () -> new PepperBerryBush(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH), HotItems.PEPPERS));
 
+    public static final RegistryObject<Block> RED_APPLE_LEAVES = registerWithItem("red_apple_leaves", FruitLeavesBlock::new);
+    public static final RegistryObject<Block> PEACH_LEAVES = registerWithItem("peach_leaves", FruitLeavesBlock::new);
+    public static final RegistryObject<Block> MANGO_LEAVES = registerWithItem("mango_leaves", FruitLeavesBlock::new);
+    public static final RegistryObject<Block> POMEGRANATE_LEAVES = registerWithItem("pomegranate_leaves", FruitLeavesBlock::new);
+    public static final RegistryObject<Block> FIG_LEAVES = registerWithItem("fig_leaves", FruitLeavesBlock::new);
+    public static final RegistryObject<Block> CITRON_LEAVES = registerWithItem("citron_leaves", FruitLeavesBlock::new);
+    public static final RegistryObject<Block> POMELO_LEAVES = registerWithItem("pomelo_leaves", FruitLeavesBlock::new);
     public static final RegistryObject<Block> MANDARIN_LEAVES = registerWithItem("mandarin_leaves", FruitLeavesBlock::new);
+    public static final RegistryObject<Block> PAPEDA_LEAVES = registerWithItem("papeda_leaves", FruitLeavesBlock::new);
+    public static final RegistryObject<Block> ORANGE_LEAVES = registerWithItem("orange_leaves", FruitLeavesBlock::new);
+    public static final RegistryObject<Block> LEMON_LEAVES = registerWithItem("lemon_leaves", FruitLeavesBlock::new);
+    public static final RegistryObject<Block> GRAPEFRUIT_LEAVES = registerWithItem("grapefruit_leaves", FruitLeavesBlock::new);
+    public static final RegistryObject<Block> LIME_LEAVES = registerWithItem("lime_leaves", FruitLeavesBlock::new);
+    public static final RegistryObject<Block> YUZU_LEAVES = registerWithItem("yuzu_leaves", FruitLeavesBlock::new);
 
     public static final RegistryObject<Block> CORN_CROP = REGISTRAR.register("corn", () -> new CornBlock(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH), HotItems.CORN));
     public static final RegistryObject<Block> MILLET_CROP = REGISTRAR.register("millet", () -> new CornBlock(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH), HotItems.MILLET));
@@ -53,7 +65,7 @@ public class HotBlocks {
 
     private static <T extends Block> RegistryObject<T> registerWithItem(String name, Supplier<T> block) {
         RegistryObject<T> registryObject = REGISTRAR.register(name, block);
-        HotItems.ITEMS.register(name, () -> new BlockItem(registryObject.get(), new Item.Properties().tab(Main.HOT_CHICKS_GROUP)));
+        HotItems.ITEMS.register(name, () -> new BlockItem(registryObject.get(), new Item.Properties().tab(HotChickens.HOT_CHICKS_GROUP)));
         return registryObject;
     }
 
@@ -71,7 +83,20 @@ public class HotBlocks {
             RenderTypeLookup.setRenderLayer(LETTUCE_CROP.get(), RenderType.cutout());
             RenderTypeLookup.setRenderLayer(CORN_CROP.get(), RenderType.cutout());
             RenderTypeLookup.setRenderLayer(MILLET_CROP.get(), RenderType.cutout());
+            RenderTypeLookup.setRenderLayer(RED_APPLE_LEAVES.get(), RenderType.cutoutMipped());
+            RenderTypeLookup.setRenderLayer(PEACH_LEAVES.get(), RenderType.cutoutMipped());
+            RenderTypeLookup.setRenderLayer(MANGO_LEAVES.get(), RenderType.cutoutMipped());
+            RenderTypeLookup.setRenderLayer(POMEGRANATE_LEAVES.get(), RenderType.cutoutMipped());
+            RenderTypeLookup.setRenderLayer(FIG_LEAVES.get(), RenderType.cutoutMipped());
+            RenderTypeLookup.setRenderLayer(CITRON_LEAVES.get(), RenderType.cutoutMipped());
+            RenderTypeLookup.setRenderLayer(POMELO_LEAVES.get(), RenderType.cutoutMipped());
             RenderTypeLookup.setRenderLayer(MANDARIN_LEAVES.get(), RenderType.cutoutMipped());
+            RenderTypeLookup.setRenderLayer(PAPEDA_LEAVES.get(), RenderType.cutoutMipped());
+            RenderTypeLookup.setRenderLayer(ORANGE_LEAVES.get(), RenderType.cutoutMipped());
+            RenderTypeLookup.setRenderLayer(LEMON_LEAVES.get(), RenderType.cutoutMipped());
+            RenderTypeLookup.setRenderLayer(GRAPEFRUIT_LEAVES.get(), RenderType.cutoutMipped());
+            RenderTypeLookup.setRenderLayer(LIME_LEAVES.get(), RenderType.cutoutMipped());
+            RenderTypeLookup.setRenderLayer(YUZU_LEAVES.get(), RenderType.cutoutMipped());
         }
     }
 }
