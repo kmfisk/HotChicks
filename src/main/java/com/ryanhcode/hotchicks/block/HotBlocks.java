@@ -5,9 +5,11 @@ import com.ryanhcode.hotchicks.block.crop.BerryBush;
 import com.ryanhcode.hotchicks.block.crop.CornBlock;
 import com.ryanhcode.hotchicks.block.crop.PepperBerryBush;
 import com.ryanhcode.hotchicks.block.crop.StandardCropBlock;
+import com.ryanhcode.hotchicks.block.trees.*;
 import com.ryanhcode.hotchicks.item.HotItems;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.SaplingBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderType;
@@ -56,6 +58,21 @@ public class HotBlocks {
     public static final RegistryObject<Block> LIME_LEAVES = registerWithItem("lime_leaves", () -> new FruitLeavesBlock(HotItems.LIME.get()));
     public static final RegistryObject<Block> YUZU_LEAVES = registerWithItem("yuzu_leaves", () -> new FruitLeavesBlock(HotItems.YUZU.get()));
 
+    public static final RegistryObject<Block> RED_APPLE_SAPLING = registerWithItem("red_apple_sapling", () -> new SaplingBlock(new RedAppleTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> PEACH_SAPLING = registerWithItem("peach_sapling", () -> new SaplingBlock(new PeachTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> MANGO_SAPLING = registerWithItem("mango_sapling", () -> new SaplingBlock(new MangoTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> POMEGRANATE_SAPLING = registerWithItem("pomegranate_sapling", () -> new SaplingBlock(new PomegranateTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> FIG_SAPLING = registerWithItem("fig_sapling", () -> new SaplingBlock(new FigTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> CITRON_SAPLING = registerWithItem("citron_sapling", () -> new SaplingBlock(new CitronTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> POMELO_SAPLING = registerWithItem("pomelo_sapling", () -> new SaplingBlock(new PomeloTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> MANDARIN_SAPLING = registerWithItem("mandarin_sapling", () -> new SaplingBlock(new MandarinTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> PAPEDA_SAPLING = registerWithItem("papeda_sapling", () -> new SaplingBlock(new PapedaTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> ORANGE_SAPLING = registerWithItem("orange_sapling", () -> new SaplingBlock(new OrangeTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> LEMON_SAPLING = registerWithItem("lemon_sapling", () -> new SaplingBlock(new LemonTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> GRAPEFRUIT_SAPLING = registerWithItem("grapefruit_sapling", () -> new SaplingBlock(new GrapefruitTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> LIME_SAPLING = registerWithItem("lime_sapling", () -> new SaplingBlock(new LimeTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> YUZU_SAPLING = registerWithItem("yuzu_sapling", () -> new SaplingBlock(new YuzuTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+
     public static final RegistryObject<Block> CORN_CROP = REGISTRAR.register("corn", () -> new CornBlock(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH), HotItems.CORN.get()));
     public static final RegistryObject<Block> MILLET_CROP = REGISTRAR.register("millet", () -> new CornBlock(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH), HotItems.MILLET.get()));
     public static final RegistryObject<Block> OATS_CROP = REGISTRAR.register("oats", () -> new StandardCropBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.CROP), HotItems.OATS.get()));
@@ -73,31 +90,47 @@ public class HotBlocks {
     @SubscribeEvent
     public static void onBlocksRegistry(final RegistryEvent.Register<Block> event) {
         if (FMLEnvironment.dist == Dist.CLIENT) {
-            RenderTypeLookup.setRenderLayer(TRELLIS_BLOCK.get(), RenderType.cutoutMipped());
-            RenderTypeLookup.setRenderLayer(STRAWBERRY_BUSH.get(), RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(BLUEBERRY_BUSH.get(), RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(COTTON_BUSH.get(), RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(PEPPER_BUSH.get(), RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(OKRA_BUSH.get(), RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(OATS_CROP.get(), RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(GARLIC_CROP.get(), RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(LETTUCE_CROP.get(), RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(CORN_CROP.get(), RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(MILLET_CROP.get(), RenderType.cutout());
-            RenderTypeLookup.setRenderLayer(RED_APPLE_LEAVES.get(), RenderType.cutoutMipped());
-            RenderTypeLookup.setRenderLayer(PEACH_LEAVES.get(), RenderType.cutoutMipped());
-            RenderTypeLookup.setRenderLayer(MANGO_LEAVES.get(), RenderType.cutoutMipped());
-            RenderTypeLookup.setRenderLayer(POMEGRANATE_LEAVES.get(), RenderType.cutoutMipped());
-            RenderTypeLookup.setRenderLayer(FIG_LEAVES.get(), RenderType.cutoutMipped());
-            RenderTypeLookup.setRenderLayer(CITRON_LEAVES.get(), RenderType.cutoutMipped());
-            RenderTypeLookup.setRenderLayer(POMELO_LEAVES.get(), RenderType.cutoutMipped());
-            RenderTypeLookup.setRenderLayer(MANDARIN_LEAVES.get(), RenderType.cutoutMipped());
-            RenderTypeLookup.setRenderLayer(PAPEDA_LEAVES.get(), RenderType.cutoutMipped());
-            RenderTypeLookup.setRenderLayer(ORANGE_LEAVES.get(), RenderType.cutoutMipped());
-            RenderTypeLookup.setRenderLayer(LEMON_LEAVES.get(), RenderType.cutoutMipped());
-            RenderTypeLookup.setRenderLayer(GRAPEFRUIT_LEAVES.get(), RenderType.cutoutMipped());
-            RenderTypeLookup.setRenderLayer(LIME_LEAVES.get(), RenderType.cutoutMipped());
-            RenderTypeLookup.setRenderLayer(YUZU_LEAVES.get(), RenderType.cutoutMipped());
+            RenderType rendertype1 = RenderType.cutoutMipped();
+            RenderTypeLookup.setRenderLayer(TRELLIS_BLOCK.get(), rendertype1);
+            RenderTypeLookup.setRenderLayer(RED_APPLE_LEAVES.get(), rendertype1);
+            RenderTypeLookup.setRenderLayer(PEACH_LEAVES.get(), rendertype1);
+            RenderTypeLookup.setRenderLayer(MANGO_LEAVES.get(), rendertype1);
+            RenderTypeLookup.setRenderLayer(POMEGRANATE_LEAVES.get(), rendertype1);
+            RenderTypeLookup.setRenderLayer(FIG_LEAVES.get(), rendertype1);
+            RenderTypeLookup.setRenderLayer(CITRON_LEAVES.get(), rendertype1);
+            RenderTypeLookup.setRenderLayer(POMELO_LEAVES.get(), rendertype1);
+            RenderTypeLookup.setRenderLayer(MANDARIN_LEAVES.get(), rendertype1);
+            RenderTypeLookup.setRenderLayer(PAPEDA_LEAVES.get(), rendertype1);
+            RenderTypeLookup.setRenderLayer(ORANGE_LEAVES.get(), rendertype1);
+            RenderTypeLookup.setRenderLayer(LEMON_LEAVES.get(), rendertype1);
+            RenderTypeLookup.setRenderLayer(GRAPEFRUIT_LEAVES.get(), rendertype1);
+            RenderTypeLookup.setRenderLayer(LIME_LEAVES.get(), rendertype1);
+            RenderTypeLookup.setRenderLayer(YUZU_LEAVES.get(), rendertype1);
+            RenderType rendertype2 = RenderType.cutout();
+            RenderTypeLookup.setRenderLayer(STRAWBERRY_BUSH.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(BLUEBERRY_BUSH.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(COTTON_BUSH.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(PEPPER_BUSH.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(OKRA_BUSH.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(OATS_CROP.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(GARLIC_CROP.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(LETTUCE_CROP.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(CORN_CROP.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(MILLET_CROP.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(RED_APPLE_SAPLING.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(PEACH_SAPLING.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(MANGO_SAPLING.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(POMEGRANATE_SAPLING.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(FIG_SAPLING.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(CITRON_SAPLING.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(POMELO_SAPLING.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(MANDARIN_SAPLING.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(PAPEDA_SAPLING.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(ORANGE_SAPLING.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(LEMON_SAPLING.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(GRAPEFRUIT_SAPLING.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(LIME_SAPLING.get(), rendertype2);
+            RenderTypeLookup.setRenderLayer(YUZU_SAPLING.get(), rendertype2);
         }
     }
 }
