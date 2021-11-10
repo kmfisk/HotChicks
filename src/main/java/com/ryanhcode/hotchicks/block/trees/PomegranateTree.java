@@ -8,10 +8,10 @@ import net.minecraft.world.gen.feature.ConfiguredFeature;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class PomegranateTree extends Tree {
+/*public class PomegranateTree extends Tree { todo
     @Nullable
     @Override
     protected ConfiguredFeature<BaseTreeFeatureConfig, ?> getConfiguredFeature(Random random, boolean bees) {
         return HotFeatures.POMEGRANATE;
     }
-}
+}*/
