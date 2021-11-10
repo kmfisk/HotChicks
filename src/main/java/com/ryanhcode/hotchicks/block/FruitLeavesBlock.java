@@ -41,11 +41,12 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
 
     @Override
     public boolean isRandomlyTicking(BlockState state) {
-        return state.getValue(AGE) < 3;
+        return state.getValue(AGE) < 3 || super.isRandomlyTicking(state);
     }
 
     @Override
     public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
+        super.randomTick(state, worldIn, pos, random);
         int i = state.getValue(AGE);
         if (i < 3 && worldIn.getRawBrightness(pos.above(), 0) >= 9 && ForgeHooks.onCropsGrowPre(worldIn, pos, state, random.nextInt(5) == 0)) {
             worldIn.setBlock(pos, state.setValue(AGE, i + 1), 2);
