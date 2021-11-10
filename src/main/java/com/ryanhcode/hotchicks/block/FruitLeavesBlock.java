@@ -19,26 +19,24 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeHooks;
 
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
     public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
 
-    Item fruitItem;
+    private final Supplier<? extends Item> fruitItem;
 
-    public FruitLeavesBlock(Item fruit) {
-        super(AbstractBlock.Properties.of(Material.LEAVES).strength(0.2F).randomTicks().sound(SoundType.GRASS).noOcclusion().isValidSpawn(FruitLeavesBlock::ocelotOrParrot).isSuffocating(FruitLeavesBlock::never).isViewBlocking(FruitLeavesBlock::never));
+    public FruitLeavesBlock(Supplier<? extends Item> fruit) {
+        super(AbstractBlock.Properties.of(Material.LEAVES).strength(0.2F).randomTicks().sound(SoundType.GRASS).noOcclusion()
+                .isValidSpawn((state, reader, pos, type) -> type == EntityType.OCELOT || type == EntityType.PARROT)
+                .isSuffocating((state, reader, pos) -> false)
+                .isViewBlocking((state, reader, pos) -> false)
+        );
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
         this.fruitItem = fruit;
-    }
-
-    private static boolean never(BlockState p_235436_0_, IBlockReader p_235436_1_, BlockPos p_235436_2_) {
-        return false;
-    }
-
-    private static Boolean ocelotOrParrot(BlockState p_235441_0_, IBlockReader p_235441_1_, BlockPos p_235441_2_, EntityType<?> p_235441_3_) {
-        return p_235441_3_ == EntityType.OCELOT || p_235441_3_ == EntityType.PARROT;
     }
 
     @Override
@@ -49,9 +47,9 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
     @Override
     public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
         int i = state.getValue(AGE);
-        if (i < 3 && worldIn.getRawBrightness(pos.above(), 0) >= 9 && net.minecraftforge.common.ForgeHooks.onCropsGrowPre(worldIn, pos, state, random.nextInt(5) == 0)) {
+        if (i < 3 && worldIn.getRawBrightness(pos.above(), 0) >= 9 && ForgeHooks.onCropsGrowPre(worldIn, pos, state, random.nextInt(5) == 0)) {
             worldIn.setBlock(pos, state.setValue(AGE, i + 1), 2);
-            net.minecraftforge.common.ForgeHooks.onCropsGrowPost(worldIn, pos, state);
+            ForgeHooks.onCropsGrowPost(worldIn, pos, state);
         }
     }
 
@@ -63,7 +61,7 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
             return ActionResultType.PASS;
         else if (i > 2) {
             int j = 1 + worldIn.random.nextInt(2);
-            popResource(worldIn, pos, new ItemStack(fruitItem, j));
+            popResource(worldIn, pos, new ItemStack(fruitItem.get(), j));
             worldIn.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + worldIn.random.nextFloat() * 0.4F);
             worldIn.setBlock(pos, state.setValue(AGE, 0), 2);
             return ActionResultType.sidedSuccess(worldIn.isClientSide);
@@ -73,6 +71,7 @@ public class FruitLeavesBlock extends LeavesBlock implements IGrowable {
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(AGE);
     }
 

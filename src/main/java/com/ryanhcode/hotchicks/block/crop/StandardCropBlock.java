@@ -11,18 +11,20 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 
+import java.util.function.Supplier;
+
 public class StandardCropBlock extends CropsBlock {
     private static final VoxelShape[] SHAPES = new VoxelShape[]{Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 3.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 4.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 5.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 7.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 8.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 9.0D, 16.0D)};
-    private final Item item;
+    private final Supplier<? extends Item> item;
 
-    public StandardCropBlock(AbstractBlock.Properties properties, Item item) {
+    public StandardCropBlock(AbstractBlock.Properties properties, Supplier<? extends Item> item) {
         super(properties);
         this.item = item;
     }
 
     @Override
     protected IItemProvider getBaseSeedId() {
-        return item;
+        return item.get();
     }
 
     @Override

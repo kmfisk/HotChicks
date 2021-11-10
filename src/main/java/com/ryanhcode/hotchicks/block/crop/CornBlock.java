@@ -16,14 +16,15 @@ import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class CornBlock extends BushBlock implements IGrowable {
     public static final IntegerProperty AGE = IntegerProperty.create("age", 0, 5);
     public static final IntegerProperty TYPE = IntegerProperty.create("type", 0, 2);
 
-    Item item;
+    private final Supplier<? extends Item> item;
 
-    public CornBlock(Properties properties, Item item) {
+    public CornBlock(Properties properties, Supplier<? extends Item> item) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0).setValue(TYPE, 0));
         this.item = item;

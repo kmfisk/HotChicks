@@ -28,15 +28,16 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class BerryBush extends BushBlock implements IGrowable {
     public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
     private static final VoxelShape BUSHLING_SHAPE = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 8.0D, 13.0D);
     private static final VoxelShape GROWING_SHAPE = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 16.0D, 15.0D);
 
-    Item item;
+    protected final Supplier<? extends Item> item;
 
-    public BerryBush(Properties properties, Item item) {
+    public BerryBush(Properties properties, Supplier<? extends Item> item) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
         this.item = item;
@@ -44,7 +45,7 @@ public class BerryBush extends BushBlock implements IGrowable {
 
     @Override
     public ItemStack getCloneItemStack(IBlockReader worldIn, BlockPos pos, BlockState state) {
-        return new ItemStack(item);
+        return item.get().getDefaultInstance();
     }
 
     @Override
@@ -83,7 +84,7 @@ public class BerryBush extends BushBlock implements IGrowable {
             return ActionResultType.PASS;
         else if (i > 2) {
             int j = 1 + worldIn.random.nextInt(2);
-            popResource(worldIn, pos, new ItemStack(item, j));
+            popResource(worldIn, pos, new ItemStack(item.get(), j));
             worldIn.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + worldIn.random.nextFloat() * 0.4F);
             worldIn.setBlock(pos, state.setValue(AGE, 2), 2);
             return ActionResultType.sidedSuccess(worldIn.isClientSide);

@@ -19,13 +19,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class PepperBerryBush extends BerryBush implements IGrowable {
     public static final EnumProperty<PepperType> VARIANT = EnumProperty.create("variant", PepperType.class);
 
-    Item item;
-
-    public PepperBerryBush(Properties properties, Item item) {
+    public PepperBerryBush(Properties properties, Supplier<? extends Item> item) {
         super(properties, item);
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0).setValue(VARIANT, PepperType.getRandom()));
     }
@@ -38,7 +37,7 @@ public class PepperBerryBush extends BerryBush implements IGrowable {
             return ActionResultType.PASS;
         else if (i > 2) {
             int j = 1 + worldIn.random.nextInt(2);
-            popResource(worldIn, pos, new ItemStack(item, j));
+            popResource(worldIn, pos, new ItemStack(item.get(), j));
             worldIn.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + worldIn.random.nextFloat() * 0.4F);
             worldIn.setBlock(pos, state.setValue(AGE, 2).setValue(VARIANT, PepperType.getRandom()), 2);
             return ActionResultType.sidedSuccess(worldIn.isClientSide);
