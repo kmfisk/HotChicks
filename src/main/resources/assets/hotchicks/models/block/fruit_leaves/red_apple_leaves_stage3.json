@@ -1,6 +1,6 @@
 {
   "parent": "hotchicks:block/fruit_leaves",
   "textures": {
-    "fruit": "hotchicks:block/mandarin_stage2"
+    "fruit": "hotchicks:block/red_apple_stage3"
   }
 }
