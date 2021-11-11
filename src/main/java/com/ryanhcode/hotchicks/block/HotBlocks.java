@@ -1,16 +1,10 @@
 package com.ryanhcode.hotchicks.block;
 
 import com.ryanhcode.hotchicks.HotChickens;
-import com.ryanhcode.hotchicks.block.crop.BerryBush;
-import com.ryanhcode.hotchicks.block.crop.CornBlock;
-import com.ryanhcode.hotchicks.block.crop.PepperBerryBush;
-import com.ryanhcode.hotchicks.block.crop.StandardCropBlock;
+import com.ryanhcode.hotchicks.block.crop.*;
 import com.ryanhcode.hotchicks.block.trees.*;
 import com.ryanhcode.hotchicks.item.HotItems;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.SaplingBlock;
-import net.minecraft.block.SoundType;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -73,6 +67,11 @@ public class HotBlocks {
     public static final RegistryObject<Block> LETTUCE_CROP = REGISTRAR.register("lettuce", () -> new StandardCropBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.CROP), HotItems.LETTUCE));
     public static final RegistryObject<Block> GARLIC_CROP = REGISTRAR.register("garlic", () -> new StandardCropBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.CROP), HotItems.GARLIC));
 
+    public static final RegistryObject<Block> WILD_GRAPE = registerWithItem("wild_grape", CropVineBlock::new);
+    public static final RegistryObject<Block> WILD_KIWI = registerWithItem("wild_kiwi", CropVineBlock::new);
+    public static final RegistryObject<Block> WILD_TOMATO = registerWithItem("wild_tomato", () -> new BushBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().strength(0.2F).sound(SoundType.VINE)));
+    public static final RegistryObject<Block> WILD_PEA = registerWithItem("wild_pea", CropVineBlock::new);
+
     public static final RegistryObject<Block> TRELLIS_BLOCK = registerWithItem("trellis", () -> new TrellisBlock(AbstractBlock.Properties.of(Material.WOOD).strength(0.8F).sound(SoundType.WOOD).noOcclusion()));
 
     private static <T extends Block> RegistryObject<T> registerWithItem(String name, Supplier<T> block) {
@@ -123,5 +122,9 @@ public class HotBlocks {
         RenderTypeLookup.setRenderLayer(GRAPEFRUIT_SAPLING.get(), rendertype2);
         RenderTypeLookup.setRenderLayer(LIME_SAPLING.get(), rendertype2);
         RenderTypeLookup.setRenderLayer(YUZU_SAPLING.get(), rendertype2);
+        RenderTypeLookup.setRenderLayer(WILD_GRAPE.get(), rendertype2);
+        RenderTypeLookup.setRenderLayer(WILD_KIWI.get(), rendertype2);
+        RenderTypeLookup.setRenderLayer(WILD_TOMATO.get(), rendertype2);
+        RenderTypeLookup.setRenderLayer(WILD_PEA.get(), rendertype2);
     }
 }

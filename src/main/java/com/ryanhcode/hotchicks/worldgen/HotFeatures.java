@@ -32,9 +32,15 @@ import java.util.Set;
 public class HotFeatures {
     public static ConfiguredFeature<?, ?> CORN;
     public static ConfiguredFeature<?, ?> MILLET;
+    public static ConfiguredFeature<?, ?> OAT;
+    public static ConfiguredFeature<?, ?> GARLIC;
     public static ConfiguredFeature<?, ?> BLUEBERRY_BUSH;
     public static ConfiguredFeature<?, ?> PEPPER_BUSH;
     public static ConfiguredFeature<?, ?> STRAWBERRY_BUSH;
+    public static ConfiguredFeature<?, ?> WILD_GRAPE;
+    public static ConfiguredFeature<?, ?> WILD_KIWI;
+    public static ConfiguredFeature<?, ?> WILD_TOMATO;
+    public static ConfiguredFeature<?, ?> WILD_PEA;
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> RED_APPLE;
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> PEACH;
 //    public static ConfiguredFeature<BaseTreeFeatureConfig, ?> MANGO; todo
@@ -62,10 +68,42 @@ public class HotFeatures {
                         new MilletPlacer(0, 0))).tries(30).xspread(10).yspread(0).zspread(10).noProjection().needWater().build()
         ).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
 
+        OAT = Feature.RANDOM_PATCH.configured(
+                (new BlockClusterFeatureConfig.Builder(
+                        new SimpleBlockStateProvider(HotBlocks.OATS_CROP.get().defaultBlockState()),
+                        SimpleBlockPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK.getBlock())).noProjection().build()
+        ).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
+        GARLIC = Feature.RANDOM_PATCH.configured(
+                (new BlockClusterFeatureConfig.Builder(
+                        new SimpleBlockStateProvider(HotBlocks.GARLIC_CROP.get().defaultBlockState()),
+                        SimpleBlockPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK.getBlock())).noProjection().build()
+        ).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
+
+        WILD_GRAPE = Feature.RANDOM_PATCH.configured(
+                (new BlockClusterFeatureConfig.Builder(
+                        new SimpleBlockStateProvider(HotBlocks.WILD_GRAPE.get().defaultBlockState()),
+                        SimpleBlockPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.OAK_LEAVES.getBlock(), Blocks.BIRCH_LEAVES.getBlock())).noProjection().build()
+        ).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
+        WILD_KIWI = Feature.RANDOM_PATCH.configured(
+                (new BlockClusterFeatureConfig.Builder(
+                        new SimpleBlockStateProvider(HotBlocks.WILD_KIWI.get().defaultBlockState()),
+                        LowLightPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.OAK_LOG.getBlock(), Blocks.BIRCH_LOG.getBlock())).noProjection().build()
+        ).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
+        WILD_TOMATO = Feature.RANDOM_PATCH.configured(
+                (new BlockClusterFeatureConfig.Builder(
+                        new SimpleBlockStateProvider(HotBlocks.WILD_TOMATO.get().defaultBlockState()),
+                        LowLightPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK.getBlock())).noProjection().build()
+        ).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
+        WILD_PEA = Feature.RANDOM_PATCH.configured(
+                (new BlockClusterFeatureConfig.Builder(
+                        new SimpleBlockStateProvider(HotBlocks.WILD_PEA.get().defaultBlockState()),
+                        LowLightPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.OAK_LOG.getBlock(), Blocks.BIRCH_LOG.getBlock())).noProjection().build()
+        ).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
+
         BLUEBERRY_BUSH = Feature.RANDOM_PATCH.configured(
                 (new BlockClusterFeatureConfig.Builder(
                         new SimpleBlockStateProvider(HotBlocks.BLUEBERRY_BUSH.get().defaultBlockState()),
-                        new LowLightPlacer())).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK.getBlock())).noProjection().build()
+                        LowLightPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK.getBlock())).noProjection().build()
         ).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE);
         PEPPER_BUSH = Feature.RANDOM_PATCH.configured(
                 (new BlockClusterFeatureConfig.Builder(
@@ -75,11 +113,17 @@ public class HotFeatures {
         STRAWBERRY_BUSH = Feature.RANDOM_PATCH.configured(
                 (new BlockClusterFeatureConfig.Builder(
                         new SimpleBlockStateProvider(HotBlocks.STRAWBERRY_BUSH.get().defaultBlockState()),
-                        new LowLightPlacer())).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK.getBlock())).noProjection().build()
+                        LowLightPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK.getBlock())).noProjection().build()
         ).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE);
 
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "corn_patches"), CORN);
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "millet_patches"), MILLET);
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "oat_patches"), OAT);
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "garlic_patches"), GARLIC);
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "wild_grape_patches"), WILD_GRAPE);
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "wild_kiwi_patches"), WILD_KIWI);
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "wild_tomato_patches"), WILD_TOMATO);
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "wild_pea_patches"), WILD_PEA);
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "blueberry_patches"), BLUEBERRY_BUSH);
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "pepper_patches"), PEPPER_BUSH);
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "strawberry_patches"), STRAWBERRY_BUSH);
@@ -176,6 +220,9 @@ public class HotFeatures {
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> STRAWBERRY_BUSH);
 
                 if (!biomeTypes.contains(BiomeDictionary.Type.COLD) && !biomeTypes.contains(BiomeDictionary.Type.DENSE) && !biomeTypes.contains(BiomeDictionary.Type.MOUNTAIN)) {
+                    event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> WILD_GRAPE);
+                    event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> WILD_KIWI);
+                    event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> WILD_PEA);
                     event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> RED_APPLE);
                     event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> PEACH);
                 }
@@ -188,6 +235,8 @@ public class HotFeatures {
 
             if (biomeTypes.contains(BiomeDictionary.Type.SAVANNA)) {
                 event.getGeneration().getFeatures(GenerationStage.Decoration.LAKES).add(() -> MILLET);
+                event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> OAT);
+                event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> GARLIC);
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> PEACH);
 //                event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> POMEGRANATE); todo
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> FIG);
@@ -203,8 +252,11 @@ public class HotFeatures {
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> PEPPER_BUSH);
             }
 
-            if (biomeTypes.contains(BiomeDictionary.Type.PLAINS) && !biomeTypes.contains(BiomeDictionary.Type.HOT))
+            if (biomeTypes.contains(BiomeDictionary.Type.PLAINS) && !biomeTypes.contains(BiomeDictionary.Type.HOT)) {
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> CORN);
+                event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> OAT);
+                event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> WILD_TOMATO);
+            }
 
             if (biomeTypes.contains(BiomeDictionary.Type.CONIFEROUS) && !biomeTypes.contains(BiomeDictionary.Type.SNOWY))
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> BLUEBERRY_BUSH);
