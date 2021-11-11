@@ -8,13 +8,14 @@ import com.ryanhcode.hotchicks.client.renderer.entity.HotChickenRenderer;
 import com.ryanhcode.hotchicks.entity.HotEntities;
 import com.ryanhcode.hotchicks.item.HotItems;
 import com.ryanhcode.hotchicks.registry.HotContainers;
+import com.ryanhcode.hotchicks.registry.HotGlobalLootModifier;
 import com.ryanhcode.hotchicks.registry.HotTileEntities;
+import com.ryanhcode.hotchicks.registry.HotVillagerTrades;
 import com.ryanhcode.hotchicks.worldgen.HotFeatures;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.color.BlockColors;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -45,12 +46,16 @@ public class HotChickens {
 
     public HotChickens() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+        IEventBus forgeBus = MinecraftForge.EVENT_BUS;
 
         HotEntities.ENTITIES.register(modBus);
         HotTileEntities.ENTITIES.register(modBus);
         HotBlocks.REGISTRAR.register(modBus);
         HotItems.ITEMS.register(modBus);
         HotContainers.CONTAINERS.register(modBus);
+        HotGlobalLootModifier.REGISTRAR.register(modBus);
+
+        forgeBus.addListener(HotVillagerTrades::onVillagerTradesEvent);
 
         modBus.addListener(this::setup);
         modBus.addListener(this::registerAttributes);
@@ -58,7 +63,7 @@ public class HotChickens {
         modBus.addListener(this::registerColorHandlerBlocks);
         modBus.addListener(this::modelLoad);
 
-        MinecraftForge.EVENT_BUS.register(this);
+        forgeBus.register(this);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
@@ -89,7 +94,7 @@ public class HotChickens {
         blockcolors.register((state, reader, pos, color) -> reader != null && pos != null ? BiomeColors.getAverageWaterColor(reader, pos) : -1,
                 HotBlocks.TROUGH_BLOCK.get(), HotBlocks.METAL_TROUGH_BLOCK.get());
         blockcolors.register((state, reader, pos, color) -> reader != null && pos != null ? BiomeColors.getAverageFoliageColor(reader, pos) : FoliageColors.getDefaultColor(),
-                HotBlocks.RED_APPLE_LEAVES.get(), HotBlocks.PEACH_LEAVES.get(), HotBlocks.MANGO_LEAVES.get(), HotBlocks.POMEGRANATE_LEAVES.get(),
+                HotBlocks.RED_APPLE_LEAVES.get(), HotBlocks.PEACH_LEAVES.get(), /*HotBlocks.MANGO_LEAVES.get(), HotBlocks.POMEGRANATE_LEAVES.get(),*/
                 HotBlocks.FIG_LEAVES.get(), HotBlocks.CITRON_LEAVES.get(), HotBlocks.POMELO_LEAVES.get(), HotBlocks.MANDARIN_LEAVES.get(),
                 HotBlocks.PAPEDA_LEAVES.get(), HotBlocks.ORANGE_LEAVES.get(), HotBlocks.LEMON_LEAVES.get(), HotBlocks.GRAPEFRUIT_LEAVES.get(),
                 HotBlocks.LIME_LEAVES.get(), HotBlocks.YUZU_LEAVES.get());
