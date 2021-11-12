@@ -1,7 +1,8 @@
 {
-  "parent": "minecraft:block/leaves",
+  "parent": "block/block",
   "textures": {
-    "all": "minecraft:block/oak_leaves"
+    "all": "hotchicks:block/fruit_leaves",
+    "particle": "#all"
   },
   "elements": [
     {   "from": [ 0, 0, 0 ],

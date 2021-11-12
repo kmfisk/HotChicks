@@ -1,5 +1,5 @@
 {
-  "parent": "hotchicks:block/fruit_leaves",
+  "parent": "hotchicks:block/citrus_leaves",
   "textures": {
     "fruit": "hotchicks:block/citron_stage1"
   }

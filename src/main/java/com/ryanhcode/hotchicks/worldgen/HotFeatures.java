@@ -128,59 +128,59 @@ public class HotFeatures {
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "pepper_patches"), PEPPER_BUSH);
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "strawberry_patches"), STRAWBERRY_BUSH);
 
-        RED_APPLE = configureFruitTree(Blocks.OAK_LOG, HotBlocks.RED_APPLE_LEAVES.get(), Blocks.OAK_LEAVES,
+        RED_APPLE = configureFruitTree(Blocks.OAK_LOG, HotBlocks.RED_APPLE_LEAVES.get(), HotBlocks.FRUIT_LEAVES.get(),
                 new FancyFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(4), 4),
                 new FancyTrunkPlacer(3, 11, 0),
                 0, 0, 0, OptionalInt.of(4));
-        PEACH = configureFruitTree(Blocks.DARK_OAK_LOG, HotBlocks.PEACH_LEAVES.get(), Blocks.DARK_OAK_LEAVES,
+        PEACH = configureFruitTree(Blocks.DARK_OAK_LOG, HotBlocks.PEACH_LEAVES.get(), HotBlocks.FRUIT_LEAVES.get(),
                 new BlobFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(0), 3),
                 new StraightTrunkPlacer(4, 2, 0),
                 1, 0, 1, OptionalInt.empty());
-        /*MANGO = configureFruitTree(Blocks.ACACIA_LOG, HotBlocks.MANGO_LEAVES.get(), Blocks.ACACIA_LEAVES, todo
+        /*MANGO = configureFruitTree(Blocks.ACACIA_LOG, HotBlocks.MANGO_LEAVES.get(), HotBlocks.TROPICAL_FRUIT_LEAVES.get(), todo
                 new FancyFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(4), 4),
                 new FancyTrunkPlacer(8, 2, 6),
                 0, 0, 0, OptionalInt.of(4));*/
-        /*POMEGRANATE = configureFruitTree(Blocks.DARK_OAK_LOG, HotBlocks.POMEGRANATE_LEAVES.get(), Blocks.DARK_OAK_LEAVES,
+        /*POMEGRANATE = configureFruitTree(Blocks.DARK_OAK_LOG, HotBlocks.POMEGRANATE_LEAVES.get(), HotBlocks.FRUIT_LEAVES.get(),
                 new FancyFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(5), 4),
                 new FancyTrunkPlacer(3, 2, 0),
                 0, 0, 0, OptionalInt.of(4));*/
-        FIG = configureFruitTree(Blocks.OAK_LOG, HotBlocks.FIG_LEAVES.get(), Blocks.OAK_LEAVES,
+        FIG = configureFruitTree(Blocks.OAK_LOG, HotBlocks.FIG_LEAVES.get(), HotBlocks.FICUS_LEAVES.get(),
                 new AcaciaFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(1)),
                 new StraightTrunkPlacer(3, 2, 0),
                 1, 0, 1, OptionalInt.empty());
-        CITRON = configureFruitTree(Blocks.OAK_LOG, HotBlocks.CITRON_LEAVES.get(), Blocks.OAK_LEAVES,
+        CITRON = configureFruitTree(Blocks.OAK_LOG, HotBlocks.CITRON_LEAVES.get(), HotBlocks.CITRUS_LEAVES.get(),
                 new AcaciaFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(1)),
                 new StraightTrunkPlacer(5, 2, 1),
                 0, 0, 0, OptionalInt.of(4));
-        POMELO = configureFruitTree(Blocks.OAK_LOG, HotBlocks.POMELO_LEAVES.get(), Blocks.OAK_LEAVES,
+        POMELO = configureFruitTree(Blocks.OAK_LOG, HotBlocks.POMELO_LEAVES.get(), HotBlocks.CITRUS_LEAVES.get(),
                 new JungleFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(0), 2),
                 new StraightTrunkPlacer(5, 1, 9),
                 1, 1, 2, OptionalInt.empty());
-        MANDARIN = configureFruitTree(Blocks.OAK_LOG, HotBlocks.MANDARIN_LEAVES.get(), Blocks.OAK_LEAVES,
+        MANDARIN = configureFruitTree(Blocks.OAK_LOG, HotBlocks.MANDARIN_LEAVES.get(), HotBlocks.CITRUS_LEAVES.get(),
                 new AcaciaFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(1)),
                 new ForkyTrunkPlacer(3, 2, 2),
                 1, 0, 2, OptionalInt.empty());
-        PAPEDA = configureFruitTree(Blocks.OAK_LOG, HotBlocks.PAPEDA_LEAVES.get(), Blocks.OAK_LEAVES,
+        PAPEDA = configureFruitTree(Blocks.OAK_LOG, HotBlocks.PAPEDA_LEAVES.get(), HotBlocks.CITRUS_LEAVES.get(),
                 new FancyFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(4), 4),
                 new FancyTrunkPlacer(3, 11, 0),
                 0, 0, 0, OptionalInt.of(4));
-        ORANGE = configureFruitTree(Blocks.OAK_LOG, HotBlocks.ORANGE_LEAVES.get(), Blocks.OAK_LEAVES,
+        ORANGE = configureFruitTree(Blocks.OAK_LOG, HotBlocks.ORANGE_LEAVES.get(), HotBlocks.CITRUS_LEAVES.get(),
                 new FancyFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(4), 4),
                 new FancyTrunkPlacer(3, 11, 0),
                 0, 0, 0, OptionalInt.of(4));
-        LEMON = configureFruitTree(Blocks.OAK_LOG, HotBlocks.LEMON_LEAVES.get(), Blocks.OAK_LEAVES,
+        LEMON = configureFruitTree(Blocks.OAK_LOG, HotBlocks.LEMON_LEAVES.get(), HotBlocks.CITRUS_LEAVES.get(),
                 new AcaciaFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(1)),
                 new StraightTrunkPlacer(5, 2, 1),
                 0, 0, 0, OptionalInt.of(4));
-        GRAPEFRUIT = configureFruitTree(Blocks.OAK_LOG, HotBlocks.GRAPEFRUIT_LEAVES.get(), Blocks.OAK_LEAVES,
+        GRAPEFRUIT = configureFruitTree(Blocks.OAK_LOG, HotBlocks.GRAPEFRUIT_LEAVES.get(), HotBlocks.CITRUS_LEAVES.get(),
                 new JungleFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(0), 2),
                 new StraightTrunkPlacer(5, 1, 9),
                 1, 1, 2, OptionalInt.empty());
-        LIME = configureFruitTree(Blocks.OAK_LOG, HotBlocks.LIME_LEAVES.get(), Blocks.OAK_LEAVES,
+        LIME = configureFruitTree(Blocks.OAK_LOG, HotBlocks.LIME_LEAVES.get(), HotBlocks.CITRUS_LEAVES.get(),
                 new FancyFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(4), 4),
                 new FancyTrunkPlacer(3, 11, 0),
                 0, 0, 0, OptionalInt.of(4));
-        YUZU = configureFruitTree(Blocks.OAK_LOG, HotBlocks.YUZU_LEAVES.get(), Blocks.OAK_LEAVES,
+        YUZU = configureFruitTree(Blocks.OAK_LOG, HotBlocks.YUZU_LEAVES.get(), HotBlocks.CITRUS_LEAVES.get(),
                 new AcaciaFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(1)),
                 new StraightTrunkPlacer(5, 2, 1),
                 0, 0, 0, OptionalInt.of(4));

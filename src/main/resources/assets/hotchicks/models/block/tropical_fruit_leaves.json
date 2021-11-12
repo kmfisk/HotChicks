@@ -1,0 +1,6 @@
+{
+  "parent": "hotchicks:block/fruit_leaves",
+  "textures": {
+    "all": "hotchicks:block/tropical_fruit_leaves"
+  }
+}

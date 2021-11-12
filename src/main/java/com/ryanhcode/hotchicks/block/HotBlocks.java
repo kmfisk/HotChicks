@@ -8,6 +8,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
+import net.minecraft.entity.EntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -47,6 +48,11 @@ public class HotBlocks {
     public static final RegistryObject<Block> COTTON_BUSH = registerWithItem("cotton_bush", () -> new BerryBush(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH), HotItems.COTTON));
     public static final RegistryObject<Block> OKRA_BUSH = registerWithItem("okra_bush", () -> new BerryBush(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH), HotItems.OKRA));
     public static final RegistryObject<Block> PEPPER_BUSH = registerWithItem("pepper_bush", () -> new PepperBerryBush(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH), HotItems.PEPPERS));
+
+    public static final RegistryObject<Block> FRUIT_LEAVES = registerWithItem("fruit_leaves", () -> new LeavesBlock(AbstractBlock.Properties.of(Material.LEAVES).strength(0.2F).randomTicks().sound(SoundType.GRASS).noOcclusion().isValidSpawn((state, reader, pos, type) -> type == EntityType.OCELOT || type == EntityType.PARROT).isSuffocating((state, reader, pos) -> false).isViewBlocking((state, reader, pos) -> false)));
+    public static final RegistryObject<Block> CITRUS_LEAVES = registerWithItem("citrus_leaves", () -> new LeavesBlock(AbstractBlock.Properties.of(Material.LEAVES).strength(0.2F).randomTicks().sound(SoundType.GRASS).noOcclusion().isValidSpawn((state, reader, pos, type) -> type == EntityType.OCELOT || type == EntityType.PARROT).isSuffocating((state, reader, pos) -> false).isViewBlocking((state, reader, pos) -> false)));
+    public static final RegistryObject<Block> FICUS_LEAVES = registerWithItem("ficus_leaves", () -> new LeavesBlock(AbstractBlock.Properties.of(Material.LEAVES).strength(0.2F).randomTicks().sound(SoundType.GRASS).noOcclusion().isValidSpawn((state, reader, pos, type) -> type == EntityType.OCELOT || type == EntityType.PARROT).isSuffocating((state, reader, pos) -> false).isViewBlocking((state, reader, pos) -> false)));
+    public static final RegistryObject<Block> TROPICAL_FRUIT_LEAVES = registerWithItem("tropical_fruit_leaves", () -> new LeavesBlock(AbstractBlock.Properties.of(Material.LEAVES).strength(0.2F).randomTicks().sound(SoundType.GRASS).noOcclusion().isValidSpawn((state, reader, pos, type) -> type == EntityType.OCELOT || type == EntityType.PARROT).isSuffocating((state, reader, pos) -> false).isViewBlocking((state, reader, pos) -> false)));
 
     public static final RegistryObject<Block> RED_APPLE_LEAVES = registerWithItem("red_apple_leaves", () -> new FruitLeavesBlock(() -> Items.APPLE));
     public static final RegistryObject<Block> PEACH_LEAVES = registerWithItem("peach_leaves", () -> new FruitLeavesBlock(HotItems.PEACH));
@@ -98,6 +104,10 @@ public class HotBlocks {
     public static void setRenderLayers() {
         RenderType rendertype1 = RenderType.cutoutMipped();
         RenderTypeLookup.setRenderLayer(TRELLIS_BLOCK.get(), rendertype1);
+        RenderTypeLookup.setRenderLayer(FRUIT_LEAVES.get(), rendertype1);
+        RenderTypeLookup.setRenderLayer(CITRUS_LEAVES.get(), rendertype1);
+        RenderTypeLookup.setRenderLayer(FICUS_LEAVES.get(), rendertype1);
+        RenderTypeLookup.setRenderLayer(TROPICAL_FRUIT_LEAVES.get(), rendertype1);
         RenderTypeLookup.setRenderLayer(RED_APPLE_LEAVES.get(), rendertype1);
         RenderTypeLookup.setRenderLayer(PEACH_LEAVES.get(), rendertype1);
         //RenderTypeLookup.setRenderLayer(MANGO_LEAVES.get(), rendertype1); todo
