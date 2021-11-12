@@ -1,6 +1,5 @@
 package com.ryanhcode.hotchicks.registry;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonObject;
 import com.ryanhcode.hotchicks.item.HotItems;
 import net.minecraft.item.ItemStack;
@@ -21,12 +20,23 @@ public class HotLootImporter extends LootModifier {
     @Nonnull
     @Override
     protected List<ItemStack> doApply(List<ItemStack> generatedLoot, LootContext context) {
-        generatedLoot.addAll(ImmutableList.of(
-                HotItems.OATS.get().getDefaultInstance(),
-                HotItems.LETTUCE.get().getDefaultInstance(),
-                HotItems.GARLIC.get().getDefaultInstance(),
-                HotItems.OKRA.get().getDefaultInstance(),
-                HotItems.COTTON.get().getDefaultInstance()));
+        switch (context.getRandom().nextInt(5)) {
+            case 0:
+                generatedLoot.add(HotItems.OATS.get().getDefaultInstance());
+                break;
+            case 1:
+                generatedLoot.add(HotItems.LETTUCE.get().getDefaultInstance());
+                break;
+            case 2:
+                generatedLoot.add(HotItems.GARLIC.get().getDefaultInstance());
+                break;
+            case 3:
+                generatedLoot.add(HotItems.OKRA.get().getDefaultInstance());
+                break;
+            case 4:
+                generatedLoot.add(HotItems.COTTON.get().getDefaultInstance());
+                break;
+        }
         return generatedLoot;
     }
 
