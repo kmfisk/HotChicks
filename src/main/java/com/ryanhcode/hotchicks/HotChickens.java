@@ -48,11 +48,11 @@ public class HotChickens {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         IEventBus forgeBus = MinecraftForge.EVENT_BUS;
 
-        HotEntities.ENTITIES.register(modBus);
-        HotTileEntities.ENTITIES.register(modBus);
+        HotEntities.REGISTRAR.register(modBus);
+        HotTileEntities.REGISTRAR.register(modBus);
         HotBlocks.REGISTRAR.register(modBus);
-        HotItems.ITEMS.register(modBus);
-        HotContainers.CONTAINERS.register(modBus);
+        HotItems.REGISTRAR.register(modBus);
+        HotContainers.REGISTRAR.register(modBus);
         HotGlobalLootModifier.REGISTRAR.register(modBus);
 
         forgeBus.addListener(HotVillagerTrades::onVillagerTradesEvent);
