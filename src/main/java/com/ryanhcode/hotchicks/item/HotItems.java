@@ -14,7 +14,7 @@ public class HotItems {
 
     public static final RegistryObject<Item> WHITE_EGG = REGISTRAR.register("white_egg", () -> new HotEggItem(new Item.Properties().stacksTo(16).tab(HotChickens.HOT_CHICKS_GROUP)));
     public static final RegistryObject<Item> STUD_BOOK = REGISTRAR.register("stud_book", () -> new StudBookItem(new Item.Properties().stacksTo(1).tab(HotChickens.HOT_CHICKS_GROUP)));
-    public static final RegistryObject<Item> LIVESTOCK_CRATE = REGISTRAR.register("livestock_crate", () -> new Item(new Item.Properties().tab(HotChickens.HOT_CHICKS_GROUP)));
+//    public static final RegistryObject<Item> LIVESTOCK_CRATE = REGISTRAR.register("livestock_crate", () -> new Item(new Item.Properties().tab(HotChickens.HOT_CHICKS_GROUP)));
 
     // CROP BLOCK ITEMS
     public static final RegistryObject<Item> BLUEBERRIES = REGISTRAR.register("blueberries", () -> new BlockNamedItem(HotBlocks.BLUEBERRY_BUSH.get(), new Item.Properties().tab(HotChickens.HOT_CHICKS_GROUP).food(HotFoods.BLUEBERRY)));

@@ -26,21 +26,21 @@ public class HotBlocks {
     public static final RegistryObject<Block> NEST = registerWithItem("nest", () -> new StickNestBlock(AbstractBlock.Properties.of(Material.GRASS).strength(0.5F).sound(SoundType.GRASS).noOcclusion()));
     public static final RegistryObject<Block> TROUGH_BLOCK = registerWithItem("trough_block", () -> new TroughBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD)));
     public static final RegistryObject<Block> METAL_TROUGH_BLOCK = registerWithItem("metal_trough_block", () -> new MetalTroughBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD)));
-    public static final RegistryObject<Block> FOOD_CROCK = registerWithItem("food_crock", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
-    public static final RegistryObject<Block> WATER_BOTTLE = registerWithItem("water_bottle", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
+//    public static final RegistryObject<Block> FOOD_CROCK = registerWithItem("food_crock", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
+//    public static final RegistryObject<Block> WATER_BOTTLE = registerWithItem("water_bottle", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
     public static final RegistryObject<Block> TRELLIS_BLOCK = registerWithItem("trellis", () -> new TrellisBlock(AbstractBlock.Properties.of(Material.WOOD).strength(0.8F).sound(SoundType.WOOD).noOcclusion()));
-    public static final RegistryObject<Block> RABBIT_WIRE = registerWithItem("rabbit_wire", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
-    public static final RegistryObject<Block> RABBIT_FLOORING = registerWithItem("rabbit_flooring", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
-    public static final RegistryObject<Block> RABBIT_WIRE_DOOR = registerWithItem("rabbit_wire_door", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
-    public static final RegistryObject<Block> FRUIT_CRATE = registerWithItem("fruit_crate", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
+//    public static final RegistryObject<Block> RABBIT_WIRE = registerWithItem("rabbit_wire", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
+//    public static final RegistryObject<Block> RABBIT_FLOORING = registerWithItem("rabbit_flooring", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
+//    public static final RegistryObject<Block> RABBIT_WIRE_DOOR = registerWithItem("rabbit_wire_door", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
+//    public static final RegistryObject<Block> FRUIT_CRATE = registerWithItem("fruit_crate", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
 
-    public static final Map<String, RegistryObject<Block>> PLANTERS = new HashMap<>();
+    /*public static final Map<String, RegistryObject<Block>> PLANTERS = new HashMap<>();
 
     static {
         String[] woodTypes = new String[]{"oak", "spruce", "birch", "acacia", "jungle", "dark_oak", "crimson", "warped"};
         for (String woodType : woodTypes)
             PLANTERS.put(woodType, registerWithItem(woodType + "_planter", () -> new Block(AbstractBlock.Properties.of(Material.WOOD))));
-    }
+    }*/
 
     public static final RegistryObject<Block> STRAWBERRY_BUSH = registerWithItem("strawberry_bush", () -> new BerryBush(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH), HotItems.STRAWBERRY));
     public static final RegistryObject<Block> BLUEBERRY_BUSH = registerWithItem("blueberry_bush", () -> new BerryBush(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH), HotItems.BLUEBERRIES));

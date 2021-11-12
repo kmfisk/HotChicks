@@ -14,6 +14,9 @@
     "age=2,type=1": {
       "model": "hotchicks:block/millet/millet_middle_2"
     },
+    "age=2,type=2": {
+      "model": "hotchicks:block/millet/millet_middle_2"
+    },
 
 
     "age=3,type=0": {

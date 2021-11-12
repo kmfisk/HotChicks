@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/vine_4u",
+  "textures": {
+    "particle": "hotchicks:block/trellis/grapes/grapes_stage5",
+    "vine": "hotchicks:block/trellis/grapes/grapes_stage5"
+  }
+}
