@@ -29,7 +29,7 @@ public class StudBookInfo implements ReadBookScreen.IBookInfo {
 
         page += "" + "" + TextFormatting.BOLD + "Breed: " + ChickenBreed.valueOf(entity.getBreed().toUpperCase()) + TextFormatting.RESET;
         page += "\n" + TextFormatting.RESET + "" + TextFormatting.BOLD + "" + "Variant: " + entity.getVariant();
-        page += "\n" + TextFormatting.RESET + "" + TextFormatting.BOLD + "" + "Child Type: " + entity.getChildType();
+        page += "\n" + TextFormatting.RESET + "" + TextFormatting.BOLD + "" + "Child Type: " + entity.getChickType();
         page += "\n" + TextFormatting.RESET + "" + TextFormatting.BOLD + "" + "Sex: " + entity.getSex().toString() + TextFormatting.RESET;
 
         page += "\n\n" + TextFormatting.RESET + "" + "Carcass Quality: " + stats.carcass_quality;

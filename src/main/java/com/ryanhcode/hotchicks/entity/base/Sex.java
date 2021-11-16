@@ -8,7 +8,7 @@ public enum Sex {
         return sex ? MALE : FEMALE;
     }
 
-    public static boolean getSex(Sex sex) {
-        return sex == MALE;
+    public boolean toBool() {
+        return this == MALE;
     }
 }

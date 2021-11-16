@@ -15,23 +15,21 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 public class HotEggItem extends Item {
-
     public HotEggItem(Properties properties) {
         super(properties);
     }
 
     public static void setStats(ItemStack stack, ChickenStats chickenStats) {
-        setStats(stack, chickenStats.carcass_quality, chickenStats.growth_rate, chickenStats.egg_speed, 50);
+        setStats(stack, chickenStats.tameness, chickenStats.carcass_quality, chickenStats.growth_rate, chickenStats.egg_speed);
     }
 
-    public static void setStats(ItemStack stack, int carcass_quality, int growth_rate, int egg_speed, int tameness) {
+    public static void setStats(ItemStack stack, int tameness, int carcass_quality, int growth_rate, int egg_speed) {
         CompoundNBT compoundnbt = stack.getTag();
+        compoundnbt.putInt("tameness", tameness);
         compoundnbt.putInt("carcass_quality", carcass_quality);
         compoundnbt.putInt("growth_rate", growth_rate);
         compoundnbt.putInt("egg_speed", egg_speed);
-        compoundnbt.putInt("tameness", tameness);
     }
-
 
     public static void setBreed(ItemStack stack, String breed) {
         CompoundNBT compoundnbt = stack.getTag();
@@ -53,7 +51,6 @@ public class HotEggItem extends Item {
         return compoundnbt.getInt("tameness");
     }
 
-
     @Override
     public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
         CompoundNBT tag = stack.getOrCreateTag();
@@ -73,14 +70,13 @@ public class HotEggItem extends Item {
         super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 
-
     @Nullable
     @Override
     public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
         CompoundNBT tag = stack.getOrCreateTag();
         if (!tag.contains("carcass_quality")) {
             //setBreed(stack, "Junglefowl");
-            setStats(stack, new ChickenStats(0, 0, 0));
+            setStats(stack, new ChickenStats(50, 0, 0, 0));
             tag.putInt("time_left", 200);
         }
 
@@ -90,13 +86,10 @@ public class HotEggItem extends Item {
         return super.initCapabilities(stack, nbt);
     }
 
-    public static void tick(ItemStack stack) {
-
-    }
-
     public static ChickenStats getStats(ItemStack stack) {
         CompoundNBT tag = stack.getOrCreateTag();
         return new ChickenStats(
+                tag.getInt("tameness"),
                 tag.getInt("carcass_quality"),
                 tag.getInt("growth_rate"),
                 tag.getInt("egg_speed")
