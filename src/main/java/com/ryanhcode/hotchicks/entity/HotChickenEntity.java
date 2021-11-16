@@ -199,42 +199,20 @@ public class HotChickenEntity extends LivestockEntity {
 
     @Override
     public boolean canMate(AnimalEntity otherAnimal) {
-        HotChickenEntity other = (HotChickenEntity) otherAnimal;
-        if (other == this) {
-            return false;
-        } else if (other.getClass() != this.getClass()) {
-            return false;
-        } else {
-            return this.isInLove() && otherAnimal.isInLove() && other.getSex() != this.getSex();
+        if (!(otherAnimal instanceof HotChickenEntity)) return false;
+        else {
+            HotChickenEntity chicken = (HotChickenEntity) otherAnimal;
+            if (chicken == this)
+                return false;
+            else
+                return this.isInLove() && otherAnimal.isInLove() && chicken.getSex() != this.getSex();
         }
-    }
-
-    @Override
-    @OnlyIn(Dist.CLIENT)
-    public void handleEntityEvent(byte id) {
-        if (id == 18) {
-            for (int i = 0; i < 7; ++i) {
-                double d0 = this.random.nextGaussian() * 0.02D;
-                double d1 = this.random.nextGaussian() * 0.02D;
-                double d2 = this.random.nextGaussian() * 0.02D;
-                this.level.addParticle(ParticleTypes.HEART, this.getRandomX(1.0D), this.getRandomY() + 0.5D, this.getRandomZ(1.0D), d0, d1, d2);
-            }
-        } else if (id == 19) {
-            for (int i = 0; i < 7; ++i) {
-                double d0 = this.random.nextGaussian() * 0.02D;
-                double d1 = this.random.nextGaussian() * 0.02D;
-                double d2 = this.random.nextGaussian() * 0.02D;
-                this.level.addParticle(ParticleTypes.ANGRY_VILLAGER, this.getRandomX(1.0D), this.getRandomY() + 0.5D, this.getRandomZ(1.0D), d0, d1, d2);
-            }
-        } else {
-            super.handleEntityEvent(id);
-        }
-
     }
 
     @Override
     public void spawnChildFromBreeding(ServerWorld world, AnimalEntity animal) {
         HotChickenEntity other = (HotChickenEntity) animal;
+        boolean inheritMotherGenes = this.random.nextFloat() <= 0.6;
 
         if (!this.getMainHandItem().isEmpty()) {
             world.broadcastEntityEvent(this, (byte) 19);
@@ -245,22 +223,25 @@ public class HotChickenEntity extends LivestockEntity {
 
         if (other.getBreed().equals(this.getBreed())) {
             HotEggItem.setBreed(stack, this.getBreed().toString());
-            boolean isMotherOrFathers = getRandom().nextFloat() < 0.6;
-            if (isMotherOrFathers) {
-                HotEggItem.setVariant(stack, isMotherOrFathers ? this.getVariant() : other.getVariant());
-            }
+            HotEggItem.setVariant(stack, inheritMotherGenes ? this.getVariant() : other.getVariant());
         } else {
-            HotEggItem.setBreed(stack, getRandom().nextFloat() < 0.5 ? this.getBreed().toString() : other.getBreed().toString());
+            if (inheritMotherGenes) {
+                HotEggItem.setBreed(stack, this.getBreed().toString());
+                HotEggItem.setVariant(stack, this.getVariant());
+            } else {
+                HotEggItem.setBreed(stack, other.getBreed().toString());
+                HotEggItem.setVariant(stack, other.getVariant());
+            }
         }
 
+        // todo
         ChickenStats stats = this.getStats().average(other.getStats()).mutate(0.15);
         HotEggItem.setStats(stack, stats);
         int avgtmness = (getTameness() + other.getTameness()) / 2;
-        if (stats.tameness < 80) {
+        if (stats.tameness < 80)
             HotEggItem.setBreed(stack, ChickenBreed.JUNGLEFOWL.toString());
-        }
         if (stats.tameness > 80 && avgtmness <= 80) {
-            Biome biome = getBiome();
+            Biome biome = this.getBiome();
             System.out.println("biome = " + biome);
             ChickenBreed breed = ChickenBreed.randomBasedOnBiome(biome);
             HotEggItem.setStats(stack, breed.stats);
@@ -277,6 +258,20 @@ public class HotChickenEntity extends LivestockEntity {
         animal.resetLove();
 
         world.broadcastEntityEvent(this, (byte) 18);
-        world.addFreshEntity(new ExperienceOrbEntity(world, this.getX(), this.getY(), this.getZ(), this.getRandom().nextInt(7) + 1));
+        world.addFreshEntity(new ExperienceOrbEntity(world, this.getX(), this.getY(), this.getZ(), this.random.nextInt(7) + 1));
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void handleEntityEvent(byte id) {
+        if (id == 19) {
+            for (int i = 0; i < 7; ++i) {
+                double d0 = this.random.nextGaussian() * 0.02D;
+                double d1 = this.random.nextGaussian() * 0.02D;
+                double d2 = this.random.nextGaussian() * 0.02D;
+                this.level.addParticle(ParticleTypes.ANGRY_VILLAGER, this.getRandomX(1.0D), this.getRandomY() + 0.5D, this.getRandomZ(1.0D), d0, d1, d2);
+            }
+        } else
+            super.handleEntityEvent(id);
     }
 }
