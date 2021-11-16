@@ -160,8 +160,11 @@ public class HotChickenEntity extends LivestockEntity {
     @Override
     public ILivingEntityData finalizeSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+        ChickenBreed breed = ChickenBreed.JUNGLEFOWL;
         this.setSex(random.nextInt(3) == 0);
-//        this.setVariant(0); todo
+        this.setBreed(breed);
+        this.setChickType(breed.randomChickIndex());
+        this.setVariant(breed.randomVariant());
         return spawnDataIn;
     }
 
@@ -176,22 +179,14 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     @Override
-    public void aiStep() {
-        super.aiStep();
-
-        if (this.getBreed().toString().equals("not_set")) {
-            ChickenBreed breed = ChickenBreed.JUNGLEFOWL;
-            this.setBreed(breed);
-            this.setChickType(breed.randomChickIndex());
-        }
-        if (this.getVariant().equals("not_set")) {
-            this.setVariant(this.getBreed().randomVariant());
-        }
+    public void baseTick() {
+        super.baseTick();
 
         if (!getMainHandItem().isEmpty()) {
-            int timer = this.entityData.get(EGG_TIMER) + 1;
-            if (timer < getMaxEggTimer() + 1) {
-                this.entityData.set(EGG_TIMER, timer);
+            int timer = this.getEggTimer();
+            if (timer < this.getMaxEggTimer()) {
+                ++timer;
+                this.setEggTimer(timer);
             }
         }
     }
