@@ -42,7 +42,6 @@ public class HotChickenEntity extends LivestockEntity {
     private static final DataParameter<Integer> CHICK_TYPE = EntityDataManager.defineId(HotChickenEntity.class, DataSerializers.INT);
 
     private static final Ingredient TEMPTATION_ITEMS = Ingredient.of(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS, HotItems.CORN.get());
-    public ChickenBreed breed = ChickenBreed.JUNGLEFOWL;
 
     public HotChickenEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
         super(type, worldIn);
@@ -73,12 +72,11 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     public void setBreed(ChickenBreed breed) {
-        this.breed = breed;
-        this.entityData.set(BREED_DATA, this.breed.toString());
+        this.entityData.set(BREED_DATA, breed.toString());
     }
 
-    public String getBreed() {
-        return this.entityData.get(BREED_DATA);
+    public ChickenBreed getBreed() {
+        return ChickenBreed.valueOf(this.entityData.get(BREED_DATA));
     }
 
     public void setVariant(String v) {
@@ -142,7 +140,7 @@ public class HotChickenEntity extends LivestockEntity {
     @Override
     public void addAdditionalSaveData(CompoundNBT compound) {
         super.addAdditionalSaveData(compound);
-        compound.putString("Breed", this.getBreed());
+        compound.putString("Breed", this.getBreed().toString());
         compound.putString("Variant", this.getVariant());
         compound.putInt("EggSpeed", this.getEggSpeed());
         compound.putInt("EggTimer", this.getEggTimer());
@@ -181,15 +179,13 @@ public class HotChickenEntity extends LivestockEntity {
     public void aiStep() {
         super.aiStep();
 
-        if (this.entityData.get(BREED_DATA).equals("not_set")) {
+        if (this.getBreed().toString().equals("not_set")) {
             ChickenBreed breed = ChickenBreed.JUNGLEFOWL;
-            this.breed = breed;
-
-            this.entityData.set(BREED_DATA, breed.toString());
-            this.entityData.set(CHICK_TYPE, breed.randomChickIndex());
+            this.setBreed(breed);
+            this.setChickType(breed.randomChickIndex());
         }
-        if (this.entityData.get(VARIANT).equals("not_set")) {
-            setVariant(breed.randomVariant());
+        if (this.getVariant().equals("not_set")) {
+            this.setVariant(this.getBreed().randomVariant());
         }
 
         if (!getMainHandItem().isEmpty()) {
@@ -252,14 +248,14 @@ public class HotChickenEntity extends LivestockEntity {
 
         ItemStack stack = new ItemStack(HotItems.WHITE_EGG.get());
 
-        if (other.breed == this.breed) {
-            HotEggItem.setBreed(stack, this.breed.toString());
+        if (other.getBreed().equals(this.getBreed())) {
+            HotEggItem.setBreed(stack, this.getBreed().toString());
             boolean isMotherOrFathers = getRandom().nextFloat() < 0.6;
             if (isMotherOrFathers) {
                 HotEggItem.setVariant(stack, isMotherOrFathers ? this.getVariant() : other.getVariant());
             }
         } else {
-            HotEggItem.setBreed(stack, getRandom().nextFloat() < 0.5 ? this.breed.toString() : other.breed.toString());
+            HotEggItem.setBreed(stack, getRandom().nextFloat() < 0.5 ? this.getBreed().toString() : other.getBreed().toString());
         }
 
         ChickenStats stats = this.getStats().average(other.getStats()).mutate(0.15);

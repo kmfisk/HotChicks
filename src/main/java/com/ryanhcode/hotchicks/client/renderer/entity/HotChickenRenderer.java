@@ -47,7 +47,7 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
         boolean isChild = chicken.isBaby();
         String path;
 
-        ChickenBreed breed = chicken.getBreed().equals("not_set") ? ChickenBreed.LEGHORN : ChickenBreed.valueOf(chicken.getBreed());
+        ChickenBreed breed = chicken.getBreed().equals("not_set") ? ChickenBreed.LEGHORN : chicken.getBreed();
         if (isChild)
             path = "textures/entity/chicken/" + (breed.childTextures.get(chicken.getChickType())) + ".png";
         else {
@@ -57,7 +57,7 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
                 if (!breed.textureMap.containsKey(chicken.getVariant()))
                     path = "textures/entity/chicken/junglefowl/junglefowl_rooster.png";
                 else
-                    path = "textures/entity/chicken/" + (breed.textureMap.get(chicken.getVariant())).get(chicken.getSex()) + ".png";
+                    path = "textures/entity/chicken/" + (breed.textureMap.get(chicken.getVariant())).getTexture(chicken.getSex()) + ".png";
             }
         }
 

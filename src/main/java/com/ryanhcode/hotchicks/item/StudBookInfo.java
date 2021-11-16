@@ -27,7 +27,7 @@ public class StudBookInfo implements ReadBookScreen.IBookInfo {
 
         String page = "";
 
-        page += "" + "" + TextFormatting.BOLD + "Breed: " + ChickenBreed.valueOf(entity.getBreed().toUpperCase()) + TextFormatting.RESET;
+        page += "" + "" + TextFormatting.BOLD + "Breed: " + ChickenBreed.valueOf(entity.getBreed().toString().toUpperCase()) + TextFormatting.RESET;
         page += "\n" + TextFormatting.RESET + "" + TextFormatting.BOLD + "" + "Variant: " + entity.getVariant();
         page += "\n" + TextFormatting.RESET + "" + TextFormatting.BOLD + "" + "Child Type: " + entity.getChickType();
         page += "\n" + TextFormatting.RESET + "" + TextFormatting.BOLD + "" + "Sex: " + entity.getSex().toString() + TextFormatting.RESET;
