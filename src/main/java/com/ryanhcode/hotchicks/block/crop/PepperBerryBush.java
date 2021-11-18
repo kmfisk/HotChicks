@@ -30,6 +30,15 @@ public class PepperBerryBush extends BerryBush implements IGrowable {
     }
 
     @Override
+    public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
+        int i = state.getValue(AGE);
+        if (i < 3 && worldIn.getRawBrightness(pos.above(), 0) >= 9 && net.minecraftforge.common.ForgeHooks.onCropsGrowPre(worldIn, pos, state, random.nextInt(5) == 0)) {
+            worldIn.setBlock(pos, state.setValue(AGE, i + 1).setValue(VARIANT, PepperType.getRandom()), 2);
+            net.minecraftforge.common.ForgeHooks.onCropsGrowPost(worldIn, pos, state);
+        }
+    }
+
+    @Override
     public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         int i = state.getValue(AGE);
         boolean flag = i == 3;

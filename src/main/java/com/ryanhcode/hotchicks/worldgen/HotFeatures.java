@@ -3,6 +3,8 @@ package com.ryanhcode.hotchicks.worldgen;
 import com.google.common.collect.ImmutableSet;
 import com.ryanhcode.hotchicks.HotChickens;
 import com.ryanhcode.hotchicks.block.HotBlocks;
+import com.ryanhcode.hotchicks.block.crop.PepperBerryBush;
+import com.ryanhcode.hotchicks.block.crop.PepperType;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.RegistryKey;
@@ -107,7 +109,7 @@ public class HotFeatures {
         ).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE);
         PEPPER_BUSH = Feature.RANDOM_PATCH.configured(
                 (new BlockClusterFeatureConfig.Builder(
-                        new SimpleBlockStateProvider(HotBlocks.PEPPER_BUSH.get().defaultBlockState()),
+                        new SimpleBlockStateProvider(HotBlocks.PEPPER_BUSH.get().defaultBlockState().setValue(PepperBerryBush.AGE, 3).setValue(PepperBerryBush.VARIANT, PepperType.getRandom())),
                         SimpleBlockPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK.getBlock())).noProjection().build()
         ).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE);
         STRAWBERRY_BUSH = Feature.RANDOM_PATCH.configured(
