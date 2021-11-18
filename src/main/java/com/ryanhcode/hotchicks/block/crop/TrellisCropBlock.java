@@ -2,7 +2,7 @@ package com.ryanhcode.hotchicks.block.crop;
 
 import net.minecraft.util.IStringSerializable;
 
-public enum TrellisCrop implements IStringSerializable {
+public enum TrellisCropBlock implements IStringSerializable {
     NONE("none"),
     GRAPES("grapes"),
     KIWI("kiwi"),
@@ -11,7 +11,7 @@ public enum TrellisCrop implements IStringSerializable {
 
     public final String name;
 
-    private TrellisCrop(String name) {
+    private TrellisCropBlock(String name) {
         this.name = name;
     }
 

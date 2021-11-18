@@ -21,10 +21,10 @@ import net.minecraft.world.server.ServerWorld;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class PepperBerryBush extends BerryBush implements IGrowable {
+public class PepperBerryBushBlock extends BerryBushBlock implements IGrowable {
     public static final EnumProperty<PepperType> VARIANT = EnumProperty.create("variant", PepperType.class);
 
-    public PepperBerryBush(Properties properties, Supplier<? extends Item> item) {
+    public PepperBerryBushBlock(Properties properties, Supplier<? extends Item> item) {
         super(properties, item);
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0).setValue(VARIANT, PepperType.getRandom()));
     }

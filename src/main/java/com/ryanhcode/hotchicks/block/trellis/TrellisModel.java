@@ -3,7 +3,7 @@ package com.ryanhcode.hotchicks.block.trellis;
 import com.google.common.collect.ImmutableList;
 import com.ryanhcode.hotchicks.HotChickens;
 import com.ryanhcode.hotchicks.block.TrellisBlock;
-import com.ryanhcode.hotchicks.block.crop.TrellisCrop;
+import com.ryanhcode.hotchicks.block.crop.TrellisCropBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.BakedQuad;
@@ -118,7 +118,7 @@ public class TrellisModel implements IDynamicBakedModel {
     @Nonnull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData) {
-        TextureAtlasSprite none = getTexture(state.setValue(TrellisBlock.CROP, TrellisCrop.NONE));
+        TextureAtlasSprite none = getTexture(state.setValue(TrellisBlock.CROP, TrellisCropBlock.NONE));
         TextureAtlasSprite texture = getTexture(state);
         List<BakedQuad> quads = new ArrayList<>();
         double l = 1.0;

@@ -1,6 +1,6 @@
 package com.ryanhcode.hotchicks.block;
 
-import com.ryanhcode.hotchicks.block.crop.TrellisCrop;
+import com.ryanhcode.hotchicks.block.crop.TrellisCropBlock;
 import com.ryanhcode.hotchicks.item.HotItems;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,7 +30,7 @@ import java.util.Random;
 
 public class TrellisBlock extends Block implements IGrowable {
     public static final IntegerProperty AGE = BlockStateProperties.AGE_5;
-    public static final EnumProperty<TrellisCrop> CROP = EnumProperty.create("crop", TrellisCrop.class);
+    public static final EnumProperty<TrellisCropBlock> CROP = EnumProperty.create("crop", TrellisCropBlock.class);
     public static final DirectionProperty FACING = HorizontalBlock.FACING;
     protected static final VoxelShape LADDER_EAST_AABB = Block.box(0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D);
     protected static final VoxelShape LADDER_WEST_AABB = Block.box(13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
@@ -39,7 +39,7 @@ public class TrellisBlock extends Block implements IGrowable {
 
     public TrellisBlock(AbstractBlock.Properties builder) {
         super(builder);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(AGE, 0).setValue(CROP, TrellisCrop.NONE));
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(AGE, 0).setValue(CROP, TrellisCropBlock.NONE));
     }
 
     @Override
@@ -47,26 +47,26 @@ public class TrellisBlock extends Block implements IGrowable {
         ItemStack stack = player.getItemInHand(handIn);
         if (stack.isEmpty()) {
 
-        } else if (stack.getItem() == HotItems.GRAPES.get() && state.getValue(CROP) == TrellisCrop.NONE) {
-            worldIn.setBlockAndUpdate(pos, state.setValue(CROP, TrellisCrop.GRAPES));
+        } else if (stack.getItem() == HotItems.GRAPES.get() && state.getValue(CROP) == TrellisCropBlock.NONE) {
+            worldIn.setBlockAndUpdate(pos, state.setValue(CROP, TrellisCropBlock.GRAPES));
             stack.setCount(stack.getCount() - 1);
             player.setItemInHand(handIn, stack);
             player.swing(handIn, false);
             return ActionResultType.CONSUME;
-        } else if (stack.getItem() == HotItems.KIWI.get() && state.getValue(CROP) == TrellisCrop.NONE) {
-            worldIn.setBlockAndUpdate(pos, state.setValue(CROP, TrellisCrop.KIWI));
+        } else if (stack.getItem() == HotItems.KIWI.get() && state.getValue(CROP) == TrellisCropBlock.NONE) {
+            worldIn.setBlockAndUpdate(pos, state.setValue(CROP, TrellisCropBlock.KIWI));
             stack.setCount(stack.getCount() - 1);
             player.setItemInHand(handIn, stack);
             player.swing(handIn, false);
             return ActionResultType.CONSUME;
-        } else if (stack.getItem() == HotItems.PEAS.get() && state.getValue(CROP) == TrellisCrop.NONE) {
-            worldIn.setBlockAndUpdate(pos, state.setValue(CROP, TrellisCrop.PEAS));
+        } else if (stack.getItem() == HotItems.PEAS.get() && state.getValue(CROP) == TrellisCropBlock.NONE) {
+            worldIn.setBlockAndUpdate(pos, state.setValue(CROP, TrellisCropBlock.PEAS));
             stack.setCount(stack.getCount() - 1);
             player.setItemInHand(handIn, stack);
             player.swing(handIn, false);
             return ActionResultType.CONSUME;
-        } else if (stack.getItem() == HotItems.TOMATO.get() && state.getValue(CROP) == TrellisCrop.NONE) {
-            worldIn.setBlockAndUpdate(pos, state.setValue(CROP, TrellisCrop.TOMATO));
+        } else if (stack.getItem() == HotItems.TOMATO.get() && state.getValue(CROP) == TrellisCropBlock.NONE) {
+            worldIn.setBlockAndUpdate(pos, state.setValue(CROP, TrellisCropBlock.TOMATO));
             stack.setCount(stack.getCount() - 1);
             player.setItemInHand(handIn, stack);
             player.swing(handIn, false);
@@ -74,21 +74,21 @@ public class TrellisBlock extends Block implements IGrowable {
         }
 
         if (state.getValue(AGE) >= 5) {
-            TrellisCrop crop = state.getValue(CROP);
+            TrellisCropBlock crop = state.getValue(CROP);
             player.swing(handIn, false);
-            if (crop == TrellisCrop.GRAPES) {
+            if (crop == TrellisCropBlock.GRAPES) {
                 drop(state, worldIn, pos, HotItems.TOMATO);
                 return ActionResultType.CONSUME;
             }
-            if (crop == TrellisCrop.KIWI) {
+            if (crop == TrellisCropBlock.KIWI) {
                 drop(state, worldIn, pos, HotItems.KIWI);
                 return ActionResultType.CONSUME;
             }
-            if (crop == TrellisCrop.PEAS) {
+            if (crop == TrellisCropBlock.PEAS) {
                 drop(state, worldIn, pos, HotItems.PEAS);
                 return ActionResultType.CONSUME;
             }
-            if (crop == TrellisCrop.TOMATO) {
+            if (crop == TrellisCropBlock.TOMATO) {
                 drop(state, worldIn, pos, HotItems.TOMATO);
                 return ActionResultType.CONSUME;
             }
@@ -173,17 +173,17 @@ public class TrellisBlock extends Block implements IGrowable {
 
     @Override
     public boolean isValidBonemealTarget(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
-        return state.getValue(CROP) != TrellisCrop.NONE;
+        return state.getValue(CROP) != TrellisCropBlock.NONE;
     }
 
     @Override
     public boolean isBonemealSuccess(World worldIn, Random rand, BlockPos pos, BlockState state) {
-        return state.getValue(CROP) != TrellisCrop.NONE;
+        return state.getValue(CROP) != TrellisCropBlock.NONE;
     }
 
     @Override
     public void performBonemeal(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
-        if (state.getValue(CROP) != TrellisCrop.NONE) {
+        if (state.getValue(CROP) != TrellisCropBlock.NONE) {
             worldIn.setBlockAndUpdate(pos, state.setValue(AGE, state.getValue(AGE) + 1));
         }
     }

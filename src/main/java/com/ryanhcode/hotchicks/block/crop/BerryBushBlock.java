@@ -30,14 +30,14 @@ import net.minecraft.world.server.ServerWorld;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class BerryBush extends BushBlock implements IGrowable {
+public class BerryBushBlock extends BushBlock implements IGrowable {
     public static final IntegerProperty AGE = BlockStateProperties.AGE_3;
     private static final VoxelShape BUSHLING_SHAPE = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 8.0D, 13.0D);
     private static final VoxelShape GROWING_SHAPE = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 16.0D, 15.0D);
 
     protected final Supplier<? extends Item> item;
 
-    public BerryBush(Properties properties, Supplier<? extends Item> item) {
+    public BerryBushBlock(Properties properties, Supplier<? extends Item> item) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0));
         this.item = item;
