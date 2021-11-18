@@ -2,7 +2,7 @@ package com.ryanhcode.hotchicks.item;
 
 import com.ryanhcode.hotchicks.HotChickens;
 import com.ryanhcode.hotchicks.block.HotBlocks;
-import com.ryanhcode.hotchicks.entity.base.ChickenBreed;
+import com.ryanhcode.hotchicks.entity.base.ChickenBreeds;
 import net.minecraft.item.BlockNamedItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.RegistryObject;
@@ -50,13 +50,13 @@ public class HotItems {
     public static final RegistryObject<Item> YUZU = REGISTRAR.register("yuzu", () -> new Item(new Item.Properties().tab(HotChickens.HOT_CHICKS_GROUP).food(HotFoods.YUZU)));
 
     // SPAWN EGGS
-    public static final RegistryObject<Item> SILKIE_SPAWN_EGG = REGISTRAR.register("silkie_spawn_egg", () -> new HotSpawnEggItem(ChickenBreed.SILKIE));
-    public static final RegistryObject<Item> RHODE_ISLAND_SPAWN_EGG = REGISTRAR.register("rhode_island_spawn_egg", () -> new HotSpawnEggItem(ChickenBreed.RHODE_ISLAND_RED));
-    public static final RegistryObject<Item> ORPINGTON_SPAWN_EGG = REGISTRAR.register("orpington_spawn_egg", () -> new HotSpawnEggItem(ChickenBreed.ORPINGTON));
-    public static final RegistryObject<Item> OLIVE_EGGER_SPAWN_EGG = REGISTRAR.register("olive_egger_spawn_egg", () -> new HotSpawnEggItem(ChickenBreed.OLIVE_EGGER));
-    public static final RegistryObject<Item> MARANS_SPAWN_EGG = REGISTRAR.register("marans_spawn_egg", () -> new HotSpawnEggItem(ChickenBreed.MARANS));
-    public static final RegistryObject<Item> LEGHORN_SPAWN_EGG = REGISTRAR.register("leghorn_spawn_egg", () -> new HotSpawnEggItem(ChickenBreed.LEGHORN));
-    public static final RegistryObject<Item> JUNGLEFOWL_SPAWN_EGG = REGISTRAR.register("junglefowl_spawn_egg", () -> new HotSpawnEggItem(ChickenBreed.JUNGLEFOWL));
-    public static final RegistryObject<Item> BARRED_ROCK_SPAWN_EGG = REGISTRAR.register("barred_rock_spawn_egg", () -> new HotSpawnEggItem(ChickenBreed.BARRED_ROCK));
-    public static final RegistryObject<Item> AMERAUCANA_SPAWN_EGG = REGISTRAR.register("ameraucana_spawn_egg", () -> new HotSpawnEggItem(ChickenBreed.AMERAUCANA));
+    public static final RegistryObject<Item> SILKIE_SPAWN_EGG = REGISTRAR.register("silkie_spawn_egg", () -> new HotSpawnEggItem(ChickenBreeds.SILKIE));
+    public static final RegistryObject<Item> RHODE_ISLAND_SPAWN_EGG = REGISTRAR.register("rhode_island_spawn_egg", () -> new HotSpawnEggItem(ChickenBreeds.RHODE_ISLAND_RED));
+    public static final RegistryObject<Item> ORPINGTON_SPAWN_EGG = REGISTRAR.register("orpington_spawn_egg", () -> new HotSpawnEggItem(ChickenBreeds.ORPINGTON));
+    public static final RegistryObject<Item> OLIVE_EGGER_SPAWN_EGG = REGISTRAR.register("olive_egger_spawn_egg", () -> new HotSpawnEggItem(ChickenBreeds.OLIVE_EGGER));
+    public static final RegistryObject<Item> MARANS_SPAWN_EGG = REGISTRAR.register("marans_spawn_egg", () -> new HotSpawnEggItem(ChickenBreeds.MARANS));
+    public static final RegistryObject<Item> LEGHORN_SPAWN_EGG = REGISTRAR.register("leghorn_spawn_egg", () -> new HotSpawnEggItem(ChickenBreeds.LEGHORN));
+    public static final RegistryObject<Item> JUNGLEFOWL_SPAWN_EGG = REGISTRAR.register("junglefowl_spawn_egg", () -> new HotSpawnEggItem(ChickenBreeds.JUNGLEFOWL));
+    public static final RegistryObject<Item> BARRED_ROCK_SPAWN_EGG = REGISTRAR.register("barred_rock_spawn_egg", () -> new HotSpawnEggItem(ChickenBreeds.BARRED_ROCK));
+    public static final RegistryObject<Item> AMERAUCANA_SPAWN_EGG = REGISTRAR.register("ameraucana_spawn_egg", () -> new HotSpawnEggItem(ChickenBreeds.AMERAUCANA));
 }

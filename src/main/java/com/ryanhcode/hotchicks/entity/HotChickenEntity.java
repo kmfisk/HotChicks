@@ -1,10 +1,10 @@
 package com.ryanhcode.hotchicks.entity;
 
-import com.ryanhcode.hotchicks.entity.base.ChickenBreed;
-import com.ryanhcode.hotchicks.entity.base.ChickenStats;
+import com.ryanhcode.hotchicks.entity.base.ChickenBreeds;
 import com.ryanhcode.hotchicks.entity.base.LivestockEntity;
 import com.ryanhcode.hotchicks.entity.goal.ChickenBreedGoal;
 import com.ryanhcode.hotchicks.entity.goal.LayEggsGoal;
+import com.ryanhcode.hotchicks.entity.stats.ChickenStats;
 import com.ryanhcode.hotchicks.item.HotEggItem;
 import com.ryanhcode.hotchicks.item.HotItems;
 import net.minecraft.entity.*;
@@ -71,12 +71,12 @@ public class HotChickenEntity extends LivestockEntity {
         this.entityData.define(CHICK_TYPE, 0);
     }
 
-    public void setBreed(ChickenBreed breed) {
+    public void setBreed(ChickenBreeds breed) {
         this.entityData.set(BREED_DATA, breed.toString());
     }
 
-    public ChickenBreed getBreed() {
-        return ChickenBreed.valueOf(this.entityData.get(BREED_DATA));
+    public ChickenBreeds getBreed() {
+        return ChickenBreeds.valueOf(this.entityData.get(BREED_DATA));
     }
 
     public void setVariant(String v) {
@@ -113,9 +113,9 @@ public class HotChickenEntity extends LivestockEntity {
 
     public void setStats(ChickenStats stats) {
         this.setTameness(stats.tameness);
-        this.setCarcassQuality(stats.carcass_quality);
-        this.setGrowthRate(stats.growth_rate);
-        this.setEggSpeed(stats.egg_speed);
+        this.setCarcassQuality(stats.carcassQuality);
+        this.setGrowthRate(stats.growthRate);
+        this.setEggSpeed(stats.eggSpeed);
     }
 
     public ChickenStats getStats() {
@@ -150,7 +150,7 @@ public class HotChickenEntity extends LivestockEntity {
     @Override
     public void readAdditionalSaveData(CompoundNBT compound) {
         super.readAdditionalSaveData(compound);
-        this.setBreed(ChickenBreed.valueOf(compound.getString("Breed")));
+        this.setBreed(ChickenBreeds.valueOf(compound.getString("Breed")));
         this.setVariant(compound.getString("Variant"));
         this.setEggSpeed(compound.getInt("EggSpeed"));
         this.setEggTimer(compound.getInt("EggTimer"));
@@ -160,7 +160,7 @@ public class HotChickenEntity extends LivestockEntity {
     @Override
     public ILivingEntityData finalizeSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-        ChickenBreed breed = ChickenBreed.JUNGLEFOWL;
+        ChickenBreeds breed = ChickenBreeds.JUNGLEFOWL;
         this.setSex(random.nextInt(3) == 0);
         this.setBreed(breed);
         this.setChickType(breed.randomChickIndex());
@@ -235,16 +235,16 @@ public class HotChickenEntity extends LivestockEntity {
         }
 
         // todo
-        ChickenStats stats = this.getStats().average(other.getStats()).mutate(0.15);
-        HotEggItem.setStats(stack, stats);
+        ChickenStats stats = (ChickenStats) this.getStats().average(other.getStats()).mutate(0.15);
+        HotEggItem.setChickenStats(stack, stats);
         int avgtmness = (getTameness() + other.getTameness()) / 2;
         if (stats.tameness < 80)
-            HotEggItem.setBreed(stack, ChickenBreed.JUNGLEFOWL.toString());
+            HotEggItem.setBreed(stack, ChickenBreeds.JUNGLEFOWL.toString());
         if (stats.tameness > 80 && avgtmness <= 80) {
             Biome biome = this.getBiome();
             System.out.println("biome = " + biome);
-            ChickenBreed breed = ChickenBreed.randomBasedOnBiome(biome);
-            HotEggItem.setStats(stack, breed.stats);
+            ChickenBreeds breed = ChickenBreeds.randomBasedOnBiome(biome);
+            HotEggItem.setChickenStats(stack, breed.stats);
             HotEggItem.setBreed(stack, breed.toString());
         }
         HotEggItem.setTameness(stack, stats.tameness);

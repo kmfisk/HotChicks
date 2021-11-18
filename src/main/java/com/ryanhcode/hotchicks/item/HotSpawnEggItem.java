@@ -3,7 +3,7 @@ package com.ryanhcode.hotchicks.item;
 import com.ryanhcode.hotchicks.HotChickens;
 import com.ryanhcode.hotchicks.entity.HotChickenEntity;
 import com.ryanhcode.hotchicks.entity.HotEntities;
-import com.ryanhcode.hotchicks.entity.base.ChickenBreed;
+import com.ryanhcode.hotchicks.entity.base.ChickenBreeds;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.entity.EntityType;
@@ -27,9 +27,9 @@ import net.minecraft.world.server.ServerWorld;
 import java.util.Objects;
 
 public class HotSpawnEggItem extends Item {
-    private final ChickenBreed breed;
+    private final ChickenBreeds breed;
 
-    public HotSpawnEggItem(ChickenBreed breed) {
+    public HotSpawnEggItem(ChickenBreeds breed) {
         super(new Item.Properties().tab(HotChickens.HOT_CHICKS_GROUP));
         this.breed = breed;
     }
@@ -84,7 +84,7 @@ public class HotSpawnEggItem extends Item {
                 } else {
 
                     e.setBreed(breed);
-                    if (breed == ChickenBreed.JUNGLEFOWL) {
+                    if (breed == ChickenBreeds.JUNGLEFOWL) {
                         e.setTameness(50);
                     } else {
                         e.setTameness(100);

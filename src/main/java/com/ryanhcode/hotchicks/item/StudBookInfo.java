@@ -1,9 +1,8 @@
 package com.ryanhcode.hotchicks.item;
 
-
-import com.ryanhcode.hotchicks.entity.base.ChickenBreed;
-import com.ryanhcode.hotchicks.entity.base.ChickenStats;
 import com.ryanhcode.hotchicks.entity.HotChickenEntity;
+import com.ryanhcode.hotchicks.entity.base.ChickenBreeds;
+import com.ryanhcode.hotchicks.entity.stats.ChickenStats;
 import net.minecraft.client.gui.screen.ReadBookScreen;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
@@ -27,14 +26,14 @@ public class StudBookInfo implements ReadBookScreen.IBookInfo {
 
         String page = "";
 
-        page += "" + "" + TextFormatting.BOLD + "Breed: " + ChickenBreed.valueOf(entity.getBreed().toString().toUpperCase()) + TextFormatting.RESET;
+        page += "" + "" + TextFormatting.BOLD + "Breed: " + ChickenBreeds.valueOf(entity.getBreed().toString().toUpperCase()) + TextFormatting.RESET;
         page += "\n" + TextFormatting.RESET + "" + TextFormatting.BOLD + "" + "Variant: " + entity.getVariant();
         page += "\n" + TextFormatting.RESET + "" + TextFormatting.BOLD + "" + "Child Type: " + entity.getChickType();
         page += "\n" + TextFormatting.RESET + "" + TextFormatting.BOLD + "" + "Sex: " + entity.getSex().toString() + TextFormatting.RESET;
 
-        page += "\n\n" + TextFormatting.RESET + "" + "Carcass Quality: " + stats.carcass_quality;
-        page += "\n" + TextFormatting.RESET + "" + "Growth Rate: " + stats.growth_rate;
-        page += "\n" + TextFormatting.RESET + "" + "Egg Speed: " + stats.egg_speed;
+        page += "\n\n" + TextFormatting.RESET + "" + "Carcass Quality: " + stats.carcassQuality;
+        page += "\n" + TextFormatting.RESET + "" + "Growth Rate: " + stats.growthRate;
+        page += "\n" + TextFormatting.RESET + "" + "Egg Speed: " + stats.eggSpeed;
         page += "\n" + TextFormatting.RESET + "" + "Tameness: " + entity.getTameness();
         page += "\n" + TextFormatting.RESET + "" + "Holding Egg: " + !entity.getMainHandItem().isEmpty();
 

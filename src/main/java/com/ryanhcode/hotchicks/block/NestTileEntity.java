@@ -1,6 +1,6 @@
 package com.ryanhcode.hotchicks.block;
 
-import com.ryanhcode.hotchicks.entity.base.ChickenBreed;
+import com.ryanhcode.hotchicks.entity.base.ChickenBreeds;
 import com.ryanhcode.hotchicks.entity.HotChickenEntity;
 import com.ryanhcode.hotchicks.item.HotEggItem;
 import com.ryanhcode.hotchicks.entity.HotEntities;
@@ -169,7 +169,7 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
                     chicken.setAge(-100);
                     chicken.setTameness(HotEggItem.getTameness(item));
                     chicken.setStats(HotEggItem.getStats(item));
-                    chicken.setBreed(ChickenBreed.valueOf(tag.getString("breed").toUpperCase()));
+                    chicken.setBreed(ChickenBreeds.valueOf(tag.getString("breed").toUpperCase()));
 
                     barrelContents.set(counter, ItemStack.EMPTY);
                 } else {

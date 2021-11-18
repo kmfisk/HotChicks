@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.ryanhcode.hotchicks.HotChickens;
 import com.ryanhcode.hotchicks.client.renderer.entity.model.HotChickenModel;
 import com.ryanhcode.hotchicks.entity.HotChickenEntity;
-import com.ryanhcode.hotchicks.entity.base.ChickenBreed;
+import com.ryanhcode.hotchicks.entity.base.ChickenBreeds;
 import com.ryanhcode.hotchicks.entity.base.Sex;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -47,7 +47,7 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
         boolean isChild = chicken.isBaby();
         String path;
 
-        ChickenBreed breed = chicken.getBreed().equals("not_set") ? ChickenBreed.LEGHORN : chicken.getBreed();
+        ChickenBreeds breed = chicken.getBreed().equals("not_set") ? ChickenBreeds.LEGHORN : chicken.getBreed();
         if (isChild)
             path = "textures/entity/chicken/" + (breed.childTextures.get(chicken.getChickType())) + ".png";
         else {
