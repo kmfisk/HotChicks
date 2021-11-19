@@ -1,6 +1,7 @@
 {
-  "parent": "hotchicks:block/tropical_fruit_leaves",
+  "parent": "hotchicks:block/fruiting_leaves",
   "textures": {
+    "all": "hotchicks:block/tropical_fruit_leaves",
     "fruit": "hotchicks:block/mango_stage1"
   }
 }

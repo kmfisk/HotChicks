@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cross",
   "textures": {
-    "cross": "hotchicks:block/trellis/tomato/tomato_stage5"
+    "cross": "hotchicks:block/wild_tomato"
   }
 }

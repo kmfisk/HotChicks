@@ -1,6 +1,7 @@
 {
-  "parent": "hotchicks:block/ficus_leaves",
+  "parent": "hotchicks:block/fruiting_leaves",
   "textures": {
+    "all": "hotchicks:block/ficus_leaves",
     "fruit": "hotchicks:block/fig_stage0"
   }
 }

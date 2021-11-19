@@ -1,6 +1,7 @@
 {
-  "parent": "hotchicks:block/citrus_leaves",
+  "parent": "hotchicks:block/fruiting_leaves",
   "textures": {
+    "all": "hotchicks:block/citrus_leaves",
     "fruit": "hotchicks:block/pomelo_stage2"
   }
 }
