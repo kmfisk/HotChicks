@@ -8,10 +8,10 @@ import net.minecraft.world.gen.feature.ConfiguredFeature;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-/*public class MangoTree extends Tree { todo
+public class MangoTree extends Tree {
     @Nullable
     @Override
     protected ConfiguredFeature<BaseTreeFeatureConfig, ?> getConfiguredFeature(Random random, boolean bees) {
         return HotFeatures.MANGO;
     }
-}*/
+}

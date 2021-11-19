@@ -45,8 +45,8 @@ public class HotFeatures {
     public static ConfiguredFeature<?, ?> WILD_PEA;
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> RED_APPLE;
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> PEACH;
-//    public static ConfiguredFeature<BaseTreeFeatureConfig, ?> MANGO; todo
-//    public static ConfiguredFeature<BaseTreeFeatureConfig, ?> POMEGRANATE;
+    public static ConfiguredFeature<BaseTreeFeatureConfig, ?> MANGO;
+    public static ConfiguredFeature<BaseTreeFeatureConfig, ?> POMEGRANATE;
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> FIG;
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> CITRON;
     public static ConfiguredFeature<BaseTreeFeatureConfig, ?> POMELO;
@@ -138,14 +138,14 @@ public class HotFeatures {
                 new BlobFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(0), 3),
                 new StraightTrunkPlacer(4, 2, 0),
                 1, 0, 1, OptionalInt.empty());
-        /*MANGO = configureFruitTree(Blocks.ACACIA_LOG, HotBlocks.MANGO_LEAVES.get(), HotBlocks.TROPICAL_FRUIT_LEAVES.get(), todo
+        MANGO = configureFruitTree(Blocks.ACACIA_LOG, HotBlocks.MANGO_LEAVES.get(), HotBlocks.TROPICAL_FRUIT_LEAVES.get(),
                 new FancyFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(4), 4),
                 new FancyTrunkPlacer(8, 2, 6),
-                0, 0, 0, OptionalInt.of(4));*/
-        /*POMEGRANATE = configureFruitTree(Blocks.DARK_OAK_LOG, HotBlocks.POMEGRANATE_LEAVES.get(), HotBlocks.FRUIT_LEAVES.get(),
+                0, 0, 0, OptionalInt.of(4));
+        POMEGRANATE = configureFruitTree(Blocks.DARK_OAK_LOG, HotBlocks.POMEGRANATE_LEAVES.get(), HotBlocks.FRUIT_LEAVES.get(),
                 new FancyFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(5), 4),
                 new FancyTrunkPlacer(3, 2, 0),
-                0, 0, 0, OptionalInt.of(4));*/
+                0, 0, 0, OptionalInt.of(4));
         FIG = configureFruitTree(Blocks.OAK_LOG, HotBlocks.FIG_LEAVES.get(), HotBlocks.FICUS_LEAVES.get(),
                 new AcaciaFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(1)),
                 new StraightTrunkPlacer(3, 2, 0),
@@ -189,8 +189,8 @@ public class HotFeatures {
 
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "red_apple_trees"), RED_APPLE);
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "peach_trees"), PEACH);
-//        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "mango_trees"), MANGO); todo
-//        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "pomegranate_trees"), POMEGRANATE);
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "mango_trees"), MANGO);
+        Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "pomegranate_trees"), POMEGRANATE);
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "fig_trees"), FIG);
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "citron_trees"), CITRON);
         Registry.register(WorldGenRegistries.CONFIGURED_FEATURE, new ResourceLocation(HotChickens.MOD_ID, "pomelo_trees"), POMELO);
@@ -240,14 +240,14 @@ public class HotFeatures {
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> OAT);
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> GARLIC);
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> PEACH);
-//                event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> POMEGRANATE); todo
+                event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> POMEGRANATE);
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> FIG);
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> CITRON);
             }
 
             if (biomeTypes.contains(BiomeDictionary.Type.JUNGLE)) {
-//                event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> MANGO);
-//                event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> POMEGRANATE);
+                event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> MANGO);
+                event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> POMEGRANATE);
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> FIG);
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> POMELO);
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> PAPEDA);

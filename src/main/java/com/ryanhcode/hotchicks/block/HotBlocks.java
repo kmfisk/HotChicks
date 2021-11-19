@@ -53,8 +53,8 @@ public class HotBlocks {
 
     public static final RegistryObject<Block> RED_APPLE_LEAVES = registerWithItem("red_apple_leaves", () -> new FruitLeavesBlock(() -> Items.APPLE));
     public static final RegistryObject<Block> PEACH_LEAVES = registerWithItem("peach_leaves", () -> new FruitLeavesBlock(HotItems.PEACH));
-    //public static final RegistryObject<Block> MANGO_LEAVES = registerWithItem("mango_leaves", () -> new FruitLeavesBlock(HotItems.MANGO)); todo
-    //public static final RegistryObject<Block> POMEGRANATE_LEAVES = registerWithItem("pomegranate_leaves", () -> new FruitLeavesBlock(HotItems.POMEGRANATE));
+    public static final RegistryObject<Block> MANGO_LEAVES = registerWithItem("mango_leaves", () -> new FruitLeavesBlock(HotItems.MANGO));
+    public static final RegistryObject<Block> POMEGRANATE_LEAVES = registerWithItem("pomegranate_leaves", () -> new FruitLeavesBlock(HotItems.POMEGRANATE));
     public static final RegistryObject<Block> FIG_LEAVES = registerWithItem("fig_leaves", () -> new FruitLeavesBlock(HotItems.FIG));
     public static final RegistryObject<Block> CITRON_LEAVES = registerWithItem("citron_leaves", () -> new FruitLeavesBlock(HotItems.CITRON));
     public static final RegistryObject<Block> POMELO_LEAVES = registerWithItem("pomelo_leaves", () -> new FruitLeavesBlock(HotItems.POMELO));
@@ -68,8 +68,8 @@ public class HotBlocks {
 
     public static final RegistryObject<Block> RED_APPLE_SAPLING = registerWithItem("red_apple_seed", () -> new SaplingBlock(new RedAppleTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
     public static final RegistryObject<Block> PEACH_SAPLING = registerWithItem("peach_seed", () -> new SaplingBlock(new PeachTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
-    //public static final RegistryObject<Block> MANGO_SAPLING = registerWithItem("mango_seed", () -> new SaplingBlock(new MangoTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS))); todo
-    //public static final RegistryObject<Block> POMEGRANATE_SAPLING = registerWithItem("pomegranate_seed", () -> new SaplingBlock(new PomegranateTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> MANGO_SAPLING = registerWithItem("mango_seed", () -> new SaplingBlock(new MangoTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> POMEGRANATE_SAPLING = registerWithItem("pomegranate_seed", () -> new SaplingBlock(new PomegranateTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
     public static final RegistryObject<Block> FIG_SAPLING = registerWithItem("fig_seed", () -> new SaplingBlock(new FigTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
     public static final RegistryObject<Block> CITRON_SAPLING = registerWithItem("citron_seed", () -> new SaplingBlock(new CitronTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
     public static final RegistryObject<Block> POMELO_SAPLING = registerWithItem("pomelo_seed", () -> new SaplingBlock(new PomeloTree(), AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.GRASS)));
@@ -107,8 +107,8 @@ public class HotBlocks {
         RenderTypeLookup.setRenderLayer(TROPICAL_FRUIT_LEAVES.get(), rendertype1);
         RenderTypeLookup.setRenderLayer(RED_APPLE_LEAVES.get(), rendertype1);
         RenderTypeLookup.setRenderLayer(PEACH_LEAVES.get(), rendertype1);
-        //RenderTypeLookup.setRenderLayer(MANGO_LEAVES.get(), rendertype1); todo
-        //RenderTypeLookup.setRenderLayer(POMEGRANATE_LEAVES.get(), rendertype1);
+        RenderTypeLookup.setRenderLayer(MANGO_LEAVES.get(), rendertype1);
+        RenderTypeLookup.setRenderLayer(POMEGRANATE_LEAVES.get(), rendertype1);
         RenderTypeLookup.setRenderLayer(FIG_LEAVES.get(), rendertype1);
         RenderTypeLookup.setRenderLayer(CITRON_LEAVES.get(), rendertype1);
         RenderTypeLookup.setRenderLayer(POMELO_LEAVES.get(), rendertype1);
@@ -132,8 +132,8 @@ public class HotBlocks {
         RenderTypeLookup.setRenderLayer(MILLET_CROP.get(), rendertype2);
         RenderTypeLookup.setRenderLayer(RED_APPLE_SAPLING.get(), rendertype2);
         RenderTypeLookup.setRenderLayer(PEACH_SAPLING.get(), rendertype2);
-        //RenderTypeLookup.setRenderLayer(MANGO_SAPLING.get(), rendertype2); todo
-        //RenderTypeLookup.setRenderLayer(POMEGRANATE_SAPLING.get(), rendertype2);
+        RenderTypeLookup.setRenderLayer(MANGO_SAPLING.get(), rendertype2);
+        RenderTypeLookup.setRenderLayer(POMEGRANATE_SAPLING.get(), rendertype2);
         RenderTypeLookup.setRenderLayer(FIG_SAPLING.get(), rendertype2);
         RenderTypeLookup.setRenderLayer(CITRON_SAPLING.get(), rendertype2);
         RenderTypeLookup.setRenderLayer(POMELO_SAPLING.get(), rendertype2);
