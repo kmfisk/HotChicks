@@ -1,4 +1,4 @@
-package com.ryanhcode.hotchicks.block.crop;
+package com.ryanhcode.hotchicks.block;
 
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;

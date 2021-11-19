@@ -1,4 +1,4 @@
-package com.ryanhcode.hotchicks.block;
+package com.ryanhcode.hotchicks.inventory;
 
 import com.ryanhcode.hotchicks.item.HotEggItem;
 import com.ryanhcode.hotchicks.registry.HotContainers;

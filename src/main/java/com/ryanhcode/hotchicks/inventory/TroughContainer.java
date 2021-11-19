@@ -1,4 +1,4 @@
-package com.ryanhcode.hotchicks.block;
+package com.ryanhcode.hotchicks.inventory;
 
 import com.ryanhcode.hotchicks.registry.HotContainers;
 import net.minecraft.entity.player.PlayerEntity;
@@ -46,7 +46,7 @@ public class TroughContainer extends Container {
     //     this(id, playerInventory, new Inventory(slots), slots);
     // }
 
-    int slot = 0;
+    public int slot = 0;
 
     private TroughContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, IInventory inventory, int slot) {
         super(type, id);

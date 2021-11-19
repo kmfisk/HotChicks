@@ -1,7 +1,6 @@
 package com.ryanhcode.hotchicks.block;
 
 import com.ryanhcode.hotchicks.HotChickens;
-import com.ryanhcode.hotchicks.block.crop.*;
 import com.ryanhcode.hotchicks.block.trees.*;
 import com.ryanhcode.hotchicks.item.HotItems;
 import net.minecraft.block.*;

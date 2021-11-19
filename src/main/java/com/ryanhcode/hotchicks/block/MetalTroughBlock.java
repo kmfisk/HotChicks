@@ -1,5 +1,6 @@
 package com.ryanhcode.hotchicks.block;
 
+import com.ryanhcode.hotchicks.inventory.TroughContainer;
 import com.ryanhcode.hotchicks.registry.HotTileEntities;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;

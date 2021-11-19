@@ -3,7 +3,7 @@ package com.ryanhcode.hotchicks.block.trellis;
 import com.google.common.collect.ImmutableList;
 import com.ryanhcode.hotchicks.HotChickens;
 import com.ryanhcode.hotchicks.block.TrellisBlock;
-import com.ryanhcode.hotchicks.block.crop.TrellisCropBlock;
+import com.ryanhcode.hotchicks.block.TrellisCropBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.BakedQuad;

@@ -1,8 +1,8 @@
 package com.ryanhcode.hotchicks.registry;
 
 import com.ryanhcode.hotchicks.HotChickens;
-import com.ryanhcode.hotchicks.block.NestContainer;
-import com.ryanhcode.hotchicks.block.TroughContainer;
+import com.ryanhcode.hotchicks.inventory.NestContainer;
+import com.ryanhcode.hotchicks.inventory.TroughContainer;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;

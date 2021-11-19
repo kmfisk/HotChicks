@@ -2,6 +2,7 @@ package com.ryanhcode.hotchicks.block;
 
 import com.ryanhcode.hotchicks.entity.base.ChickenBreeds;
 import com.ryanhcode.hotchicks.entity.HotChickenEntity;
+import com.ryanhcode.hotchicks.inventory.NestContainer;
 import com.ryanhcode.hotchicks.item.HotEggItem;
 import com.ryanhcode.hotchicks.entity.HotEntities;
 import com.ryanhcode.hotchicks.registry.HotTileEntities;

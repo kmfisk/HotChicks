@@ -1,4 +1,4 @@
-package com.ryanhcode.hotchicks.block;
+package com.ryanhcode.hotchicks.inventory;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;

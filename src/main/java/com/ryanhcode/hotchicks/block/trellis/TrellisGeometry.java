@@ -2,7 +2,7 @@ package com.ryanhcode.hotchicks.block.trellis;
 
 import com.mojang.datafixers.util.Pair;
 import com.ryanhcode.hotchicks.HotChickens;
-import com.ryanhcode.hotchicks.block.crop.TrellisCropBlock;
+import com.ryanhcode.hotchicks.block.TrellisCropBlock;
 import net.minecraft.client.renderer.model.*;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;

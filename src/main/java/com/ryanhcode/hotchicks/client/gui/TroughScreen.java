@@ -1,8 +1,9 @@
-package com.ryanhcode.hotchicks.block;
+package com.ryanhcode.hotchicks.client.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.ryanhcode.hotchicks.HotChickens;
+import com.ryanhcode.hotchicks.inventory.TroughContainer;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;

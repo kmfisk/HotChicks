@@ -1,8 +1,8 @@
 package com.ryanhcode.hotchicks;
 
 import com.ryanhcode.hotchicks.block.HotBlocks;
-import com.ryanhcode.hotchicks.block.NestScreen;
-import com.ryanhcode.hotchicks.block.TroughScreen;
+import com.ryanhcode.hotchicks.client.gui.NestScreen;
+import com.ryanhcode.hotchicks.client.gui.TroughScreen;
 import com.ryanhcode.hotchicks.block.trellis.TrellisModelLoader;
 import com.ryanhcode.hotchicks.client.renderer.entity.HotChickenRenderer;
 import com.ryanhcode.hotchicks.entity.HotEntities;

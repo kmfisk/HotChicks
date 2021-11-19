@@ -1,6 +1,5 @@
 package com.ryanhcode.hotchicks.block;
 
-import com.ryanhcode.hotchicks.block.crop.TrellisCropBlock;
 import com.ryanhcode.hotchicks.item.HotItems;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;

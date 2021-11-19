@@ -1,7 +1,7 @@
 package com.ryanhcode.hotchicks.worldgen;
 
 
-import com.ryanhcode.hotchicks.block.crop.CornBlock;
+import com.ryanhcode.hotchicks.block.CornBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
