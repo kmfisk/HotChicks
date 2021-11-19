@@ -15,6 +15,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChickenModel> {
+    public static final String[] AMERAUCANAS = new String[]{"black", "blue", "bluewheaten", "brown", "buff", "lavender", "lightbrown"};
+    public static final String[] MARANS = new String[]{"blackbirchen", "blackcopper", "cuckoo", "goldcuckoo"};
+    public static final String[] ORPINGTONS = new String[]{"black", "blue", "buff", "white"};
+    public static final String[] RHODE_ISLANDS = new String[]{"deepred", "lightred", "red"};
+    public static final String[] SILKIES = new String[]{"black", "blue", "buff", "partridge", "white"};
     public final HotChickenModel roosterModel;
     public final HotChickenModel henModel;
     public final HotChickenModel chickModel;
@@ -24,11 +29,6 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
         roosterModel = new HotChickenModel.Rooster();
         henModel = new HotChickenModel.Hen();
         chickModel = new HotChickenModel.Chick();
-    }
-
-    @Override
-    protected boolean shouldShowName(HotChickenEntity p_177070_1_) {
-        return false;
     }
 
     @Override
@@ -44,23 +44,73 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
 
     @Override
     public ResourceLocation getTextureLocation(HotChickenEntity chicken) {
-        boolean isChild = chicken.isBaby();
-        String path;
+        String location;
+        String sex = chicken.getSex() == Sex.MALE ? "rooster.png" : "hen.png";
+        int variant = chicken.getVariant();
 
-        ChickenBreeds breed = chicken.getBreed().equals("not_set") ? ChickenBreeds.LEGHORN : chicken.getBreed();
-        if (isChild)
-            path = "textures/entity/chicken/" + (breed.childTextures.get(chicken.getChickType())) + ".png";
-        else {
-            if (chicken.getVariant().equals("not_set"))
-                path = "textures/entity/chicken/junglefowl/junglefowl_rooster.png";
-            else {
-                if (!breed.textureMap.containsKey(chicken.getVariant()))
-                    path = "textures/entity/chicken/junglefowl/junglefowl_rooster.png";
-                else
-                    path = "textures/entity/chicken/" + (breed.textureMap.get(chicken.getVariant())).getTexture(chicken.getSex()) + ".png";
+        if (chicken.isBaby()) {
+            int baby;
+            switch (variant) {
+                case 9: case 24: case 32: default:
+                    baby = 1;
+                    break;
+                case 26: case 30:
+                    baby = 2;
+                    break;
+                case 23: case 27:
+                    baby = 3;
+                    break;
+                case 13: case 25: case 31:
+                    baby = 4;
+                    break;
+                case 29:
+                    baby = 5;
+                    break;
+                case 2: case 3: case 4: case 5: case 6: case 7: case 10:
+                case 15: case 16: case 17: case 18: case 19: case 20: case 22:
+                    baby = 6;
+                    break;
+                case 1: case 14: case 21: case 28:
+                    baby = 7;
+                    break;
+                case 8: case 11: case 12:
+                    baby = 8;
+                    break;
             }
+
+            return new ResourceLocation("textures/entity/chicken/chicks/chick_" + baby + ".png");
         }
 
-        return new ResourceLocation(HotChickens.MOD_ID, path);
+        switch (chicken.getBreedFromVariant(variant)) {
+            default: case JUNGLEFOWL:
+                location = "textures/entity/chicken/junglefowl/junglefowl_" + sex;
+                break;
+            case AMERAUCANA:
+                location = "textures/entity/chicken/ameraucanas/ameraucana_" + AMERAUCANAS[variant - 1] + sex;
+                break;
+            case BARRED_ROCK:
+                location = "textures/entity/chicken/barred_rocks/barredrock_" + sex;
+                break;
+            case LEGHORN:
+                location = "textures/entity/chicken/leghorns/leghorn_" + sex;
+                break;
+            case MARANS:
+                location = "textures/entity/chicken/marans/marans_" + MARANS[variant - 10] + sex;
+                break;
+            case OLIVE_EGGER:
+                location = "textures/entity/chicken/ameraucanas/ameraucana_" + AMERAUCANAS[variant - 14] + sex;
+                break;
+            case ORPINGTON:
+                location = "textures/entity/chicken/orpingtons/orpington_" + ORPINGTONS[variant - 21] + sex;
+                break;
+            case RHODE_ISLAND_RED:
+                location = "textures/entity/chicken/rhode_islands/rhodeisland_" + RHODE_ISLANDS[variant - 25] + sex;
+                break;
+            case SILKIE:
+                location = "textures/entity/chicken/silkies/silkie_" + SILKIES[variant - 28] + sex;
+                break;
+        }
+
+        return new ResourceLocation(HotChickens.MOD_ID, location);
     }
 }

@@ -10,6 +10,7 @@ import net.minecraft.world.World;
 
 public abstract class LivestockEntity extends AnimalEntity {
     public static final DataParameter<Boolean> SEX = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.BOOLEAN);
+    public static final DataParameter<Integer> VARIANT = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> TAMENESS = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> CARCASS_QUALITY = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> GROWTH_RATE = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
@@ -21,6 +22,7 @@ public abstract class LivestockEntity extends AnimalEntity {
     public void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(SEX, false);
+        this.entityData.define(VARIANT, 0);
         this.entityData.define(TAMENESS, 50);
         this.entityData.define(CARCASS_QUALITY, 0);
         this.entityData.define(GROWTH_RATE, 0);
@@ -32,6 +34,14 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     public Sex getSex() {
         return Sex.getSex(entityData.get(SEX));
+    }
+
+    public void setVariant(int variant) {
+        this.entityData.set(VARIANT, variant);
+    }
+
+    public int getVariant() {
+        return this.entityData.get(VARIANT);
     }
 
     public void setTameness(int tameness) {
@@ -61,6 +71,7 @@ public abstract class LivestockEntity extends AnimalEntity {
     public void addAdditionalSaveData(CompoundNBT compound) {
         super.addAdditionalSaveData(compound);
         compound.putBoolean("Sex", this.getSex().toBool());
+        compound.putInt("Variant", this.getVariant());
         compound.putInt("Tameness", this.getTameness());
         compound.putInt("CarcassQuality", this.getCarcassQuality());
         compound.putInt("GrowthRate", this.getGrowthRate());
@@ -69,6 +80,7 @@ public abstract class LivestockEntity extends AnimalEntity {
     public void readAdditionalSaveData(CompoundNBT compound) {
         super.readAdditionalSaveData(compound);
         this.setSex(compound.getBoolean("Sex"));
+        this.setVariant(compound.getInt("Variant"));
         this.setTameness(compound.getInt("Tameness"));
         this.setCarcassQuality(compound.getInt("CarcassQuality"));
         this.setGrowthRate(compound.getInt("GrowthRate"));

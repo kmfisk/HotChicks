@@ -36,9 +36,9 @@ public class HotEggItem extends Item {
         compoundnbt.putString("Breed", breed);
     }
 
-    public static void setVariant(ItemStack stack, String variant) {
+    public static void setVariant(ItemStack stack, int variant) {
         CompoundNBT compoundnbt = stack.getTag();
-        compoundnbt.putString("Variant", variant);
+        compoundnbt.putInt("Variant", variant);
     }
 
     public static void setTameness(ItemStack stack, int v) {
@@ -81,7 +81,7 @@ public class HotEggItem extends Item {
         }
 
         if (!tag.contains("Variant")) {
-            tag.putString("Variant", "not_set");
+            tag.putInt("Variant", 0);
         }
         return super.initCapabilities(stack, nbt);
     }

@@ -34,14 +34,12 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 
 public class HotChickenEntity extends LivestockEntity {
-    private static final DataParameter<String> BREED_DATA = EntityDataManager.defineId(HotChickenEntity.class, DataSerializers.STRING);
-    private static final DataParameter<String> VARIANT = EntityDataManager.defineId(HotChickenEntity.class, DataSerializers.STRING);
-
     private static final DataParameter<Integer> EGG_SPEED = EntityDataManager.defineId(HotChickenEntity.class, DataSerializers.INT);
     private static final DataParameter<Integer> EGG_TIMER = EntityDataManager.defineId(HotChickenEntity.class, DataSerializers.INT);
-    private static final DataParameter<Integer> CHICK_TYPE = EntityDataManager.defineId(HotChickenEntity.class, DataSerializers.INT);
 
     private static final Ingredient TEMPTATION_ITEMS = Ingredient.of(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS, HotItems.CORN.get());
+
+    public final int maxVariants = 33;
 
     public HotChickenEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
         super(type, worldIn);
@@ -64,27 +62,8 @@ public class HotChickenEntity extends LivestockEntity {
     @Override
     public void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(BREED_DATA, "not_set");
-        this.entityData.define(VARIANT, "not_set");
         this.entityData.define(EGG_SPEED, 3);
         this.entityData.define(EGG_TIMER, 0);
-        this.entityData.define(CHICK_TYPE, 0);
-    }
-
-    public void setBreed(ChickenBreeds breed) {
-        this.entityData.set(BREED_DATA, breed.toString());
-    }
-
-    public ChickenBreeds getBreed() {
-        return ChickenBreeds.valueOf(this.entityData.get(BREED_DATA));
-    }
-
-    public void setVariant(String v) {
-        this.entityData.set(VARIANT, v);
-    }
-
-    public String getVariant() {
-        return this.entityData.get(VARIANT);
     }
 
     public void setEggSpeed(int eggSpeed) {
@@ -101,14 +80,6 @@ public class HotChickenEntity extends LivestockEntity {
 
     public int getEggTimer() {
         return this.entityData.get(EGG_TIMER);
-    }
-
-    public void setChickType(int chickType) {
-        this.entityData.set(CHICK_TYPE, chickType);
-    }
-
-    public int getChickType() {
-        return this.entityData.get(CHICK_TYPE);
     }
 
     public void setStats(ChickenStats stats) {
@@ -140,32 +111,46 @@ public class HotChickenEntity extends LivestockEntity {
     @Override
     public void addAdditionalSaveData(CompoundNBT compound) {
         super.addAdditionalSaveData(compound);
-        compound.putString("Breed", this.getBreed().toString());
-        compound.putString("Variant", this.getVariant());
         compound.putInt("EggSpeed", this.getEggSpeed());
         compound.putInt("EggTimer", this.getEggTimer());
-        compound.putInt("ChickType", this.getChickType());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundNBT compound) {
         super.readAdditionalSaveData(compound);
-        this.setBreed(ChickenBreeds.valueOf(compound.getString("Breed")));
-        this.setVariant(compound.getString("Variant"));
         this.setEggSpeed(compound.getInt("EggSpeed"));
         this.setEggTimer(compound.getInt("EggTimer"));
-        this.setChickType(compound.getInt("ChickType"));
     }
 
     @Override
     public ILivingEntityData finalizeSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
         spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
-        ChickenBreeds breed = ChickenBreeds.JUNGLEFOWL;
         this.setSex(random.nextInt(3) == 0);
-        this.setBreed(breed);
-        this.setChickType(breed.randomChickIndex());
-        this.setVariant(breed.randomVariant());
+        this.setVariant(0);
         return spawnDataIn;
+    }
+
+    public ChickenBreeds getBreedFromVariant(int variant) {
+        switch (variant) {
+            default: case 0:
+                return ChickenBreeds.JUNGLEFOWL;
+            case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+                return ChickenBreeds.AMERAUCANA;
+            case 8:
+                return ChickenBreeds.BARRED_ROCK;
+            case 9:
+                return ChickenBreeds.LEGHORN;
+            case 10: case 11: case 12: case 13:
+                return ChickenBreeds.MARANS;
+            case 14: case 15: case 16: case 17: case 18: case 19: case 20:
+                return ChickenBreeds.OLIVE_EGGER;
+            case 21: case 22: case 23: case 24:
+                return ChickenBreeds.ORPINGTON;
+            case 25: case 26: case 27:
+                return ChickenBreeds.RHODE_ISLAND_RED;
+            case 28: case 29: case 30: case 31: case 32:
+                return ChickenBreeds.SILKIE;
+        }
     }
 
     @Override
@@ -211,7 +196,7 @@ public class HotChickenEntity extends LivestockEntity {
 
     @Override
     public void spawnChildFromBreeding(ServerWorld world, AnimalEntity animal) {
-        HotChickenEntity other = (HotChickenEntity) animal;
+        HotChickenEntity otherParent = (HotChickenEntity) animal;
         boolean inheritMotherGenes = this.random.nextFloat() <= 0.6;
 
         if (!this.getMainHandItem().isEmpty()) {
@@ -220,24 +205,26 @@ public class HotChickenEntity extends LivestockEntity {
         }
 
         ItemStack stack = new ItemStack(HotItems.WHITE_EGG.get());
+        ChickenBreeds breed1 = this.getBreedFromVariant(this.getVariant());
+        ChickenBreeds breed2 = otherParent.getBreedFromVariant(otherParent.getVariant());
 
-        if (other.getBreed().equals(this.getBreed())) {
-            HotEggItem.setBreed(stack, this.getBreed().toString());
-            HotEggItem.setVariant(stack, inheritMotherGenes ? this.getVariant() : other.getVariant());
+        if (breed1.equals(breed2)) {
+            HotEggItem.setBreed(stack, breed1.toString());
+            HotEggItem.setVariant(stack, inheritMotherGenes ? this.getVariant() : otherParent.getVariant());
         } else {
             if (inheritMotherGenes) {
-                HotEggItem.setBreed(stack, this.getBreed().toString());
+                HotEggItem.setBreed(stack, breed1.toString());
                 HotEggItem.setVariant(stack, this.getVariant());
             } else {
-                HotEggItem.setBreed(stack, other.getBreed().toString());
-                HotEggItem.setVariant(stack, other.getVariant());
+                HotEggItem.setBreed(stack, breed2.toString());
+                HotEggItem.setVariant(stack, otherParent.getVariant());
             }
         }
 
         // todo
-        ChickenStats stats = (ChickenStats) this.getStats().average(other.getStats()).mutate(0.15);
+        ChickenStats stats = (ChickenStats) this.getStats().average(otherParent.getStats()).mutate(0.15);
         HotEggItem.setChickenStats(stack, stats);
-        int avgtmness = (getTameness() + other.getTameness()) / 2;
+        int avgtmness = (getTameness() + otherParent.getTameness()) / 2;
         if (stats.tameness < 80)
             HotEggItem.setBreed(stack, ChickenBreeds.JUNGLEFOWL.toString());
         if (stats.tameness > 80 && avgtmness <= 80) {

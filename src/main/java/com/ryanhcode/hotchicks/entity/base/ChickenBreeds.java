@@ -10,115 +10,19 @@ import java.util.Map;
 import java.util.Random;
 
 public enum ChickenBreeds {
-    JUNGLEFOWL(new HashMap<String, Variant>() {{
-                put("default", new Variant("junglefowl/junglefowl"));
-            }},
-            new ArrayList<String>() {{
-                add("chicks/chick_1");
-            }},
-            50, 1, 2, 3),
-    LEGHORN(new HashMap<String, Variant>() {{
-                put("default", new Variant("leghorns/leghorn"));
-            }},
-            new ArrayList<String>() {{
-                add("chicks/chick_1");
-            }},
-            80, 1, 2, 7),
-    RHODE_ISLAND_RED(new HashMap<String, Variant>() {{
-                put("deep_red", new Variant("rhode_islands/rhodeisland_deepred"));
-                put("light_red", new Variant("rhode_islands/rhodeisland_lightred"));
-                put("red", new Variant("rhode_islands/rhodeisland_red"));
-            }},
-            new ArrayList<String>() {{
-                add("chicks/chick_2");
-                add("chicks/chick_3");
-                add("chicks/chick_4");
-            }},
-            80, 3, 2, 4),
-    BARRED_ROCK(new HashMap<String, Variant>() {{
-                put("default", new Variant("barred_rocks/barredrock"));
-            }},
-            new ArrayList<String>() {{
-                add("chicks/chick_8");
-            }},
-            80, 3, 3, 5),
-    ORPINGTON(new HashMap<String, Variant>() {{
-                put("black", new Variant("orpingtons/orpington_black"));
-                put("blue", new Variant("orpingtons/orpington_blue"));
-                put("buff", new Variant("orpingtons/orpington_buff"));
-                put("white", new Variant("orpingtons/orpington_white"));
-            }},
-            new ArrayList<String>() {{
-                add("chicks/chick_7");
-                add("chicks/chick_6");
-                add("chicks/chick_3");
-                add("chicks/chick_1");
-            }},
-            80, 3, 3, 3),
-    AMERAUCANA(new HashMap<String, Variant>() {{
-                put("black", new Variant("ameraucanas/ameraucana_black"));
-                put("blue", new Variant("ameraucanas/ameraucana_blue"));
-                put("bluewheaten", new Variant("ameraucanas/ameraucana_bluewheaten"));
-                put("brown", new Variant("ameraucanas/ameraucana_brown"));
-                put("buff", new Variant("ameraucanas/ameraucana_buff"));
-                put("lavender", new Variant("ameraucanas/ameraucana_lavender"));
-                put("lightbrown", new Variant("ameraucanas/ameraucana_lightbrown"));
-            }},
-            new ArrayList<String>() {{
-                add("chicks/chick_7");
-                add("chicks/chick_6");
-            }},
-            80, 2, 1, 4),
-    OLIVE_EGGER(new HashMap<String, Variant>() {{
-                put("black", new Variant("ameraucanas/ameraucana_black"));
-                put("blue", new Variant("ameraucanas/ameraucana_blue"));
-                put("bluewheaten", new Variant("ameraucanas/ameraucana_bluewheaten"));
-                put("brown", new Variant("ameraucanas/ameraucana_brown"));
-                put("buff", new Variant("ameraucanas/ameraucana_buff"));
-                put("lavender", new Variant("ameraucanas/ameraucana_lavender"));
-                put("lightbrown", new Variant("ameraucanas/ameraucana_lightbrown"));
-            }},
-            new ArrayList<String>() {{
-                add("chicks/chick_7");
-                add("chicks/chick_6");
-            }},
-            80, 2, 1, 4),
-    MARANS(new HashMap<String, Variant>() {{
-                put("gold_cuckoo", new Variant("marans/marans_goldcuckoo"));
-                put("black_copper", new Variant("marans/marans_blackcopper"));
-                put("cuckoo", new Variant("marans/marans_cuckoo"));
-                put("black_birchen", new Variant("marans/marans_blackbirchen"));
-            }},
-            new ArrayList<String>() {{
-                add("chicks/chick_8");
-                add("chicks/chick_6");
-                add("chicks/chick_8");
-                add("chicks/chick_4");
-            }},
-            80, 3, 1, 4),
-    SILKIE(new HashMap<String, Variant>() {{
-                put("black", new Variant("silkies/silkie_black"));
-                put("blue", new Variant("silkies/silkie_blue"));
-                put("buff", new Variant("silkies/silkie_buff"));
-                put("patridge", new Variant("silkies/silkie_patridge"));
-                put("white", new Variant("silkies/silkie_white"));
-            }},
-            new ArrayList<String>() {{
-                add("chicks/chick_7");
-                add("chicks/chick_5");
-                add("chicks/chick_4");
-                add("chicks/chick_2");
-                add("chicks/chick_1");
-            }},
-            80, 3, 1, 3);
+    JUNGLEFOWL(50, 1, 2, 3),
+    LEGHORN(80, 1, 2, 7),
+    RHODE_ISLAND_RED(80, 3, 2, 4),
+    BARRED_ROCK(80, 3, 3, 5),
+    ORPINGTON(80, 3, 3, 3),
+    AMERAUCANA(80, 2, 1, 4),
+    OLIVE_EGGER(80, 2, 1, 4),
+    MARANS(80, 3, 1, 4),
+    SILKIE(80, 3, 1, 3);
 
-    public final Map<String, Variant> textureMap;
-    public final ArrayList<String> childTextures;
     public final ChickenStats stats;
 
-    ChickenBreeds(Map<String, Variant> textureMap, ArrayList<String> childTextures, int tameness, int carcassQuality, int growthRate, int eggSpeed) {
-        this.textureMap = textureMap;
-        this.childTextures = childTextures;
+    ChickenBreeds(int tameness, int carcassQuality, int growthRate, int eggSpeed) {
         this.stats = new ChickenStats(tameness, carcassQuality, growthRate, eggSpeed);
     }
 
@@ -177,31 +81,5 @@ public enum ChickenBreeds {
             }
         }
         return value;
-    }
-
-    public String randomChick() {
-        return childTextures.get(randomChickIndex());
-    }
-
-    public int randomChickIndex() {
-        return new Random(System.currentTimeMillis()).nextInt(childTextures.size());
-    }
-
-    public String randomVariant() {
-        Object[] textures = textureMap.keySet().toArray();
-        return (String) textures[new Random().nextInt(textures.length)];
-    }
-
-    public static class Variant {
-        private final String male, female;
-
-        public Variant(String path) {
-            this.male = path + "_rooster";
-            this.female = path + "_hen";
-        }
-
-        public String getTexture(Sex sex) {
-            return sex == Sex.MALE ? male : female;
-        }
     }
 }
