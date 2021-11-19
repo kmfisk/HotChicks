@@ -45,7 +45,7 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
     @Override
     public ResourceLocation getTextureLocation(HotChickenEntity chicken) {
         String location;
-        String sex = chicken.getSex() == Sex.MALE ? "rooster.png" : "hen.png";
+        String sex = chicken.getSex() == Sex.MALE ? "_rooster.png" : "_hen.png";
         int variant = chicken.getVariant();
 
         if (chicken.isBaby()) {
@@ -83,16 +83,16 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
 
         switch (chicken.getBreedFromVariant(variant)) {
             default: case JUNGLEFOWL:
-                location = "textures/entity/chicken/junglefowl/junglefowl_" + sex;
+                location = "textures/entity/chicken/junglefowl/junglefowl" + sex;
                 break;
             case AMERAUCANA:
                 location = "textures/entity/chicken/ameraucanas/ameraucana_" + AMERAUCANAS[variant - 1] + sex;
                 break;
             case BARRED_ROCK:
-                location = "textures/entity/chicken/barred_rocks/barredrock_" + sex;
+                location = "textures/entity/chicken/barred_rocks/barredrock" + sex;
                 break;
             case LEGHORN:
-                location = "textures/entity/chicken/leghorns/leghorn_" + sex;
+                location = "textures/entity/chicken/leghorns/leghorn" + sex;
                 break;
             case MARANS:
                 location = "textures/entity/chicken/marans/marans_" + MARANS[variant - 10] + sex;
