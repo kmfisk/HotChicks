@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hotchicks:garlic"
+          "name": "hotchicks:corn"
         }
       ]
     },
@@ -26,15 +26,15 @@
               }
             }
           ],
-          "name": "hotchicks:garlic"
+          "name": "hotchicks:corn"
         }
       ],
       "conditions": [
         {
           "condition": "minecraft:block_state_property",
-          "block": "hotchicks:garlic",
+          "block": "hotchicks:corn",
           "properties": {
-            "age": "7"
+            "age": "5"
           }
         }
       ]
