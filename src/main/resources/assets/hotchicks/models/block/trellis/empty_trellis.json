@@ -1,0 +1,7 @@
+{
+  "parent": "block/ladder",
+  "textures": {
+    "particle": "#texture",
+    "texture": "hotchicks:block/trellis/none/none"
+  }
+}

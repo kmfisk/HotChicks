@@ -3,7 +3,6 @@ package com.ryanhcode.hotchicks;
 import com.ryanhcode.hotchicks.block.HotBlocks;
 import com.ryanhcode.hotchicks.client.gui.NestScreen;
 import com.ryanhcode.hotchicks.client.gui.TroughScreen;
-import com.ryanhcode.hotchicks.block.trellis.TrellisModelLoader;
 import com.ryanhcode.hotchicks.client.renderer.entity.HotChickenRenderer;
 import com.ryanhcode.hotchicks.entity.HotEntities;
 import com.ryanhcode.hotchicks.item.HotItems;
@@ -61,7 +60,7 @@ public class HotChickens {
         modBus.addListener(this::registerAttributes);
         modBus.addListener(this::registerRenderers);
         modBus.addListener(this::registerColorHandlerBlocks);
-        modBus.addListener(this::modelLoad);
+//        modBus.addListener(this::modelLoad);
 
         forgeBus.register(this);
     }
@@ -74,9 +73,9 @@ public class HotChickens {
         event.put(HotEntities.HOT_CHICKEN.get(), MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.MOVEMENT_SPEED, 0.25).build());
     }
 
-    private void modelLoad(ModelRegistryEvent event) {
+    /*private void modelLoad(ModelRegistryEvent event) {
         ModelLoaderRegistry.registerLoader(new ResourceLocation(HotChickens.MOD_ID, "trellisloader"), new TrellisModelLoader());
-    }
+    }*/
 
     private void registerRenderers(final FMLClientSetupEvent event) {
         ScreenManager.register(HotContainers.NEST.get(), NestScreen::new);

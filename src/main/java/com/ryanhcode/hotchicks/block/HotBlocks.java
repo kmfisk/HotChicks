@@ -26,7 +26,12 @@ public class HotBlocks {
     public static final RegistryObject<Block> METAL_TROUGH_BLOCK = registerWithItem("metal_trough_block", () -> new MetalTroughBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD)));
 //    public static final RegistryObject<Block> FOOD_CROCK = registerWithItem("food_crock", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
 //    public static final RegistryObject<Block> WATER_BOTTLE = registerWithItem("water_bottle", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
-    public static final RegistryObject<Block> TRELLIS_BLOCK = registerWithItem("trellis", () -> new TrellisBlock(AbstractBlock.Properties.of(Material.WOOD).strength(0.8F).sound(SoundType.WOOD).noOcclusion()));
+//    public static final RegistryObject<Block> TRELLIS_BLOCK = registerWithItem("trellis", () -> new TrellisBlock(AbstractBlock.Properties.of(Material.WOOD).strength(0.8F).sound(SoundType.WOOD).noOcclusion()));
+    public static final RegistryObject<Block> EMPTY_TRELLIS = registerWithItem("trellis", () -> new NEWTrellisBlock(null, null));
+    public static final RegistryObject<Block> GRAPE_TRELLIS = REGISTRAR.register("grape_trellis", () -> new NEWTrellisBlock(() -> (NEWTrellisBlock) EMPTY_TRELLIS.get(), HotItems.GRAPES));
+    public static final RegistryObject<Block> KIWI_TRELLIS = REGISTRAR.register("kiwi_trellis", () -> new NEWTrellisBlock(() -> (NEWTrellisBlock) EMPTY_TRELLIS.get(), HotItems.KIWI));
+    public static final RegistryObject<Block> TOMATO_TRELLIS = REGISTRAR.register("tomato_trellis", () -> new NEWTrellisBlock(() -> (NEWTrellisBlock) EMPTY_TRELLIS.get(), HotItems.TOMATO));
+    public static final RegistryObject<Block> PEA_TRELLIS = REGISTRAR.register("pea_trellis", () -> new NEWTrellisBlock(() -> (NEWTrellisBlock) EMPTY_TRELLIS.get(), HotItems.PEAS));
 //    public static final RegistryObject<Block> RABBIT_WIRE = registerWithItem("rabbit_wire", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
 //    public static final RegistryObject<Block> RABBIT_FLOORING = registerWithItem("rabbit_flooring", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
 //    public static final RegistryObject<Block> RABBIT_WIRE_DOOR = registerWithItem("rabbit_wire_door", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
@@ -100,7 +105,11 @@ public class HotBlocks {
 
     public static void setRenderLayers() {
         RenderType rendertype1 = RenderType.cutoutMipped();
-        RenderTypeLookup.setRenderLayer(TRELLIS_BLOCK.get(), rendertype1);
+        RenderTypeLookup.setRenderLayer(EMPTY_TRELLIS.get(), rendertype1);
+        RenderTypeLookup.setRenderLayer(GRAPE_TRELLIS.get(), rendertype1);
+        RenderTypeLookup.setRenderLayer(KIWI_TRELLIS.get(), rendertype1);
+        RenderTypeLookup.setRenderLayer(TOMATO_TRELLIS.get(), rendertype1);
+        RenderTypeLookup.setRenderLayer(PEA_TRELLIS.get(), rendertype1);
         RenderTypeLookup.setRenderLayer(FRUIT_LEAVES.get(), rendertype1);
         RenderTypeLookup.setRenderLayer(CITRUS_LEAVES.get(), rendertype1);
         RenderTypeLookup.setRenderLayer(FICUS_LEAVES.get(), rendertype1);
