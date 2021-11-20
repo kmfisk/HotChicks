@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hotchicks:trough_block"
+          "name": "hotchicks:nest"
         }
       ],
       "conditions": [

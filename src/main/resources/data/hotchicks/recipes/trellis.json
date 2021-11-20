@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hotchicksgroup",
+  "pattern": [
+    "NSN",
+    "SNS",
+    "NSN"
+  ],
+  "key": {
+    "S": [
+      { "tag": "minecraft:string"  }
+    ],
+    "N": [
+      { "item": "minecraft:stick"  }
+    ]
+
+  },
+  "result": {
+    "item": "hotchicks:trellis",
+    "count": 8
+  }
+}

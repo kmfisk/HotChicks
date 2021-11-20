@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "hotchicks:papeda",
+      "count": 2
+    }
+  ],
+  "result": {
+    "item": "hotchicks:papeda_seed",
+    "count": 1
+  }
+}
