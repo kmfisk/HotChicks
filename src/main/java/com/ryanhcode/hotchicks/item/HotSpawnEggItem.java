@@ -54,36 +54,8 @@ public class HotSpawnEggItem extends Item {
             HotChickenEntity e = (HotChickenEntity) entitytype.spawn((ServerWorld) world, itemstack, context.getPlayer(), blockpos1, SpawnReason.SPAWN_EGG, true, !Objects.equals(blockpos, blockpos1) && direction == Direction.UP);
 
             if (e != null) {
-                switch (breed) {
-                    default:
-                    case JUNGLEFOWL:
-                        e.setVariant(0);
-                        break;
-                    case AMERAUCANA:
-                        e.setVariant(random.nextInt(7) + 1);
-                        break;
-                    case BARRED_ROCK:
-                        e.setVariant(8);
-                        break;
-                    case LEGHORN:
-                        e.setVariant(9);
-                        break;
-                    case MARANS:
-                        e.setVariant(random.nextInt(4) + 10);
-                        break;
-                    case OLIVE_EGGER:
-                        e.setVariant(random.nextInt(7) + 14);
-                        break;
-                    case ORPINGTON:
-                        e.setVariant(random.nextInt(4) + 21);
-                        break;
-                    case RHODE_ISLAND_RED:
-                        e.setVariant(random.nextInt(3) + 25);
-                        break;
-                    case SILKIE:
-                        e.setVariant(random.nextInt(5) + 28);
-                        break;
-                }
+                setStats(e);
+
                 itemstack.shrink(1);
             }
 
@@ -112,41 +84,7 @@ public class HotSpawnEggItem extends Item {
                     return ActionResult.pass(itemstack);
 
                 } else {
-                    switch (breed) {
-                        default:
-                        case JUNGLEFOWL:
-                            e.setVariant(0);
-                            e.setTameness(50);
-                            break;
-                        case AMERAUCANA:
-                            e.setVariant(random.nextInt(7) + 1);
-                            break;
-                        case BARRED_ROCK:
-                            e.setVariant(8);
-                            break;
-                        case LEGHORN:
-                            e.setVariant(9);
-                            break;
-                        case MARANS:
-                            e.setVariant(random.nextInt(4) + 10);
-                            break;
-                        case OLIVE_EGGER:
-                            e.setVariant(random.nextInt(7) + 14);
-                            break;
-                        case ORPINGTON:
-                            e.setVariant(random.nextInt(4) + 21);
-                            break;
-                        case RHODE_ISLAND_RED:
-                            e.setVariant(random.nextInt(3) + 25);
-                            break;
-                        case SILKIE:
-                            e.setVariant(random.nextInt(5) + 28);
-                            break;
-                    }
-
-                    if (breed != ChickenBreeds.JUNGLEFOWL)
-                        e.setTameness(100);
-
+                    setStats(e);
 
                     if (!playerIn.abilities.instabuild)
                         itemstack.shrink(1);
@@ -158,5 +96,40 @@ public class HotSpawnEggItem extends Item {
                 return ActionResult.fail(itemstack);
             }
         }
+    }
+
+    private void setStats(HotChickenEntity chicken) {
+        switch (breed) {
+            default:
+            case JUNGLEFOWL:
+                chicken.setVariant(0);
+                break;
+            case AMERAUCANA:
+                chicken.setVariant(random.nextInt(7) + 1);
+                break;
+            case BARRED_ROCK:
+                chicken.setVariant(8);
+                break;
+            case LEGHORN:
+                chicken.setVariant(9);
+                break;
+            case MARANS:
+                chicken.setVariant(random.nextInt(4) + 10);
+                break;
+            case OLIVE_EGGER:
+                chicken.setVariant(random.nextInt(7) + 14);
+                break;
+            case ORPINGTON:
+                chicken.setVariant(random.nextInt(4) + 21);
+                break;
+            case RHODE_ISLAND_RED:
+                chicken.setVariant(random.nextInt(3) + 25);
+                break;
+            case SILKIE:
+                chicken.setVariant(random.nextInt(5) + 28);
+                break;
+        }
+
+        chicken.setStats(breed.stats);
     }
 }

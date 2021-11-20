@@ -48,9 +48,9 @@ public class HotChickenEntity extends LivestockEntity {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new LayEggsGoal(this));
-        this.goalSelector.addGoal(1, new SwimGoal(this));
-        this.goalSelector.addGoal(2, new PanicGoal(this, 1.4D));
+        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(1, new PanicGoal(this, 1.4D));
+        this.goalSelector.addGoal(2, new LayEggsGoal(this));
         this.goalSelector.addGoal(3, new ChickenBreedGoal(this, 1.0D));
         this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, false, TEMPTATION_ITEMS));
         this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1D));
@@ -127,6 +127,7 @@ public class HotChickenEntity extends LivestockEntity {
         spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
         this.setSex(random.nextInt(3) == 0);
         this.setVariant(0);
+        this.setStats(new ChickenStats(random.nextInt(25) + random.nextInt(35), random.nextInt(4), random.nextInt(4), random.nextInt(8)));
         return spawnDataIn;
     }
 
@@ -178,7 +179,7 @@ public class HotChickenEntity extends LivestockEntity {
 
     @Nullable
     @Override
-    public AgeableEntity getBreedOffspring(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
+    public AgeableEntity getBreedOffspring(ServerWorld world, AgeableEntity entity) {
         return null;
     }
 
@@ -221,13 +222,12 @@ public class HotChickenEntity extends LivestockEntity {
             }
         }
 
-        // todo
         ChickenStats stats = (ChickenStats) this.getStats().average(otherParent.getStats()).mutate(0.15);
         HotEggItem.setChickenStats(stack, stats);
         int avgtmness = (getTameness() + otherParent.getTameness()) / 2;
-        if (stats.tameness < 80)
+        if (stats.tameness < 85)
             HotEggItem.setBreed(stack, ChickenBreeds.JUNGLEFOWL.toString());
-        if (stats.tameness > 80 && avgtmness <= 80) {
+        if (stats.tameness > 85 && avgtmness <= 85) {
             Biome biome = this.getBiome();
             System.out.println("biome = " + biome);
             ChickenBreeds breed = ChickenBreeds.randomBasedOnBiome(biome);

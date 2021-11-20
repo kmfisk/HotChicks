@@ -78,7 +78,7 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
                     break;
             }
 
-            return new ResourceLocation("textures/entity/chicken/chicks/chick_" + baby + ".png");
+            return new ResourceLocation(HotChickens.MOD_ID, "textures/entity/chicken/chicks/chick_" + baby + ".png");
         }
 
         switch (chicken.getBreedFromVariant(variant)) {

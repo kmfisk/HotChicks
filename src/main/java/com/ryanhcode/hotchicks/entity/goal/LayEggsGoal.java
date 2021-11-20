@@ -1,8 +1,8 @@
 package com.ryanhcode.hotchicks.entity.goal;
 
+import com.ryanhcode.hotchicks.block.HotBlocks;
 import com.ryanhcode.hotchicks.block.NestTileEntity;
 import com.ryanhcode.hotchicks.entity.HotChickenEntity;
-import com.ryanhcode.hotchicks.block.HotBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.item.ItemStack;
@@ -23,27 +23,22 @@ import net.minecraft.world.server.ServerWorld;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-
 public class LayEggsGoal extends MoveToBlockGoal {
     private final Block block;
     private final HotChickenEntity entity;
     private int breakingTime;
 
     public LayEggsGoal(HotChickenEntity creature) {
-
         super(creature, 1.3, 24, 3);
         this.block = HotBlocks.NEST_BOX.get();
         this.entity = creature;
     }
 
-    /**
-     * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
-     * method as well.
-     */
+    @Override
     public boolean canUse() {
-        if (entity.getEggTimer() < entity.getMaxEggTimer() || entity.getMainHandItem().isEmpty()) {
+        if (entity.getEggTimer() < entity.getMaxEggTimer() || entity.getMainHandItem().isEmpty())
             return false;
-        } else if (this.nextStartTick > 0) {
+        else if (this.nextStartTick > 0) {
             --this.nextStartTick;
             return false;
         } else if (this.tryFindBlock()) {
@@ -56,20 +51,16 @@ public class LayEggsGoal extends MoveToBlockGoal {
     }
 
     private boolean tryFindBlock() {
-        return this.blockPos != null && this.isValidTarget(this.mob.level, this.blockPos) ? true : this.findNearestBlock();
+        return this.blockPos != null && this.isValidTarget(this.mob.level, this.blockPos) || this.findNearestBlock();
     }
 
-    /**
-     * Reset the task's internal state. Called when this task is interrupted by another one
-     */
+    @Override
     public void stop() {
         super.stop();
         this.entity.fallDistance = 1.0F;
     }
 
-    /**
-     * Execute a one shot task or start executing a continuous task
-     */
+    @Override
     public void start() {
         super.start();
         this.breakingTime = 0;
@@ -81,15 +72,10 @@ public class LayEggsGoal extends MoveToBlockGoal {
         return 1.0;
     }
 
-
     public boolean above = false;
 
-    /**
-     * Keep ticking a continuous task that has already been started
-     */
+    @Override
     public void tick() {
-
-
         BlockPos blockpos5 = this.blockPos;
         if (!blockpos5.closerThan(this.mob.position(), this.acceptedDistance())) {
             this.above = false;
@@ -101,7 +87,6 @@ public class LayEggsGoal extends MoveToBlockGoal {
             this.above = true;
             --this.tryTicks;
         }
-
 
         World world = this.entity.level;
         BlockPos blockpos = this.entity.blockPosition();
@@ -151,7 +136,6 @@ public class LayEggsGoal extends MoveToBlockGoal {
 
             this.breakingTime += 1;
         }
-
     }
 
     @Override
@@ -176,9 +160,7 @@ public class LayEggsGoal extends MoveToBlockGoal {
         }
     }
 
-    /**
-     * Return true to set given position as destination
-     */
+    @Override
     protected boolean isValidTarget(IWorldReader worldIn, BlockPos pos) {
         IChunk ichunk = worldIn.getChunk(pos.getX() >> 4, pos.getZ() >> 4, ChunkStatus.FULL, false);
         if (ichunk == null) {

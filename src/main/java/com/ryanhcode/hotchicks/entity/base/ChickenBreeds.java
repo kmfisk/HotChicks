@@ -10,15 +10,15 @@ import java.util.Map;
 import java.util.Random;
 
 public enum ChickenBreeds {
-    JUNGLEFOWL(50, 1, 2, 3),
-    LEGHORN(80, 1, 2, 7),
-    RHODE_ISLAND_RED(80, 3, 2, 4),
-    BARRED_ROCK(80, 3, 3, 5),
-    ORPINGTON(80, 3, 3, 3),
-    AMERAUCANA(80, 2, 1, 4),
-    OLIVE_EGGER(80, 2, 1, 4),
-    MARANS(80, 3, 1, 4),
-    SILKIE(80, 3, 1, 3);
+    JUNGLEFOWL(50, 0, 0, 0),
+    LEGHORN(85, 1, 2, 7),
+    RHODE_ISLAND_RED(85, 3, 2, 4),
+    BARRED_ROCK(85, 3, 3, 5),
+    ORPINGTON(85, 3, 3, 3),
+    AMERAUCANA(85, 2, 1, 4),
+    OLIVE_EGGER(85, 2, 1, 4),
+    MARANS(85, 3, 1, 4),
+    SILKIE(85, 3, 1, 3);
 
     public final ChickenStats stats;
 

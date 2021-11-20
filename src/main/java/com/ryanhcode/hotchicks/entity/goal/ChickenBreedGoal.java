@@ -1,6 +1,5 @@
 package com.ryanhcode.hotchicks.entity.goal;
 
-
 import com.ryanhcode.hotchicks.entity.HotChickenEntity;
 import com.ryanhcode.hotchicks.entity.base.Sex;
 import net.minecraft.entity.EntityPredicate;
@@ -18,7 +17,7 @@ public class ChickenBreedGoal extends Goal {
     private final Class<? extends HotChickenEntity> mateClass;
     protected final World world;
     protected HotChickenEntity targetMate;
-    private int spawnBabyDelay;
+    private int loveTime;
     private final double moveSpeed;
 
     public ChickenBreedGoal(HotChickenEntity animal, double speedIn) {
@@ -33,51 +32,36 @@ public class ChickenBreedGoal extends Goal {
         this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
     }
 
-    /**
-     * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
-     * method as well.
-     */
+    @Override
     public boolean canUse() {
-        if (!this.animal.isInLove()) {
+        if (!this.animal.isInLove() || this.animal.getSex() != Sex.FEMALE)
             return false;
-        } else {
+        else {
             this.targetMate = this.getNearbyMate();
-            return this.targetMate != null;
+            return this.targetMate != null && this.targetMate.getSex() == Sex.MALE;
         }
     }
 
-    /**
-     * Returns whether an in-progress EntityAIBase should continue executing
-     */
+    @Override
     public boolean canContinueToUse() {
-        return this.targetMate.isAlive() && this.targetMate.isInLove() && this.spawnBabyDelay < 60;
+        return this.targetMate.isAlive() && this.targetMate.isInLove() && this.loveTime < 60;
     }
 
-    /**
-     * Reset the task's internal state. Called when this task is interrupted by another one
-     */
+    @Override
     public void stop() {
         this.targetMate = null;
-        this.spawnBabyDelay = 0;
+        this.loveTime = 0;
     }
 
-    /**
-     * Keep ticking a continuous task that has already been started
-     */
+    @Override
     public void tick() {
         this.animal.getLookControl().setLookAt(this.targetMate, 10.0F, (float) this.animal.getMaxHeadXRot());
         this.animal.getNavigation().moveTo(this.targetMate, this.moveSpeed);
-        ++this.spawnBabyDelay;
-        if (this.spawnBabyDelay >= 60 && this.animal.distanceToSqr(this.targetMate) < 9.0D && this.targetMate.getSex() == Sex.MALE && this.animal.getSex() == Sex.FEMALE) {
-            this.spawnBaby();
-        }
-
+        ++this.loveTime;
+        if (this.loveTime >= 60 && this.animal.distanceToSqr(this.targetMate) < 9.0D)
+            this.breed();
     }
 
-    /**
-     * Loops through nearby animals and finds another animal of the same type that can be mated with. Returns the first
-     * valid mate found.
-     */
     @Nullable
     private HotChickenEntity getNearbyMate() {
         List<HotChickenEntity> list = this.world.getNearbyEntities(this.mateClass, PARTNER_TARGETING, this.animal, this.animal.getBoundingBox().inflate(8.0D));
@@ -94,10 +78,7 @@ public class ChickenBreedGoal extends Goal {
         return animalentity;
     }
 
-    /**
-     * Spawns a baby animal of the same type.
-     */
-    protected void spawnBaby() {
+    protected void breed() {
         this.animal.spawnChildFromBreeding((ServerWorld) this.world, this.targetMate);
     }
 }
