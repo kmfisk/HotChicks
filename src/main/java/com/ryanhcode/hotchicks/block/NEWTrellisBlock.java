@@ -1,6 +1,7 @@
 package com.ryanhcode.hotchicks.block;
 
 import com.google.common.collect.Maps;
+import com.ryanhcode.hotchicks.HotChickens;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,7 +24,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
@@ -32,31 +32,18 @@ public class NEWTrellisBlock extends Block implements IGrowable {
     public static final DirectionProperty FACING = HorizontalBlock.FACING;
     public static final IntegerProperty AGE = BlockStateProperties.AGE_5;
 
-    protected static final VoxelShape EAST_AABB = Block.box(0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D);
-    protected static final VoxelShape WEST_AABB = Block.box(13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-    protected static final VoxelShape SOUTH_AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 3.0D);
-    protected static final VoxelShape NORTH_AABB = Block.box(0.0D, 0.0D, 13.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape EAST_AABB = Block.box(0.0D, 0.0D, 0.0D, 6.0D, 16.0D, 16.0D);
+    protected static final VoxelShape WEST_AABB = Block.box(10.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape SOUTH_AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 6.0D);
+    protected static final VoxelShape NORTH_AABB = Block.box(0.0D, 0.0D, 10.0D, 16.0D, 16.0D, 16.0D);
 
-    private final Map<ResourceLocation, Supplier<? extends Block>> fullTrellises;
-    private final Supplier<NEWTrellisBlock> emptyTrellis;
+    private static final Map<ResourceLocation, Supplier<? extends Block>> fullTrellises = Maps.newHashMap();
     private final Supplier<? extends Item> cropItem;
 
-    public NEWTrellisBlock(Supplier<NEWTrellisBlock> emptyTrellis, Supplier<? extends Item> cropItem) {
+    public NEWTrellisBlock(Supplier<? extends Item> cropItem) {
         super(AbstractBlock.Properties.of(Material.WOOD).strength(0.4F).sound(SoundType.WOOD).noOcclusion());
         this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0).setValue(FACING, Direction.NORTH));
         this.cropItem = cropItem;
-        if (emptyTrellis == null) {
-            this.fullTrellises = Maps.newHashMap();
-            this.emptyTrellis = null;
-        } else {
-            this.fullTrellises = Collections.emptyMap();
-            this.emptyTrellis = emptyTrellis;
-            emptyTrellis.get().fullTrellises.put(cropItem.get().getRegistryName(), () -> this);
-        }
-    }
-
-    public NEWTrellisBlock getEmptyTrellis() {
-        return emptyTrellis == null ? this : emptyTrellis.get();
     }
 
     @Override
@@ -82,12 +69,12 @@ public class NEWTrellisBlock extends Block implements IGrowable {
     public ActionResultType use(BlockState state, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
         ItemStack itemStack = player.getItemInHand(hand);
         Item item = itemStack.getItem();
-        Block block = getEmptyTrellis().fullTrellises.getOrDefault(item.getRegistryName(), Blocks.AIR.delegate).get();
+        Block block = fullTrellises.getOrDefault(item.getRegistryName(), Blocks.AIR.delegate).get();
         boolean notHoldingCrop = block == Blocks.AIR;
         boolean isTrellisEmpty = this.cropItem == null;
         if (notHoldingCrop != isTrellisEmpty) {
             if (isTrellisEmpty) {
-                world.setBlock(blockPos, block.defaultBlockState(), 3);
+                world.setBlock(blockPos, block.defaultBlockState().setValue(FACING, state.getValue(FACING)), 3);
                 if (!player.abilities.instabuild)
                     itemStack.shrink(1);
 
@@ -155,5 +142,12 @@ public class NEWTrellisBlock extends Block implements IGrowable {
     public void performBonemeal(ServerWorld world, Random random, BlockPos blockPos, BlockState state) {
         int i = Math.min(5, state.getValue(AGE) + 1);
         world.setBlock(blockPos, state.setValue(AGE, i), 2);
+    }
+
+    static {
+        fullTrellises.put(new ResourceLocation(HotChickens.MOD_ID, "grapes"), HotBlocks.GRAPE_TRELLIS);
+        fullTrellises.put(new ResourceLocation(HotChickens.MOD_ID, "kiwi"), HotBlocks.KIWI_TRELLIS);
+        fullTrellises.put(new ResourceLocation(HotChickens.MOD_ID, "tomato"), HotBlocks.TOMATO_TRELLIS);
+        fullTrellises.put(new ResourceLocation(HotChickens.MOD_ID, "peas"), HotBlocks.PEA_TRELLIS);
     }
 }
