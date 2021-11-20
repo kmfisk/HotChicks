@@ -17,12 +17,9 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.FoliageColors;
 import net.minecraft.world.biome.BiomeColors;
 import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -70,7 +67,7 @@ public class HotChickens {
     }
 
     private void registerAttributes(final EntityAttributeCreationEvent event) {
-        event.put(HotEntities.HOT_CHICKEN.get(), MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.MOVEMENT_SPEED, 0.25).build());
+        event.put(HotEntities.CHICKEN.get(), MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.MOVEMENT_SPEED, 0.25).build());
     }
 
     /*private void modelLoad(ModelRegistryEvent event) {
@@ -83,7 +80,7 @@ public class HotChickens {
         ScreenManager.register(HotContainers.TROUGH_DOUBLE.get(), TroughScreen::new);
         ScreenManager.register(HotContainers.TROUGH_SINGLE.get(), TroughScreen::new);
 
-        RenderingRegistry.registerEntityRenderingHandler(HotEntities.HOT_CHICKEN.get(), HotChickenRenderer::new);
+        RenderingRegistry.registerEntityRenderingHandler(HotEntities.CHICKEN.get(), HotChickenRenderer::new);
 
         HotBlocks.setRenderLayers();
     }

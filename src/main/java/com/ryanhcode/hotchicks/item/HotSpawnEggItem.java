@@ -50,7 +50,7 @@ public class HotSpawnEggItem extends Item {
                 blockpos1 = blockpos.relative(direction);
             }
 
-            EntityType<?> entitytype = HotEntities.HOT_CHICKEN.get();
+            EntityType<?> entitytype = HotEntities.CHICKEN.get();
             HotChickenEntity e = (HotChickenEntity) entitytype.spawn((ServerWorld) world, itemstack, context.getPlayer(), blockpos1, SpawnReason.SPAWN_EGG, true, !Objects.equals(blockpos, blockpos1) && direction == Direction.UP);
 
             if (e != null) {
@@ -105,7 +105,7 @@ public class HotSpawnEggItem extends Item {
                 return ActionResult.pass(itemstack);
             } else if (worldIn.mayInteract(playerIn, blockpos) && playerIn.mayUseItemAt(blockpos, blockraytraceresult.getDirection(), itemstack)) {
 
-                EntityType<?> entitytype = HotEntities.HOT_CHICKEN.get();
+                EntityType<?> entitytype = HotEntities.CHICKEN.get();
 
                 HotChickenEntity e = (HotChickenEntity) entitytype.spawn((ServerWorld) worldIn, itemstack, playerIn, blockpos, SpawnReason.SPAWN_EGG, false, false);
                 if (e == null) {

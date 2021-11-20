@@ -159,7 +159,7 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
                 int time_left = tag.getInt("time_left") - 1;
                 if (time_left <= 0) {
 
-                    HotChickenEntity chicken = new HotChickenEntity(HotEntities.HOT_CHICKEN.get(), level);
+                    HotChickenEntity chicken = new HotChickenEntity(HotEntities.CHICKEN.get(), level);
                     chicken.setPos(getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.2, getBlockPos().getZ() + 0.5);
                     level.addFreshEntity(
                             chicken
