@@ -11,10 +11,13 @@ import com.ryanhcode.hotchicks.registry.HotGlobalLootModifier;
 import com.ryanhcode.hotchicks.registry.HotTileEntities;
 import com.ryanhcode.hotchicks.registry.HotVillagerTrades;
 import com.ryanhcode.hotchicks.worldgen.HotFeatures;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.color.BlockColors;
+import net.minecraft.client.renderer.color.ItemColors;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.FoliageColors;
@@ -57,7 +60,7 @@ public class HotChickens {
         modBus.addListener(this::registerAttributes);
         modBus.addListener(this::registerRenderers);
         modBus.addListener(this::registerColorHandlerBlocks);
-//        modBus.addListener(this::modelLoad);
+        modBus.addListener(this::registerColorHandlerItems);
 
         forgeBus.register(this);
     }
@@ -69,10 +72,6 @@ public class HotChickens {
     private void registerAttributes(final EntityAttributeCreationEvent event) {
         event.put(HotEntities.CHICKEN.get(), MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.MOVEMENT_SPEED, 0.25).build());
     }
-
-    /*private void modelLoad(ModelRegistryEvent event) {
-        ModelLoaderRegistry.registerLoader(new ResourceLocation(HotChickens.MOD_ID, "trellisloader"), new TrellisModelLoader());
-    }*/
 
     private void registerRenderers(final FMLClientSetupEvent event) {
         ScreenManager.register(HotContainers.NEST.get(), NestScreen::new);
@@ -91,6 +90,18 @@ public class HotChickens {
                 HotBlocks.TROUGH_BLOCK.get(), HotBlocks.METAL_TROUGH_BLOCK.get());
         blockcolors.register((state, reader, pos, color) -> reader != null && pos != null ? BiomeColors.getAverageFoliageColor(reader, pos) : FoliageColors.getDefaultColor(),
                 HotBlocks.CITRUS_LEAVES.get(), HotBlocks.FICUS_LEAVES.get(), HotBlocks.FRUIT_LEAVES.get(), HotBlocks.TROPICAL_FRUIT_LEAVES.get(),
+                HotBlocks.RED_APPLE_LEAVES.get(), HotBlocks.PEACH_LEAVES.get(), HotBlocks.MANGO_LEAVES.get(), HotBlocks.POMEGRANATE_LEAVES.get(),
+                HotBlocks.FIG_LEAVES.get(), HotBlocks.CITRON_LEAVES.get(), HotBlocks.POMELO_LEAVES.get(), HotBlocks.MANDARIN_LEAVES.get(),
+                HotBlocks.PAPEDA_LEAVES.get(), HotBlocks.ORANGE_LEAVES.get(), HotBlocks.LEMON_LEAVES.get(), HotBlocks.GRAPEFRUIT_LEAVES.get(),
+                HotBlocks.LIME_LEAVES.get(), HotBlocks.YUZU_LEAVES.get());
+    }
+
+    private void registerColorHandlerItems(final ColorHandlerEvent.Item event) {
+        ItemColors itemcolors = event.getItemColors();
+        itemcolors.register((color, item) -> {
+                    BlockState blockState = ((BlockItem) color.getItem()).getBlock().defaultBlockState();
+                    return event.getBlockColors().getColor(blockState, null, null, item);
+                }, HotBlocks.CITRUS_LEAVES.get(), HotBlocks.FICUS_LEAVES.get(), HotBlocks.FRUIT_LEAVES.get(), HotBlocks.TROPICAL_FRUIT_LEAVES.get(),
                 HotBlocks.RED_APPLE_LEAVES.get(), HotBlocks.PEACH_LEAVES.get(), HotBlocks.MANGO_LEAVES.get(), HotBlocks.POMEGRANATE_LEAVES.get(),
                 HotBlocks.FIG_LEAVES.get(), HotBlocks.CITRON_LEAVES.get(), HotBlocks.POMELO_LEAVES.get(), HotBlocks.MANDARIN_LEAVES.get(),
                 HotBlocks.PAPEDA_LEAVES.get(), HotBlocks.ORANGE_LEAVES.get(), HotBlocks.LEMON_LEAVES.get(), HotBlocks.GRAPEFRUIT_LEAVES.get(),
