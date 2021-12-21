@@ -1,14 +1,15 @@
 package com.ryanhcode.hotchicks.block;
 
-import com.ryanhcode.hotchicks.item.HotItems;
+import com.google.common.collect.Maps;
+import com.ryanhcode.hotchicks.HotChickens;
 import net.minecraft.block.*;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.EnumProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -17,193 +18,136 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.fml.RegistryObject;
 
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class TrellisBlock extends Block implements IGrowable {
-    public static final IntegerProperty AGE = BlockStateProperties.AGE_5;
-    public static final EnumProperty<TrellisCropBlock> CROP = EnumProperty.create("crop", TrellisCropBlock.class);
     public static final DirectionProperty FACING = HorizontalBlock.FACING;
-    protected static final VoxelShape LADDER_EAST_AABB = Block.box(0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D);
-    protected static final VoxelShape LADDER_WEST_AABB = Block.box(13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
-    protected static final VoxelShape LADDER_SOUTH_AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 3.0D);
-    protected static final VoxelShape LADDER_NORTH_AABB = Block.box(0.0D, 0.0D, 13.0D, 16.0D, 16.0D, 16.0D);
+    public static final IntegerProperty AGE = BlockStateProperties.AGE_5;
 
-    public TrellisBlock(AbstractBlock.Properties builder) {
-        super(builder);
-        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(AGE, 0).setValue(CROP, TrellisCropBlock.NONE));
+    protected static final VoxelShape EAST_AABB = Block.box(0.0D, 0.0D, 0.0D, 6.0D, 16.0D, 16.0D);
+    protected static final VoxelShape WEST_AABB = Block.box(10.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape SOUTH_AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 6.0D);
+    protected static final VoxelShape NORTH_AABB = Block.box(0.0D, 0.0D, 10.0D, 16.0D, 16.0D, 16.0D);
+
+    private static final Map<ResourceLocation, Supplier<? extends Block>> fullTrellises = Maps.newHashMap();
+    private final Supplier<? extends Item> cropItem;
+
+    public TrellisBlock(Supplier<? extends Item> cropItem) {
+        super(AbstractBlock.Properties.of(Material.WOOD).strength(0.4F).sound(SoundType.WOOD).noOcclusion());
+        this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0).setValue(FACING, Direction.NORTH));
+        this.cropItem = cropItem;
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        ItemStack stack = player.getItemInHand(handIn);
-        if (stack.isEmpty()) {
-
-        } else if (stack.getItem() == HotItems.GRAPES.get() && state.getValue(CROP) == TrellisCropBlock.NONE) {
-            worldIn.setBlockAndUpdate(pos, state.setValue(CROP, TrellisCropBlock.GRAPES));
-            stack.setCount(stack.getCount() - 1);
-            player.setItemInHand(handIn, stack);
-            player.swing(handIn, false);
-            return ActionResultType.CONSUME;
-        } else if (stack.getItem() == HotItems.KIWI.get() && state.getValue(CROP) == TrellisCropBlock.NONE) {
-            worldIn.setBlockAndUpdate(pos, state.setValue(CROP, TrellisCropBlock.KIWI));
-            stack.setCount(stack.getCount() - 1);
-            player.setItemInHand(handIn, stack);
-            player.swing(handIn, false);
-            return ActionResultType.CONSUME;
-        } else if (stack.getItem() == HotItems.PEAS.get() && state.getValue(CROP) == TrellisCropBlock.NONE) {
-            worldIn.setBlockAndUpdate(pos, state.setValue(CROP, TrellisCropBlock.PEAS));
-            stack.setCount(stack.getCount() - 1);
-            player.setItemInHand(handIn, stack);
-            player.swing(handIn, false);
-            return ActionResultType.CONSUME;
-        } else if (stack.getItem() == HotItems.TOMATO.get() && state.getValue(CROP) == TrellisCropBlock.NONE) {
-            worldIn.setBlockAndUpdate(pos, state.setValue(CROP, TrellisCropBlock.TOMATO));
-            stack.setCount(stack.getCount() - 1);
-            player.setItemInHand(handIn, stack);
-            player.swing(handIn, false);
-            return ActionResultType.CONSUME;
-        }
-
-        if (state.getValue(AGE) >= 5) {
-            TrellisCropBlock crop = state.getValue(CROP);
-            player.swing(handIn, false);
-            if (crop == TrellisCropBlock.GRAPES) {
-                drop(state, worldIn, pos, HotItems.TOMATO);
-                return ActionResultType.CONSUME;
-            }
-            if (crop == TrellisCropBlock.KIWI) {
-                drop(state, worldIn, pos, HotItems.KIWI);
-                return ActionResultType.CONSUME;
-            }
-            if (crop == TrellisCropBlock.PEAS) {
-                drop(state, worldIn, pos, HotItems.PEAS);
-                return ActionResultType.CONSUME;
-            }
-            if (crop == TrellisCropBlock.TOMATO) {
-                drop(state, worldIn, pos, HotItems.TOMATO);
-                return ActionResultType.CONSUME;
-            }
-        }
-
-        return super.use(state, worldIn, pos, player, handIn, hit);
+    public ItemStack getCloneItemStack(IBlockReader blockReader, BlockPos blockPos, BlockState state) {
+        return this.cropItem == null ? super.getCloneItemStack(blockReader, blockPos, state) : this.cropItem.get().getDefaultInstance();
     }
 
-    private void drop(BlockState state, World worldIn, BlockPos pos, RegistryObject<Item> item) {
-        popResource(worldIn, pos, new ItemStack(item.get(), 1));
-        worldIn.playSound((PlayerEntity) null, pos, SoundEvents.SWEET_BERRY_BUSH_BREAK, SoundCategory.BLOCKS, 1.0F, 0.8F + worldIn.random.nextFloat() * 0.4F);
-        worldIn.setBlock(pos, state.setValue(AGE, 2), 2);
+    @Override
+    public boolean isRandomlyTicking(BlockState state) {
+        return this.cropItem != null && state.getValue(AGE) < 5;
     }
 
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        switch ((Direction) state.getValue(FACING)) {
-            case NORTH:
-                return LADDER_NORTH_AABB;
-            case SOUTH:
-                return LADDER_SOUTH_AABB;
-            case WEST:
-                return LADDER_WEST_AABB;
-            case EAST:
-            default:
-                return LADDER_EAST_AABB;
+    @Override
+    public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
+        int i = state.getValue(AGE);
+        if (i < 5 && world.getRawBrightness(pos.above(), 0) >= 9 && net.minecraftforge.common.ForgeHooks.onCropsGrowPre(world, pos, state, random.nextInt(5) == 0)) {
+            world.setBlock(pos, state.setValue(AGE, i + 1), 2);
+            net.minecraftforge.common.ForgeHooks.onCropsGrowPost(world, pos, state);
         }
     }
 
+    @Override
+    public ActionResultType use(BlockState state, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
+        ItemStack itemStack = player.getItemInHand(hand);
+        Item item = itemStack.getItem();
+        Block block = fullTrellises.getOrDefault(item.getRegistryName(), Blocks.AIR.delegate).get();
+        boolean notHoldingCrop = block == Blocks.AIR;
+        boolean isTrellisEmpty = this.cropItem == null;
+        if (notHoldingCrop != isTrellisEmpty) {
+            if (isTrellisEmpty) {
+                world.setBlock(blockPos, block.defaultBlockState().setValue(FACING, state.getValue(FACING)), 3);
+                if (!player.abilities.instabuild)
+                    itemStack.shrink(1);
 
-    public VoxelShape getVisualShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
-        return VoxelShapes.empty();
-    }
-
-
-    @Nullable
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        if (!context.replacingClickedOnBlock()) {
-            BlockState blockstate = context.getLevel().getBlockState(context.getClickedPos().relative(context.getClickedFace().getOpposite()));
-            if (blockstate.is(this) && blockstate.getValue(FACING) == context.getClickedFace()) {
-                return null;
-            }
-        }
-
-        BlockState blockstate1 = this.defaultBlockState();
-        IWorldReader iworldreader = context.getLevel();
-        BlockPos blockpos = context.getClickedPos();
-        FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
-
-        for (Direction direction : context.getNearestLookingDirections()) {
-            if (direction.getAxis().isHorizontal()) {
-                blockstate1 = blockstate1.setValue(FACING, direction.getOpposite());
-                if (blockstate1.canSurvive(iworldreader, blockpos)) {
-                    return blockstate1;
+            } else {
+                int i = state.getValue(AGE);
+                boolean flag2 = i == 5;
+                if (!flag2 && item == Items.BONE_MEAL)
+                    return ActionResultType.PASS;
+                else if (i > 4) {
+                    int j = 1 + world.random.nextInt(2);
+                    popResource(world, blockPos, new ItemStack(this.cropItem.get(), j));
+                    world.playSound(null, blockPos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
+                    world.setBlock(blockPos, state.setValue(AGE, 0), 2);
+                    return ActionResultType.sidedSuccess(world.isClientSide);
                 }
             }
-        }
+            return ActionResultType.sidedSuccess(world.isClientSide);
 
-        return null;
+        } else
+            return super.use(state, world, blockPos, player, hand, rayTraceResult);
     }
 
-
-    /**
-     * Returns the blockstate with the given rotation from the passed blockstate. If inapplicable, returns the passed
-     * blockstate.
-     * fine.
-     */
-    public BlockState rotate(BlockState state, Rotation rot) {
-        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context) {
+        Direction enumFacing = context.getHorizontalDirection().getOpposite();
+        return super.getStateForPlacement(context).setValue(FACING, enumFacing);
     }
 
-    /**
-     * Returns the blockstate with the given mirror of the passed blockstate. If inapplicable, returns the passed
-     * blockstate.
-     */
-    public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
+    @Override
+    public BlockState rotate(BlockState state, IWorld world, BlockPos pos, Rotation direction) {
+        return state.setValue(FACING, direction.rotate(state.getValue(FACING)));
     }
 
+    @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(FACING, AGE, CROP);
+        builder.add(FACING, AGE);
     }
 
     @Override
-    public boolean isValidBonemealTarget(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
-        return state.getValue(CROP) != TrellisCropBlock.NONE;
-    }
-
-    @Override
-    public boolean isBonemealSuccess(World worldIn, Random rand, BlockPos pos, BlockState state) {
-        return state.getValue(CROP) != TrellisCropBlock.NONE;
-    }
-
-    @Override
-    public void performBonemeal(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
-        if (state.getValue(CROP) != TrellisCropBlock.NONE) {
-            worldIn.setBlockAndUpdate(pos, state.setValue(AGE, state.getValue(AGE) + 1));
+    public VoxelShape getShape(BlockState state, IBlockReader blockReader, BlockPos blockPos, ISelectionContext context) {
+        switch (state.getValue(FACING)) {
+            default:
+                return NORTH_AABB;
+            case EAST:
+                return EAST_AABB;
+            case SOUTH:
+                return SOUTH_AABB;
+            case WEST:
+                return WEST_AABB;
         }
     }
 
-    /**
-     * Returns whether or not this block is of a type that needs random ticking. Called for ref-counting purposes by
-     * ExtendedBlockStorage in order to broadly cull a chunk from the random chunk update list for efficiency's sake.
-     */
-    public boolean isRandomlyTicking(BlockState state) {
-        return state.getValue(AGE) < 5;
+    @Override
+    public boolean isValidBonemealTarget(IBlockReader reader, BlockPos blockPos, BlockState state, boolean isClient) {
+        return this.cropItem != null && state.getValue(AGE) < 5;
     }
 
-    /**
-     * Performs a random tick on a block.
-     */
-    public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
-        int i = state.getValue(AGE);
-        if (i < 5 && worldIn.getRawBrightness(pos.above(), 0) >= 9 && net.minecraftforge.common.ForgeHooks.onCropsGrowPre(worldIn, pos, state, random.nextInt(5) == 0)) {
-            performBonemeal(worldIn, random, pos, state);
-            net.minecraftforge.common.ForgeHooks.onCropsGrowPost(worldIn, pos, state);
-        }
+    @Override
+    public boolean isBonemealSuccess(World world, Random random, BlockPos blockPos, BlockState state) {
+        return this.cropItem != null;
+    }
 
+    @Override
+    public void performBonemeal(ServerWorld world, Random random, BlockPos blockPos, BlockState state) {
+        int i = Math.min(5, state.getValue(AGE) + 1);
+        world.setBlock(blockPos, state.setValue(AGE, i), 2);
+    }
+
+    static {
+        fullTrellises.put(new ResourceLocation(HotChickens.MOD_ID, "grapes"), HotBlocks.GRAPE_TRELLIS);
+        fullTrellises.put(new ResourceLocation(HotChickens.MOD_ID, "kiwi"), HotBlocks.KIWI_TRELLIS);
+        fullTrellises.put(new ResourceLocation(HotChickens.MOD_ID, "tomato"), HotBlocks.TOMATO_TRELLIS);
+        fullTrellises.put(new ResourceLocation(HotChickens.MOD_ID, "peas"), HotBlocks.PEA_TRELLIS);
     }
 }
