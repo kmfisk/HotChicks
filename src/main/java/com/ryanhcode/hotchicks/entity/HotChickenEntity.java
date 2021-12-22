@@ -311,10 +311,15 @@ public class HotChickenEntity extends LivestockEntity {
         return false;
     }
 
+    @Override
+    public int getAmbientSoundInterval() {
+        return 480;
+    }
+
     @Nullable
     @Override
     protected SoundEvent getAmbientSound() {
-        if (this.getSex() == Sex.MALE && this.random.nextInt(4) == 0)
+        if (this.getSex() == Sex.MALE && this.random.nextInt(10) == 0)
             return HotSounds.ROOSTER_CROW;
         return HotSounds.CHICKEN_AMBIENT;
     }

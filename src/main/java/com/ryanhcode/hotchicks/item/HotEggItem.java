@@ -70,7 +70,6 @@ public class HotEggItem extends Item {
     public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
         CompoundNBT tag = stack.getOrCreateTag();
         if (!tag.contains("CarcassQuality")) {
-            //setBreed(stack, "Junglefowl");
             setChickenStats(stack, new ChickenStats(50, 0, 0, 0));
             tag.putInt("TimeLeft", 200);
         }

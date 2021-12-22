@@ -21,13 +21,17 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
     public static final String[] RHODE_ISLANDS = new String[]{"deepred", "lightred", "red"};
     public static final String[] SILKIES = new String[]{"black", "blue", "buff", "partridge", "white"};
     public final HotChickenModel roosterModel;
+    public final HotChickenModel roosterSilkieModel;
     public final HotChickenModel henModel;
+    public final HotChickenModel henSilkieModel;
     public final HotChickenModel chickModel;
 
     public HotChickenRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new HotChickenModel.Hen(), 0.3F);
         roosterModel = new HotChickenModel.Rooster();
+        roosterSilkieModel = new HotChickenModel.RoosterSilkie();
         henModel = new HotChickenModel.Hen();
+        henSilkieModel = new HotChickenModel.HenSilkie();
         chickModel = new HotChickenModel.Chick();
     }
 
@@ -36,6 +40,8 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
         boolean isChild = chicken.isBaby();
         if (isChild)
             model = chickModel;
+        else if (chicken.getBreedFromVariant(chicken.getVariant()) == ChickenBreeds.SILKIE)
+            model = chicken.getSex() == Sex.MALE ? roosterSilkieModel : henSilkieModel;
         else
             model = chicken.getSex() == Sex.MALE ? roosterModel : henModel;
 
