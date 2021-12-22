@@ -18,23 +18,25 @@ public class Stats {
         return new Stats(tameness, carcassQuality, growthRate);
     }
 
-    public Stats average(Stats stats) {
+    public Stats average(Stats parent2Stats) {
         return new Stats(
-                (stats.tameness + tameness) / 2,
-                (stats.carcassQuality + carcassQuality) / 2,
-                (stats.growthRate + growthRate) / 2
+                (parent2Stats.tameness + tameness) / 2,
+                (parent2Stats.carcassQuality + carcassQuality) / 2,
+                (parent2Stats.growthRate + growthRate) / 2
         );
     }
 
     public Stats mutate(double chance) {
         Stats stats = copy();
-        stats.tameness *= 1.1; // todo, mutate tameness?
 
         if (this.rand.nextFloat() < chance)
-            stats.carcassQuality += this.rand.nextFloat() < 0.5 ? 1 : -1;
+            stats.tameness = this.rand.nextFloat() < 0.8 ? Math.min(100, stats.tameness + 1 + this.rand.nextInt(10)) : Math.max(0, stats.tameness - this.rand.nextInt(5) + 1);
 
         if (this.rand.nextFloat() < chance)
-            stats.growthRate += this.rand.nextFloat() < 0.5 ? 1 : -1;
+            stats.carcassQuality = this.rand.nextFloat() < 0.8 ? Math.min(4, stats.carcassQuality + 1) : Math.max(0, stats.carcassQuality - 1);
+
+        if (this.rand.nextFloat() < chance)
+            stats.growthRate = this.rand.nextFloat() < 0.8 ? Math.min(4, stats.growthRate + 1) : Math.max(0, stats.growthRate - 1);
 
         return stats;
     }

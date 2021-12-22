@@ -3,6 +3,7 @@ package com.ryanhcode.hotchicks.entity.goal;
 import com.ryanhcode.hotchicks.block.HotBlocks;
 import com.ryanhcode.hotchicks.block.NestTileEntity;
 import com.ryanhcode.hotchicks.entity.HotChickenEntity;
+import com.ryanhcode.hotchicks.entity.base.Sex;
 import net.minecraft.block.Block;
 import net.minecraft.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.item.ItemStack;
@@ -24,6 +25,7 @@ import javax.annotation.Nullable;
 import java.util.Random;
 
 public class LayEggsGoal extends MoveToBlockGoal {
+    public boolean reachedTarget;
     private final Block block;
     private final HotChickenEntity entity;
     private int breakingTime;
@@ -36,28 +38,24 @@ public class LayEggsGoal extends MoveToBlockGoal {
 
     @Override
     public boolean canUse() {
-        if (entity.getEggTimer() < entity.getMaxEggTimer() || entity.getMainHandItem().isEmpty())
+        if (entity.getSex() != Sex.FEMALE || entity.getEggTimer() < entity.getMaxEggTimer() || entity.getMainHandItem().isEmpty())
             return false;
         else if (this.nextStartTick > 0) {
             --this.nextStartTick;
             return false;
-        } else if (this.tryFindBlock()) {
-            this.nextStartTick = 20;
-            return true;
         } else {
             this.nextStartTick = this.nextStartTick(this.mob);
-            return false;
+            return this.tryFindBlock();
         }
+    }
+
+    @Override
+    public boolean canContinueToUse() {
+        return !entity.getMainHandItem().isEmpty() && super.canContinueToUse();
     }
 
     private boolean tryFindBlock() {
         return this.blockPos != null && this.isValidTarget(this.mob.level, this.blockPos) || this.findNearestBlock();
-    }
-
-    @Override
-    public void stop() {
-        super.stop();
-        this.entity.fallDistance = 1.0F;
     }
 
     @Override
@@ -68,23 +66,16 @@ public class LayEggsGoal extends MoveToBlockGoal {
     }
 
     @Override
-    public double acceptedDistance() {
-        return 1.0;
-    }
-
-    public boolean above = false;
-
-    @Override
     public void tick() {
         BlockPos blockpos5 = this.blockPos;
         if (!blockpos5.closerThan(this.mob.position(), this.acceptedDistance())) {
-            this.above = false;
+            this.reachedTarget = false;
             ++this.tryTicks;
             if (this.shouldRecalculatePath()) {
-                this.mob.getNavigation().moveTo((double) ((float) blockpos5.getX()) + 0.5D, (double) blockpos5.getY(), (double) ((float) blockpos5.getZ()) + 0.5D, this.speedModifier);
+                this.mob.getNavigation().moveTo((double) ((float) blockpos5.getX()) + 0.5D, blockpos5.getY(), (double) ((float) blockpos5.getZ()) + 0.5D, this.speedModifier);
             }
         } else {
-            this.above = true;
+            this.reachedTarget = true;
             --this.tryTicks;
         }
 
@@ -92,7 +83,7 @@ public class LayEggsGoal extends MoveToBlockGoal {
         BlockPos blockpos = this.entity.blockPosition();
         BlockPos blockpos1 = this.findTarget(blockpos, world);
         Random random = this.entity.getRandom();
-        if (above && blockpos1 != null) {
+        if (reachedTarget && blockpos1 != null) {
             if (this.breakingTime > 0) {
                 Vector3d vector3d = this.entity.getDeltaMovement();
                 this.entity.setDeltaMovement(vector3d.x, 0.3D, vector3d.z);
@@ -139,8 +130,23 @@ public class LayEggsGoal extends MoveToBlockGoal {
     }
 
     @Override
-    public boolean canContinueToUse() {
-        return !entity.getMainHandItem().isEmpty();
+    public boolean isReachedTarget() {
+        return this.reachedTarget;
+    }
+
+    @Override
+    protected boolean isValidTarget(IWorldReader worldIn, BlockPos pos) {
+        IChunk ichunk = worldIn.getChunk(pos.getX() >> 4, pos.getZ() >> 4, ChunkStatus.FULL, false);
+        if (ichunk == null)
+            return false;
+        else
+            return (ichunk.getBlockState(pos).is(this.block) || ichunk.getBlockState(pos).is(HotBlocks.NEST.get())) && ichunk.getBlockState(pos.above()).isAir() && ichunk.getBlockState(pos.above(2)).isAir();
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+        this.entity.fallDistance = 1.0F;
     }
 
     @Nullable
@@ -157,16 +163,6 @@ public class LayEggsGoal extends MoveToBlockGoal {
             }
 
             return null;
-        }
-    }
-
-    @Override
-    protected boolean isValidTarget(IWorldReader worldIn, BlockPos pos) {
-        IChunk ichunk = worldIn.getChunk(pos.getX() >> 4, pos.getZ() >> 4, ChunkStatus.FULL, false);
-        if (ichunk == null) {
-            return false;
-        } else {
-            return (ichunk.getBlockState(pos).is(this.block) || ichunk.getBlockState(pos).is(HotBlocks.NEST.get())) && ichunk.getBlockState(pos.above()).isAir() && ichunk.getBlockState(pos.above(2)).isAir();
         }
     }
 }

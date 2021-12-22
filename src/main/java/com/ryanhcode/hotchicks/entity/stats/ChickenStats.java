@@ -14,13 +14,13 @@ public class ChickenStats extends Stats {
     }
 
     @Override
-    public Stats average(Stats stats) {
-        Stats stats1 = super.average(stats);
-        ChickenStats chickenStats = (ChickenStats) stats;
+    public Stats average(Stats parent2Stats) {
+        Stats stats = super.average(parent2Stats);
+        ChickenStats parent2Stats1 = (ChickenStats) parent2Stats;
 
         return new ChickenStats(
-                stats1.tameness, stats1.carcassQuality, stats1.growthRate,
-                (chickenStats.eggSpeed + eggSpeed) / 2
+                stats.tameness, stats.carcassQuality, stats.growthRate,
+                (parent2Stats1.eggSpeed + eggSpeed) / 2
         );
     }
 

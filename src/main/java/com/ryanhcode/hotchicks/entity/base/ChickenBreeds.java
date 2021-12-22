@@ -1,13 +1,13 @@
 package com.ryanhcode.hotchicks.entity.base;
 
 import com.ryanhcode.hotchicks.entity.stats.ChickenStats;
+import net.minecraft.util.RegistryKey;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
+import net.minecraftforge.common.BiomeDictionary;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 public enum ChickenBreeds {
     JUNGLEFOWL(50, 0, 0, 0),
@@ -26,60 +26,41 @@ public enum ChickenBreeds {
         this.stats = new ChickenStats(tameness, carcassQuality, growthRate, eggSpeed);
     }
 
-    public static ChickenBreeds breedFromBiome(Biome biome) {
-        String path = biome.getRegistryName().getPath();
-        System.out.println("bpath: " + path);
-        if (path.equals(Biomes.PLAINS.getRegistryName().getPath())) {
-            return LEGHORN;
-        }
-        if (path.contains("forest") && !path.contains("dark") && !path.contains("roofed")) {
-            return RHODE_ISLAND_RED;
-        }
+    public static int variantFromBiome(Random random, Set<BiomeDictionary.Type> biomeTypes) {
+        System.out.println("biome dictionary types: " + biomeTypes);
+        if (biomeTypes.contains(BiomeDictionary.Type.PLAINS) && !biomeTypes.contains(BiomeDictionary.Type.HOT) && !biomeTypes.contains(BiomeDictionary.Type.COLD))
+            return 9; // LEGHORN;
 
-        if (path.equals(Biomes.DARK_FOREST.getRegistryName().getPath()) || path.equals(Biomes.DARK_FOREST_HILLS.getRegistryName().getPath())) {
-            return BARRED_ROCK;
-        }
-        if (path.equals(Biomes.DESERT.getRegistryName().getPath())) {
-            return ORPINGTON;
-        }
-        if (path.equals(Biomes.TAIGA_MOUNTAINS.getRegistryName().getPath()) || path.equals(Biomes.MOUNTAINS.getRegistryName().getPath()) || path.equals(Biomes.MOUNTAIN_EDGE.getRegistryName().getPath())) {
-            return AMERAUCANA;
-        }
-        if (path.contains("jungle")) {
-            return OLIVE_EGGER;
-        }
-        if (path.equals(Biomes.SWAMP.getRegistryName().getPath())) {
-            return MARANS;
-        }
-        if (path.contains("snow")) {
-            return SILKIE;
-        }
+        if (biomeTypes.contains(BiomeDictionary.Type.FOREST) && !biomeTypes.contains(BiomeDictionary.Type.COLD) && !biomeTypes.contains(BiomeDictionary.Type.DENSE) && !biomeTypes.contains(BiomeDictionary.Type.MOUNTAIN))
+            return random.nextInt(3) + 25; // RHODE_ISLAND_RED;
 
-        System.out.println("made it here@");
-        return random(JUNGLEFOWL);
+        if (biomeTypes.contains(BiomeDictionary.Type.FOREST) && biomeTypes.contains(BiomeDictionary.Type.SPOOKY))
+            return 8; // BARRED_ROCK;
+
+        if (biomeTypes.contains(BiomeDictionary.Type.HOT) && biomeTypes.contains(BiomeDictionary.Type.SANDY))
+            return random.nextInt(4) + 21; // ORPINGTON;
+
+        if (biomeTypes.contains(BiomeDictionary.Type.MOUNTAIN) && !biomeTypes.contains(BiomeDictionary.Type.DRY))
+            return random.nextInt(7) + 1; // AMERAUCANA;
+
+        if (biomeTypes.contains(BiomeDictionary.Type.JUNGLE))
+            return random.nextInt(7) + 14; // OLIVE_EGGER;
+
+        if (biomeTypes.contains(BiomeDictionary.Type.SWAMP))
+            return random.nextInt(4) + 10; // MARANS;
+
+        if (biomeTypes.contains(BiomeDictionary.Type.SNOWY))
+            return random.nextInt(5) + 28; // SILKIE;
+
+        System.out.println("@@@@ no matching biome @@@@");
+        return 0;
     }
 
-    public static ChickenBreeds randomBasedOnBiome(Biome biome) {
-        Random rand = new Random(System.currentTimeMillis()
-        );
-        if (rand.nextFloat() < 0.8) {
-            System.out.println("from biome");
-            ChickenBreeds chickenBreed = breedFromBiome(biome);
-            System.out.println("chickenBreed from biome = " + chickenBreed);
-            return chickenBreed;
-        } else {
-            return random(JUNGLEFOWL);
-        }
-    }
-
-    public static ChickenBreeds random(ChickenBreeds... not) {
-        Random random = new Random();
-        ChickenBreeds value = values()[random.nextInt(values().length)];
-        for (ChickenBreeds c : not) {
-            if (value == c) {
-                return random(not);
-            }
-        }
-        return value;
+    public static int randomBasedOnBiome(Random random, Biome biome) {
+        Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(RegistryKey.create(Registry.BIOME_REGISTRY, biome.getRegistryName()));
+        System.out.println("from biome");
+        int variantFromBiome = variantFromBiome(random, biomeTypes);
+        System.out.println("variant from biome = " + variantFromBiome);
+        return variantFromBiome;
     }
 }

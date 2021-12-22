@@ -133,23 +133,48 @@ public class HotChickenEntity extends LivestockEntity {
 
     public ChickenBreeds getBreedFromVariant(int variant) {
         switch (variant) {
-            default: case 0:
+            default:
+            case 0:
                 return ChickenBreeds.JUNGLEFOWL;
-            case 1: case 2: case 3: case 4: case 5: case 6: case 7:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
                 return ChickenBreeds.AMERAUCANA;
             case 8:
                 return ChickenBreeds.BARRED_ROCK;
             case 9:
                 return ChickenBreeds.LEGHORN;
-            case 10: case 11: case 12: case 13:
+            case 10:
+            case 11:
+            case 12:
+            case 13:
                 return ChickenBreeds.MARANS;
-            case 14: case 15: case 16: case 17: case 18: case 19: case 20:
+            case 14:
+            case 15:
+            case 16:
+            case 17:
+            case 18:
+            case 19:
+            case 20:
                 return ChickenBreeds.OLIVE_EGGER;
-            case 21: case 22: case 23: case 24:
+            case 21:
+            case 22:
+            case 23:
+            case 24:
                 return ChickenBreeds.ORPINGTON;
-            case 25: case 26: case 27:
+            case 25:
+            case 26:
+            case 27:
                 return ChickenBreeds.RHODE_ISLAND_RED;
-            case 28: case 29: case 30: case 31: case 32:
+            case 28:
+            case 29:
+            case 30:
+            case 31:
+            case 32:
                 return ChickenBreeds.SILKIE;
         }
     }
@@ -197,7 +222,7 @@ public class HotChickenEntity extends LivestockEntity {
 
     @Override
     public void spawnChildFromBreeding(ServerWorld world, AnimalEntity animal) {
-        HotChickenEntity otherParent = (HotChickenEntity) animal;
+        HotChickenEntity parent2 = (HotChickenEntity) animal;
         boolean inheritMotherGenes = this.random.nextFloat() <= 0.6;
 
         if (!this.getMainHandItem().isEmpty()) {
@@ -207,40 +232,50 @@ public class HotChickenEntity extends LivestockEntity {
 
         ItemStack stack = new ItemStack(HotItems.WHITE_EGG.get());
         ChickenBreeds breed1 = this.getBreedFromVariant(this.getVariant());
-        ChickenBreeds breed2 = otherParent.getBreedFromVariant(otherParent.getVariant());
+        ChickenBreeds breed2 = parent2.getBreedFromVariant(parent2.getVariant());
+        ChickenStats stats = (ChickenStats) this.getStats().average(parent2.getStats()).mutate(0.2);
+        HotEggItem.setChickenStats(stack, stats);
+        if (stats.tameness < 85) {
+            HotEggItem.setBreed(stack, ChickenBreeds.JUNGLEFOWL.toString());
+            HotEggItem.setVariant(stack, 0);
 
-        if (breed1.equals(breed2)) {
-            HotEggItem.setBreed(stack, breed1.toString());
-            HotEggItem.setVariant(stack, inheritMotherGenes ? this.getVariant() : otherParent.getVariant());
         } else {
-            if (inheritMotherGenes) {
-                HotEggItem.setBreed(stack, breed1.toString());
-                HotEggItem.setVariant(stack, this.getVariant());
+            if (breed1 != ChickenBreeds.JUNGLEFOWL && breed2 != ChickenBreeds.JUNGLEFOWL) {
+                if (breed1.equals(breed2)) {
+                    HotEggItem.setBreed(stack, breed1.toString());
+                    HotEggItem.setVariant(stack, inheritMotherGenes ? this.getVariant() : parent2.getVariant());
+                } else {
+                    if (inheritMotherGenes) {
+                        HotEggItem.setBreed(stack, breed1.toString());
+                        HotEggItem.setVariant(stack, this.getVariant());
+                    } else {
+                        HotEggItem.setBreed(stack, breed2.toString());
+                        HotEggItem.setVariant(stack, parent2.getVariant());
+                    }
+                }
+
             } else {
-                HotEggItem.setBreed(stack, breed2.toString());
-                HotEggItem.setVariant(stack, otherParent.getVariant());
+                if (breed1 != ChickenBreeds.JUNGLEFOWL && inheritMotherGenes) {
+                    HotEggItem.setBreed(stack, breed1.toString());
+                    HotEggItem.setVariant(stack, this.getVariant());
+                } else if (breed2 != ChickenBreeds.JUNGLEFOWL && !inheritMotherGenes) {
+                    HotEggItem.setBreed(stack, breed2.toString());
+                    HotEggItem.setVariant(stack, parent2.getVariant());
+                } else {
+                    Biome biome = this.getBiome();
+                    System.out.println("biome = " + biome);
+                    int variant = ChickenBreeds.randomBasedOnBiome(random, biome);
+                    ChickenBreeds breed = this.getBreedFromVariant(variant);
+                    HotEggItem.setBreed(stack, breed.toString());
+                    HotEggItem.setVariant(stack, variant);
+                }
             }
         }
 
-        ChickenStats stats = (ChickenStats) this.getStats().average(otherParent.getStats()).mutate(0.15);
-        HotEggItem.setChickenStats(stack, stats);
-        int avgtmness = (getTameness() + otherParent.getTameness()) / 2;
-        if (stats.tameness < 85)
-            HotEggItem.setBreed(stack, ChickenBreeds.JUNGLEFOWL.toString());
-        if (stats.tameness > 85 && avgtmness <= 85) {
-            Biome biome = this.getBiome();
-            System.out.println("biome = " + biome);
-            ChickenBreeds breed = ChickenBreeds.randomBasedOnBiome(biome);
-            HotEggItem.setChickenStats(stack, breed.stats);
-            HotEggItem.setBreed(stack, breed.toString());
-        }
-        HotEggItem.setTameness(stack, stats.tameness);
-
-
         this.setItemInHand(Hand.MAIN_HAND, stack);
 
-        this.setAge(6000);
-        animal.setAge(6000);
+        this.setAge(60);
+        animal.setAge(60);
         this.resetLove();
         animal.resetLove();
 

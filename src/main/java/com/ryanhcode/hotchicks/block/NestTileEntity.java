@@ -166,9 +166,10 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
                     );
 
                     chicken.setBaby(true);
-                    chicken.setAge(-100);
-                    chicken.setTameness(HotEggItem.getTameness(item));
+                    chicken.setAge(-600); //todo chick age timer
                     chicken.setStats(HotEggItem.getStats(item));
+                    chicken.setSex(chicken.getRandom().nextBoolean());
+                    chicken.setVariant(HotEggItem.getVariant(item));
 
                     barrelContents.set(counter, ItemStack.EMPTY);
                 } else {
