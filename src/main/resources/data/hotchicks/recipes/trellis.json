@@ -8,7 +8,7 @@
   ],
   "key": {
     "S": [
-      { "tag": "minecraft:string"  }
+      { "item": "minecraft:string"  }
     ],
     "N": [
       { "item": "minecraft:stick"  }

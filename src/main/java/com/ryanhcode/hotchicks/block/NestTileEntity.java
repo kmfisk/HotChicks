@@ -32,7 +32,6 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
     public NonNullList<ItemStack> barrelContents = NonNullList.withSize(5, ItemStack.EMPTY);
     private int numPlayersUsing;
 
-
     private NestTileEntity(TileEntityType<?> barrelType) {
         super(barrelType);
     }
@@ -43,25 +42,19 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
 
     public CompoundNBT save(CompoundNBT compound) {
         super.save(compound);
-        if (!this.trySaveLootTable(compound)) {
+        if (!this.trySaveLootTable(compound))
             ItemStackHelper.saveAllItems(compound, this.barrelContents);
-        }
-
         return compound;
     }
 
     public void load(BlockState state, CompoundNBT nbt) {
         super.load(state, nbt);
         this.barrelContents = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        if (!this.tryLoadLootTable(nbt)) {
+        if (!this.tryLoadLootTable(nbt))
             ItemStackHelper.loadAllItems(nbt, this.barrelContents);
-        }
-
     }
 
-    /**
-     * Returns the number of slots in the inventory.
-     */
+    @Override
     public int getContainerSize() {
         return 5;
     }
@@ -80,24 +73,18 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
 
     public Container createMenu(int id, PlayerInventory player) {
         return new NestContainer(id, player, this);
-        //return ChestContainer.createGeneric9X1(id, player);
     }
 
     public void startOpen(PlayerEntity player) {
         if (!player.isSpectator()) {
-            if (this.numPlayersUsing < 0) {
+            if (this.numPlayersUsing < 0)
                 this.numPlayersUsing = 0;
-            }
-
             ++this.numPlayersUsing;
-            BlockState blockstate = this.getBlockState();
             this.scheduleTick();
         }
-
     }
 
     private void scheduleTick() {
-
         this.level.getBlockTicks().scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
     }
 
@@ -112,35 +99,26 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
             BlockState blockstate = this.getBlockState();
             if (!(blockstate.is(HotBlocks.NEST_BOX.get()) || blockstate.is(HotBlocks.NEST.get()))) {
                 this.setRemoved();
-                return;
             }
-
         }
-
-
     }
 
     public void stopOpen(PlayerEntity player) {
-        if (!player.isSpectator()) {
+        if (!player.isSpectator())
             --this.numPlayersUsing;
-        }
-
-
     }
-
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
         return false;
     }
 
-
     private void playSound(BlockState state, SoundEvent sound) {
         Vector3i vector3i = state.getValue(NestBlock.PROPERTY_FACING).getNormal();
         double d0 = (double) this.worldPosition.getX() + 0.5D + (double) vector3i.getX() / 2.0D;
         double d1 = (double) this.worldPosition.getY() + 0.5D + (double) vector3i.getY() / 2.0D;
         double d2 = (double) this.worldPosition.getZ() + 0.5D + (double) vector3i.getZ() / 2.0D;
-        this.level.playSound((PlayerEntity) null, d0, d1, d2, sound, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
+        this.level.playSound(null, d0, d1, d2, sound, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
     }
 
     @Override
@@ -165,28 +143,18 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
                             chicken
                     );
 
-                    chicken.setBaby(true);
-                    chicken.setAge(-600); //todo chick age timer
+                    chicken.setAge(-24000); //todo chick age timer
                     chicken.setStats(HotEggItem.getStats(item));
                     chicken.setSex(chicken.getRandom().nextBoolean());
                     chicken.setVariant(HotEggItem.getVariant(item));
 
                     barrelContents.set(counter, ItemStack.EMPTY);
-                } else {
+                } else
                     tag.putInt("time_left", time_left);
-                }
             }
             counter += 1;
         }
 
-        /*boolean hasItems = false;
-        for(ItemStack i : items){
-            if(i!=ItemStack.EMPTY){
-                hasItems = true;
-            }else{
-
-            }
-        }*/
         level.setBlockAndUpdate(getBlockPos(), level.getBlockState(getBlockPos()).setValue(NestBlock.eggs,
                 hasEgg
         ));
@@ -204,7 +172,6 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
 
     @Override
     public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
-        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         return false;
     }
 

@@ -2,12 +2,16 @@ package com.ryanhcode.hotchicks.entity;
 
 import com.ryanhcode.hotchicks.entity.base.ChickenBreeds;
 import com.ryanhcode.hotchicks.entity.base.LivestockEntity;
+import com.ryanhcode.hotchicks.entity.base.Sex;
 import com.ryanhcode.hotchicks.entity.goal.ChickenBreedGoal;
 import com.ryanhcode.hotchicks.entity.goal.LayEggsGoal;
 import com.ryanhcode.hotchicks.entity.stats.ChickenStats;
 import com.ryanhcode.hotchicks.item.HotEggItem;
 import com.ryanhcode.hotchicks.item.HotItems;
+import com.ryanhcode.hotchicks.registry.HotSounds;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.passive.AnimalEntity;
@@ -20,7 +24,10 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
@@ -57,6 +64,8 @@ public class HotChickenEntity extends LivestockEntity {
         this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(9, new MeleeAttackGoal(this, 1.4F, true));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
     }
 
     @Override
@@ -274,8 +283,8 @@ public class HotChickenEntity extends LivestockEntity {
 
         this.setItemInHand(Hand.MAIN_HAND, stack);
 
-        this.setAge(60);
-        animal.setAge(60);
+        this.setAge(6000); // todo mate timers
+        animal.setAge(6000);
         this.resetLove();
         animal.resetLove();
 
@@ -295,5 +304,46 @@ public class HotChickenEntity extends LivestockEntity {
             }
         } else
             super.handleEntityEvent(id);
+    }
+
+    @Override
+    public boolean causeFallDamage(float p_225503_1_, float p_225503_2_) {
+        return false;
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        if (this.getSex() == Sex.MALE && this.random.nextInt(4) == 0)
+            return HotSounds.ROOSTER_CROW;
+        return HotSounds.CHICKEN_AMBIENT;
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(DamageSource source) {
+        return HotSounds.CHICKEN_HURT;
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.CHICKEN_DEATH;
+    }
+
+    @Override
+    protected void playStepSound(BlockPos pos, BlockState state) {
+        this.playSound(SoundEvents.CHICKEN_STEP, 0.15F, 1.0F);
+    }
+
+    @Override
+    public boolean doHurtTarget(Entity entity) {
+        boolean flag = entity.hurt(DamageSource.mobAttack(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
+        if (flag) {
+            this.doEnchantDamageEffects(this, entity);
+            this.playSound(this.getSex() == Sex.MALE ? HotSounds.ROOSTER_ATTACK : HotSounds.CHICKEN_ATTACK, 1.0F, 1.0F);
+        }
+
+        return flag;
     }
 }

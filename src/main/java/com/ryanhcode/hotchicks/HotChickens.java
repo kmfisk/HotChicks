@@ -70,7 +70,7 @@ public class HotChickens {
     }
 
     private void registerAttributes(final EntityAttributeCreationEvent event) {
-        event.put(HotEntities.CHICKEN.get(), MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.MOVEMENT_SPEED, 0.25).build());
+        event.put(HotEntities.CHICKEN.get(), MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.MOVEMENT_SPEED, 0.25).add(Attributes.ATTACK_DAMAGE, 1.0D).build());
     }
 
     private void registerRenderers(final FMLClientSetupEvent event) {

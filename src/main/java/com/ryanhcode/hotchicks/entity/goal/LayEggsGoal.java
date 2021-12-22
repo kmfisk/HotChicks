@@ -62,7 +62,6 @@ public class LayEggsGoal extends MoveToBlockGoal {
     public void start() {
         super.start();
         this.breakingTime = 0;
-        System.out.println("lay egg woo");
     }
 
     @Override
@@ -71,9 +70,8 @@ public class LayEggsGoal extends MoveToBlockGoal {
         if (!blockpos5.closerThan(this.mob.position(), this.acceptedDistance())) {
             this.reachedTarget = false;
             ++this.tryTicks;
-            if (this.shouldRecalculatePath()) {
+            if (this.shouldRecalculatePath())
                 this.mob.getNavigation().moveTo((double) ((float) blockpos5.getX()) + 0.5D, blockpos5.getY(), (double) ((float) blockpos5.getZ()) + 0.5D, this.speedModifier);
-            }
         } else {
             this.reachedTarget = true;
             --this.tryTicks;
@@ -88,7 +86,6 @@ public class LayEggsGoal extends MoveToBlockGoal {
                 Vector3d vector3d = this.entity.getDeltaMovement();
                 this.entity.setDeltaMovement(vector3d.x, 0.3D, vector3d.z);
                 if (!world.isClientSide) {
-                    double d0 = 0.08D;
                     ((ServerWorld) world).sendParticles(new ItemParticleData(ParticleTypes.ITEM, new ItemStack(Items.EGG)), (double) blockpos1.getX() + 0.5D, (double) blockpos1.getY() + 0.7D, (double) blockpos1.getZ() + 0.5D, 3, ((double) random.nextFloat() - 0.5D) * 0.08D, ((double) random.nextFloat() - 0.5D) * 0.08D, ((double) random.nextFloat() - 0.5D) * 0.08D, (double) 0.15F);
                 }
             }
@@ -98,29 +95,25 @@ public class LayEggsGoal extends MoveToBlockGoal {
                 this.entity.setDeltaMovement(vector3d1.x, -0.3D, vector3d1.z);
             }
 
-            if (true) {
-                TileEntity te = world.getBlockEntity(blockpos1);
+            TileEntity te = world.getBlockEntity(blockpos1);
 
 
-                if (te instanceof NestTileEntity) {
-                    entity.setEggTimer(0);
-                    stop();
-                    System.out.println("lay egg now");
-                    ItemStack stack = entity.getMainHandItem();
+            if (te instanceof NestTileEntity) {
+                entity.setEggTimer(0);
+                stop();
+                ItemStack stack = entity.getMainHandItem();
 
-                    NestTileEntity nest = (NestTileEntity) te;
+                NestTileEntity nest = (NestTileEntity) te;
 
-                    nest.barrelContents.set(0, stack); // TODO: Make proper
-                    entity.setItemInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+                nest.barrelContents.set(0, stack); // TODO: Make proper
+                entity.setItemInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
 
-                    if (!world.isClientSide) {
-                        for (int i = 0; i < 20; ++i) {
-                            double d3 = random.nextGaussian() * 0.02D;
-                            double d1 = random.nextGaussian() * 0.02D;
-                            double d2 = random.nextGaussian() * 0.02D;
-                            ((ServerWorld) world).sendParticles(ParticleTypes.HEART, (double) blockpos1.getX() + 0.5D, (double) blockpos1.getY(), (double) blockpos1.getZ() + 0.5D, 1, d3, d1, d2, (double) 0.15F);
-                        }
-                        //this.playBrokenSound(world, blockpos1);
+                if (!world.isClientSide) {
+                    for (int i = 0; i < 20; ++i) {
+                        double d3 = random.nextGaussian() * 0.02D;
+                        double d1 = random.nextGaussian() * 0.02D;
+                        double d2 = random.nextGaussian() * 0.02D;
+                        ((ServerWorld) world).sendParticles(ParticleTypes.HEART, (double) blockpos1.getX() + 0.5D, (double) blockpos1.getY(), (double) blockpos1.getZ() + 0.5D, 1, d3, d1, d2, (double) 0.15F);
                     }
                 }
             }

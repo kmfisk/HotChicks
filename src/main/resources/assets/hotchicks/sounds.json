@@ -1,0 +1,34 @@
+{
+  "chicken_ambient": {
+    "subtitle": "hotchicks.subtitle.chicken_ambient",
+    "sounds": [
+      "hotchicks:chicken_ambient_1",
+      "hotchicks:chicken_ambient_2",
+      "hotchicks:chicken_ambient_3"
+    ]
+  },
+  "chicken_hurt": {
+    "subtitle": "hotchicks.subtitle.chicken_hurt",
+    "sounds": [
+      "hotchicks:chicken_attacked"
+    ]
+  },
+  "chicken_attack": {
+    "subtitle": "hotchicks.subtitle.chicken_attack",
+    "sounds": [
+      "hotchicks:chicken_attacking"
+    ]
+  },
+  "rooster_attack": {
+    "subtitle": "hotchicks.subtitle.rooster_attack",
+    "sounds": [
+      "hotchicks:rooster_attacking"
+    ]
+  },
+  "rooster_crow": {
+    "subtitle": "hotchicks.subtitle.rooster_crow",
+    "sounds": [
+      "hotchicks:rooster_crow"
+    ]
+  }
+}
