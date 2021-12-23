@@ -16,6 +16,15 @@ public class HotItems {
     public static final RegistryObject<Item> STUD_BOOK = REGISTRAR.register("stud_book", () -> new StudBookItem(new Item.Properties().stacksTo(1).tab(HotChickens.HOT_CHICKS_GROUP)));
 //    public static final RegistryObject<Item> LIVESTOCK_CRATE = REGISTRAR.register("livestock_crate", () -> new Item(new Item.Properties().tab(HotChickens.HOT_CHICKS_GROUP)));
 
+    // ENTITY DROPS
+    public static final RegistryObject<Item> CHOICE_CHICKEN_CARCASS = REGISTRAR.register("choice_chicken_carcass", () -> new Item(new Item.Properties().tab(HotChickens.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> PRIME_CHICKEN_CARCASS = REGISTRAR.register("prime_chicken_carcass", () -> new Item(new Item.Properties().tab(HotChickens.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> GOOD_CHICKEN_CARCASS = REGISTRAR.register("good_chicken_carcass", () -> new Item(new Item.Properties().tab(HotChickens.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> FAIR_CHICKEN_CARCASS = REGISTRAR.register("fair_chicken_carcass", () -> new Item(new Item.Properties().tab(HotChickens.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> POOR_CHICKEN_CARCASS = REGISTRAR.register("poor_chicken_carcass", () -> new Item(new Item.Properties().tab(HotChickens.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> CHICKEN_QUARTER = REGISTRAR.register("chicken_quarter", () -> new Item(new Item.Properties().tab(HotChickens.HOT_CHICKS_GROUP).food(HotFoods.CHICKEN_QUARTER)));
+    public static final RegistryObject<Item> COOKED_CHICKEN_QUARTER = REGISTRAR.register("cooked_chicken_quarter", () -> new Item(new Item.Properties().tab(HotChickens.HOT_CHICKS_GROUP).food(HotFoods.COOKED_CHICKEN_QUARTER)));
+
     // CROP BLOCK ITEMS
     public static final RegistryObject<Item> BLUEBERRIES = REGISTRAR.register("blueberries", () -> new BlockNamedItem(HotBlocks.BLUEBERRY_BUSH.get(), new Item.Properties().tab(HotChickens.HOT_CHICKS_GROUP).food(HotFoods.BLUEBERRY)));
     public static final RegistryObject<Item> CORN = REGISTRAR.register("corn", () -> new BlockNamedItem(HotBlocks.CORN_CROP.get(), new Item.Properties().tab(HotChickens.HOT_CHICKS_GROUP).food(HotFoods.CORN)));

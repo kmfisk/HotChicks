@@ -1,5 +1,6 @@
 package com.ryanhcode.hotchicks.entity;
 
+import com.ryanhcode.hotchicks.HotChickens;
 import com.ryanhcode.hotchicks.entity.base.ChickenBreeds;
 import com.ryanhcode.hotchicks.entity.base.LivestockEntity;
 import com.ryanhcode.hotchicks.entity.base.Sex;
@@ -24,10 +25,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
@@ -320,14 +318,14 @@ public class HotChickenEntity extends LivestockEntity {
     @Override
     protected SoundEvent getAmbientSound() {
         if (this.getSex() == Sex.MALE && this.random.nextInt(10) == 0)
-            return HotSounds.ROOSTER_CROW;
-        return HotSounds.CHICKEN_AMBIENT;
+            return HotSounds.ROOSTER_CROW.get();
+        return HotSounds.CHICKEN_AMBIENT.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return HotSounds.CHICKEN_HURT;
+        return HotSounds.CHICKEN_HURT.get();
     }
 
     @Nullable
@@ -346,9 +344,27 @@ public class HotChickenEntity extends LivestockEntity {
         boolean flag = entity.hurt(DamageSource.mobAttack(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
         if (flag) {
             this.doEnchantDamageEffects(this, entity);
-            this.playSound(this.getSex() == Sex.MALE ? HotSounds.ROOSTER_ATTACK : HotSounds.CHICKEN_ATTACK, 1.0F, 1.0F);
+            this.playSound(this.getSex() == Sex.MALE ? HotSounds.ROOSTER_ATTACK.get() : HotSounds.CHICKEN_ATTACK.get(), 1.0F, 1.0F);
         }
 
         return flag;
+    }
+
+    @Override
+    protected ResourceLocation getDefaultLootTable() {
+        switch (this.getCarcassQuality()) {
+            case 0:
+                return new ResourceLocation(HotChickens.MOD_ID, "entities/chicken/poor");
+            case 1:
+                return new ResourceLocation(HotChickens.MOD_ID, "entities/chicken/fair");
+            case 2:
+                return new ResourceLocation(HotChickens.MOD_ID, "entities/chicken/good");
+            case 3:
+                return new ResourceLocation(HotChickens.MOD_ID, "entities/chicken/prime");
+            case 4:
+                return new ResourceLocation(HotChickens.MOD_ID, "entities/chicken/choice");
+        }
+
+        return this.getType().getDefaultLootTable();
     }
 }

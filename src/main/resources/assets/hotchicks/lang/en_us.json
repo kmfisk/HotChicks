@@ -1,6 +1,8 @@
 {
   "itemGroup.hotchicks.hot_chicks_group": "Click for Hot Chicks",
 
+  "entity.hotchicks.chicken": "Chicken",
+
   "block.hotchicks.nest_box": "Nest Box",
   "block.hotchicks.nest": "Nest",
   "block.hotchicks.wooden_trough": "Wooden Trough",
@@ -53,6 +55,13 @@
   "item.hotchicks.white_egg": "White Egg",
   "item.hotchicks.stud_book": "Stud Book",
 
+  "item.hotchicks.choice_chicken_carcass": "Choice Chicken Carcass",
+  "item.hotchicks.prime_chicken_carcass": "Prime Chicken Carcass",
+  "item.hotchicks.good_chicken_carcass": "Good Chicken Carcass",
+  "item.hotchicks.fair_chicken_carcass": "Fair Chicken Carcass",
+  "item.hotchicks.poor_chicken_carcass": "Poor Chicken Carcass",
+  "item.hotchicks.chicken_quarter": "Raw Chicken Quarter",
+  "item.hotchicks.cooked_chicken_quarter": "Cooked Chicken Quarter",
   "item.hotchicks.peppers":  "Peppers",
   "item.hotchicks.blueberries":  "Blueberries",
   "item.hotchicks.corn":  "Corn",

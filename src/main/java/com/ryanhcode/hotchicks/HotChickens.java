@@ -6,10 +6,7 @@ import com.ryanhcode.hotchicks.client.gui.TroughScreen;
 import com.ryanhcode.hotchicks.client.renderer.entity.HotChickenRenderer;
 import com.ryanhcode.hotchicks.entity.HotEntities;
 import com.ryanhcode.hotchicks.item.HotItems;
-import com.ryanhcode.hotchicks.registry.HotContainers;
-import com.ryanhcode.hotchicks.registry.HotGlobalLootModifier;
-import com.ryanhcode.hotchicks.registry.HotTileEntities;
-import com.ryanhcode.hotchicks.registry.HotVillagerTrades;
+import com.ryanhcode.hotchicks.registry.*;
 import com.ryanhcode.hotchicks.worldgen.HotFeatures;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.ScreenManager;
@@ -51,6 +48,7 @@ public class HotChickens {
         HotTileEntities.REGISTRAR.register(modBus);
         HotBlocks.REGISTRAR.register(modBus);
         HotItems.REGISTRAR.register(modBus);
+        HotSounds.REGISTRAR.register(modBus);
         HotContainers.REGISTRAR.register(modBus);
         HotGlobalLootModifier.REGISTRAR.register(modBus);
 
