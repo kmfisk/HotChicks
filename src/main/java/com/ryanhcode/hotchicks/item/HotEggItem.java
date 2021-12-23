@@ -1,5 +1,6 @@
 package com.ryanhcode.hotchicks.item;
 
+import com.ryanhcode.hotchicks.entity.base.ChickenBreeds;
 import com.ryanhcode.hotchicks.entity.stats.ChickenStats;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
@@ -34,6 +35,11 @@ public class HotEggItem extends Item {
     public static void setBreed(ItemStack stack, String breed) {
         CompoundNBT compoundnbt = stack.getTag();
         compoundnbt.putString("Breed", breed);
+    }
+
+    public static ChickenBreeds getBreed(ItemStack item) {
+        CompoundNBT compoundnbt = item.getTag();
+        return ChickenBreeds.valueOf(compoundnbt.getString("Breed"));
     }
 
     public static void setVariant(ItemStack stack, int variant) {

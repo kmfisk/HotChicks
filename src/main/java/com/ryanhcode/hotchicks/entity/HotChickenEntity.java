@@ -44,7 +44,7 @@ public class HotChickenEntity extends LivestockEntity {
 
     private static final Ingredient TEMPTATION_ITEMS = Ingredient.of(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS, HotItems.CORN.get());
 
-    public final int maxVariants = 33;
+    public final int maxVariants = 32;
 
     public HotChickenEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
         super(type, worldIn);
@@ -134,7 +134,7 @@ public class HotChickenEntity extends LivestockEntity {
         spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
         this.setSex(random.nextInt(3) == 0);
         this.setVariant(0);
-        this.setStats(new ChickenStats(random.nextInt(25) + random.nextInt(35), random.nextInt(4), random.nextInt(4), random.nextInt(8)));
+        this.setStats(new ChickenStats(random.nextInt(25) + random.nextInt(35), random.nextInt(3), random.nextInt(3), random.nextInt(3)));
         return spawnDataIn;
     }
 
@@ -231,6 +231,7 @@ public class HotChickenEntity extends LivestockEntity {
     public void spawnChildFromBreeding(ServerWorld world, AnimalEntity animal) {
         HotChickenEntity parent2 = (HotChickenEntity) animal;
         boolean inheritMotherGenes = this.random.nextFloat() <= 0.6;
+        boolean colorMorph = this.random.nextFloat() <= 0.1;
 
         if (!this.getMainHandItem().isEmpty()) {
             world.broadcastEntityEvent(this, (byte) 19);
@@ -240,43 +241,58 @@ public class HotChickenEntity extends LivestockEntity {
         ItemStack stack = new ItemStack(HotItems.WHITE_EGG.get());
         ChickenBreeds breed1 = this.getBreedFromVariant(this.getVariant());
         ChickenBreeds breed2 = parent2.getBreedFromVariant(parent2.getVariant());
-        ChickenStats stats = (ChickenStats) this.getStats().average(parent2.getStats()).mutate(0.2);
+        ChickenStats stats = (ChickenStats) this.getStats().average(parent2.getStats(), true).mutate(0.2);
         HotEggItem.setChickenStats(stack, stats);
         if (stats.tameness < 85) {
             HotEggItem.setBreed(stack, ChickenBreeds.JUNGLEFOWL.toString());
             HotEggItem.setVariant(stack, 0);
 
         } else {
+            int chickVariant;
+            ChickenBreeds chickBreed;
+
             if (breed1 != ChickenBreeds.JUNGLEFOWL && breed2 != ChickenBreeds.JUNGLEFOWL) {
                 if (breed1.equals(breed2)) {
-                    HotEggItem.setBreed(stack, breed1.toString());
-                    HotEggItem.setVariant(stack, inheritMotherGenes ? this.getVariant() : parent2.getVariant());
+                    chickBreed = breed1;
+                    chickVariant = inheritMotherGenes ? this.getVariant() : parent2.getVariant();
                 } else {
                     if (inheritMotherGenes) {
-                        HotEggItem.setBreed(stack, breed1.toString());
-                        HotEggItem.setVariant(stack, this.getVariant());
+                        chickBreed = breed1;
+                        chickVariant = this.getVariant();
                     } else {
-                        HotEggItem.setBreed(stack, breed2.toString());
-                        HotEggItem.setVariant(stack, parent2.getVariant());
+                        chickBreed = breed2;
+                        chickVariant = parent2.getVariant();
                     }
                 }
+                if (colorMorph)
+                    chickVariant = ChickenBreeds.randomFromBreed(this.random, chickBreed);
 
             } else {
                 if (breed1 != ChickenBreeds.JUNGLEFOWL && inheritMotherGenes) {
-                    HotEggItem.setBreed(stack, breed1.toString());
-                    HotEggItem.setVariant(stack, this.getVariant());
+                    chickBreed = breed1;
+                    chickVariant = colorMorph ? ChickenBreeds.randomFromBreed(this.random, chickBreed) : this.getVariant();
                 } else if (breed2 != ChickenBreeds.JUNGLEFOWL && !inheritMotherGenes) {
-                    HotEggItem.setBreed(stack, breed2.toString());
-                    HotEggItem.setVariant(stack, parent2.getVariant());
-                } else {
-                    Biome biome = this.getBiome();
-                    System.out.println("biome = " + biome);
-                    int variant = ChickenBreeds.randomBasedOnBiome(random, biome);
-                    ChickenBreeds breed = this.getBreedFromVariant(variant);
-                    HotEggItem.setBreed(stack, breed.toString());
-                    HotEggItem.setVariant(stack, variant);
+                    chickBreed = breed2;
+                    chickVariant = colorMorph ? ChickenBreeds.randomFromBreed(this.random, chickBreed) : parent2.getVariant();
+                }
+
+                else {
+                    if (this.random.nextFloat() <= 0.8) {
+                        Biome biome = this.getBiome();
+                        chickVariant = ChickenBreeds.randomBasedOnBiome(this.random, biome);
+                    } else
+                        chickVariant = this.random.nextInt(this.maxVariants) + 1;
+                    chickBreed = this.getBreedFromVariant(chickVariant);
                 }
             }
+
+            if (chickBreed != ChickenBreeds.JUNGLEFOWL && this.random.nextFloat() <= 0.8) {
+                stats = (ChickenStats) stats.average(chickBreed.stats, false);
+                HotEggItem.setChickenStats(stack, stats);
+            }
+
+            HotEggItem.setBreed(stack, chickBreed.toString());
+            HotEggItem.setVariant(stack, chickVariant);
         }
 
         this.setItemInHand(Hand.MAIN_HAND, stack);
@@ -341,7 +357,7 @@ public class HotChickenEntity extends LivestockEntity {
 
     @Override
     public boolean doHurtTarget(Entity entity) {
-        boolean flag = entity.hurt(DamageSource.mobAttack(this), (float)((int)this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
+        boolean flag = entity.hurt(DamageSource.mobAttack(this), (float) ((int) this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
         if (flag) {
             this.doEnchantDamageEffects(this, entity);
             this.playSound(this.getSex() == Sex.MALE ? HotSounds.ROOSTER_ATTACK.get() : HotSounds.CHICKEN_ATTACK.get(), 1.0F, 1.0F);

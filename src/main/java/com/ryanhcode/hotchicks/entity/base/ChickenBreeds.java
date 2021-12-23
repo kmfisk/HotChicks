@@ -26,41 +26,47 @@ public enum ChickenBreeds {
         this.stats = new ChickenStats(tameness, carcassQuality, growthRate, eggSpeed);
     }
 
-    public static int variantFromBiome(Random random, Set<BiomeDictionary.Type> biomeTypes) {
-        System.out.println("biome dictionary types: " + biomeTypes);
-        if (biomeTypes.contains(BiomeDictionary.Type.PLAINS) && !biomeTypes.contains(BiomeDictionary.Type.HOT) && !biomeTypes.contains(BiomeDictionary.Type.COLD))
-            return 9; // LEGHORN;
-
-        if (biomeTypes.contains(BiomeDictionary.Type.FOREST) && !biomeTypes.contains(BiomeDictionary.Type.COLD) && !biomeTypes.contains(BiomeDictionary.Type.DENSE) && !biomeTypes.contains(BiomeDictionary.Type.MOUNTAIN))
-            return random.nextInt(3) + 25; // RHODE_ISLAND_RED;
-
-        if (biomeTypes.contains(BiomeDictionary.Type.FOREST) && biomeTypes.contains(BiomeDictionary.Type.SPOOKY))
-            return 8; // BARRED_ROCK;
-
-        if (biomeTypes.contains(BiomeDictionary.Type.HOT) && biomeTypes.contains(BiomeDictionary.Type.SANDY))
-            return random.nextInt(4) + 21; // ORPINGTON;
-
-        if (biomeTypes.contains(BiomeDictionary.Type.MOUNTAIN) && !biomeTypes.contains(BiomeDictionary.Type.DRY))
-            return random.nextInt(7) + 1; // AMERAUCANA;
-
-        if (biomeTypes.contains(BiomeDictionary.Type.JUNGLE))
-            return random.nextInt(7) + 14; // OLIVE_EGGER;
-
-        if (biomeTypes.contains(BiomeDictionary.Type.SWAMP))
-            return random.nextInt(4) + 10; // MARANS;
-
-        if (biomeTypes.contains(BiomeDictionary.Type.SNOWY))
-            return random.nextInt(5) + 28; // SILKIE;
-
-        System.out.println("@@@@ no matching biome @@@@");
-        return 0;
+    public static int randomFromBreed(Random random, ChickenBreeds breeds) {
+        switch (breeds) {
+            default: case JUNGLEFOWL:
+                return 0;
+            case AMERAUCANA:
+                return random.nextInt(7) + 1;
+            case BARRED_ROCK:
+                return 8;
+            case LEGHORN:
+                return 9;
+            case MARANS:
+                return random.nextInt(4) + 10;
+            case OLIVE_EGGER:
+                return random.nextInt(7) + 14;
+            case ORPINGTON:
+                return random.nextInt(4) + 21;
+            case RHODE_ISLAND_RED:
+                return random.nextInt(3) + 25;
+            case SILKIE:
+                return random.nextInt(5) + 28;
+        }
     }
 
     public static int randomBasedOnBiome(Random random, Biome biome) {
         Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(RegistryKey.create(Registry.BIOME_REGISTRY, biome.getRegistryName()));
-        System.out.println("from biome");
-        int variantFromBiome = variantFromBiome(random, biomeTypes);
-        System.out.println("variant from biome = " + variantFromBiome);
-        return variantFromBiome;
+        if (biomeTypes.contains(BiomeDictionary.Type.PLAINS) && !biomeTypes.contains(BiomeDictionary.Type.HOT) && !biomeTypes.contains(BiomeDictionary.Type.COLD))
+            return 9; // LEGHORN;
+        if (biomeTypes.contains(BiomeDictionary.Type.FOREST) && !biomeTypes.contains(BiomeDictionary.Type.COLD) && !biomeTypes.contains(BiomeDictionary.Type.DENSE) && !biomeTypes.contains(BiomeDictionary.Type.MOUNTAIN))
+            return random.nextInt(3) + 25; // RHODE_ISLAND_RED;
+        if (biomeTypes.contains(BiomeDictionary.Type.FOREST) && biomeTypes.contains(BiomeDictionary.Type.SPOOKY))
+            return 8; // BARRED_ROCK;
+        if (biomeTypes.contains(BiomeDictionary.Type.HOT) && biomeTypes.contains(BiomeDictionary.Type.SANDY))
+            return random.nextInt(4) + 21; // ORPINGTON;
+        if (biomeTypes.contains(BiomeDictionary.Type.MOUNTAIN) && !biomeTypes.contains(BiomeDictionary.Type.DRY))
+            return random.nextInt(7) + 1; // AMERAUCANA;
+        if (biomeTypes.contains(BiomeDictionary.Type.JUNGLE))
+            return random.nextInt(7) + 14; // OLIVE_EGGER;
+        if (biomeTypes.contains(BiomeDictionary.Type.SWAMP))
+            return random.nextInt(4) + 10; // MARANS;
+        if (biomeTypes.contains(BiomeDictionary.Type.SNOWY))
+            return random.nextInt(5) + 28; // SILKIE;
+        return random.nextInt(32) + 1;
     }
 }
