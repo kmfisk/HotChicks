@@ -19,6 +19,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.FoliageColors;
 import net.minecraft.world.biome.BiomeColors;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -28,6 +29,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 @Mod(HotChickens.MOD_ID)
 public class HotChickens {
@@ -56,9 +58,13 @@ public class HotChickens {
 
         modBus.addListener(this::setup);
         modBus.addListener(this::registerAttributes);
-        modBus.addListener(this::registerRenderers);
-        modBus.addListener(this::registerColorHandlerBlocks);
-        modBus.addListener(this::registerColorHandlerItems);
+
+
+        if (FMLEnvironment.dist == Dist.CLIENT) {
+            modBus.addListener(this::setupClient);
+            modBus.addListener(this::registerColorHandlerBlocks);
+            modBus.addListener(this::registerColorHandlerItems);
+        }
 
         forgeBus.register(this);
     }
@@ -71,7 +77,7 @@ public class HotChickens {
         event.put(HotEntities.CHICKEN.get(), MobEntity.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.MOVEMENT_SPEED, 0.25).add(Attributes.ATTACK_DAMAGE, 1.0D).build());
     }
 
-    private void registerRenderers(final FMLClientSetupEvent event) {
+    private void setupClient(final FMLClientSetupEvent event) {
         ScreenManager.register(HotContainers.NEST.get(), NestScreen::new);
         ScreenManager.register(HotContainers.TROUGH_DOUBLE_METAL.get(), TroughScreen::new);
         ScreenManager.register(HotContainers.TROUGH_DOUBLE.get(), TroughScreen::new);
