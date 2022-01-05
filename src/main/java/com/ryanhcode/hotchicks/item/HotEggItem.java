@@ -1,6 +1,5 @@
 package com.ryanhcode.hotchicks.item;
 
-import com.ryanhcode.hotchicks.entity.base.ChickenBreeds;
 import com.ryanhcode.hotchicks.entity.stats.ChickenStats;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
@@ -25,31 +24,16 @@ public class HotEggItem extends Item {
     }
 
     public static void setChickenStats(ItemStack stack, int tameness, int carcass_quality, int growth_rate, int egg_speed) {
-        CompoundNBT compoundnbt = stack.getTag();
+        CompoundNBT compoundnbt = stack.getOrCreateTag();
         compoundnbt.putInt("Tameness", tameness);
         compoundnbt.putInt("CarcassQuality", carcass_quality);
         compoundnbt.putInt("GrowthRate", growth_rate);
         compoundnbt.putInt("EggSpeed", egg_speed);
     }
 
-    public static void setBreed(ItemStack stack, String breed) {
-        CompoundNBT compoundnbt = stack.getTag();
-        compoundnbt.putString("Breed", breed);
-    }
-
-    public static ChickenBreeds getBreed(ItemStack item) {
-        CompoundNBT compoundnbt = item.getTag();
-        return ChickenBreeds.valueOf(compoundnbt.getString("Breed"));
-    }
-
-    public static void setVariant(ItemStack stack, int variant) {
-        CompoundNBT compoundnbt = stack.getTag();
-        compoundnbt.putInt("Variant", variant);
-    }
-
     public static int getVariant(ItemStack item) {
         CompoundNBT compoundnbt = item.getTag();
-        return compoundnbt.getInt("Variant");
+        return compoundnbt != null ? compoundnbt.getInt("Variant") : 0;
     }
 
     @Override

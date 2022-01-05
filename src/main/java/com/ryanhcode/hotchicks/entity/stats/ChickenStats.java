@@ -10,27 +10,27 @@ public class ChickenStats extends Stats {
 
     @Override
     public Stats copy() {
-        return new ChickenStats(this.tameness, this.carcassQuality, this.growthRate, this.eggSpeed);
+        return new ChickenStats(tameness, carcassQuality, growthRate, eggSpeed);
     }
 
     @Override
     public Stats average(Stats parent2Stats, boolean includeTameness) {
         Stats stats = super.average(parent2Stats, includeTameness);
-        ChickenStats parent2Stats1 = (ChickenStats) parent2Stats;
+        ChickenStats parent2ChickenStats = (ChickenStats) parent2Stats;
 
         return new ChickenStats(
                 stats.tameness, stats.carcassQuality, stats.growthRate,
-                average(parent2Stats1.eggSpeed, this.eggSpeed)
+                average(parent2ChickenStats.eggSpeed, eggSpeed)
         );
     }
 
     @Override
     public Stats mutate(double chance) {
         Stats stats = super.mutate(chance);
-        ChickenStats chickenStats = new ChickenStats(stats.tameness, stats.carcassQuality, stats.growthRate, this.eggSpeed);
+        ChickenStats chickenStats = new ChickenStats(stats.tameness, stats.carcassQuality, stats.growthRate, eggSpeed);
 
         if (this.rand.nextFloat() <= chance)
-            chickenStats.eggSpeed = this.rand.nextFloat() <= 0.8 ? Math.min(4, chickenStats.eggSpeed + 1) : Math.max(0, chickenStats.eggSpeed - 1);
+            chickenStats.eggSpeed = this.rand.nextFloat() <= 0.8 ? Math.min(8, chickenStats.eggSpeed + 1) : Math.max(0, chickenStats.eggSpeed - 1);
 
         return chickenStats;
     }

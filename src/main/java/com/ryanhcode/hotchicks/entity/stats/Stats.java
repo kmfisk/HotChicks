@@ -15,14 +15,14 @@ public class Stats {
     }
 
     public Stats copy() {
-        return new Stats(this.tameness, this.carcassQuality, this.growthRate);
+        return new Stats(tameness, carcassQuality, growthRate);
     }
 
     public Stats average(Stats parent2Stats, boolean includeTameness) {
         return new Stats(
-                includeTameness ? average(parent2Stats.tameness, this.tameness) : this.tameness,
-                average(parent2Stats.carcassQuality, this.carcassQuality),
-                average(parent2Stats.growthRate, this.growthRate)
+                includeTameness ? average(parent2Stats.tameness, tameness) : tameness,
+                average(parent2Stats.carcassQuality, carcassQuality),
+                average(parent2Stats.growthRate, growthRate)
         );
     }
 

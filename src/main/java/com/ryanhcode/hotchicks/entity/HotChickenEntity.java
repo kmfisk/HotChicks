@@ -7,7 +7,6 @@ import com.ryanhcode.hotchicks.entity.base.Sex;
 import com.ryanhcode.hotchicks.entity.goal.ChickenBreedGoal;
 import com.ryanhcode.hotchicks.entity.goal.LayEggsGoal;
 import com.ryanhcode.hotchicks.entity.stats.ChickenStats;
-import com.ryanhcode.hotchicks.item.HotEggItem;
 import com.ryanhcode.hotchicks.item.HotItems;
 import com.ryanhcode.hotchicks.registry.HotSounds;
 import net.minecraft.block.BlockState;
@@ -238,14 +237,14 @@ public class HotChickenEntity extends LivestockEntity {
             return;
         }
 
-        ItemStack stack = new ItemStack(HotItems.WHITE_EGG.get());
+        ItemStack stack = HotItems.WHITE_EGG.get().getDefaultInstance();
+        CompoundNBT stackTag = stack.getOrCreateTag();
         ChickenBreeds breed1 = this.getBreedFromVariant(this.getVariant());
         ChickenBreeds breed2 = parent2.getBreedFromVariant(parent2.getVariant());
         ChickenStats stats = (ChickenStats) this.getStats().average(parent2.getStats(), true).mutate(0.2);
-        HotEggItem.setChickenStats(stack, stats);
         if (stats.tameness < 85) {
-            HotEggItem.setBreed(stack, ChickenBreeds.JUNGLEFOWL.toString());
-            HotEggItem.setVariant(stack, 0);
+            stackTag.putString("Breed", ChickenBreeds.JUNGLEFOWL.toString());
+            stackTag.putInt("Variant", 0);
 
         } else {
             int chickVariant;
@@ -286,13 +285,15 @@ public class HotChickenEntity extends LivestockEntity {
                 }
             }
 
-            if (chickBreed != ChickenBreeds.JUNGLEFOWL && this.random.nextFloat() <= 0.8) {
+            if (chickBreed != ChickenBreeds.JUNGLEFOWL && this.random.nextFloat() <= 0.8)
                 stats = (ChickenStats) stats.average(chickBreed.stats, false);
-                HotEggItem.setChickenStats(stack, stats);
-            }
 
-            HotEggItem.setBreed(stack, chickBreed.toString());
-            HotEggItem.setVariant(stack, chickVariant);
+            stackTag.putString("Breed", chickBreed.toString());
+            stackTag.putInt("Variant", chickVariant);
+            stackTag.putInt("Tameness", stats.tameness);
+            stackTag.putInt("CarcassQuality", stats.carcassQuality);
+            stackTag.putInt("GrowthRate", stats.growthRate);
+            stackTag.putInt("EggSpeed", stats.eggSpeed);
         }
 
         this.setItemInHand(Hand.MAIN_HAND, stack);
