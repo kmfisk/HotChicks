@@ -1,10 +1,12 @@
-package com.github.kmfisk.hotchicks.block;
+package com.github.kmfisk.hotchicks.block.entity;
 
+import com.github.kmfisk.hotchicks.block.HotBlocks;
+import com.github.kmfisk.hotchicks.block.NestBlock;
 import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
 import com.github.kmfisk.hotchicks.entity.HotEntities;
 import com.github.kmfisk.hotchicks.inventory.NestContainer;
 import com.github.kmfisk.hotchicks.item.HotEggItem;
-import com.github.kmfisk.hotchicks.registry.HotTileEntities;
+import com.github.kmfisk.hotchicks.block.entity.HotTileEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

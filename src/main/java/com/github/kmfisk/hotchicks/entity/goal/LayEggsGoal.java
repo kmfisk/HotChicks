@@ -1,6 +1,6 @@
 package com.github.kmfisk.hotchicks.entity.goal;
 
-import com.github.kmfisk.hotchicks.block.NestTileEntity;
+import com.github.kmfisk.hotchicks.block.entity.NestTileEntity;
 import com.github.kmfisk.hotchicks.block.HotBlocks;
 import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
 import com.github.kmfisk.hotchicks.entity.base.Sex;

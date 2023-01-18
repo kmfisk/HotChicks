@@ -1,7 +1,9 @@
-package com.github.kmfisk.hotchicks.block;
+package com.github.kmfisk.hotchicks.block.entity;
 
+import com.github.kmfisk.hotchicks.block.HotBlocks;
+import com.github.kmfisk.hotchicks.block.TroughBlock;
+import com.github.kmfisk.hotchicks.block.TroughFillType;
 import com.github.kmfisk.hotchicks.inventory.TroughContainer;
-import com.github.kmfisk.hotchicks.registry.HotTileEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

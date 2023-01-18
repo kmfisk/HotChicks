@@ -1,6 +1,5 @@
 package com.github.kmfisk.hotchicks.inventory;
 
-import com.github.kmfisk.hotchicks.registry.HotContainers;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -14,28 +13,28 @@ public class TroughContainer extends Container {
     private IInventory inventory;
 
     public static TroughContainer createGenericSingle(int id, PlayerInventory player, IInventory blockEntity) {
-        return new TroughContainer(HotContainers.TROUGH_SINGLE.get(), id, blockEntity, player, 3);
+        return new TroughContainer(HotContainerTypes.TROUGH_SINGLE.get(), id, blockEntity, player, 3);
     }
 
     public static TroughContainer createGenericSingle(int id, PlayerInventory player) {
-        return new TroughContainer(HotContainers.TROUGH_SINGLE.get(), id, new Inventory(3), player, 3);
+        return new TroughContainer(HotContainerTypes.TROUGH_SINGLE.get(), id, new Inventory(3), player, 3);
     }
 
 
     public static TroughContainer createGenericDouble(int id, PlayerInventory player, IInventory blockEntity) {
-        return new TroughContainer(HotContainers.TROUGH_DOUBLE.get(), id, blockEntity, player, 6);
+        return new TroughContainer(HotContainerTypes.TROUGH_DOUBLE.get(), id, blockEntity, player, 6);
     }
 
     public static TroughContainer createGenericDouble(int id, PlayerInventory player) {
-        return new TroughContainer(HotContainers.TROUGH_DOUBLE.get(), id, new Inventory(6), player, 6);
+        return new TroughContainer(HotContainerTypes.TROUGH_DOUBLE.get(), id, new Inventory(6), player, 6);
     }
 
     public static TroughContainer createGenericDoubleMetal(int id, PlayerInventory player) {
-        return new TroughContainer(HotContainers.TROUGH_DOUBLE_METAL.get(), id, new Inventory(12), player, 12);
+        return new TroughContainer(HotContainerTypes.TROUGH_DOUBLE_METAL.get(), id, new Inventory(12), player, 12);
     }
 
     public static TroughContainer createGenericDoubleMetal(int id, PlayerInventory player, IInventory blockEntity) {
-        return new TroughContainer(HotContainers.TROUGH_DOUBLE_METAL.get(), id, blockEntity, player, 12);
+        return new TroughContainer(HotContainerTypes.TROUGH_DOUBLE_METAL.get(), id, blockEntity, player, 12);
     }
 
     private TroughContainer(ContainerType<?> type, int id, IInventory blockEntity, PlayerInventory player, int slot) {

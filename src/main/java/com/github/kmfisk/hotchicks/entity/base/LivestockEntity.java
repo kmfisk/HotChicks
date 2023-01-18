@@ -1,12 +1,22 @@
 package com.github.kmfisk.hotchicks.entity.base;
 
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
+import net.minecraftforge.common.Tags;
+
+import java.util.Random;
 
 public abstract class LivestockEntity extends AnimalEntity {
     public static final DataParameter<Boolean> SEX = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.BOOLEAN);
@@ -84,5 +94,12 @@ public abstract class LivestockEntity extends AnimalEntity {
         this.setTameness(compound.getInt("Tameness"));
         this.setCarcassQuality(compound.getInt("CarcassQuality"));
         this.setGrowthRate(compound.getInt("GrowthRate"));
+    }
+
+    public static boolean checkLivestockSpawnRules(EntityType<? extends LivestockEntity> entityType, IServerWorld world, SpawnReason spawnReason, BlockPos pos, Random random) {
+        BlockState blockState = world.getBlockState(pos.below());
+        return (blockState.is(Blocks.GRASS_BLOCK) || blockState.is(Blocks.SNOW) || blockState.is(BlockTags.ICE)
+                || Tags.Blocks.SAND.contains(blockState.getBlock()) || Tags.Blocks.DIRT.contains(blockState.getBlock()))
+                && world.getRawBrightness(pos, 0) > 8;
     }
 }

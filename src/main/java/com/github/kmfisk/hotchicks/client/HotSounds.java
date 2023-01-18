@@ -1,4 +1,4 @@
-package com.github.kmfisk.hotchicks.registry;
+package com.github.kmfisk.hotchicks.client;
 
 import com.github.kmfisk.hotchicks.HotChicks;
 import net.minecraft.util.ResourceLocation;

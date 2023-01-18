@@ -1,9 +1,6 @@
-package com.github.kmfisk.hotchicks.registry;
+package com.github.kmfisk.hotchicks.block.entity;
 
 import com.github.kmfisk.hotchicks.HotChicks;
-import com.github.kmfisk.hotchicks.block.MetalTroughTileEntity;
-import com.github.kmfisk.hotchicks.block.NestTileEntity;
-import com.github.kmfisk.hotchicks.block.TroughTileEntity;
 import com.github.kmfisk.hotchicks.block.HotBlocks;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.RegistryObject;

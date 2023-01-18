@@ -1,6 +1,5 @@
-package com.github.kmfisk.hotchicks.block;
+package com.github.kmfisk.hotchicks.block.entity;
 
-import com.github.kmfisk.hotchicks.registry.HotTileEntities;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntityType;
 

@@ -1,4 +1,4 @@
-package com.github.kmfisk.hotchicks.registry;
+package com.github.kmfisk.hotchicks.entity.merchant.villager;
 
 import com.github.kmfisk.hotchicks.item.HotItems;
 import net.minecraft.entity.merchant.villager.VillagerProfession;

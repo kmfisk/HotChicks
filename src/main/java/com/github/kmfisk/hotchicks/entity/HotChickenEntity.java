@@ -8,9 +8,10 @@ import com.github.kmfisk.hotchicks.entity.base.LivestockEntity;
 import com.github.kmfisk.hotchicks.entity.base.Sex;
 import com.github.kmfisk.hotchicks.entity.goal.ChickenBreedGoal;
 import com.github.kmfisk.hotchicks.item.HotItems;
-import com.github.kmfisk.hotchicks.registry.HotSounds;
+import com.github.kmfisk.hotchicks.client.HotSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ExperienceOrbEntity;
@@ -47,6 +48,10 @@ public class HotChickenEntity extends LivestockEntity {
 
     public HotChickenEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
         super(type, worldIn);
+    }
+
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+        return createMobAttributes().add(Attributes.MAX_HEALTH, 10.0D).add(Attributes.MOVEMENT_SPEED, 0.25).add(Attributes.ATTACK_DAMAGE, 1.0D);
     }
 
     @Override

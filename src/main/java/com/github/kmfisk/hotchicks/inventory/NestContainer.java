@@ -1,7 +1,6 @@
 package com.github.kmfisk.hotchicks.inventory;
 
 import com.github.kmfisk.hotchicks.item.HotEggItem;
-import com.github.kmfisk.hotchicks.registry.HotContainers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,7 +22,7 @@ public class NestContainer extends Container {
     }
 
     public NestContainer(int id, PlayerInventory playerInventory, IInventory inventory) {
-        super(HotContainers.NEST.get(), id);
+        super(HotContainerTypes.NEST.get(), id);
         this.hopperInventory = inventory;
         checkContainerSize(inventory, 5);
         inventory.startOpen(playerInventory.player);

@@ -1,5 +1,6 @@
 package com.github.kmfisk.hotchicks.block;
 
+import com.github.kmfisk.hotchicks.block.entity.NestTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.monster.piglin.PiglinTasks;

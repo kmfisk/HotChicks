@@ -1,5 +1,6 @@
 package com.github.kmfisk.hotchicks.block;
 
+import com.github.kmfisk.hotchicks.block.entity.NestTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;

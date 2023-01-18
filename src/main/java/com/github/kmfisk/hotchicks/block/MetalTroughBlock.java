@@ -1,7 +1,8 @@
 package com.github.kmfisk.hotchicks.block;
 
+import com.github.kmfisk.hotchicks.block.entity.TroughTileEntity;
 import com.github.kmfisk.hotchicks.inventory.TroughContainer;
-import com.github.kmfisk.hotchicks.registry.HotTileEntities;
+import com.github.kmfisk.hotchicks.block.entity.HotTileEntities;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;

@@ -1,4 +1,4 @@
-package com.github.kmfisk.hotchicks.registry;
+package com.github.kmfisk.hotchicks.loot;
 
 import com.github.kmfisk.hotchicks.item.HotItems;
 import com.google.gson.JsonObject;
