@@ -2,33 +2,33 @@
   "chicken_ambient": {
     "subtitle": "hotchicks.subtitle.chicken_ambient",
     "sounds": [
-      "hotchicks:chicken_ambient_1",
-      "hotchicks:chicken_ambient_2",
-      "hotchicks:chicken_ambient_3"
+      { "name": "hotchicks:chicken_ambient_1", "volume": 0.5 },
+      { "name": "hotchicks:chicken_ambient_2", "volume": 0.5 },
+      { "name": "hotchicks:chicken_ambient_3", "volume": 0.5, "weight": 3 }
     ]
   },
   "chicken_hurt": {
     "subtitle": "hotchicks.subtitle.chicken_hurt",
     "sounds": [
-      "hotchicks:chicken_attacked"
+      { "name": "hotchicks:chicken_attacked", "volume": 0.5 }
     ]
   },
   "chicken_attack": {
     "subtitle": "hotchicks.subtitle.chicken_attack",
     "sounds": [
-      "hotchicks:chicken_attacking"
+      { "name": "hotchicks:chicken_attacking", "volume": 0.3 }
     ]
   },
   "rooster_attack": {
     "subtitle": "hotchicks.subtitle.rooster_attack",
     "sounds": [
-      "hotchicks:rooster_attacking"
+      { "name": "hotchicks:rooster_attacking", "volume": 0.5 }
     ]
   },
   "rooster_crow": {
     "subtitle": "hotchicks.subtitle.rooster_crow",
     "sounds": [
-      "hotchicks:rooster_crow"
+      { "name": "hotchicks:rooster_crow", "volume": 0.5 }
     ]
   }
 }
