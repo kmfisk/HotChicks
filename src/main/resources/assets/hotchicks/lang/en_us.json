@@ -3,6 +3,12 @@
 
   "entity.hotchicks.chicken": "Chicken",
 
+  "hotchicks.subtitle.chicken_ambient": "Chicken clucking",
+  "hotchicks.subtitle.chicken_hurt": "Chicken hurt",
+  "hotchicks.subtitle.chicken_attack": "Chicken aggressive",
+  "hotchicks.subtitle.rooster_attack": "Rooster aggressive",
+  "hotchicks.subtitle.rooster_crow": "Rooster crowing",
+
   "block.hotchicks.nest_box": "Nest Box",
   "block.hotchicks.nest": "Nest",
   "block.hotchicks.wooden_trough": "Wooden Trough",
