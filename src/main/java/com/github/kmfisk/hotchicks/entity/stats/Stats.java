@@ -6,11 +6,19 @@ public class Stats {
     public Random rand = new Random(System.currentTimeMillis());
     public int tameness;
     public int carcassQuality;
+    public int hideQuality;
     public int growthRate;
 
     public Stats(int tameness, int carcassQuality, int growthRate) {
         this.tameness = tameness;
         this.carcassQuality = carcassQuality;
+        this.growthRate = growthRate;
+    }
+
+    public Stats(int tameness, int carcassQuality, int hideQuality, int growthRate) {
+        this.tameness = tameness;
+        this.carcassQuality = carcassQuality;
+        this.hideQuality = hideQuality;
         this.growthRate = growthRate;
     }
 

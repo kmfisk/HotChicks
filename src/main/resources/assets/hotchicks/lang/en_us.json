@@ -2,6 +2,7 @@
   "itemGroup.hotchicks.hot_chicks_group": "Click for Hot Chicks",
 
   "entity.hotchicks.chicken": "Chicken",
+  "entity.hotchicks.rabbit": "Rabbit",
 
   "hotchicks.subtitle.chicken_ambient": "Chicken clucking",
   "hotchicks.subtitle.chicken_hurt": "Chicken hurt",
@@ -68,6 +69,18 @@
   "item.hotchicks.poor_chicken_carcass": "Poor Chicken Carcass",
   "item.hotchicks.chicken_quarter": "Raw Chicken Quarter",
   "item.hotchicks.cooked_chicken_quarter": "Cooked Chicken Quarter",
+  "item.hotchicks.choice_rabbit_carcass": "Choice Rabbit Carcass",
+  "item.hotchicks.prime_rabbit_carcass": "Prime Rabbit Carcass",
+  "item.hotchicks.good_rabbit_carcass": "Good Rabbit Carcass",
+  "item.hotchicks.fair_rabbit_carcass": "Fair Rabbit Carcass",
+  "item.hotchicks.poor_rabbit_carcass": "Poor Rabbit Carcass",
+  "item.hotchicks.rabbit_quarter": "Raw Rabbit Quarter",
+  "item.hotchicks.cooked_rabbit_quarter": "Cooked Rabbit Quarter",
+  "item.hotchicks.choice_rabbit_hide": "Choice Rabbit Hide",
+  "item.hotchicks.prime_rabbit_hide": "Prime Rabbit Hide",
+  "item.hotchicks.good_rabbit_hide": "Good Rabbit Hide",
+  "item.hotchicks.fair_rabbit_hide": "Fair Rabbit Hide",
+  "item.hotchicks.poor_rabbit_hide": "Poor Rabbit Hide",
   "item.hotchicks.peppers":  "Peppers",
   "item.hotchicks.blueberries":  "Blueberries",
   "item.hotchicks.corn":  "Corn",
@@ -104,5 +117,13 @@
   "item.hotchicks.leghorn_spawn_egg": "Leghorn Chicken Spawn Egg",
   "item.hotchicks.junglefowl_spawn_egg":  "Junglefowl Chicken Spawn Egg",
   "item.hotchicks.barred_rock_spawn_egg": "Barred Rock Chicken Spawn Egg",
-  "item.hotchicks.ameraucana_spawn_egg":  "Ameraucana Chicken Spawn Egg"
+  "item.hotchicks.ameraucana_spawn_egg":  "Ameraucana Chicken Spawn Egg",
+
+  "item.hotchicks.american_chinchilla_spawn_egg": "American Chinchilla Rabbit Spawn Egg",
+  "item.hotchicks.california_spawn_egg": "California Rabbit Spawn Egg",
+  "item.hotchicks.cottontail_spawn_egg": "Cottontail Rabbit Spawn Egg",
+  "item.hotchicks.dutch_spawn_egg": "Dutch Rabbit Spawn Egg",
+  "item.hotchicks.flemish_giant_spawn_egg": "Flemish Giant Rabbit Spawn Egg",
+  "item.hotchicks.new_zealand_spawn_egg": "New Zealand Rabbit Spawn Egg",
+  "item.hotchicks.rex_spawn_egg": "Rex Rabbit Spawn Egg"
 }

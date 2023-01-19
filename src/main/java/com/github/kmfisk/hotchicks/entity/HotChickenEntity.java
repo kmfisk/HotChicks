@@ -113,12 +113,6 @@ public class HotChickenEntity extends LivestockEntity {
         return 200;
     }
 
-    private Biome getBiome() {
-        int x = MathHelper.floor(this.getX());
-        int z = MathHelper.floor(this.getZ());
-        return this.level.getBiome(new BlockPos(x, 0, z));
-    }
-
     @Override
     public void addAdditionalSaveData(CompoundNBT compound) {
         super.addAdditionalSaveData(compound);
@@ -134,12 +128,12 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     @Override
-    public ILivingEntityData finalizeSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason, @Nullable ILivingEntityData spawnDataIn, @Nullable CompoundNBT dataTag) {
-        spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficultyInstance, SpawnReason spawnReason, @Nullable ILivingEntityData entityData, @Nullable CompoundNBT nbt) {
+        entityData = super.finalizeSpawn(world, difficultyInstance, spawnReason, entityData, nbt);
         this.setSex(random.nextInt(3) == 0);
         this.setVariant(0);
         this.setStats(new ChickenStats(random.nextInt(25) + random.nextInt(35), random.nextInt(3), random.nextInt(3), random.nextInt(3)));
-        return spawnDataIn;
+        return entityData;
     }
 
     public ChickenBreeds getBreedFromVariant(int variant) {
@@ -191,8 +185,8 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     @Override
-    protected float getStandingEyeHeight(Pose poseIn, EntitySize sizeIn) {
-        return this.isBaby() ? sizeIn.height * 0.85F : sizeIn.height * 0.92F;
+    protected float getStandingEyeHeight(Pose pose, EntitySize size) {
+        return this.isBaby() ? size.height * 0.85F : size.height * 0.92F;
     }
 
     @Override
@@ -220,14 +214,14 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     @Override
-    public boolean canMate(AnimalEntity otherAnimal) {
-        if (!(otherAnimal instanceof HotChickenEntity)) return false;
+    public boolean canMate(AnimalEntity mate) {
+        if (!(mate instanceof HotChickenEntity)) return false;
         else {
-            HotChickenEntity chicken = (HotChickenEntity) otherAnimal;
+            HotChickenEntity chicken = (HotChickenEntity) mate;
             if (chicken == this)
                 return false;
             else
-                return this.isInLove() && otherAnimal.isInLove() && chicken.getSex() != this.getSex();
+                return this.isInLove() && chicken.isInLove() && chicken.getSex() != this.getSex();
         }
     }
 
@@ -370,23 +364,5 @@ public class HotChickenEntity extends LivestockEntity {
         }
 
         return flag;
-    }
-
-    @Override
-    protected ResourceLocation getDefaultLootTable() {
-        switch (this.getCarcassQuality()) {
-            case 0:
-                return new ResourceLocation(HotChicks.MOD_ID, "entities/chicken/poor");
-            case 1:
-                return new ResourceLocation(HotChicks.MOD_ID, "entities/chicken/fair");
-            case 2:
-                return new ResourceLocation(HotChicks.MOD_ID, "entities/chicken/good");
-            case 3:
-                return new ResourceLocation(HotChicks.MOD_ID, "entities/chicken/prime");
-            case 4:
-                return new ResourceLocation(HotChicks.MOD_ID, "entities/chicken/choice");
-        }
-
-        return this.getType().getDefaultLootTable();
     }
 }

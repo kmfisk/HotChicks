@@ -2,6 +2,7 @@ package com.github.kmfisk.hotchicks.entity;
 
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.client.renderer.entity.HotChickenRenderer;
+import com.github.kmfisk.hotchicks.client.renderer.entity.HotRabbitRenderer;
 import com.github.kmfisk.hotchicks.entity.base.LivestockEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -26,18 +27,27 @@ public class HotEntities {
     public static final DeferredRegister<EntityType<?>> REGISTRAR = DeferredRegister.create(ForgeRegistries.ENTITIES, HotChicks.MOD_ID);
     private static final List<Tuple<Supplier<EntityType<? extends LivingEntity>>, Supplier<AttributeModifierMap.MutableAttribute>>> ATTRIBUTES = new ArrayList<>();
     private static final List<Tuple<Supplier<EntityType<?>>, Supplier<IRenderFactory<?>>>> RENDERERS = new ArrayList<>();
-    public static final List<Tuple<RegistryObject<EntityType<?>>, List<SpawnInfo>>> SPAWNS = new ArrayList<>();
+//    public static final List<Tuple<RegistryObject<EntityType<?>>, List<SpawnInfo>>> SPAWNS = new ArrayList<>();
 
     public static RegistryObject<EntityType<HotChickenEntity>> CHICKEN = new Builder<>(HotChickenEntity::new, EntityClassification.CREATURE)
             .attributes(HotChickenEntity::registerAttributes)
             .renderer(() -> HotChickenRenderer::new)
-            .spawn(new SpawnInfo((type) -> type.contains(BiomeDictionary.Type.JUNGLE) || (type.contains(BiomeDictionary.Type.SPOOKY) && type.contains(BiomeDictionary.Type.FOREST)),
-                    2, 4, 10))
+            /*.spawn(new SpawnInfo((type) -> type.contains(BiomeDictionary.Type.JUNGLE) || (type.contains(BiomeDictionary.Type.SPOOKY) && type.contains(BiomeDictionary.Type.FOREST)),
+                    2, 4, 10))*/
             .data(hotChickenEntityBuilder -> hotChickenEntityBuilder.sized(0.4f, 0.7f).clientTrackingRange(10))
             .build(REGISTRAR, "chicken");
 
+    public static RegistryObject<EntityType<HotRabbitEntity>> RABBIT = new Builder<>(HotRabbitEntity::new, EntityClassification.CREATURE)
+            .attributes(HotRabbitEntity::registerAttributes)
+            .renderer(() -> HotRabbitRenderer::new)
+            /*.spawn(new SpawnInfo((type) -> type.contains(BiomeDictionary.Type.PLAINS) || (type.contains(BiomeDictionary.Type.CONIFEROUS) && !type.contains(BiomeDictionary.Type.MOUNTAIN) && !type.contains(BiomeDictionary.Type.SNOWY)),
+                    2, 4, 10))*/
+            .data(hotRabbitEntityBuilder -> hotRabbitEntityBuilder.sized(0.4f, 0.4f).clientTrackingRange(10))
+            .build(REGISTRAR, "rabbit");
+
     public static void registerSpawnPlacements() {
         EntitySpawnPlacementRegistry.register(CHICKEN.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING, LivestockEntity::checkLivestockSpawnRules);
+        EntitySpawnPlacementRegistry.register(RABBIT.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING, LivestockEntity::checkLivestockSpawnRules);
     }
 
     public static void registerAttributes(BiConsumer<EntityType<? extends LivingEntity>, AttributeModifierMap.MutableAttribute> register) {
@@ -65,7 +75,7 @@ public class HotEntities {
         private Supplier<AttributeModifierMap.MutableAttribute> attributes;
         private Supplier<IRenderFactory<? super T>> renderer;
         private Consumer<EntityType.Builder<T>> builderConsumer;
-        private final List<SpawnInfo> spawnInfos = new ArrayList<>();
+//        private final List<SpawnInfo> spawnInfos = new ArrayList<>();
 
         public Builder(EntityType.IFactory<T> factory, EntityClassification category) {
             this.factory = factory;
@@ -82,10 +92,10 @@ public class HotEntities {
             return this;
         }
 
-        public Builder<T> spawn(SpawnInfo spawnInfo) {
+        /*public Builder<T> spawn(SpawnInfo spawnInfo) {
             spawnInfos.add(spawnInfo);
             return this;
-        }
+        }*/
 
         public Builder<T> data(Consumer<EntityType.Builder<T>> consumer) {
             builderConsumer = consumer;
@@ -107,15 +117,15 @@ public class HotEntities {
                 RENDERERS.add(new Tuple<>(cast(type), cast(renderer)));
             }
 
-            if (!spawnInfos.isEmpty()) {
+            /*if (!spawnInfos.isEmpty()) {
                 SPAWNS.add(new Tuple<>(cast(type), spawnInfos));
-            }
+            }*/
 
             return type;
         }
     }
 
-    public static class SpawnInfo {
+    /*public static class SpawnInfo {
         public final SpawnPredicate predicate;
         public final int groupMinimum, groupMaximum, weight;
 
@@ -130,5 +140,5 @@ public class HotEntities {
     @FunctionalInterface
     public interface SpawnPredicate {
         boolean invoke(Set<BiomeDictionary.Type> type);
-    }
+    }*/
 }

@@ -3,6 +3,7 @@ package com.github.kmfisk.hotchicks.item;
 import com.github.kmfisk.hotchicks.entity.base.ChickenBreeds;
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.block.HotBlocks;
+import com.github.kmfisk.hotchicks.entity.base.RabbitBreeds;
 import net.minecraft.item.BlockNamedItem;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.RegistryObject;
@@ -24,6 +25,18 @@ public class HotItems {
     public static final RegistryObject<Item> POOR_CHICKEN_CARCASS = REGISTRAR.register("poor_chicken_carcass", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
     public static final RegistryObject<Item> CHICKEN_QUARTER = REGISTRAR.register("chicken_quarter", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.CHICKEN_QUARTER)));
     public static final RegistryObject<Item> COOKED_CHICKEN_QUARTER = REGISTRAR.register("cooked_chicken_quarter", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.COOKED_CHICKEN_QUARTER)));
+    public static final RegistryObject<Item> CHOICE_RABBIT_CARCASS = REGISTRAR.register("choice_rabbit_carcass", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> PRIME_RABBIT_CARCASS = REGISTRAR.register("prime_rabbit_carcass", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> GOOD_RABBIT_CARCASS = REGISTRAR.register("good_rabbit_carcass", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> FAIR_RABBIT_CARCASS = REGISTRAR.register("fair_rabbit_carcass", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> POOR_RABBIT_CARCASS = REGISTRAR.register("poor_rabbit_carcass", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> RABBIT_QUARTER = REGISTRAR.register("rabbit_quarter", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.RABBIT_QUARTER)));
+    public static final RegistryObject<Item> COOKED_RABBIT_QUARTER = REGISTRAR.register("cooked_rabbit_quarter", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.COOKED_RABBIT_QUARTER)));
+    public static final RegistryObject<Item> CHOICE_RABBIT_HIDE = REGISTRAR.register("choice_rabbit_hide", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> PRIME_RABBIT_HIDE = REGISTRAR.register("prime_rabbit_hide", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> GOOD_RABBIT_HIDE = REGISTRAR.register("good_rabbit_hide", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> FAIR_RABBIT_HIDE = REGISTRAR.register("fair_rabbit_hide", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> POOR_RABBIT_HIDE = REGISTRAR.register("poor_rabbit_hide", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
 
     // CROP BLOCK ITEMS
     public static final RegistryObject<Item> BLUEBERRIES = REGISTRAR.register("blueberries", () -> new BlockNamedItem(HotBlocks.BLUEBERRY_BUSH.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.BLUEBERRY)));
@@ -59,13 +72,20 @@ public class HotItems {
     public static final RegistryObject<Item> YUZU = REGISTRAR.register("yuzu", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.YUZU)));
 
     // SPAWN EGGS
-    public static final RegistryObject<Item> SILKIE_SPAWN_EGG = REGISTRAR.register("silkie_spawn_egg", () -> new HotSpawnEggItem(ChickenBreeds.SILKIE));
-    public static final RegistryObject<Item> RHODE_ISLAND_SPAWN_EGG = REGISTRAR.register("rhode_island_spawn_egg", () -> new HotSpawnEggItem(ChickenBreeds.RHODE_ISLAND_RED));
-    public static final RegistryObject<Item> ORPINGTON_SPAWN_EGG = REGISTRAR.register("orpington_spawn_egg", () -> new HotSpawnEggItem(ChickenBreeds.ORPINGTON));
-    public static final RegistryObject<Item> OLIVE_EGGER_SPAWN_EGG = REGISTRAR.register("olive_egger_spawn_egg", () -> new HotSpawnEggItem(ChickenBreeds.OLIVE_EGGER));
-    public static final RegistryObject<Item> MARANS_SPAWN_EGG = REGISTRAR.register("marans_spawn_egg", () -> new HotSpawnEggItem(ChickenBreeds.MARANS));
-    public static final RegistryObject<Item> LEGHORN_SPAWN_EGG = REGISTRAR.register("leghorn_spawn_egg", () -> new HotSpawnEggItem(ChickenBreeds.LEGHORN));
-    public static final RegistryObject<Item> JUNGLEFOWL_SPAWN_EGG = REGISTRAR.register("junglefowl_spawn_egg", () -> new HotSpawnEggItem(ChickenBreeds.JUNGLEFOWL));
-    public static final RegistryObject<Item> BARRED_ROCK_SPAWN_EGG = REGISTRAR.register("barred_rock_spawn_egg", () -> new HotSpawnEggItem(ChickenBreeds.BARRED_ROCK));
-    public static final RegistryObject<Item> AMERAUCANA_SPAWN_EGG = REGISTRAR.register("ameraucana_spawn_egg", () -> new HotSpawnEggItem(ChickenBreeds.AMERAUCANA));
+    public static final RegistryObject<Item> SILKIE_SPAWN_EGG = REGISTRAR.register("silkie_spawn_egg", () -> new ChickenSpawnEggItem(ChickenBreeds.SILKIE));
+    public static final RegistryObject<Item> RHODE_ISLAND_SPAWN_EGG = REGISTRAR.register("rhode_island_spawn_egg", () -> new ChickenSpawnEggItem(ChickenBreeds.RHODE_ISLAND_RED));
+    public static final RegistryObject<Item> ORPINGTON_SPAWN_EGG = REGISTRAR.register("orpington_spawn_egg", () -> new ChickenSpawnEggItem(ChickenBreeds.ORPINGTON));
+    public static final RegistryObject<Item> OLIVE_EGGER_SPAWN_EGG = REGISTRAR.register("olive_egger_spawn_egg", () -> new ChickenSpawnEggItem(ChickenBreeds.OLIVE_EGGER));
+    public static final RegistryObject<Item> MARANS_SPAWN_EGG = REGISTRAR.register("marans_spawn_egg", () -> new ChickenSpawnEggItem(ChickenBreeds.MARANS));
+    public static final RegistryObject<Item> LEGHORN_SPAWN_EGG = REGISTRAR.register("leghorn_spawn_egg", () -> new ChickenSpawnEggItem(ChickenBreeds.LEGHORN));
+    public static final RegistryObject<Item> JUNGLEFOWL_SPAWN_EGG = REGISTRAR.register("junglefowl_spawn_egg", () -> new ChickenSpawnEggItem(ChickenBreeds.JUNGLEFOWL));
+    public static final RegistryObject<Item> BARRED_ROCK_SPAWN_EGG = REGISTRAR.register("barred_rock_spawn_egg", () -> new ChickenSpawnEggItem(ChickenBreeds.BARRED_ROCK));
+    public static final RegistryObject<Item> AMERAUCANA_SPAWN_EGG = REGISTRAR.register("ameraucana_spawn_egg", () -> new ChickenSpawnEggItem(ChickenBreeds.AMERAUCANA));
+    public static final RegistryObject<Item> COTTONTAIL_SPAWN_EGG = REGISTRAR.register("cottontail_spawn_egg", () -> new RabbitSpawnEggItem(RabbitBreeds.COTTONTAIL));
+    public static final RegistryObject<Item> AMERICAN_CHINCHILLA_SPAWN_EGG = REGISTRAR.register("american_chinchilla_spawn_egg", () -> new RabbitSpawnEggItem(RabbitBreeds.AMERICAN_CHINCHILLA));
+    public static final RegistryObject<Item> CALIFORNIA_SPAWN_EGG = REGISTRAR.register("california_spawn_egg", () -> new RabbitSpawnEggItem(RabbitBreeds.CALIFORNIA));
+    public static final RegistryObject<Item> DUTCH_SPAWN_EGG = REGISTRAR.register("dutch_spawn_egg", () -> new RabbitSpawnEggItem(RabbitBreeds.DUTCH));
+    public static final RegistryObject<Item> FLEMISH_GIANT_SPAWN_EGG = REGISTRAR.register("flemish_giant_spawn_egg", () -> new RabbitSpawnEggItem(RabbitBreeds.FLEMISH_GIANT));
+    public static final RegistryObject<Item> NEW_ZEALAND_SPAWN_EGG = REGISTRAR.register("new_zealand_spawn_egg", () -> new RabbitSpawnEggItem(RabbitBreeds.NEW_ZEALAND));
+    public static final RegistryObject<Item> REX_SPAWN_EGG = REGISTRAR.register("rex_spawn_egg", () -> new RabbitSpawnEggItem(RabbitBreeds.REX));
 }

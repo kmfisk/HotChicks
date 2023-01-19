@@ -1,0 +1,164 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "hotchicks:poor_rabbit_hide",
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "nbt": "{HideQuality:0}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "hotchicks:fair_rabbit_hide",
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "nbt": "{HideQuality:1}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "hotchicks:good_rabbit_hide",
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "nbt": "{HideQuality:2}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "hotchicks:prime_rabbit_hide",
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "nbt": "{HideQuality:3}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "hotchicks:choice_rabbit_hide",
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "nbt": "{HideQuality:4}"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "hotchicks:poor_rabbit_carcass",
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "nbt": "{CarcassQuality:0}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "hotchicks:fair_rabbit_carcass",
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "nbt": "{CarcassQuality:1}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "hotchicks:good_rabbit_carcass",
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "nbt": "{CarcassQuality:2}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "hotchicks:prime_rabbit_carcass",
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "nbt": "{CarcassQuality:3}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "hotchicks:choice_rabbit_carcass",
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "nbt": "{CarcassQuality:4}"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:rabbit_foot"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:killed_by_player"
+        },
+        {
+          "condition": "minecraft:random_chance_with_looting",
+          "chance": 0.1,
+          "looting_multiplier": 0.03
+        }
+      ]
+    }
+  ]
+}

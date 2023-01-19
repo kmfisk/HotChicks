@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "hotchicks:rabbit_quarter"
+  },
+  "result": "hotchicks:cooked_rabbit_quarter",
+  "experience": 0.35,
+  "cookingtime": 200
+}

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "hotchicks:good_rabbit_carcass"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:rabbit_quarter",
+    "count": 2
+  }
+}

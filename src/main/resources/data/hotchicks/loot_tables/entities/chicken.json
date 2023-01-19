@@ -6,6 +6,76 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "name": "hotchicks:poor_chicken_carcass",
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "nbt": "{CarcassQuality:0}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "hotchicks:fair_chicken_carcass",
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "nbt": "{CarcassQuality:1}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "hotchicks:good_chicken_carcass",
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "nbt": "{CarcassQuality:2}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "hotchicks:prime_chicken_carcass",
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "nbt": "{CarcassQuality:3}"
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "hotchicks:choice_chicken_carcass",
+          "conditions": [
+            {
+              "condition": "minecraft:entity_properties",
+              "entity": "this",
+              "predicate": {
+                "nbt": "{CarcassQuality:4}"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
           "functions": [
             {
               "function": "minecraft:set_count",

@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "hotchicks:item/spawnegg/spawn_egg_rabbit_new_zealand"
+  }
+}

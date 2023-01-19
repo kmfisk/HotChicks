@@ -8,6 +8,8 @@ public class HotFoods {
     // ENTITY DROPS
     public static final Food CHICKEN_QUARTER = (new Food.Builder()).nutrition(2).saturationMod(0.3F).effect(() -> new EffectInstance(Effects.HUNGER, 600, 0), 0.3F).meat().build();
     public static final Food COOKED_CHICKEN_QUARTER = (new Food.Builder()).nutrition(6).saturationMod(0.6F).meat().build();
+    public static final Food RABBIT_QUARTER = (new Food.Builder()).nutrition(2).saturationMod(0.3F).meat().build();
+    public static final Food COOKED_RABBIT_QUARTER = (new Food.Builder()).nutrition(6).saturationMod(0.6F).meat().build();
 
     // CROPS
     public static final Food LETTUCE = (new Food.Builder()).nutrition(3).saturationMod(0.3F).build();

@@ -26,10 +26,10 @@ import net.minecraft.world.server.ServerWorld;
 
 import java.util.Objects;
 
-public class HotSpawnEggItem extends Item {
+public class ChickenSpawnEggItem extends Item {
     private final ChickenBreeds breed;
 
-    public HotSpawnEggItem(ChickenBreeds breed) {
+    public ChickenSpawnEggItem(ChickenBreeds breed) {
         super(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP));
         this.breed = breed;
     }

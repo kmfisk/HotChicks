@@ -12,8 +12,10 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.Tags;
 
 import java.util.Random;
@@ -101,5 +103,11 @@ public abstract class LivestockEntity extends AnimalEntity {
         return (blockState.is(Blocks.GRASS_BLOCK) || blockState.is(Blocks.SNOW) || blockState.is(BlockTags.ICE)
                 || Tags.Blocks.SAND.contains(blockState.getBlock()) || Tags.Blocks.DIRT.contains(blockState.getBlock()))
                 && world.getRawBrightness(pos, 0) > 8;
+    }
+
+    protected Biome getBiome() {
+        int x = MathHelper.floor(this.getX());
+        int z = MathHelper.floor(this.getZ());
+        return this.level.getBiome(new BlockPos(x, 0, z));
     }
 }
