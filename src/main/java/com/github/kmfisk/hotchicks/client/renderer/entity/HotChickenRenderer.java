@@ -15,10 +15,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChickenModel> {
-    public static final String[] AMERAUCANAS = new String[]{"black", "blue", "bluewheaten", "brown", "buff", "lavender", "lightbrown"};
-    public static final String[] MARANS = new String[]{"blackbirchen", "blackcopper", "cuckoo", "goldcuckoo"};
+    public static final String[] AMERAUCANAS = new String[]{"black", "blue", "blue_wheaten", "brown", "buff", "lavender", "light_brown"};
+    public static final String[] MARANS = new String[]{"black_birchen", "black_copper", "cuckoo", "gold_cuckoo"};
     public static final String[] ORPINGTONS = new String[]{"black", "blue", "buff", "white"};
-    public static final String[] RHODE_ISLANDS = new String[]{"deepred", "lightred", "red"};
+    public static final String[] RHODE_ISLANDS = new String[]{"deep_red", "light_red", "red"};
     public static final String[] SILKIES = new String[]{"black", "blue", "buff", "partridge", "white"};
     public final HotChickenModel roosterModel;
     public final HotChickenModel roosterSilkieModel;
@@ -84,7 +84,7 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
                     break;
             }
 
-            return new ResourceLocation(HotChicks.MOD_ID, "textures/entity/chicken/chicks/chick_" + baby + ".png");
+            return new ResourceLocation(HotChicks.MOD_ID, "textures/entity/chicken/chick_" + baby + ".png");
         }
 
         switch (chicken.getBreedFromVariant(variant)) {
@@ -92,28 +92,28 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
                 location = "textures/entity/chicken/junglefowl/junglefowl" + sex;
                 break;
             case AMERAUCANA:
-                location = "textures/entity/chicken/ameraucanas/ameraucana_" + AMERAUCANAS[variant - 1] + sex;
+                location = "textures/entity/chicken/ameraucana/" + AMERAUCANAS[variant - 1] + sex;
                 break;
             case BARRED_ROCK:
-                location = "textures/entity/chicken/barred_rocks/barredrock" + sex;
+                location = "textures/entity/chicken/barred_rock/barred_rock" + sex;
                 break;
             case LEGHORN:
-                location = "textures/entity/chicken/leghorns/leghorn" + sex;
+                location = "textures/entity/chicken/leghorn/leghorn" + sex;
                 break;
             case MARANS:
-                location = "textures/entity/chicken/marans/marans_" + MARANS[variant - 10] + sex;
+                location = "textures/entity/chicken/marans/" + MARANS[variant - 10] + sex;
                 break;
             case OLIVE_EGGER:
-                location = "textures/entity/chicken/ameraucanas/ameraucana_" + AMERAUCANAS[variant - 14] + sex;
+                location = "textures/entity/chicken/ameraucana/" + AMERAUCANAS[variant - 14] + sex;
                 break;
             case ORPINGTON:
-                location = "textures/entity/chicken/orpingtons/orpington_" + ORPINGTONS[variant - 21] + sex;
+                location = "textures/entity/chicken/orpington/" + ORPINGTONS[variant - 21] + sex;
                 break;
             case RHODE_ISLAND_RED:
-                location = "textures/entity/chicken/rhode_islands/rhodeisland_" + RHODE_ISLANDS[variant - 25] + sex;
+                location = "textures/entity/chicken/rhode_island/" + RHODE_ISLANDS[variant - 25] + sex;
                 break;
             case SILKIE:
-                location = "textures/entity/chicken/silkies/silkie_" + SILKIES[variant - 28] + sex;
+                location = "textures/entity/chicken/silkie/" + SILKIES[variant - 28] + sex;
                 break;
         }
 

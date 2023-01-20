@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "hotchicks:item/spawnegg/spawn_egg_rabbit_flemish_giant"
+    "layer0": "hotchicks:item/spawn_egg/spawn_egg_rabbit_flemish_giant"
   }
 }
