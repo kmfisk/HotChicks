@@ -1,9 +1,9 @@
-package com.github.kmfisk.hotchicks.entity.base;
+package com.github.kmfisk.hotchicks.entity;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -13,11 +13,13 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.Tags;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
 public abstract class LivestockEntity extends AnimalEntity {
@@ -25,10 +27,12 @@ public abstract class LivestockEntity extends AnimalEntity {
     public static final DataParameter<Integer> VARIANT = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> TAMENESS = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> CARCASS_QUALITY = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
+    public static final DataParameter<Integer> HIDE_QUALITY = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> GROWTH_RATE = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
+    public static final DataParameter<Integer> LITTER_SIZE = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
 
-    public LivestockEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
-        super(type, worldIn);
+    public LivestockEntity(EntityType<? extends AnimalEntity> type, World world) {
+        super(type, world);
     }
 
     public void defineSynchedData() {
@@ -40,12 +44,23 @@ public abstract class LivestockEntity extends AnimalEntity {
         this.entityData.define(GROWTH_RATE, 0);
     }
 
-    public void setSex(boolean isMale) {
-        this.entityData.set(SEX, isMale);
+    @Override
+    public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficultyInstance, SpawnReason spawnReason, @Nullable ILivingEntityData entityData, @Nullable CompoundNBT nbt) {
+        setSex(Sex.fromBool(random.nextFloat() <= this.getMaleRatio()));
+        setVariant(0);
+        return entityData;
     }
 
+    public abstract float getMaleRatio();
+
+    public abstract int getMaxVariants();
+
     public Sex getSex() {
-        return Sex.getSex(entityData.get(SEX));
+        return Sex.fromBool(entityData.get(SEX));
+    }
+
+    public void setSex(Sex sex) {
+        this.entityData.set(SEX, sex.toBool());
     }
 
     public void setVariant(int variant) {
@@ -72,6 +87,14 @@ public abstract class LivestockEntity extends AnimalEntity {
         return this.entityData.get(CARCASS_QUALITY);
     }
 
+    public void setHideQuality(int hideQuality) {
+        this.entityData.set(HIDE_QUALITY, hideQuality);
+    }
+
+    public int getHideQuality() {
+        return this.entityData.get(HIDE_QUALITY);
+    }
+
     public void setGrowthRate(int growthRate) {
         this.entityData.set(GROWTH_RATE, growthRate);
     }
@@ -80,22 +103,30 @@ public abstract class LivestockEntity extends AnimalEntity {
         return this.entityData.get(GROWTH_RATE);
     }
 
-    public void addAdditionalSaveData(CompoundNBT compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putBoolean("Sex", this.getSex().toBool());
-        compound.putInt("Variant", this.getVariant());
-        compound.putInt("Tameness", this.getTameness());
-        compound.putInt("CarcassQuality", this.getCarcassQuality());
-        compound.putInt("GrowthRate", this.getGrowthRate());
+    public void setLitterSize(int litterSize) {
+        this.entityData.set(LITTER_SIZE, litterSize);
     }
 
-    public void readAdditionalSaveData(CompoundNBT compound) {
-        super.readAdditionalSaveData(compound);
-        this.setSex(compound.getBoolean("Sex"));
-        this.setVariant(compound.getInt("Variant"));
-        this.setTameness(compound.getInt("Tameness"));
-        this.setCarcassQuality(compound.getInt("CarcassQuality"));
-        this.setGrowthRate(compound.getInt("GrowthRate"));
+    public int getLitterSize() {
+        return this.entityData.get(LITTER_SIZE);
+    }
+
+    public void addAdditionalSaveData(CompoundNBT nbt) {
+        super.addAdditionalSaveData(nbt);
+        nbt.putBoolean("Sex", this.getSex().toBool());
+        nbt.putInt("Variant", this.getVariant());
+        nbt.putInt("Tameness", this.getTameness());
+        nbt.putInt("CarcassQuality", this.getCarcassQuality());
+        nbt.putInt("GrowthRate", this.getGrowthRate());
+    }
+
+    public void readAdditionalSaveData(CompoundNBT nbt) {
+        super.readAdditionalSaveData(nbt);
+        this.setSex(Sex.fromBool(nbt.getBoolean("Sex")));
+        this.setVariant(nbt.getInt("Variant"));
+        this.setTameness(nbt.getInt("Tameness"));
+        this.setCarcassQuality(nbt.getInt("CarcassQuality"));
+        this.setGrowthRate(nbt.getInt("GrowthRate"));
     }
 
     public static boolean checkLivestockSpawnRules(EntityType<? extends LivestockEntity> entityType, IServerWorld world, SpawnReason spawnReason, BlockPos pos, Random random) {
@@ -109,5 +140,18 @@ public abstract class LivestockEntity extends AnimalEntity {
         int x = MathHelper.floor(this.getX());
         int z = MathHelper.floor(this.getZ());
         return this.level.getBiome(new BlockPos(x, 0, z));
+    }
+
+    public enum Sex {
+        MALE,
+        FEMALE;
+
+        public static Sex fromBool(boolean value) {
+            return value ? MALE : FEMALE;
+        }
+
+        public boolean toBool() {
+            return this == MALE;
+        }
     }
 }

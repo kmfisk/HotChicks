@@ -1,14 +1,11 @@
 package com.github.kmfisk.hotchicks.entity;
 
+import com.github.kmfisk.hotchicks.client.HotSounds;
 import com.github.kmfisk.hotchicks.entity.base.ChickenBreeds;
+import com.github.kmfisk.hotchicks.entity.goal.ChickenBreedGoal;
 import com.github.kmfisk.hotchicks.entity.goal.LayEggsGoal;
 import com.github.kmfisk.hotchicks.entity.stats.ChickenStats;
-import com.github.kmfisk.hotchicks.HotChicks;
-import com.github.kmfisk.hotchicks.entity.base.LivestockEntity;
-import com.github.kmfisk.hotchicks.entity.base.Sex;
-import com.github.kmfisk.hotchicks.entity.goal.ChickenBreedGoal;
 import com.github.kmfisk.hotchicks.item.HotItems;
-import com.github.kmfisk.hotchicks.client.HotSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -25,9 +22,11 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
@@ -39,15 +38,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 
 public class HotChickenEntity extends LivestockEntity {
-    private static final DataParameter<Integer> EGG_SPEED = EntityDataManager.defineId(HotChickenEntity.class, DataSerializers.INT);
-    private static final DataParameter<Integer> EGG_TIMER = EntityDataManager.defineId(HotChickenEntity.class, DataSerializers.INT);
+    public static final DataParameter<Integer> EGG_SPEED = EntityDataManager.defineId(HotChickenEntity.class, DataSerializers.INT);
+    public static final DataParameter<Integer> EGG_TIMER = EntityDataManager.defineId(HotChickenEntity.class, DataSerializers.INT);
 
     private static final Ingredient TEMPTATION_ITEMS = Ingredient.of(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS, HotItems.CORN.get());
 
-    public final int maxVariants = 32;
-
-    public HotChickenEntity(EntityType<? extends AnimalEntity> type, World worldIn) {
-        super(type, worldIn);
+    public HotChickenEntity(EntityType<? extends AnimalEntity> type, World world) {
+        super(type, world);
     }
 
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
@@ -75,6 +72,23 @@ public class HotChickenEntity extends LivestockEntity {
         super.defineSynchedData();
         this.entityData.define(EGG_SPEED, 3);
         this.entityData.define(EGG_TIMER, 0);
+    }
+
+    @Override
+    public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficultyInstance, SpawnReason spawnReason, @Nullable ILivingEntityData entityData, @Nullable CompoundNBT nbt) {
+        entityData = super.finalizeSpawn(world, difficultyInstance, spawnReason, entityData, nbt);
+        this.setStats(new ChickenStats(random.nextInt(25) + random.nextInt(35), random.nextInt(3), random.nextInt(3), random.nextInt(5)));
+        return entityData;
+    }
+
+    @Override
+    public float getMaleRatio() {
+        return 0.33F;
+    }
+
+    @Override
+    public int getMaxVariants() {
+        return 32;
     }
 
     public void setEggSpeed(int eggSpeed) {
@@ -114,74 +128,31 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT compound) {
-        super.addAdditionalSaveData(compound);
-        compound.putInt("EggSpeed", this.getEggSpeed());
-        compound.putInt("EggTimer", this.getEggTimer());
+    public void addAdditionalSaveData(CompoundNBT nbt) {
+        super.addAdditionalSaveData(nbt);
+        nbt.putInt("EggSpeed", this.getEggSpeed());
+        nbt.putInt("EggTimer", this.getEggTimer());
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT compound) {
-        super.readAdditionalSaveData(compound);
-        this.setEggSpeed(compound.getInt("EggSpeed"));
-        this.setEggTimer(compound.getInt("EggTimer"));
-    }
-
-    @Override
-    public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficultyInstance, SpawnReason spawnReason, @Nullable ILivingEntityData entityData, @Nullable CompoundNBT nbt) {
-        entityData = super.finalizeSpawn(world, difficultyInstance, spawnReason, entityData, nbt);
-        this.setSex(random.nextInt(3) == 0);
-        this.setVariant(0);
-        this.setStats(new ChickenStats(random.nextInt(25) + random.nextInt(35), random.nextInt(3), random.nextInt(3), random.nextInt(3)));
-        return entityData;
+    public void readAdditionalSaveData(CompoundNBT nbt) {
+        super.readAdditionalSaveData(nbt);
+        this.setEggSpeed(nbt.getInt("EggSpeed"));
+        this.setEggTimer(nbt.getInt("EggTimer"));
     }
 
     public ChickenBreeds getBreedFromVariant(int variant) {
-        switch (variant) {
-            default:
-            case 0:
-                return ChickenBreeds.JUNGLEFOWL;
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 6:
-            case 7:
-                return ChickenBreeds.AMERAUCANA;
-            case 8:
-                return ChickenBreeds.BARRED_ROCK;
-            case 9:
-                return ChickenBreeds.LEGHORN;
-            case 10:
-            case 11:
-            case 12:
-            case 13:
-                return ChickenBreeds.MARANS;
-            case 14:
-            case 15:
-            case 16:
-            case 17:
-            case 18:
-            case 19:
-            case 20:
-                return ChickenBreeds.OLIVE_EGGER;
-            case 21:
-            case 22:
-            case 23:
-            case 24:
-                return ChickenBreeds.ORPINGTON;
-            case 25:
-            case 26:
-            case 27:
-                return ChickenBreeds.RHODE_ISLAND_RED;
-            case 28:
-            case 29:
-            case 30:
-            case 31:
-            case 32:
-                return ChickenBreeds.SILKIE;
-        }
+        if (variant == 0) return ChickenBreeds.JUNGLEFOWL;
+        if (variant <= 7) return ChickenBreeds.AMERAUCANA;
+        if (variant == 8) return ChickenBreeds.BARRED_ROCK;
+        if (variant == 9) return ChickenBreeds.LEGHORN;
+        if (variant <= 13) return ChickenBreeds.MARANS;
+        if (variant <= 20) return ChickenBreeds.OLIVE_EGGER;
+        if (variant <= 24) return ChickenBreeds.ORPINGTON;
+        if (variant <= 27) return ChickenBreeds.RHODE_ISLAND_RED;
+        if (variant <= 32) return ChickenBreeds.SILKIE;
+
+        return ChickenBreeds.JUNGLEFOWL;
     }
 
     @Override
@@ -272,14 +243,12 @@ public class HotChickenEntity extends LivestockEntity {
                 } else if (breed2 != ChickenBreeds.JUNGLEFOWL && !inheritMotherGenes) {
                     chickBreed = breed2;
                     chickVariant = colorMorph ? ChickenBreeds.randomFromBreed(this.random, chickBreed) : parent2.getVariant();
-                }
-
-                else {
+                } else {
                     if (this.random.nextFloat() <= 0.8) {
                         Biome biome = this.getBiome();
                         chickVariant = ChickenBreeds.randomBasedOnBiome(this.random, biome);
                     } else
-                        chickVariant = this.random.nextInt(this.maxVariants) + 1;
+                        chickVariant = this.random.nextInt(this.getMaxVariants()) + 1;
                     chickBreed = this.getBreedFromVariant(chickVariant);
                 }
             }
@@ -321,7 +290,7 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     @Override
-    public boolean causeFallDamage(float p_225503_1_, float p_225503_2_) {
+    public boolean causeFallDamage(float fallDistance, float damageMultiplier) {
         return false;
     }
 

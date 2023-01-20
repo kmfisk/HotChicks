@@ -4,6 +4,7 @@ import com.github.kmfisk.hotchicks.block.HotBlocks;
 import com.github.kmfisk.hotchicks.block.NestBlock;
 import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
 import com.github.kmfisk.hotchicks.entity.HotEntities;
+import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import com.github.kmfisk.hotchicks.inventory.NestContainer;
 import com.github.kmfisk.hotchicks.item.HotEggItem;
 import com.github.kmfisk.hotchicks.block.entity.HotTileEntities;
@@ -147,7 +148,7 @@ public class NestTileEntity extends LockableLootTileEntity implements ITickableT
 
                     chicken.setAge(-24000); //todo chick age timer
                     chicken.setStats(HotEggItem.getStats(item));
-                    chicken.setSex(chicken.getRandom().nextBoolean());
+                    chicken.setSex(LivestockEntity.Sex.fromBool(chicken.getRandom().nextBoolean()));
                     chicken.setVariant(HotEggItem.getVariant(item));
 
                     barrelContents.set(counter, ItemStack.EMPTY);

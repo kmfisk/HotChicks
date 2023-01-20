@@ -1,11 +1,8 @@
 package com.github.kmfisk.hotchicks.entity.stats;
 
 public class RabbitStats extends Stats {
-    public int litterSize;
-
     public RabbitStats(int tameness, int carcassQuality, int hideQuality, int growthRate, int litterSize) {
-        super(tameness, carcassQuality, hideQuality, growthRate);
-        this.litterSize = litterSize;
+        super(tameness, carcassQuality, hideQuality, growthRate, litterSize);
     }
 
     @Override
@@ -29,11 +26,11 @@ public class RabbitStats extends Stats {
 
     @Override
     public Stats mutate(double chance) {
-        Stats stats = super.mutate(chance);
-        RabbitStats rabbitStats = new RabbitStats(stats.tameness, stats.carcassQuality, stats.hideQuality, stats.growthRate, litterSize);
+        Stats rabbitStats = super.mutate(chance);
+//        RabbitStats rabbitStats = new RabbitStats(stats.tameness, stats.carcassQuality, stats.hideQuality, stats.growthRate, litterSize);
 
-        if (this.rand.nextFloat() <= chance)
-            rabbitStats.litterSize = this.rand.nextFloat() <= 0.8 ? Math.min(4, rabbitStats.litterSize + 1) : Math.max(0, rabbitStats.litterSize - 1);
+        rabbitStats.hideQuality = mutate(StatType.HIDE_QUALITY, rabbitStats.hideQuality, chance);
+        rabbitStats.litterSize = mutate(StatType.LITTER_SIZE, rabbitStats.litterSize, chance);
 
         return rabbitStats;
     }
