@@ -1,6 +1,7 @@
 package com.github.kmfisk.hotchicks.item;
 
-import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
+import com.github.kmfisk.hotchicks.client.gui.StudBookInfo;
+import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ReadBookScreen;
 import net.minecraft.entity.LivingEntity;
@@ -20,16 +21,16 @@ public class StudBookItem extends Item {
 
     @Override
     public ActionResultType interactLivingEntity(ItemStack stack, PlayerEntity player, LivingEntity target, Hand hand) {
-        if (target instanceof HotChickenEntity) {
-            HotChickenEntity chicken = (HotChickenEntity) target;
+        if (target instanceof LivestockEntity) {
+            LivestockEntity livestock = (LivestockEntity) target;
             if (player.level.isClientSide)
-                this.openStudBook(chicken);
+                this.openStudBook(livestock);
         }
         return super.interactLivingEntity(stack, player, target, hand);
     }
 
     @OnlyIn(Dist.CLIENT)
-    public void openStudBook(HotChickenEntity chicken) {
-        Minecraft.getInstance().setScreen(new ReadBookScreen(new StudBookInfo(chicken)));
+    public void openStudBook(LivestockEntity livestock) {
+        Minecraft.getInstance().setScreen(new ReadBookScreen(new StudBookInfo(livestock)));
     }
 }

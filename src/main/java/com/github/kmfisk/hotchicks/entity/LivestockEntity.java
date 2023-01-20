@@ -48,7 +48,7 @@ public abstract class LivestockEntity extends AnimalEntity {
     public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficultyInstance, SpawnReason spawnReason, @Nullable ILivingEntityData entityData, @Nullable CompoundNBT nbt) {
         setSex(Sex.fromBool(random.nextFloat() <= this.getMaleRatio()));
         setVariant(0);
-        return entityData;
+        return super.finalizeSpawn(world, difficultyInstance, spawnReason, entityData, nbt);
     }
 
     public abstract float getMaleRatio();

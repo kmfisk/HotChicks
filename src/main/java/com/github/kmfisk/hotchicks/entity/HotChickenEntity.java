@@ -77,7 +77,7 @@ public class HotChickenEntity extends LivestockEntity {
     @Override
     public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficultyInstance, SpawnReason spawnReason, @Nullable ILivingEntityData entityData, @Nullable CompoundNBT nbt) {
         entityData = super.finalizeSpawn(world, difficultyInstance, spawnReason, entityData, nbt);
-        this.setStats(new ChickenStats(random.nextInt(25) + random.nextInt(35), random.nextInt(3), random.nextInt(3), random.nextInt(5)));
+        setStats(new ChickenStats(random.nextInt(25) + random.nextInt(35), random.nextInt(3), random.nextInt(3), random.nextInt(5)));
         return entityData;
     }
 
@@ -108,18 +108,18 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     public void setStats(ChickenStats stats) {
-        this.setTameness(stats.tameness);
-        this.setCarcassQuality(stats.carcassQuality);
-        this.setGrowthRate(stats.growthRate);
-        this.setEggSpeed(stats.eggSpeed);
+        setTameness(stats.tameness);
+        setCarcassQuality(stats.carcassQuality);
+        setGrowthRate(stats.growthRate);
+        setEggSpeed(stats.eggSpeed);
     }
 
     public ChickenStats getStats() {
         return new ChickenStats(
-                this.getTameness(),
-                this.getCarcassQuality(),
-                this.getGrowthRate(),
-                this.getEggSpeed()
+                getTameness(),
+                getCarcassQuality(),
+                getGrowthRate(),
+                getEggSpeed()
         );
     }
 

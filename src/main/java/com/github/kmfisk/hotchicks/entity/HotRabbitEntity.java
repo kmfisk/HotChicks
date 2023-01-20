@@ -77,20 +77,20 @@ public class HotRabbitEntity extends LivestockEntity {
     }
 
     public void setStats(RabbitStats stats) {
-        this.setTameness(stats.tameness);
-        this.setCarcassQuality(stats.carcassQuality);
-        this.setHideQuality(stats.hideQuality);
-        this.setGrowthRate(stats.growthRate);
-        this.setLitterSize(stats.litterSize);
+        setTameness(stats.tameness);
+        setCarcassQuality(stats.carcassQuality);
+        setHideQuality(stats.hideQuality);
+        setGrowthRate(stats.growthRate);
+        setLitterSize(stats.litterSize);
     }
 
     public RabbitStats getStats() {
         return new RabbitStats(
-                this.getTameness(),
-                this.getCarcassQuality(),
-                this.getHideQuality(),
-                this.getGrowthRate(),
-                this.getLitterSize()
+                getTameness(),
+                getCarcassQuality(),
+                getHideQuality(),
+                getGrowthRate(),
+                getLitterSize()
         );
     }
 
