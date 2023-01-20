@@ -193,11 +193,7 @@ public class HotRabbitEntity extends LivestockEntity {
             RabbitBreeds breed2 = parent.getBreedFromVariant(parent.getVariant());
             RabbitStats stats = (RabbitStats) getStats().average(parent.getStats(), true).mutate(0.2);
 
-            child.setBaby(true);
-            child.setStats(stats);
-            child.setSex(Sex.fromBool(random.nextBoolean()));
-
-            if (stats.tameness < 85) child.setVariant(0);
+            if (stats.tameness < 95) child.setVariant(0);
             else {
                 int childVariant;
                 RabbitBreeds childBreed;
@@ -236,6 +232,10 @@ public class HotRabbitEntity extends LivestockEntity {
 
                 child.setVariant(childVariant);
             }
+
+            child.setBaby(true);
+            child.setStats(stats);
+            child.setSex(Sex.fromBool(random.nextBoolean()));
 
             child.moveTo(getX(), getY(), getZ(), 0.0F, 0.0F); // todo: pregnancy
             world.addFreshEntityWithPassengers(child);
