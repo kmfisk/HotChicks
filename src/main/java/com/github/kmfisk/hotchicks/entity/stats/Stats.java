@@ -59,6 +59,13 @@ public class Stats {
         return stat;
     }
 
+    public int randomLitterSize() {
+        int chance = rand.nextInt(100);
+        if (chance < 70) return litterSize;
+        else if (chance < 95) return litterSize == 0 ? 0 : rand.nextInt(litterSize);
+        else return Math.min(StatType.LITTER_SIZE.max, litterSize + 1);
+    }
+
     public enum StatType {
         TAMENESS(0, 100),
         CARCASS_QUALITY(0, 4),

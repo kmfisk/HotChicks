@@ -41,7 +41,7 @@ public class HotChickenEntity extends LivestockEntity {
     public static final DataParameter<Integer> EGG_SPEED = EntityDataManager.defineId(HotChickenEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> EGG_TIMER = EntityDataManager.defineId(HotChickenEntity.class, DataSerializers.INT);
 
-    private static final Ingredient TEMPTATION_ITEMS = Ingredient.of(Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS, HotItems.CORN.get());
+    private static final Ingredient TEMPTATION_ITEMS = Ingredient.of(HotItems.CORN.get(), Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);
 
     public HotChickenEntity(EntityType<? extends AnimalEntity> type, World world) {
         super(type, world);
@@ -88,7 +88,7 @@ public class HotChickenEntity extends LivestockEntity {
 
     @Override
     public int getMaxVariants() {
-        return 32;
+        return ChickenBreeds.MAX_VARIANTS;
     }
 
     public void setEggSpeed(int eggSpeed) {

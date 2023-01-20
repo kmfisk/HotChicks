@@ -10,63 +10,67 @@ import java.util.Random;
 import java.util.Set;
 
 public enum ChickenBreeds {
-    JUNGLEFOWL(50, 0, 0, 0),
-    LEGHORN(85, 1, 2, 7),
-    RHODE_ISLAND_RED(85, 3, 2, 4),
-    BARRED_ROCK(85, 3, 3, 5),
-    ORPINGTON(85, 3, 3, 3),
-    AMERAUCANA(85, 2, 1, 4),
-    OLIVE_EGGER(85, 2, 1, 4),
-    MARANS(85, 3, 1, 4),
-    SILKIE(85, 3, 1, 3);
+    JUNGLEFOWL(50, 0, 0, 0, 1),
+    AMERAUCANA(85, 2, 1, 4, 7),
+    BARRED_ROCK(85, 3, 3, 5, 1),
+    LEGHORN(85, 1, 2, 7, 1),
+    MARANS(85, 3, 1, 4, 4),
+    OLIVE_EGGER(85, 2, 1, 4, 7),
+    ORPINGTON(85, 3, 3, 3, 4),
+    RHODE_ISLAND_RED(85, 3, 2, 4, 3),
+    SILKIE(85, 3, 1, 3, 5);
 
+    public static final int MAX_VARIANTS = 32;
     public final ChickenStats stats;
+    public final int variants;
 
-    ChickenBreeds(int tameness, int carcassQuality, int growthRate, int eggSpeed) {
+    ChickenBreeds(int tameness, int carcassQuality, int growthRate, int eggSpeed, int variants) {
         this.stats = new ChickenStats(tameness, carcassQuality, growthRate, eggSpeed);
+        this.variants = variants;
     }
 
     public static int randomFromBreed(Random random, ChickenBreeds breeds) {
         switch (breeds) {
-            default: case JUNGLEFOWL:
+            default:
+            case JUNGLEFOWL:
                 return 0;
             case AMERAUCANA:
-                return random.nextInt(7) + 1;
+                return random.nextInt(AMERAUCANA.variants) + 1;
             case BARRED_ROCK:
                 return 8;
             case LEGHORN:
                 return 9;
             case MARANS:
-                return random.nextInt(4) + 10;
+                return random.nextInt(MARANS.variants) + 10;
             case OLIVE_EGGER:
-                return random.nextInt(7) + 14;
+                return random.nextInt(OLIVE_EGGER.variants) + 14;
             case ORPINGTON:
-                return random.nextInt(4) + 21;
+                return random.nextInt(ORPINGTON.variants) + 21;
             case RHODE_ISLAND_RED:
-                return random.nextInt(3) + 25;
+                return random.nextInt(RHODE_ISLAND_RED.variants) + 25;
             case SILKIE:
-                return random.nextInt(5) + 28;
+                return random.nextInt(SILKIE.variants) + 28;
         }
     }
 
     public static int randomBasedOnBiome(Random random, Biome biome) {
         Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(RegistryKey.create(Registry.BIOME_REGISTRY, biome.getRegistryName()));
         if (biomeTypes.contains(BiomeDictionary.Type.PLAINS) && !biomeTypes.contains(BiomeDictionary.Type.HOT) && !biomeTypes.contains(BiomeDictionary.Type.COLD))
-            return 9; // LEGHORN;
+            return randomFromBreed(random, LEGHORN);
         if (biomeTypes.contains(BiomeDictionary.Type.FOREST) && !biomeTypes.contains(BiomeDictionary.Type.COLD) && !biomeTypes.contains(BiomeDictionary.Type.DENSE) && !biomeTypes.contains(BiomeDictionary.Type.MOUNTAIN))
-            return random.nextInt(3) + 25; // RHODE_ISLAND_RED;
+            return randomFromBreed(random, RHODE_ISLAND_RED);
         if (biomeTypes.contains(BiomeDictionary.Type.FOREST) && biomeTypes.contains(BiomeDictionary.Type.SPOOKY))
-            return 8; // BARRED_ROCK;
+            return randomFromBreed(random, BARRED_ROCK);
         if (biomeTypes.contains(BiomeDictionary.Type.HOT) && biomeTypes.contains(BiomeDictionary.Type.SANDY))
-            return random.nextInt(4) + 21; // ORPINGTON;
+            return randomFromBreed(random, ORPINGTON);
         if (biomeTypes.contains(BiomeDictionary.Type.MOUNTAIN) && !biomeTypes.contains(BiomeDictionary.Type.DRY))
-            return random.nextInt(7) + 1; // AMERAUCANA;
+            return randomFromBreed(random, AMERAUCANA);
         if (biomeTypes.contains(BiomeDictionary.Type.JUNGLE))
-            return random.nextInt(7) + 14; // OLIVE_EGGER;
+            return randomFromBreed(random, OLIVE_EGGER);
         if (biomeTypes.contains(BiomeDictionary.Type.SWAMP))
-            return random.nextInt(4) + 10; // MARANS;
+            return randomFromBreed(random, MARANS);
         if (biomeTypes.contains(BiomeDictionary.Type.SNOWY))
-            return random.nextInt(5) + 28; // SILKIE;
-        return random.nextInt(32) + 1;
+            return randomFromBreed(random, SILKIE);
+        return random.nextInt(MAX_VARIANTS) + 1;
     }
 }

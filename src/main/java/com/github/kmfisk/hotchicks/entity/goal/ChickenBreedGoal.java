@@ -1,7 +1,7 @@
 package com.github.kmfisk.hotchicks.entity.goal;
 
 import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
-import com.github.kmfisk.hotchicks.entity.base.Sex;
+import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import net.minecraft.entity.EntityPredicate;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.world.World;
@@ -34,11 +34,11 @@ public class ChickenBreedGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (!this.animal.isInLove() || this.animal.getSex() != Sex.FEMALE)
+        if (!this.animal.isInLove() || this.animal.getSex() != LivestockEntity.Sex.FEMALE)
             return false;
         else {
             this.targetMate = this.getNearbyMate();
-            return this.targetMate != null && this.targetMate.getSex() == Sex.MALE;
+            return this.targetMate != null && this.targetMate.getSex() == LivestockEntity.Sex.MALE;
         }
     }
 

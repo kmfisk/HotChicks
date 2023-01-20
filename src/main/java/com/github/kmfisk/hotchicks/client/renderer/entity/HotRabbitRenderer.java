@@ -3,7 +3,7 @@ package com.github.kmfisk.hotchicks.client.renderer.entity;
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.client.renderer.entity.model.HotRabbitModel;
 import com.github.kmfisk.hotchicks.entity.HotRabbitEntity;
-import com.github.kmfisk.hotchicks.entity.base.Sex;
+import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -32,7 +32,7 @@ public class HotRabbitRenderer extends MobRenderer<HotRabbitEntity, HotRabbitMod
     @Override
     public ResourceLocation getTextureLocation(HotRabbitEntity rabbit) {
         String location;
-        String sex = rabbit.getSex() == Sex.MALE ? "_buck.png" : "_doe.png";
+        String sex = rabbit.getSex() == LivestockEntity.Sex.MALE ? "_buck.png" : "_doe.png";
         int variant = rabbit.getVariant();
 
         switch (rabbit.getBreedFromVariant(variant)) {

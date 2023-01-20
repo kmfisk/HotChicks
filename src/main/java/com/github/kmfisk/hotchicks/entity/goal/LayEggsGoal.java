@@ -3,7 +3,7 @@ package com.github.kmfisk.hotchicks.entity.goal;
 import com.github.kmfisk.hotchicks.block.entity.NestTileEntity;
 import com.github.kmfisk.hotchicks.block.HotBlocks;
 import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
-import com.github.kmfisk.hotchicks.entity.base.Sex;
+import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.item.ItemStack;
@@ -38,7 +38,7 @@ public class LayEggsGoal extends MoveToBlockGoal {
 
     @Override
     public boolean canUse() {
-        if (entity.getSex() != Sex.FEMALE || entity.getEggTimer() < entity.getMaxEggTimer() || entity.getMainHandItem().isEmpty())
+        if (entity.getSex() != LivestockEntity.Sex.FEMALE || entity.getEggTimer() < entity.getMaxEggTimer() || entity.getMainHandItem().isEmpty())
             return false;
         else if (this.nextStartTick > 0) {
             --this.nextStartTick;

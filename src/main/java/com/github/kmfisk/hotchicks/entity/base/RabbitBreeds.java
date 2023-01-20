@@ -10,57 +10,57 @@ import java.util.Random;
 import java.util.Set;
 
 public enum RabbitBreeds {
-    COTTONTAIL(50, 0, 0, 0, 0),
-    AMERICAN_CHINCHILLA(95, 2, 3, 2, 1),
-    CALIFORNIA(95, 2, 1, 2, 2),
-    DUTCH(95, 1, 1, 1, 4),
-    FLEMISH_GIANT(95, 4, 1, 0, 1),
-    NEW_ZEALAND(95, 3, 1, 3, 3),
-    REX(95, 1, 4, 1, 2);
+    COTTONTAIL(50, 0, 0, 0, 0, 1),
+    AMERICAN_CHINCHILLA(95, 2, 3, 2, 1, 2),
+    CALIFORNIA(95, 2, 1, 2, 2, 1),
+    DUTCH(95, 1, 1, 1, 4, 6),
+    FLEMISH_GIANT(95, 4, 1, 0, 1, 5),
+    NEW_ZEALAND(95, 3, 1, 3, 3, 3),
+    REX(95, 1, 4, 1, 2, 9);
 
+    public static final int MAX_VARIANTS = 26;
     public final RabbitStats stats;
+    public final int variants;
 
-    RabbitBreeds(int tameness, int carcassQuality, int hideQuality, int growthRate, int litterSize) {
+    RabbitBreeds(int tameness, int carcassQuality, int hideQuality, int growthRate, int litterSize, int variants) {
         this.stats = new RabbitStats(tameness, carcassQuality, hideQuality, growthRate, litterSize);
+        this.variants = variants;
     }
 
     public static int randomFromBreed(Random random, RabbitBreeds breeds) {
         switch (breeds) {
-            default: case COTTONTAIL:
+            default:
+            case COTTONTAIL:
                 return 0;
             case AMERICAN_CHINCHILLA:
-                return random.nextInt(2) + 1;
+                return random.nextInt(AMERICAN_CHINCHILLA.variants) + 1;
             case CALIFORNIA:
                 return 3;
             case DUTCH:
-                return random.nextInt(6) + 4;
+                return random.nextInt(DUTCH.variants) + 4;
             case FLEMISH_GIANT:
-                return random.nextInt(5) + 10;
+                return random.nextInt(FLEMISH_GIANT.variants) + 10;
             case NEW_ZEALAND:
-                return random.nextInt(3) + 15;
+                return random.nextInt(NEW_ZEALAND.variants) + 15;
             case REX:
-                return random.nextInt(9) + 18;
+                return random.nextInt(REX.variants) + 18;
         }
     }
 
-    public static int randomBasedOnBiome(Random random, Biome biome) { // todo
+    public static int randomBasedOnBiome(Random random, Biome biome) {
         Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(RegistryKey.create(Registry.BIOME_REGISTRY, biome.getRegistryName()));
-        if (biomeTypes.contains(BiomeDictionary.Type.PLAINS) && !biomeTypes.contains(BiomeDictionary.Type.HOT) && !biomeTypes.contains(BiomeDictionary.Type.COLD))
-            return 9; // LEGHORN;
-        if (biomeTypes.contains(BiomeDictionary.Type.FOREST) && !biomeTypes.contains(BiomeDictionary.Type.COLD) && !biomeTypes.contains(BiomeDictionary.Type.DENSE) && !biomeTypes.contains(BiomeDictionary.Type.MOUNTAIN))
-            return random.nextInt(3) + 25; // RHODE_ISLAND_RED;
-        if (biomeTypes.contains(BiomeDictionary.Type.FOREST) && biomeTypes.contains(BiomeDictionary.Type.SPOOKY))
-            return 8; // BARRED_ROCK;
-        if (biomeTypes.contains(BiomeDictionary.Type.HOT) && biomeTypes.contains(BiomeDictionary.Type.SANDY))
-            return random.nextInt(4) + 21; // ORPINGTON;
-        if (biomeTypes.contains(BiomeDictionary.Type.MOUNTAIN) && !biomeTypes.contains(BiomeDictionary.Type.DRY))
-            return random.nextInt(7) + 1; // AMERAUCANA;
+        if (biomeTypes.contains(BiomeDictionary.Type.COLD))
+            return randomFromBreed(random, AMERICAN_CHINCHILLA);
         if (biomeTypes.contains(BiomeDictionary.Type.JUNGLE))
-            return random.nextInt(7) + 14; // OLIVE_EGGER;
-        if (biomeTypes.contains(BiomeDictionary.Type.SWAMP))
-            return random.nextInt(4) + 10; // MARANS;
-        if (biomeTypes.contains(BiomeDictionary.Type.SNOWY))
-            return random.nextInt(5) + 28; // SILKIE;
-        return random.nextInt(26) + 1;
+            return randomFromBreed(random, CALIFORNIA);
+        if (biomeTypes.contains(BiomeDictionary.Type.HOT) && !biomeTypes.contains(BiomeDictionary.Type.JUNGLE) && !biomeTypes.contains(BiomeDictionary.Type.OCEAN))
+            return randomFromBreed(random, DUTCH);
+        if (biomeTypes.contains(BiomeDictionary.Type.MOUNTAIN) && !biomeTypes.contains(BiomeDictionary.Type.HOT) && !biomeTypes.contains(BiomeDictionary.Type.COLD))
+            return randomFromBreed(random, FLEMISH_GIANT);
+        if (biomeTypes.contains(BiomeDictionary.Type.PLAINS) && !biomeTypes.contains(BiomeDictionary.Type.HOT) && !biomeTypes.contains(BiomeDictionary.Type.COLD))
+            return randomFromBreed(random, NEW_ZEALAND);
+        if (biomeTypes.contains(BiomeDictionary.Type.FOREST) && !biomeTypes.contains(BiomeDictionary.Type.HOT) && !biomeTypes.contains(BiomeDictionary.Type.COLD))
+            return randomFromBreed(random, REX);
+        return random.nextInt(MAX_VARIANTS) + 1;
     }
 }

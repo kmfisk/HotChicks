@@ -3,8 +3,8 @@ package com.github.kmfisk.hotchicks.client.renderer.entity;
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.client.renderer.entity.model.HotChickenModel;
 import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
+import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import com.github.kmfisk.hotchicks.entity.base.ChickenBreeds;
-import com.github.kmfisk.hotchicks.entity.base.Sex;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -41,9 +41,9 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
         if (isChild)
             model = chickModel;
         else if (chicken.getBreedFromVariant(chicken.getVariant()) == ChickenBreeds.SILKIE)
-            model = chicken.getSex() == Sex.MALE ? roosterSilkieModel : henSilkieModel;
+            model = chicken.getSex() == LivestockEntity.Sex.MALE ? roosterSilkieModel : henSilkieModel;
         else
-            model = chicken.getSex() == Sex.MALE ? roosterModel : henModel;
+            model = chicken.getSex() == LivestockEntity.Sex.MALE ? roosterModel : henModel;
 
         super.render(chicken, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
@@ -51,7 +51,7 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
     @Override
     public ResourceLocation getTextureLocation(HotChickenEntity chicken) {
         String location;
-        String sex = chicken.getSex() == Sex.MALE ? "_rooster.png" : "_hen.png";
+        String sex = chicken.getSex() == LivestockEntity.Sex.MALE ? "_rooster.png" : "_hen.png";
         int variant = chicken.getVariant();
 
         if (chicken.isBaby()) {
