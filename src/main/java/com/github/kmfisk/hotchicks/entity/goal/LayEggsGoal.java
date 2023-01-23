@@ -22,7 +22,7 @@ public class LayEggsGoal extends Goal {
             TileEntity tileEntity = chicken.level.getBlockEntity(chicken.getNestPos());
             if (tileEntity instanceof NestTileEntity) {
                 NestTileEntity nestTileEntity = (NestTileEntity) tileEntity;
-                if (nestTileEntity.getItems().contains(ItemStack.EMPTY)) return true; // todo
+                if (nestTileEntity.getItems().contains(ItemStack.EMPTY)) return true;
                 chicken.setNestPos(null);
             }
         }
@@ -43,7 +43,7 @@ public class LayEggsGoal extends Goal {
             chicken.setEggTimer(0);
             ItemStack stack = chicken.getMainHandItem();
 
-            nestTileEntity.barrelContents.set(0, stack); // TODO: Make proper
+            nestTileEntity.setItem(0, stack); // TODO: Make proper
             chicken.setItemInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
 
             if (!chicken.level.isClientSide) {

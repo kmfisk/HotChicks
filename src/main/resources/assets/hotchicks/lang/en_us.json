@@ -28,7 +28,9 @@
 
   "__comment": "Blocks",
   "block.hotchicks.nest_box": "Nest Box",
+  "container.hotchicks.nest_box": "Nest Box",
   "block.hotchicks.nest": "Nest",
+  "container.hotchicks.nest": "Nest",
   "block.hotchicks.wooden_trough": "Wooden Trough",
   "block.hotchicks.metal_trough": "Metal Trough",
   "block.hotchicks.trellis": "Trellis",

@@ -171,8 +171,7 @@ public class HotChickenEntity extends LivestockEntity {
     public boolean doesNestHaveSpace(BlockPos nestPos) {
         TileEntity tileEntity = level.getBlockEntity(nestPos);
         if (tileEntity instanceof NestTileEntity)
-            return ((NestTileEntity) tileEntity).getItems().contains(ItemStack.EMPTY);
-            //return ((NestTileEntity) tileEntity).getItems().size() < 5; // todo
+            return ((NestTileEntity) tileEntity).getItems().stream().anyMatch(ItemStack::isEmpty);
         else return false;
     }
 
@@ -318,8 +317,8 @@ public class HotChickenEntity extends LivestockEntity {
 
         this.setItemInHand(Hand.MAIN_HAND, stack);
 
-        this.setAge(6000); // todo mate timers
-        animal.setAge(6000);
+        this.setAge(20); // todo mate timers
+        animal.setAge(20);
         this.resetLove();
         animal.resetLove();
 

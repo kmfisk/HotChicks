@@ -14,7 +14,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class HotContainerTypes {
     public static final DeferredRegister<ContainerType<?>> REGISTRAR = DeferredRegister.create(ForgeRegistries.CONTAINERS, HotChicks.MOD_ID);
 
-    public static final RegistryObject<ContainerType<NestContainer>> NEST = REGISTRAR.register("nest_container", NestContainer::createCraftingContainer);
+    public static final RegistryObject<ContainerType<NestContainer>> NEST = REGISTRAR.register("nest", () -> new ContainerType<>(NestContainer::new));
     public static final RegistryObject<ContainerType<TroughContainer>> TROUGH_SINGLE = REGISTRAR.register("trough_single", () -> new ContainerType<>(TroughContainer::createGenericSingle));
     public static final RegistryObject<ContainerType<TroughContainer>> TROUGH_DOUBLE = REGISTRAR.register("trough_double", () -> new ContainerType<>(TroughContainer::createGenericDouble));
     public static final RegistryObject<ContainerType<TroughContainer>> TROUGH_DOUBLE_METAL = REGISTRAR.register("trough_double_metal", () -> new ContainerType<>(TroughContainer::createGenericDoubleMetal));
