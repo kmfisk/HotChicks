@@ -3,7 +3,6 @@ package com.github.kmfisk.hotchicks.block;
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.block.trees.*;
 import com.github.kmfisk.hotchicks.item.HotItems;
-import com.github.kmfisk.hotchicks.block.trees.*;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderType;
@@ -22,7 +21,7 @@ public class HotBlocks {
     public static final DeferredRegister<Block> REGISTRAR = DeferredRegister.create(ForgeRegistries.BLOCKS, HotChicks.MOD_ID);
 
     public static final RegistryObject<Block> NEST_BOX = registerWithItem("nest_box", () -> new NestBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD)));
-    public static final RegistryObject<Block> NEST = registerWithItem("nest", () -> new StickNestBlock(AbstractBlock.Properties.of(Material.GRASS).strength(0.5F).sound(SoundType.GRASS).noOcclusion()));
+    public static final RegistryObject<Block> NEST = registerWithItem("nest", () -> new NestBoxBlock(AbstractBlock.Properties.of(Material.GRASS).strength(0.5F).sound(SoundType.GRASS).noOcclusion()));
     public static final RegistryObject<Block> TROUGH_BLOCK = registerWithItem("wooden_trough", () -> new TroughBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD)));
     public static final RegistryObject<Block> METAL_TROUGH_BLOCK = registerWithItem("metal_trough", () -> new MetalTroughBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD)));
 //    public static final RegistryObject<Block> FOOD_CROCK = registerWithItem("food_crock", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));

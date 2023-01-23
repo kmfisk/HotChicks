@@ -1,6 +1,5 @@
 package com.github.kmfisk.hotchicks.entity.goal;
 
-import com.github.kmfisk.hotchicks.block.HotBlocks;
 import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import net.minecraft.entity.ai.goal.Goal;
@@ -37,7 +36,7 @@ public class UpdateNestGoal extends Goal {
                 for (int i1 = 0; i1 <= l; i1 = i1 > 0 ? -i1 : 1 - i1) {
                     for (int j1 = i1 < l && i1 > -l ? l : 0; j1 <= l; j1 = j1 > 0 ? -j1 : 1 - j1) {
                         blockpos$mutable.setWithOffset(chickenPos, i1, k - 1, j1);
-                        if (chicken.isWithinRestriction(blockpos$mutable) && isValidTarget(blockpos$mutable)) {
+                        if (chicken.isWithinRestriction(blockpos$mutable) && chicken.isValidNestBlock(blockpos$mutable)) {
                             if (!chicken.goToNestGoal.isTargetBlacklisted(blockpos$mutable)) {
                                 chicken.setNestPos(blockpos$mutable);
                                 return;
@@ -48,9 +47,5 @@ public class UpdateNestGoal extends Goal {
                 }
             }
         }
-    }
-
-    protected boolean isValidTarget(BlockPos pos) {
-        return chicken.level.getBlockState(pos).is(HotBlocks.NEST.get()) && chicken.doesNestHaveSpace(pos) && chicken.level.isEmptyBlock(pos.above());
     }
 }

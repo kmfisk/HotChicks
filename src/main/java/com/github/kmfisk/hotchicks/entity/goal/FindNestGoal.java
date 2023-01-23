@@ -1,6 +1,5 @@
 package com.github.kmfisk.hotchicks.entity.goal;
 
-import com.github.kmfisk.hotchicks.block.HotBlocks;
 import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.ai.goal.Goal;
@@ -29,7 +28,7 @@ public class FindNestGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return chicken.getNestPos() != null && !chicken.hasRestriction() && chicken.wantsToLayEggs() && !hasReachedTarget(chicken.getNestPos()) && chicken.level.getBlockState(chicken.getNestPos()).is(HotBlocks.NEST.get());
+        return chicken.getNestPos() != null && !chicken.hasRestriction() && chicken.wantsToLayEggs() && !hasReachedTarget(chicken.getNestPos()) && chicken.isValidNestBlock(chicken.getNestPos());
     }
 
     @Override

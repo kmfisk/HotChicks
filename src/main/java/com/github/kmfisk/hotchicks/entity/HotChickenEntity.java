@@ -1,11 +1,13 @@
 package com.github.kmfisk.hotchicks.entity;
 
+import com.github.kmfisk.hotchicks.block.HotBlocks;
 import com.github.kmfisk.hotchicks.block.entity.NestTileEntity;
 import com.github.kmfisk.hotchicks.client.HotSounds;
 import com.github.kmfisk.hotchicks.entity.base.ChickenBreeds;
 import com.github.kmfisk.hotchicks.entity.goal.*;
 import com.github.kmfisk.hotchicks.entity.stats.ChickenStats;
 import com.github.kmfisk.hotchicks.item.HotItems;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -14,6 +16,7 @@ import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
@@ -23,19 +26,19 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.stats.Stats;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.GameRules;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 
 import javax.annotation.Nullable;
 
@@ -175,6 +178,11 @@ public class HotChickenEntity extends LivestockEntity {
         else return false;
     }
 
+    public boolean isValidNestBlock(BlockPos pos) {
+        if (level.getBlockState(pos).is(HotBlocks.NEST_BOX.get())) return doesNestHaveSpace(pos);
+        return level.getBlockState(pos).is(HotBlocks.NEST.get()) && doesNestHaveSpace(pos) && level.isEmptyBlock(pos.above());
+    }
+
     public boolean hasNest() {
         return nestPos != null;
     }
@@ -193,12 +201,12 @@ public class HotChickenEntity extends LivestockEntity {
         super.aiStep();
         if (!level.isClientSide) {
             if (remainingCooldownBeforeLocatingNewNest > 0) --remainingCooldownBeforeLocatingNewNest;
-            if (tickCount % 20 == 0 && !isNestValid())
+            if (tickCount % 20 == 0 && !isValidNestBlock())
                 nestPos = null;
         }
     }
 
-    private boolean isNestValid() {
+    private boolean isValidNestBlock() {
         if (!hasNest()) return false;
         else {
             TileEntity tileEntity = level.getBlockEntity(nestPos);
@@ -232,7 +240,7 @@ public class HotChickenEntity extends LivestockEntity {
     @Nullable
     @Override
     public AgeableEntity getBreedOffspring(ServerWorld world, AgeableEntity entity) {
-        return null;
+        return HotEntities.CHICKEN.get().create(world);
     }
 
     @Override
@@ -248,82 +256,106 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     @Override
-    public void spawnChildFromBreeding(ServerWorld world, AnimalEntity animal) {
-        HotChickenEntity parent2 = (HotChickenEntity) animal;
-        boolean inheritMotherGenes = this.random.nextFloat() <= 0.6;
-        boolean colorMorph = this.random.nextFloat() <= 0.1;
+    public void spawnChildFromBreeding(ServerWorld world, AnimalEntity entity) {
+        if (entity instanceof HotChickenEntity) createChild(world, (HotChickenEntity) entity);
+    }
 
-        if (!this.getMainHandItem().isEmpty()) {
-            world.broadcastEntityEvent(this, (byte) 19);
+    public void createChild(ServerWorld world, HotChickenEntity parent) {
+        HotChickenEntity child = (HotChickenEntity) getBreedOffspring(world, parent);
+        final BabyEntitySpawnEvent event = new BabyEntitySpawnEvent(this, parent, child);
+        final boolean cancelled = MinecraftForge.EVENT_BUS.post(event);
+        child = (HotChickenEntity) event.getChild();
+        if (cancelled) {
+            setAge(6000);
+            parent.setAge(6000);
+            resetLove();
+            parent.resetLove();
             return;
         }
 
-        ItemStack stack = HotItems.WHITE_EGG.get().getDefaultInstance();
-        CompoundNBT stackTag = stack.getOrCreateTag();
-        ChickenBreeds breed1 = this.getBreedFromVariant(this.getVariant());
-        ChickenBreeds breed2 = parent2.getBreedFromVariant(parent2.getVariant());
-        ChickenStats stats = (ChickenStats) this.getStats().average(parent2.getStats(), true).mutate(0.2);
-        if (stats.tameness < 85) {
-            stackTag.putString("Breed", ChickenBreeds.JUNGLEFOWL.toString());
-            stackTag.putInt("Variant", 0);
-
-        } else {
-            int chickVariant;
-            ChickenBreeds chickBreed;
-
-            if (breed1 != ChickenBreeds.JUNGLEFOWL && breed2 != ChickenBreeds.JUNGLEFOWL) {
-                if (breed1.equals(breed2)) {
-                    chickBreed = breed1;
-                    chickVariant = inheritMotherGenes ? this.getVariant() : parent2.getVariant();
-                } else {
-                    if (inheritMotherGenes) {
-                        chickBreed = breed1;
-                        chickVariant = this.getVariant();
-                    } else {
-                        chickBreed = breed2;
-                        chickVariant = parent2.getVariant();
-                    }
-                }
-                if (colorMorph)
-                    chickVariant = ChickenBreeds.randomFromBreed(this.random, chickBreed);
-
-            } else {
-                if (breed1 != ChickenBreeds.JUNGLEFOWL && inheritMotherGenes) {
-                    chickBreed = breed1;
-                    chickVariant = colorMorph ? ChickenBreeds.randomFromBreed(this.random, chickBreed) : this.getVariant();
-                } else if (breed2 != ChickenBreeds.JUNGLEFOWL && !inheritMotherGenes) {
-                    chickBreed = breed2;
-                    chickVariant = colorMorph ? ChickenBreeds.randomFromBreed(this.random, chickBreed) : parent2.getVariant();
-                } else {
-                    if (this.random.nextFloat() <= 0.8) {
-                        Biome biome = this.getBiome();
-                        chickVariant = ChickenBreeds.randomBasedOnBiome(this.random, biome);
-                    } else
-                        chickVariant = this.random.nextInt(this.getMaxVariants()) + 1;
-                    chickBreed = this.getBreedFromVariant(chickVariant);
-                }
+        if (child != null) {
+            ServerPlayerEntity serverplayerentity = getLoveCause();
+            if (serverplayerentity == null && parent.getLoveCause() != null) serverplayerentity = parent.getLoveCause();
+            if (serverplayerentity != null) {
+                serverplayerentity.awardStat(Stats.ANIMALS_BRED);
+                CriteriaTriggers.BRED_ANIMALS.trigger(serverplayerentity, this, parent, child);
             }
 
-            if (chickBreed != ChickenBreeds.JUNGLEFOWL && this.random.nextFloat() <= 0.8)
-                stats = (ChickenStats) stats.average(chickBreed.stats, false);
+            setAge(20); // todo mate timers
+            parent.setAge(20);
+            resetLove();
+            parent.resetLove();
 
-            stackTag.putString("Breed", chickBreed.toString());
-            stackTag.putInt("Variant", chickVariant);
-            stackTag.putInt("Tameness", stats.tameness);
-            stackTag.putInt("CarcassQuality", stats.carcassQuality);
-            stackTag.putInt("GrowthRate", stats.growthRate);
-            stackTag.putInt("EggSpeed", stats.eggSpeed);
+            if (!getMainHandItem().isEmpty()) {
+                world.broadcastEntityEvent(this, (byte) 19); // todo ?
+                return;
+            }
+
+            boolean inheritMotherGenes = random.nextFloat() <= 0.6;
+            boolean colorMorph = random.nextFloat() <= 0.1;
+            ChickenBreeds breed1 = getBreedFromVariant(getVariant());
+            ChickenBreeds breed2 = parent.getBreedFromVariant(parent.getVariant());
+            ChickenStats stats = (ChickenStats) getStats().average(parent.getStats(), true).mutate(0.2);
+
+            if (stats.tameness < 85) child.setVariant(0);
+            else {
+                int childVariant;
+                ChickenBreeds childBreed;
+
+                if (breed1 != ChickenBreeds.JUNGLEFOWL && breed2 != ChickenBreeds.JUNGLEFOWL) {
+                    if (breed1.equals(breed2)) {
+                        childBreed = breed1;
+                        childVariant = inheritMotherGenes ? getVariant() : parent.getVariant();
+                    } else {
+                        if (inheritMotherGenes) {
+                            childBreed = breed1;
+                            childVariant = getVariant();
+                        } else {
+                            childBreed = breed2;
+                            childVariant = parent.getVariant();
+                        }
+                    }
+                    if (colorMorph) childVariant = ChickenBreeds.randomFromBreed(random, childBreed);
+
+                } else {
+                    if (breed1 != ChickenBreeds.JUNGLEFOWL && inheritMotherGenes) {
+                        childBreed = breed1;
+                        childVariant = colorMorph ? ChickenBreeds.randomFromBreed(random, childBreed) : getVariant();
+                    } else if (breed2 != ChickenBreeds.JUNGLEFOWL && !inheritMotherGenes) {
+                        childBreed = breed2;
+                        childVariant = colorMorph ? ChickenBreeds.randomFromBreed(random, childBreed) : parent.getVariant();
+                    } else {
+                        if (this.random.nextFloat() <= 0.8)
+                            childVariant = ChickenBreeds.randomBasedOnBiome(random, getBiome());
+                        else childVariant = random.nextInt(getMaxVariants()) + 1;
+                        childBreed = getBreedFromVariant(childVariant);
+                    }
+                }
+
+                if (childBreed != ChickenBreeds.JUNGLEFOWL && random.nextFloat() <= 0.8)
+                    stats = (ChickenStats) stats.average(childBreed.stats, false);
+
+                child.setVariant(childVariant);
+            }
+
+            child.setBaby(true);
+            child.setStats(stats);
+            child.setSex(Sex.fromBool(random.nextBoolean()));
+
+            ItemStack stack = HotItems.WHITE_EGG.get().getDefaultInstance();
+            CompoundNBT tags = stack.getOrCreateTag();
+            child.save(tags);
+            ResourceLocation key = EntityType.getKey(child.getType());
+            tags.putString("id", key.toString());
+            tags.putString("Breed", getBreedFromVariant(child.getVariant()).toString());
+            tags.putInt("TimeLeft", 600); //todo hatch timers;
+            stack.setTag(tags);
+            setItemInHand(Hand.MAIN_HAND, stack);
+
+            world.broadcastEntityEvent(this, (byte) 18);
+            if (world.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))
+                world.addFreshEntity(new ExperienceOrbEntity(world, getX(), getY(), getZ(), random.nextInt(7) + 1));
         }
-
-        this.setItemInHand(Hand.MAIN_HAND, stack);
-
-        this.setAge(20); // todo mate timers
-        animal.setAge(20);
-        this.resetLove();
-        animal.resetLove();
-
-        world.broadcastEntityEvent(this, (byte) 18);
-        world.addFreshEntity(new ExperienceOrbEntity(world, this.getX(), this.getY(), this.getZ(), this.random.nextInt(7) + 1));
     }
 
     @Override

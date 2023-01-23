@@ -69,15 +69,15 @@ public class Stats {
     public int getMaxEggSpeed() {
         switch (eggSpeed) {
             default: case 0:
-                return 48000;
+                return 480;//00; todo
             case 1:
-                return 24000;
+                return 240;//00;
             case 2:
-                return 12000;
+                return 120;//00;
             case 3:
-                return 8000;
+                return 80;//00;
             case 4:
-                return 6000;
+                return 60;//00;
         }
     }
 

@@ -11,12 +11,12 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 
-public class StickNestBlock extends NestBlock {
+public class NestBoxBlock extends NestBlock {
     public static final DirectionProperty PROPERTY_FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty PROPERTY_EGGS = BooleanProperty.create("eggs");
     private static final VoxelShape shape = box(3, 0, 3, 13, 3, 13);
 
-    public StickNestBlock(Properties properties) {
+    public NestBoxBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(PROPERTY_FACING, Direction.NORTH).setValue(PROPERTY_EGGS, false));
     }

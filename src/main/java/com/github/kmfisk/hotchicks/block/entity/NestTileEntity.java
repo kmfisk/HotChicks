@@ -2,11 +2,10 @@ package com.github.kmfisk.hotchicks.block.entity;
 
 import com.github.kmfisk.hotchicks.block.NestBlock;
 import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
-import com.github.kmfisk.hotchicks.entity.HotEntities;
-import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import com.github.kmfisk.hotchicks.inventory.NestContainer;
 import com.github.kmfisk.hotchicks.item.HotEggItem;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -173,21 +172,18 @@ public class NestTileEntity extends LockableTileEntity implements ITickableTileE
         for (ItemStack item : items) {
             if (item.getItem() instanceof HotEggItem && !item.isEmpty()) {
                 hasEgg = true;
-                CompoundNBT tag = item.getOrCreateTag();
-                int timeLeft = tag.getInt("TimeLeft") - 1;
+                CompoundNBT itemTag = item.getTag();
+                int timeLeft = itemTag.getInt("TimeLeft") - 1;
                 if (timeLeft <= 0) {
-                    HotChickenEntity chicken = new HotChickenEntity(HotEntities.CHICKEN.get(), level);
-                    chicken.setPos(getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.2, getBlockPos().getZ() + 0.5);
-                    level.addFreshEntity(chicken);
-
-                    chicken.setAge(-24000); //todo chick age timer
-                    chicken.setStats(HotEggItem.getStats(item));
-                    chicken.setSex(LivestockEntity.Sex.fromBool(chicken.getRandom().nextBoolean()));
-                    chicken.setVariant(HotEggItem.getVariant(item));
+                    HotChickenEntity chicken = (HotChickenEntity) EntityType.loadEntityRecursive(itemTag, level, entity -> entity);
+                    if (chicken != null) {
+                        chicken.absMoveTo(getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.2, getBlockPos().getZ() + 0.5);
+                        level.addFreshEntity(chicken);
+                    }
 
                     this.items.set(counter, ItemStack.EMPTY);
 
-                } else tag.putInt("TimeLeft", timeLeft);
+                } else itemTag.putInt("TimeLeft", timeLeft);
             }
 
             counter += 1;

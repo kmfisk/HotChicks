@@ -241,9 +241,8 @@ public class HotRabbitEntity extends LivestockEntity {
             world.addFreshEntityWithPassengers(child);
 
             world.broadcastEntityEvent(this, (byte)18);
-            if (world.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT)) {
+            if (world.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))
                 world.addFreshEntity(new ExperienceOrbEntity(world, getX(), getY(), getZ(), random.nextInt(7) + 1));
-            }
         }
     }
 

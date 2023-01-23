@@ -43,15 +43,19 @@ public class LayEggsGoal extends Goal {
             chicken.setEggTimer(0);
             ItemStack stack = chicken.getMainHandItem();
 
-            nestTileEntity.setItem(0, stack); // TODO: Make proper
-            chicken.setItemInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
-
-            if (!chicken.level.isClientSide) {
-                for (int i = 0; i < 20; ++i) {
-                    double d3 = chicken.getRandom().nextGaussian() * 0.02D;
-                    double d1 = chicken.getRandom().nextGaussian() * 0.02D;
-                    double d2 = chicken.getRandom().nextGaussian() * 0.02D;
-                    ((ServerWorld) chicken.level).sendParticles(ParticleTypes.HEART, (double) chicken.getNestPos().getX() + 0.5D, chicken.getNestPos().getY(), (double) chicken.getNestPos().getZ() + 0.5D, 1, d3, d1, d2, 0.15F);
+            for (int i = 0; i < nestTileEntity.getContainerSize(); i++) {
+                if (nestTileEntity.getItem(i) == ItemStack.EMPTY) {
+                    nestTileEntity.setItem(i, stack);
+                    chicken.setItemInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
+                    if (!chicken.level.isClientSide) {
+                        for (int j = 0; j < 20; ++j) {
+                            double d3 = chicken.getRandom().nextGaussian() * 0.02D;
+                            double d1 = chicken.getRandom().nextGaussian() * 0.02D;
+                            double d2 = chicken.getRandom().nextGaussian() * 0.02D;
+                            ((ServerWorld) chicken.level).sendParticles(ParticleTypes.HEART, (double) chicken.getNestPos().getX() + 0.5D, chicken.getNestPos().getY(), (double) chicken.getNestPos().getZ() + 0.5D, 1, d3, d1, d2, 0.15F);
+                        }
+                    }
+                    break;
                 }
             }
         }
