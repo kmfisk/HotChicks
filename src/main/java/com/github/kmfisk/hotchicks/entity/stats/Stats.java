@@ -66,6 +66,21 @@ public class Stats {
         else return Math.min(StatType.LITTER_SIZE.max, litterSize + 1);
     }
 
+    public int getMaxEggSpeed() {
+        switch (eggSpeed) {
+            default: case 0:
+                return 48000;
+            case 1:
+                return 24000;
+            case 2:
+                return 12000;
+            case 3:
+                return 8000;
+            case 4:
+                return 6000;
+        }
+    }
+
     public enum StatType {
         TAMENESS(0, 100),
         CARCASS_QUALITY(0, 4),

@@ -1,9 +1,9 @@
 package com.github.kmfisk.hotchicks.entity;
 
+import com.github.kmfisk.hotchicks.block.entity.NestTileEntity;
 import com.github.kmfisk.hotchicks.client.HotSounds;
 import com.github.kmfisk.hotchicks.entity.base.ChickenBreeds;
-import com.github.kmfisk.hotchicks.entity.goal.ChickenBreedGoal;
-import com.github.kmfisk.hotchicks.entity.goal.LayEggsGoal;
+import com.github.kmfisk.hotchicks.entity.goal.*;
 import com.github.kmfisk.hotchicks.entity.stats.ChickenStats;
 import com.github.kmfisk.hotchicks.item.HotItems;
 import net.minecraft.block.BlockState;
@@ -18,10 +18,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
@@ -40,8 +42,10 @@ import javax.annotation.Nullable;
 public class HotChickenEntity extends LivestockEntity {
     public static final DataParameter<Integer> EGG_SPEED = EntityDataManager.defineId(HotChickenEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> EGG_TIMER = EntityDataManager.defineId(HotChickenEntity.class, DataSerializers.INT);
-
-    private static final Ingredient TEMPTATION_ITEMS = Ingredient.of(HotItems.CORN.get(), Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);
+    private static final Ingredient FOOD_ITEMS = Ingredient.of(HotItems.CORN.get(), Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);
+    public int remainingCooldownBeforeLocatingNewNest = 0;
+    private BlockPos nestPos = null;
+    public FindNestGoal goToNestGoal;
 
     public HotChickenEntity(EntityType<? extends AnimalEntity> type, World world) {
         super(type, world);
@@ -58,13 +62,15 @@ public class HotChickenEntity extends LivestockEntity {
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.4D));
         this.goalSelector.addGoal(2, new LayEggsGoal(this));
         this.goalSelector.addGoal(3, new ChickenBreedGoal(this, 1.0D));
-        this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, false, TEMPTATION_ITEMS));
+        this.goalSelector.addGoal(4, new LivestockAvoidPlayerGoal<>(this, PlayerEntity.class, 16.0F, 0.8D, 1.33D));
+        this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, false, FOOD_ITEMS));
         this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1D));
+        this.goalSelector.addGoal(5, new UpdateNestGoal(this));
+        this.goToNestGoal = new FindNestGoal(this, 16);
+        this.goalSelector.addGoal(5, this.goToNestGoal);
         this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
-        this.goalSelector.addGoal(9, new MeleeAttackGoal(this, 1.4F, true));
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
     }
 
     @Override
@@ -124,18 +130,21 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     public int getMaxEggTimer() {
-        return 200;
+        return getStats().getMaxEggSpeed();
     }
 
     @Override
     public void addAdditionalSaveData(CompoundNBT nbt) {
         super.addAdditionalSaveData(nbt);
+        if (hasNest()) nbt.put("NestPos", NBTUtil.writeBlockPos(getNestPos()));
         nbt.putInt("EggSpeed", this.getEggSpeed());
         nbt.putInt("EggTimer", this.getEggTimer());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundNBT nbt) {
+        nestPos = null;
+        if (nbt.contains("NestPos")) nestPos = NBTUtil.readBlockPos(nbt.getCompound("NestPos"));
         super.readAdditionalSaveData(nbt);
         this.setEggSpeed(nbt.getInt("EggSpeed"));
         this.setEggTimer(nbt.getInt("EggTimer"));
@@ -155,6 +164,49 @@ public class HotChickenEntity extends LivestockEntity {
         return ChickenBreeds.JUNGLEFOWL;
     }
 
+    public boolean wantsToLayEggs() {
+        return getSex() == Sex.FEMALE && getMainHandItem() != ItemStack.EMPTY && getEggTimer() >= getMaxEggTimer();
+    }
+
+    public boolean doesNestHaveSpace(BlockPos nestPos) {
+        TileEntity tileEntity = level.getBlockEntity(nestPos);
+        if (tileEntity instanceof NestTileEntity)
+            return ((NestTileEntity) tileEntity).getItems().contains(ItemStack.EMPTY);
+            //return ((NestTileEntity) tileEntity).getItems().size() < 5; // todo
+        else return false;
+    }
+
+    public boolean hasNest() {
+        return nestPos != null;
+    }
+
+    public void setNestPos(@Nullable BlockPos pos) {
+        nestPos = pos;
+    }
+
+    @Nullable
+    public BlockPos getNestPos() {
+        return nestPos;
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (!level.isClientSide) {
+            if (remainingCooldownBeforeLocatingNewNest > 0) --remainingCooldownBeforeLocatingNewNest;
+            if (tickCount % 20 == 0 && !isNestValid())
+                nestPos = null;
+        }
+    }
+
+    private boolean isNestValid() {
+        if (!hasNest()) return false;
+        else {
+            TileEntity tileEntity = level.getBlockEntity(nestPos);
+            return tileEntity instanceof NestTileEntity;
+        }
+    }
+
     @Override
     protected float getStandingEyeHeight(Pose pose, EntitySize size) {
         return this.isBaby() ? size.height * 0.85F : size.height * 0.92F;
@@ -169,12 +221,12 @@ public class HotChickenEntity extends LivestockEntity {
     public void baseTick() {
         super.baseTick();
 
-        if (!getMainHandItem().isEmpty()) {
-            int timer = this.getEggTimer();
-            if (timer < this.getMaxEggTimer()) {
-                ++timer;
-                this.setEggTimer(timer);
-            }
+        if (!getMainHandItem().isEmpty() && getSex() == Sex.FEMALE) {
+            int eggTimer = this.getEggTimer();
+            if (eggTimer < this.getMaxEggTimer()) {
+                ++eggTimer;
+                setEggTimer(eggTimer);
+            } /*else setEggTimer(0);*/
         }
     }
 
