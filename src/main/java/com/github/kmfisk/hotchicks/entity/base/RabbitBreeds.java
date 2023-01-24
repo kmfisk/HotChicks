@@ -10,7 +10,7 @@ import java.util.Random;
 import java.util.Set;
 
 public enum RabbitBreeds {
-    COTTONTAIL(50, 0, 0, 0, 0, 1),
+    COTTONTAIL(50, 0, 0, 0, 1, 1),
     AMERICAN_CHINCHILLA(95, 2, 3, 2, 1, 2),
     CALIFORNIA(95, 2, 1, 2, 2, 1),
     DUTCH(95, 1, 1, 1, 4, 6),

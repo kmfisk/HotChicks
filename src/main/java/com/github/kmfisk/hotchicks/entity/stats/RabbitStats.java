@@ -27,7 +27,6 @@ public class RabbitStats extends Stats {
     @Override
     public Stats mutate(double chance) {
         Stats rabbitStats = super.mutate(chance);
-//        RabbitStats rabbitStats = new RabbitStats(stats.tameness, stats.carcassQuality, stats.hideQuality, stats.growthRate, litterSize);
 
         rabbitStats.hideQuality = mutate(StatType.HIDE_QUALITY, rabbitStats.hideQuality, chance);
         rabbitStats.litterSize = mutate(StatType.LITTER_SIZE, rabbitStats.litterSize, chance);

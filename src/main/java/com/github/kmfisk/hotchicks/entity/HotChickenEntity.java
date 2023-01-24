@@ -86,7 +86,7 @@ public class HotChickenEntity extends LivestockEntity {
     @Override
     public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficultyInstance, SpawnReason spawnReason, @Nullable ILivingEntityData entityData, @Nullable CompoundNBT nbt) {
         entityData = super.finalizeSpawn(world, difficultyInstance, spawnReason, entityData, nbt);
-        setStats(new ChickenStats(random.nextInt(25) + random.nextInt(35), random.nextInt(3), random.nextInt(3), random.nextInt(5)));
+        setStats(new ChickenStats(random.nextInt(25) + random.nextInt(35), random.nextInt(3), random.nextInt(3), random.nextInt(3)));
         return entityData;
     }
 
