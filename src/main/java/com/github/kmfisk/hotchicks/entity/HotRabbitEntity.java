@@ -21,7 +21,6 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
@@ -29,7 +28,7 @@ import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 import javax.annotation.Nullable;
 
 public class HotRabbitEntity extends LivestockEntity {
-    private static final Ingredient TEMPTATION_ITEMS = Ingredient.of(Items.CARROT, Items.WHEAT, HotItems.CORN.get(), HotItems.OATS.get(), HotItems.LETTUCE.get());
+    private static final Ingredient FOOD_ITEMS = Ingredient.of(Items.CARROT, Items.WHEAT, HotItems.CORN.get(), HotItems.OATS.get(), HotItems.LETTUCE.get());
 
     public HotRabbitEntity(EntityType<? extends AnimalEntity> type, World world) {
         super(type, world);
@@ -45,7 +44,7 @@ public class HotRabbitEntity extends LivestockEntity {
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.4D));
         this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D));
-        this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, false, TEMPTATION_ITEMS));
+        this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, false, FOOD_ITEMS));
         this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
@@ -74,6 +73,16 @@ public class HotRabbitEntity extends LivestockEntity {
     @Override
     public int getMaxVariants() {
         return RabbitBreeds.MAX_VARIANTS;
+    }
+
+    @Override
+    public int getMaxHunger() {
+        return 6;
+    }
+
+    @Override
+    public boolean isEdibleFood(ItemStack stack) {
+        return FOOD_ITEMS.test(stack);
     }
 
     public void setStats(RabbitStats stats) {

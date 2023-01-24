@@ -1,18 +1,25 @@
 package com.github.kmfisk.hotchicks.entity;
 
+import com.github.kmfisk.hotchicks.entity.base.HungerStat;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
@@ -30,9 +37,12 @@ public abstract class LivestockEntity extends AnimalEntity {
     public static final DataParameter<Integer> HIDE_QUALITY = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> GROWTH_RATE = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> LITTER_SIZE = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
+    public static final DataParameter<Integer> HUNGER = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
+    private final HungerStat hunger;
 
     public LivestockEntity(EntityType<? extends AnimalEntity> type, World world) {
         super(type, world);
+        hunger = new HungerStat(this, HUNGER, getMaxHunger(), 120);//00);
     }
 
     public void defineSynchedData() {
@@ -42,6 +52,7 @@ public abstract class LivestockEntity extends AnimalEntity {
         this.entityData.define(TAMENESS, 50);
         this.entityData.define(CARCASS_QUALITY, 0);
         this.entityData.define(GROWTH_RATE, 0);
+        this.entityData.define(HUNGER, 0);
     }
 
     @Override
@@ -54,6 +65,10 @@ public abstract class LivestockEntity extends AnimalEntity {
     public abstract float getMaleRatio();
 
     public abstract int getMaxVariants();
+
+    public abstract int getMaxHunger();
+
+    public abstract boolean isEdibleFood(ItemStack stack);
 
     public Sex getSex() {
         return Sex.fromBool(entityData.get(SEX));
@@ -111,6 +126,10 @@ public abstract class LivestockEntity extends AnimalEntity {
         return this.entityData.get(LITTER_SIZE);
     }
 
+    public HungerStat getHunger() {
+        return hunger;
+    }
+
     public void addAdditionalSaveData(CompoundNBT nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putBoolean("Sex", this.getSex().toBool());
@@ -118,6 +137,7 @@ public abstract class LivestockEntity extends AnimalEntity {
         nbt.putInt("Tameness", this.getTameness());
         nbt.putInt("CarcassQuality", this.getCarcassQuality());
         nbt.putInt("GrowthRate", this.getGrowthRate());
+        nbt.put("Hunger", hunger.toTag());
     }
 
     public void readAdditionalSaveData(CompoundNBT nbt) {
@@ -127,6 +147,42 @@ public abstract class LivestockEntity extends AnimalEntity {
         this.setTameness(nbt.getInt("Tameness"));
         this.setCarcassQuality(nbt.getInt("CarcassQuality"));
         this.setGrowthRate(nbt.getInt("GrowthRate"));
+        hunger.fromTag(nbt.getCompound("Hunger"));
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (isAlive()) {
+            if (getHunger().getValue() > 0) hunger.tick();
+            if (getHealth() < getMaxHealth() && tickCount % 20 == 0) {
+                if (getHunger().getValue() == getHunger().getMax()) heal(1.0F);
+            }
+        }
+    }
+
+    @Override
+    public boolean canFallInLove() {
+        return !getHunger().isLow() && super.canFallInLove();
+    }
+
+    @Override
+    public ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (isEdibleFood(stack)) {
+            if (getHunger().getValue() < getHunger().getMax()) {
+                usePlayerItem(player, stack);
+                hunger.increment(1);
+                return ActionResultType.sidedSuccess(level.isClientSide);
+            }
+        }
+        if (stack.getItem() == Items.STICK) {
+            player.displayClientMessage(new StringTextComponent("Hunger: " +
+                    getHunger().getValue() + " / " + getHunger().getMax() +
+                    " -> " + getHunger().getTicks()), true);
+        }
+
+        return super.mobInteract(player, hand);
     }
 
     public static boolean checkLivestockSpawnRules(EntityType<? extends LivestockEntity> entityType, IServerWorld world, SpawnReason spawnReason, BlockPos pos, Random random) {

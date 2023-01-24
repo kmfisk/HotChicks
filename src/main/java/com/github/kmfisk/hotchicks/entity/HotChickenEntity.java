@@ -100,6 +100,16 @@ public class HotChickenEntity extends LivestockEntity {
         return ChickenBreeds.MAX_VARIANTS;
     }
 
+    @Override
+    public int getMaxHunger() {
+        return 6;
+    }
+
+    @Override
+    public boolean isEdibleFood(ItemStack stack) {
+        return FOOD_ITEMS.test(stack);
+    }
+
     public void setEggSpeed(int eggSpeed) {
         this.entityData.set(EGG_SPEED, eggSpeed);
     }
@@ -241,6 +251,11 @@ public class HotChickenEntity extends LivestockEntity {
     @Override
     public AgeableEntity getBreedOffspring(ServerWorld world, AgeableEntity entity) {
         return HotEntities.CHICKEN.get().create(world);
+    }
+
+    @Override
+    public boolean canFallInLove() {
+        return getMainHandItem().isEmpty() && super.canFallInLove();
     }
 
     @Override
