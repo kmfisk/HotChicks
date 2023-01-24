@@ -24,10 +24,7 @@ public class ChickenStats extends Stats {
     @Override
     public Stats mutate(double chance) {
         Stats chickenStats = super.mutate(chance);
-//        ChickenStats chickenStats = new ChickenStats(stats.tameness, stats.carcassQuality, stats.growthRate, eggSpeed);
-
         chickenStats.eggSpeed = mutate(StatType.EGG_SPEED, chickenStats.eggSpeed, chance);
-
         return chickenStats;
     }
 }

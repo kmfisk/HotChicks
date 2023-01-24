@@ -11,14 +11,14 @@ import java.util.Set;
 
 public enum ChickenBreeds {
     JUNGLEFOWL(50, 0, 0, 0, 1),
-    AMERAUCANA(85, 2, 1, 4, 7),
-    BARRED_ROCK(85, 3, 3, 5, 1),
-    LEGHORN(85, 1, 2, 7, 1),
-    MARANS(85, 3, 1, 4, 4),
-    OLIVE_EGGER(85, 2, 1, 4, 7),
-    ORPINGTON(85, 3, 3, 3, 4),
-    RHODE_ISLAND_RED(85, 3, 2, 4, 3),
-    SILKIE(85, 3, 1, 3, 5);
+    AMERAUCANA(85, 2, 1, 2, 7),
+    BARRED_ROCK(85, 3, 3, 3, 1),
+    LEGHORN(85, 1, 2, 4, 1),
+    MARANS(85, 3, 1, 2, 4),
+    OLIVE_EGGER(85, 2, 1, 2, 7),
+    ORPINGTON(85, 3, 3, 1, 4),
+    RHODE_ISLAND_RED(85, 3, 2, 2, 3),
+    SILKIE(85, 3, 1, 1, 5);
 
     public static final int MAX_VARIANTS = 32;
     public final ChickenStats stats;

@@ -86,7 +86,7 @@ public class Stats {
         CARCASS_QUALITY(0, 4),
         HIDE_QUALITY(0, 4),
         GROWTH_RATE(0, 4),
-        EGG_SPEED(0, 8),
+        EGG_SPEED(0, 4),
         LITTER_SIZE(0, 4);
 
         public final int min;
