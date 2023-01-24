@@ -1,6 +1,7 @@
 package com.github.kmfisk.hotchicks.entity;
 
 import com.github.kmfisk.hotchicks.entity.base.HungerStat;
+import com.github.kmfisk.hotchicks.entity.goal.FindFoodGoal;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
@@ -42,7 +43,13 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     public LivestockEntity(EntityType<? extends AnimalEntity> type, World world) {
         super(type, world);
-        hunger = new HungerStat(this, HUNGER, getMaxHunger(), 120);//00);
+        hunger = new HungerStat(this, HUNGER, getMaxHunger(), 12000);
+    }
+
+    @Override
+    protected void registerGoals() {
+        super.registerGoals();
+        this.goalSelector.addGoal(2, new FindFoodGoal(this, 16, 2));
     }
 
     public void defineSynchedData() {
@@ -155,9 +162,7 @@ public abstract class LivestockEntity extends AnimalEntity {
         super.aiStep();
         if (isAlive()) {
             if (getHunger().getValue() > 0) hunger.tick();
-            if (getHealth() < getMaxHealth() && tickCount % 20 == 0) {
-                if (getHunger().getValue() == getHunger().getMax()) heal(1.0F);
-            }
+            if (getHealth() < getMaxHealth() && tickCount % 20 == 0 && getHunger().getValue() == getHunger().getMax()) heal(1.0F);
         }
     }
 

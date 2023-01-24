@@ -91,7 +91,7 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
 
     @Override
     public boolean canPlaceItem(int index, ItemStack stack) {
-        return level.getBlockState(getBlockPos()).getValue(TroughBlock.CONTAINS) != TroughFillType.WATER && stack.getItem() == Items.WHEAT;
+        return level.getBlockState(getBlockPos()).getValue(TroughBlock.CONTAINS) != TroughFillType.WATER /*&& stack.getItem() == Items.WHEAT*/;
     }
 
     public void startOpen(PlayerEntity player) {

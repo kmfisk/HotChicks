@@ -28,10 +28,10 @@ public class TroughSlot extends Slot {
      * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
      */
     public boolean mayPlace(ItemStack stack) {
-        if (stack.getItem() == Items.WHEAT) {
+//        if (stack.getItem() == Items.WHEAT) {
             return true;
-        }
-        return false;
+//        }
+//        return false;
     }
 
 }
