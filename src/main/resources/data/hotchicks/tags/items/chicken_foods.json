@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "hotchicks:corn",
+    "hotchicks:oats",
+    "hotchicks:millet",
+    "hotchicks:peas",
+    "#forge:seeds"
+  ]
+}

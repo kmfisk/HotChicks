@@ -1,5 +1,6 @@
 package com.github.kmfisk.hotchicks.entity;
 
+import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.block.HotBlocks;
 import com.github.kmfisk.hotchicks.block.entity.NestTileEntity;
 import com.github.kmfisk.hotchicks.client.HotSounds;
@@ -17,8 +18,8 @@ import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
@@ -27,6 +28,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
@@ -38,14 +40,15 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 
 import javax.annotation.Nullable;
 
 public class HotChickenEntity extends LivestockEntity {
+    public static final Tags.IOptionalNamedTag<Item> CHICKEN_FOODS = ItemTags.createOptional(new ResourceLocation(HotChicks.MOD_ID, "chicken_foods"));
     public static final DataParameter<Integer> EGG_SPEED = EntityDataManager.defineId(HotChickenEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> EGG_TIMER = EntityDataManager.defineId(HotChickenEntity.class, DataSerializers.INT);
-    private static final Ingredient FOOD_ITEMS = Ingredient.of(HotItems.CORN.get(), Items.WHEAT_SEEDS, Items.MELON_SEEDS, Items.PUMPKIN_SEEDS, Items.BEETROOT_SEEDS);
     public int remainingCooldownBeforeLocatingNewNest = 0;
     private BlockPos nestPos = null;
     public FindNestGoal goToNestGoal;
@@ -66,7 +69,7 @@ public class HotChickenEntity extends LivestockEntity {
         this.goalSelector.addGoal(2, new LayEggsGoal(this));
         this.goalSelector.addGoal(3, new ChickenBreedGoal(this, 1.0D));
         this.goalSelector.addGoal(4, new LivestockAvoidPlayerGoal<>(this, PlayerEntity.class, 16.0F, 0.8D, 1.33D));
-        this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, false, FOOD_ITEMS));
+        this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, false, Ingredient.of(CHICKEN_FOODS)));
         this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(5, new UpdateNestGoal(this));
         this.goToNestGoal = new FindNestGoal(this, 16);
@@ -107,7 +110,7 @@ public class HotChickenEntity extends LivestockEntity {
 
     @Override
     public boolean isEdibleFood(ItemStack stack) {
-        return FOOD_ITEMS.test(stack);
+        return Ingredient.of(CHICKEN_FOODS).test(stack);
     }
 
     public void setEggSpeed(int eggSpeed) {

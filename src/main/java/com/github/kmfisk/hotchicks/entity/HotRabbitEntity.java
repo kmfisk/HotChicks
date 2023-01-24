@@ -1,8 +1,8 @@
 package com.github.kmfisk.hotchicks.entity;
 
+import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.entity.base.RabbitBreeds;
 import com.github.kmfisk.hotchicks.entity.stats.RabbitStats;
-import com.github.kmfisk.hotchicks.item.HotItems;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -12,23 +12,27 @@ import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stats;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 
 import javax.annotation.Nullable;
 
 public class HotRabbitEntity extends LivestockEntity {
-    private static final Ingredient FOOD_ITEMS = Ingredient.of(Items.CARROT, Items.WHEAT, HotItems.CORN.get(), HotItems.OATS.get(), HotItems.LETTUCE.get());
+    public static final Tags.IOptionalNamedTag<Item> RABBIT_FOODS = ItemTags.createOptional(new ResourceLocation(HotChicks.MOD_ID, "rabbit_foods"));
 
     public HotRabbitEntity(EntityType<? extends AnimalEntity> type, World world) {
         super(type, world);
@@ -44,7 +48,7 @@ public class HotRabbitEntity extends LivestockEntity {
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.4D));
         this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D));
-        this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, false, FOOD_ITEMS));
+        this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, false, Ingredient.of(RABBIT_FOODS)));
         this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
@@ -82,7 +86,7 @@ public class HotRabbitEntity extends LivestockEntity {
 
     @Override
     public boolean isEdibleFood(ItemStack stack) {
-        return FOOD_ITEMS.test(stack);
+        return Ingredient.of(RABBIT_FOODS).test(stack);
     }
 
     public void setStats(RabbitStats stats) {
@@ -230,7 +234,8 @@ public class HotRabbitEntity extends LivestockEntity {
                         childBreed = breed2;
                         childVariant = colorMorph ? RabbitBreeds.randomFromBreed(random, childBreed) : parent.getVariant();
                     } else {
-                        if (random.nextFloat() <= 0.8F) childVariant = RabbitBreeds.randomBasedOnBiome(random, getBiome());
+                        if (random.nextFloat() <= 0.8F)
+                            childVariant = RabbitBreeds.randomBasedOnBiome(random, getBiome());
                         else childVariant = random.nextInt(getMaxVariants()) + 1;
                         childBreed = getBreedFromVariant(childVariant);
                     }
@@ -249,7 +254,7 @@ public class HotRabbitEntity extends LivestockEntity {
             child.moveTo(getX(), getY(), getZ(), 0.0F, 0.0F); // todo: pregnancy
             world.addFreshEntityWithPassengers(child);
 
-            world.broadcastEntityEvent(this, (byte)18);
+            world.broadcastEntityEvent(this, (byte) 18);
             if (world.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))
                 world.addFreshEntity(new ExperienceOrbEntity(world, getX(), getY(), getZ(), random.nextInt(7) + 1));
         }
