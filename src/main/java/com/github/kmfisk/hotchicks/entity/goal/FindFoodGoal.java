@@ -1,6 +1,7 @@
 package com.github.kmfisk.hotchicks.entity.goal;
 
 import com.github.kmfisk.hotchicks.block.HotBlocks;
+import com.github.kmfisk.hotchicks.block.entity.MetalTroughTileEntity;
 import com.github.kmfisk.hotchicks.block.entity.TroughTileEntity;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import net.minecraft.entity.ai.goal.MoveToBlockGoal;
@@ -62,6 +63,12 @@ public class FindFoodGoal extends MoveToBlockGoal {
             TileEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity instanceof TroughTileEntity)
                 return ((TroughTileEntity) tileEntity).getItems().stream().anyMatch(entity::isEdibleFood);
+        }
+
+        if (level.getBlockState(pos).is(HotBlocks.METAL_TROUGH_BLOCK.get())) {
+            TileEntity tileEntity = level.getBlockEntity(pos);
+            if (tileEntity instanceof MetalTroughTileEntity)
+                return ((MetalTroughTileEntity) tileEntity).getItems().stream().anyMatch(entity::isEdibleFood);
         }
 
         return false;
