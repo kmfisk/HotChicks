@@ -1,5 +1,7 @@
 package com.github.kmfisk.hotchicks.entity.stats;
 
+import com.github.kmfisk.hotchicks.config.HotChicksConfig;
+
 import java.util.Random;
 
 public class Stats {
@@ -47,7 +49,8 @@ public class Stats {
     public Stats mutate(double chance) {
         Stats stats = copy();
 
-        if (this.rand.nextFloat() <= chance) stats.tameness = this.rand.nextFloat() <= 0.8 ? Math.min(StatType.TAMENESS.max, stats.tameness + 1 + this.rand.nextInt(10)) : Math.max(StatType.TAMENESS.min, stats.tameness - this.rand.nextInt(5) + 1);
+        if (this.rand.nextFloat() <= chance)
+            stats.tameness = this.rand.nextFloat() <= 0.8 ? Math.min(StatType.TAMENESS.max, stats.tameness + 1 + this.rand.nextInt(10)) : Math.max(StatType.TAMENESS.min, stats.tameness - this.rand.nextInt(5) + 1);
         stats.carcassQuality = mutate(StatType.CARCASS_QUALITY, stats.carcassQuality, chance);
         stats.growthRate = mutate(StatType.GROWTH_RATE, stats.growthRate, chance);
 
@@ -55,7 +58,8 @@ public class Stats {
     }
 
     protected int mutate(StatType statType, int stat, double chance) {
-        if (this.rand.nextFloat() <= chance) stat = this.rand.nextFloat() <= 0.8 ? Math.min(statType.max, stat + 1) : Math.max(statType.min, stat - 1);
+        if (this.rand.nextFloat() <= chance)
+            stat = this.rand.nextFloat() <= 0.8 ? Math.min(statType.max, stat + 1) : Math.max(statType.min, stat - 1);
         return stat;
     }
 
@@ -66,19 +70,12 @@ public class Stats {
         else return Math.min(StatType.LITTER_SIZE.max, litterSize + 1);
     }
 
-    public int getMaxEggSpeed() {
-        switch (eggSpeed) {
-            default: case 0:
-                return 480;//00; todo
-            case 1:
-                return 240;//00;
-            case 2:
-                return 120;//00;
-            case 3:
-                return 80;//00;
-            case 4:
-                return 60;//00;
-        }
+    public int getGrowthRateForStat() {
+        return HotChicksConfig.growthSpeed.get() * (5 - growthRate);
+    }
+
+    public int getEggSpeedForStat() {
+        return HotChicksConfig.eggSpeed.get() * (5 - eggSpeed);
     }
 
     public enum StatType {

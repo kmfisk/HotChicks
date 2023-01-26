@@ -4,6 +4,7 @@ import com.github.kmfisk.hotchicks.block.HotBlocks;
 import com.github.kmfisk.hotchicks.block.entity.HotTileEntities;
 import com.github.kmfisk.hotchicks.client.ColorEvents;
 import com.github.kmfisk.hotchicks.client.HotSounds;
+import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.HotEntities;
 import com.github.kmfisk.hotchicks.entity.merchant.villager.HotVillagerTrades;
 import com.github.kmfisk.hotchicks.inventory.HotContainerTypes;
@@ -16,7 +17,9 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -54,6 +57,8 @@ public class HotChicks {
             bus.addListener(ColorEvents::registerColorHandlerBlocks);
             bus.addListener(ColorEvents::registerColorHandlerItems);
         }
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, HotChicksConfig.CONFIG_SPEC);
     }
 
     private void registerAttributes(final EntityAttributeCreationEvent event) {

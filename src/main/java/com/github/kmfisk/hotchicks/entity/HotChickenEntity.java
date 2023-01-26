@@ -4,6 +4,7 @@ import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.block.HotBlocks;
 import com.github.kmfisk.hotchicks.block.entity.NestTileEntity;
 import com.github.kmfisk.hotchicks.client.HotSounds;
+import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.base.ChickenBreeds;
 import com.github.kmfisk.hotchicks.entity.goal.*;
 import com.github.kmfisk.hotchicks.entity.stats.ChickenStats;
@@ -136,6 +137,7 @@ public class HotChickenEntity extends LivestockEntity {
         setEggSpeed(stats.eggSpeed);
     }
 
+    @Override
     public ChickenStats getStats() {
         return new ChickenStats(
                 getTameness(),
@@ -146,7 +148,7 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     public int getMaxEggTimer() {
-        return getStats().getMaxEggSpeed();
+        return getStats().getEggSpeedForStat();
     }
 
     @Override
@@ -299,13 +301,14 @@ public class HotChickenEntity extends LivestockEntity {
                 CriteriaTriggers.BRED_ANIMALS.trigger(serverplayerentity, this, parent, child);
             }
 
-            setAge(20); // todo mate timers
-            parent.setAge(20);
+            int breedingCooldown = HotChicksConfig.breedingCooldown.get();
+            setAge(getSex() == Sex.MALE ? 6000 : breedingCooldown);
+            parent.setAge(parent.getSex() == Sex.MALE ? 6000 : breedingCooldown);
             resetLove();
             parent.resetLove();
 
             if (!getMainHandItem().isEmpty()) {
-                world.broadcastEntityEvent(this, (byte) 19); // todo ?
+                world.broadcastEntityEvent(this, (byte) 19);
                 return;
             }
 
@@ -366,7 +369,7 @@ public class HotChickenEntity extends LivestockEntity {
             ResourceLocation key = EntityType.getKey(child.getType());
             tags.putString("id", key.toString());
             tags.putString("Breed", getBreedFromVariant(child.getVariant()).toString());
-            tags.putInt("TimeLeft", 600); //todo hatch timers;
+            tags.putInt("TimeLeft", HotChicksConfig.hatchSpeed.get());
             stack.setTag(tags);
             setItemInHand(Hand.MAIN_HAND, stack);
 

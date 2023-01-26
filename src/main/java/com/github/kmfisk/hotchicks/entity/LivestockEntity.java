@@ -1,7 +1,9 @@
 package com.github.kmfisk.hotchicks.entity;
 
+import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.base.HungerStat;
 import com.github.kmfisk.hotchicks.entity.goal.FindFoodGoal;
+import com.github.kmfisk.hotchicks.entity.stats.Stats;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
@@ -43,7 +45,7 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     public LivestockEntity(EntityType<? extends AnimalEntity> type, World world) {
         super(type, world);
-        hunger = new HungerStat(this, HUNGER, getMaxHunger(), 12000);
+        hunger = new HungerStat(this, HUNGER, getMaxHunger(), HotChicksConfig.hungerDepletion.get());
     }
 
     @Override
@@ -76,6 +78,8 @@ public abstract class LivestockEntity extends AnimalEntity {
     public abstract int getMaxHunger();
 
     public abstract boolean isEdibleFood(ItemStack stack);
+
+    public abstract Stats getStats();
 
     public Sex getSex() {
         return Sex.fromBool(entityData.get(SEX));
@@ -161,7 +165,7 @@ public abstract class LivestockEntity extends AnimalEntity {
     public void aiStep() {
         super.aiStep();
         if (isAlive()) {
-            if (getHunger().getValue() > 0) hunger.tick();
+            if (HotChicksConfig.hunger.get() && getHunger().getValue() > 0) hunger.tick();
             if (getHealth() < getMaxHealth() && tickCount % 20 == 0 && getHunger().getValue() == getHunger().getMax()) heal(1.0F);
         }
     }
@@ -169,6 +173,11 @@ public abstract class LivestockEntity extends AnimalEntity {
     @Override
     public boolean canFallInLove() {
         return !getHunger().isLow() && super.canFallInLove();
+    }
+
+    @Override
+    public void setBaby(boolean baby) {
+        setAge(baby ? -(getStats().getGrowthRateForStat()) : 0);
     }
 
     @Override

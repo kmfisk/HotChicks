@@ -47,7 +47,7 @@ public final class HungerStat {
     }
 
     public boolean isLow() {
-        return getValue() <= getMax() / 2; // todo
+        return getValue() <= getMax() / 2;
     }
 
     public CompoundNBT toTag() {

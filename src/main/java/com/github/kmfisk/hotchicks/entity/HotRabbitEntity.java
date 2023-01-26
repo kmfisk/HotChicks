@@ -1,6 +1,7 @@
 package com.github.kmfisk.hotchicks.entity;
 
 import com.github.kmfisk.hotchicks.HotChicks;
+import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.base.RabbitBreeds;
 import com.github.kmfisk.hotchicks.entity.stats.RabbitStats;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -97,6 +98,7 @@ public class HotRabbitEntity extends LivestockEntity {
         setLitterSize(stats.litterSize);
     }
 
+    @Override
     public RabbitStats getStats() {
         return new RabbitStats(
                 getTameness(),
@@ -195,8 +197,9 @@ public class HotRabbitEntity extends LivestockEntity {
                 CriteriaTriggers.BRED_ANIMALS.trigger(serverplayerentity, this, parent, child);
             }
 
-            setAge(6000);
-            parent.setAge(6000);
+            int breedingCooldown = HotChicksConfig.breedingCooldown.get();
+            setAge(getSex() == Sex.MALE ? 6000 : breedingCooldown);
+            parent.setAge(parent.getSex() == Sex.MALE ? 6000 : breedingCooldown);
             resetLove();
             parent.resetLove();
 
