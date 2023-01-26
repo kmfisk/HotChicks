@@ -1,209 +1,148 @@
 package com.github.kmfisk.hotchicks.block.entity;
 
-import com.github.kmfisk.hotchicks.block.HotBlocks;
 import com.github.kmfisk.hotchicks.block.TroughBlock;
 import com.github.kmfisk.hotchicks.block.TroughFillType;
 import com.github.kmfisk.hotchicks.inventory.TroughContainer;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.state.properties.ChestType;
-import net.minecraft.tileentity.ChestTileEntity;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.LockableLootTileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.*;
+import net.minecraft.tileentity.LockableTileEntity;
+import net.minecraft.util.Direction;
+import net.minecraft.util.NonNullList;
+import net.minecraft.util.Rotation;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import net.minecraftforge.registries.ForgeRegistries;
 
-public class TroughTileEntity extends LockableLootTileEntity implements ITickableTileEntity {
-    public int size = 3;
-    public NonNullList<ItemStack> contents = NonNullList.withSize(3, ItemStack.EMPTY);
-    private int numPlayersUsing;
+import javax.annotation.Nullable;
+import java.util.stream.IntStream;
 
+public class TroughTileEntity extends LockableTileEntity implements ISidedInventory {
+    private final NonNullList<ItemStack> items;
+    private final SidedInvWrapper sideHandler = new SidedInvWrapper(this, Direction.UP);
 
-    public TroughTileEntity(TileEntityType<?> barrelType) {
-        super(barrelType);
-    }
-
-    public TroughTileEntity() {
-        this(HotTileEntities.TROUGH.get());
-    }
-
-    public TroughTileEntity(int size) {
-        this();
-        contents = NonNullList.withSize(size, ItemStack.EMPTY);
-        this.size = size;
-    }
-
-    public CompoundNBT save(CompoundNBT compound) {
-        super.save(compound);
-        if (!this.trySaveLootTable(compound)) {
-            ItemStackHelper.saveAllItems(compound, this.contents);
-        }
-
-        return compound;
-    }
-
-    public void load(BlockState state, CompoundNBT nbt) {
-        super.load(state, nbt);
-        this.contents = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        if (!this.tryLoadLootTable(nbt)) {
-            ItemStackHelper.loadAllItems(nbt, this.contents);
-        }
-
-    }
-
-    /**
-     * Returns the number of slots in the inventory.
-     */
-    public int getContainerSize() {
-        return size;
+    public TroughTileEntity(boolean large) {
+        super(large ? HotTileEntities.METAL_TROUGH.get() : HotTileEntities.TROUGH.get());
+        this.items = NonNullList.withSize(large ? 6 : 3, ItemStack.EMPTY);
     }
 
     public NonNullList<ItemStack> getItems() {
-        return this.contents;
-    }
-
-    public void setItems(NonNullList<ItemStack> itemsIn) {
-        this.contents = itemsIn;
-    }
-
-    protected ITextComponent getDefaultName() {
-        return new StringTextComponent("Trough");
+        return items;
     }
 
     @Override
-    protected Container createMenu(int id, PlayerInventory player) {
-        if (size == 6) {
-            return TroughContainer.createGenericDouble(id, player, this);
-        }
-        return TroughContainer.createGenericSingle(id, player, this);
+    protected Container createMenu(int id, PlayerInventory playerInventory) {
+        if (getContainerSize() == 6) return TroughContainer.createGenericDouble(id, playerInventory, this);
+        else return TroughContainer.createGenericSingle(id, playerInventory, this);
     }
 
     @Override
-    public boolean canPlaceItem(int index, ItemStack stack) {
-        return level.getBlockState(getBlockPos()).getValue(TroughBlock.CONTAINS) != TroughFillType.WATER /*&& stack.getItem() == Items.WHEAT*/;
-    }
-
-    public void startOpen(PlayerEntity player) {
-        if (!player.isSpectator()) {
-            if (this.numPlayersUsing < 0) {
-                this.numPlayersUsing = 0;
-            }
-
-            ++this.numPlayersUsing;
-            BlockState blockstate = this.getBlockState();
-            this.scheduleTick();
-        }
-
-    }
-
-    private void scheduleTick() {
-
-        this.level.getBlockTicks().scheduleTick(this.getBlockPos(), this.getBlockState().getBlock(), 5);
-    }
-
-    public void barrelTick() {
-        int i = this.worldPosition.getX();
-        int j = this.worldPosition.getY();
-        int k = this.worldPosition.getZ();
-        this.numPlayersUsing = ChestTileEntity.getOpenCount(this.level, this, i, j, k);
-        if (this.numPlayersUsing > 0) {
-            this.scheduleTick();
-        } else {
-            BlockState blockstate = this.getBlockState();
-            if (!(blockstate.is(HotBlocks.TROUGH_BLOCK.get()) || blockstate.is(HotBlocks.METAL_TROUGH_BLOCK.get()))) {
-                this.setRemoved();
-                return;
-            }
-
-        }
-
-
-    }
-
-    public void stopOpen(PlayerEntity player) {
-        if (!player.isSpectator()) {
-            --this.numPlayersUsing;
-        }
-
-    }
-
-    private void playSound(BlockState state, SoundEvent sound) {
-        Vector3i vector3i = state.getValue(TroughBlock.FACING).getNormal();
-        double d0 = (double) this.worldPosition.getX() + 0.5D + (double) vector3i.getX() / 2.0D;
-        double d1 = (double) this.worldPosition.getY() + 0.5D + (double) vector3i.getY() / 2.0D;
-        double d2 = (double) this.worldPosition.getZ() + 0.5D + (double) vector3i.getZ() / 2.0D;
-        this.level.playSound((PlayerEntity) null, d0, d1, d2, sound, SoundCategory.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
-    }
-
-
-    public static void swapContents(TroughTileEntity chest, TroughTileEntity otherChest) {
-        NonNullList<ItemStack> nonnulllist = chest.getItems();
-        chest.setItems(otherChest.getItems());
-        otherChest.setItems(nonnulllist);
-    }
-
-    private net.minecraftforge.common.util.LazyOptional<net.minecraftforge.items.IItemHandlerModifiable> chestHandler;
-
-    @Override
-    public void clearCache() {
-        super.clearCache();
-        if (this.chestHandler != null) {
-            this.chestHandler.invalidate();
-            this.chestHandler = null;
-        }
-    }
-
-
-    @Override
-    public <T> net.minecraftforge.common.util.LazyOptional<T> getCapability(net.minecraftforge.common.capabilities.Capability<T> cap, Direction side) {
-        if (!this.remove && cap == net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (this.chestHandler == null)
-                this.chestHandler = net.minecraftforge.common.util.LazyOptional.of(this::createHandler);
-            return this.chestHandler.cast();
-        }
-        return super.getCapability(cap, side);
-    }
-
-    private net.minecraftforge.items.IItemHandlerModifiable createHandler() {
-        BlockState state = this.getBlockState();
-        if (!(state.getBlock() instanceof TroughBlock)) {
-            return new net.minecraftforge.items.wrapper.InvWrapper(this);
-        }
-        IInventory inv = TroughBlock.getChestInventory((TroughBlock) state.getBlock(), state, getLevel(), getBlockPos(), true);
-        return new net.minecraftforge.items.wrapper.InvWrapper(inv == null ? this : inv);
+    public int getContainerSize() {
+        return items.size();
     }
 
     @Override
-    protected void invalidateCaps() {
-        super.invalidateCaps();
-        if (chestHandler != null)
-            chestHandler.invalidate();
-    }
-
-
-    public boolean hasItems() {
-        boolean has = false;
-        for (ItemStack i : getItems()) {
-            if (!i.isEmpty()) {
-                has = true;
-            }
-        }
-        return has;
+    public boolean isEmpty() {
+        return items.stream().allMatch(ItemStack::isEmpty);
     }
 
     @Override
-    public void tick() {
+    public ItemStack getItem(int index) {
+        return index >= 0 && index < items.size() ? items.get(index) : ItemStack.EMPTY;
+    }
+
+    @Override
+    public ItemStack removeItem(int index, int count) {
+        setChanged();
+        return ItemStackHelper.removeItem(items, index, count);
+    }
+
+    @Override
+    public ItemStack removeItemNoUpdate(int index) {
+        setChanged();
+        return ItemStackHelper.takeItem(items, index);
+    }
+
+    @Override
+    public void setItem(int index, ItemStack stack) {
+        if (index >= 0 && index < items.size()) {
+            items.set(index, stack);
+            setChanged();
+        }
+    }
+
+    @Override
+    public boolean stillValid(PlayerEntity player) {
+        return true;
+    }
+
+    @Override
+    public void clearContent() {
+        items.clear();
+        setChanged();
+    }
+
+    @Override
+    public void load(BlockState state, CompoundNBT nbt) {
+        super.load(state, nbt);
+        clearContent();
+        ItemStackHelper.loadAllItems(nbt, items);
+    }
+
+    @Override
+    public CompoundNBT save(CompoundNBT nbt) {
+        super.save(nbt);
+        ItemStackHelper.saveAllItems(nbt, items);
+        return nbt;
+    }
+
+    @Nullable
+    @Override
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        return new SUpdateTileEntityPacket(getBlockPos(), 1, getUpdateTag());
+    }
+
+    @Override
+    public CompoundNBT getUpdateTag() {
+        return save(new CompoundNBT());
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        handleUpdateTag(getBlockState(), pkt.getTag());
+    }
+
+    @Override
+    public int[] getSlotsForFace(Direction pSide) {
+        return IntStream.range(0, items.size()).toArray();
+    }
+
+    @Override
+    public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
+        return direction == null || direction == Direction.UP;
+    }
+
+    @Override
+    public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
+        return direction == Direction.UP;
+    }
+
+    @Override
+    public void setChanged() { // todo
         //NonNullList<ItemStack> items = getItems();
         //int counter = 0;
         //world.setBlockState(getPos(), world.getBlockState(getPos()).with(NestBlock.eggs,
@@ -243,7 +182,18 @@ public class TroughTileEntity extends LockableLootTileEntity implements ITickabl
                 level.setBlockAndUpdate(worldPosition, state.setValue(TroughBlock.CONTAINS, value));
             }
         }
-
     }
 
+    @Override
+    protected ITextComponent getDefaultName() {
+        return new TranslationTextComponent(Util.makeDescriptionId("container", ForgeRegistries.BLOCKS.getKey(getBlockState().getBlock())));
+    }
+
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
+        if (!this.remove && facing == Direction.UP && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return LazyOptional.of(() -> sideHandler).cast();
+        }
+        return super.getCapability(capability, facing);
+    }
 }
