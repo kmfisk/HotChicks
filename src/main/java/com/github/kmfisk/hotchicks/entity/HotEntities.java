@@ -39,7 +39,7 @@ public class HotEntities {
             .renderer(() -> HotRabbitRenderer::new)
             /*.spawn(new SpawnInfo((type) -> type.contains(BiomeDictionary.Type.PLAINS) || (type.contains(BiomeDictionary.Type.CONIFEROUS) && !type.contains(BiomeDictionary.Type.MOUNTAIN) && !type.contains(BiomeDictionary.Type.SNOWY)),
                     2, 4, 10))*/
-            .data(hotRabbitEntityBuilder -> hotRabbitEntityBuilder.sized(0.4f, 0.4f).clientTrackingRange(10))
+            .data(hotRabbitEntityBuilder -> hotRabbitEntityBuilder.sized(0.6f, 0.5f).clientTrackingRange(10))
             .build(REGISTRAR, "rabbit");
 
     public static void registerSpawnPlacements() {

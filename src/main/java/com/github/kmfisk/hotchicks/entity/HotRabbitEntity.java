@@ -137,7 +137,7 @@ public class HotRabbitEntity extends LivestockEntity {
 
     @Override
     protected float getStandingEyeHeight(Pose pose, EntitySize size) {
-        return super.getStandingEyeHeight(pose, size); // todo
+        return size.height * 0.65F;
     }
 
     @Override
