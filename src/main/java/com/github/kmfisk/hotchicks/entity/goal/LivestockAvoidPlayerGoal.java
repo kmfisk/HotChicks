@@ -14,11 +14,11 @@ public class LivestockAvoidPlayerGoal<T extends LivingEntity> extends AvoidEntit
 
     @Override
     public boolean canUse() {
-        return /*todo: HUNGER livestock.isHungry() &&*/ super.canUse();
+        return livestock.getHunger().isLow() && super.canUse();
     }
 
     @Override
     public boolean canContinueToUse() {
-        return /*livestock.isHungry() &&*/ super.canContinueToUse();
+        return livestock.getHunger().isLow() && super.canContinueToUse();
     }
 }
