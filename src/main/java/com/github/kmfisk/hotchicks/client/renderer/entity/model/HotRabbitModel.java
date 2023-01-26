@@ -2,6 +2,8 @@ package com.github.kmfisk.hotchicks.client.renderer.entity.model;
 
 import com.github.kmfisk.hotchicks.entity.HotRabbitEntity;
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.SegmentedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
 
@@ -30,7 +32,7 @@ public class HotRabbitModel extends SegmentedModel<HotRabbitEntity> {
     public ModelRenderer LegRight;
     public ModelRenderer FootRight;
     private Iterable<ModelRenderer> parts;
-    
+
     public HotRabbitModel() {
         this.texWidth = 64;
         this.texHeight = 32;
@@ -172,7 +174,21 @@ public class HotRabbitModel extends SegmentedModel<HotRabbitEntity> {
     }
 
     @Override
-    public void setupAnim(HotRabbitEntity p_225597_1_, float p_225597_2_, float p_225597_3_, float p_225597_4_, float p_225597_5_, float p_225597_6_) {
+    public void renderToBuffer(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        if (young) {
+            matrixStack.pushPose();
+            float f1 = 1.0F / 2.0F;
+            matrixStack.scale(f1, f1, f1);
+            matrixStack.translate(0.0D, 24.0F / 16.0F, 0.0D);
+            parts().forEach((renderer) -> renderer.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha));
+            matrixStack.popPose();
 
+        } else super.renderToBuffer(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+    }
+
+    @Override
+    public void setupAnim(HotRabbitEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        this.Head.xRot = headPitch / (180F / (float) Math.PI) + 0.006F;
+        this.Head.yRot = netHeadYaw / (180F / (float) Math.PI);
     }
 }

@@ -820,7 +820,7 @@ public class HotChickenModel extends SegmentedModel<HotChickenEntity> {
             float degree = 1.4f;
             this.LegLeft.xRot = MathHelper.cos(5.0F + (limbSwing * speed * 0.2F) + (float) Math.PI) * (degree * -2.0F) * limbSwingAmount * 0.5F + -0.35F;
             this.LegRight.xRot = MathHelper.cos(5.0F + (limbSwing * speed * 0.2F) + (float) Math.PI) * (degree * 2.0F) * limbSwingAmount * 0.5F + -0.35F;
-            this.Neck.xRot = MathHelper.cos(6.0F + (limbSwing * speed * 0.4F) + (float) Math.PI) * (degree * -0.2F) * limbSwingAmount * 0.5F + -0.5F;
+            this.Neck.xRot = MathHelper.cos(6.0F + (limbSwing * speed * 0.4F) + (float) Math.PI) * (degree * -0.2F) * limbSwingAmount * 0.5F + 0.64F;
 
             this.Head.xRot = headPitch / (180F / (float)Math.PI) + -0.46F;
             this.Head.yRot = netHeadYaw / (180F / (float)Math.PI);
