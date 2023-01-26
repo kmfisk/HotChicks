@@ -23,7 +23,7 @@ public class HotChicksConfig {
                 .comment(" Growth speed is in minecraft ticks, and will be multiplied by the total of 5 minus the entity's stat.",
                         " For example, by default, a chick with a 2 in growth rate will have a growth timer of 36,000 ticks; that is (12000 * (5 - 2)).",
                         " Default: 12000")
-                .define("baby_growth", 12000);
+                .define("growth_speed", 12000);
         eggSpeed = builder
                 .comment(" Egg speed is in minecraft ticks, and will be multiplied by the total of 5 minus the entity's stat.",
                         " For example, by default, a hen with a 2 in egg speed will have an egg laying timer of 18,000 ticks; that is (6000 * (5 - 2)).",
@@ -31,9 +31,9 @@ public class HotChicksConfig {
                 .define("egg_speed", 6000);
         hatchSpeed = builder
                 .comment(" Hatch speed is in minecraft ticks, and is the same for all eggs.",
-                        " By default, an egg will have a hatch timer of 6,000 ticks.",
-                        " Default: 6000")
-                .define("egg_speed", 6000);
+                        " By default, an egg will have a hatch timer of 24,000 ticks.",
+                        " Default: 24000")
+                .define("hatch_speed", 24000);
         breedingCooldown = builder
                 .comment(" Breeding cooldown is in minecraft ticks, and will be multiplied by the total of 5 minus the entity's growth rate stat.",
                         " For example, by default, a hen with a 2 in growth rate will have a breeding cooldown of 54,000 ticks; that is (18000 * (5 - 2)).",
