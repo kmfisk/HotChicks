@@ -114,6 +114,11 @@ public class HotChickenEntity extends LivestockEntity {
         return Ingredient.of(CHICKEN_FOODS).test(stack);
     }
 
+    @Override
+    public String getReadableBreed() {
+        return getBreedFromVariant(getVariant()).toString();
+    }
+
     public void setEggSpeed(int eggSpeed) {
         this.entityData.set(EGG_SPEED, eggSpeed);
     }
@@ -368,7 +373,7 @@ public class HotChickenEntity extends LivestockEntity {
             child.save(tags);
             ResourceLocation key = EntityType.getKey(child.getType());
             tags.putString("id", key.toString());
-            tags.putString("Breed", getBreedFromVariant(child.getVariant()).toString());
+            tags.putString("Breed", getReadableBreed());
             tags.putInt("TimeLeft", HotChicksConfig.hatchSpeed.get());
             stack.setTag(tags);
             setItemInHand(Hand.MAIN_HAND, stack);

@@ -32,7 +32,7 @@ public class StudBookInfo implements ReadBookScreen.IBookInfo {
             HotChickenEntity chicken = (HotChickenEntity) entity;
             stats = chicken.getStats();
 
-            page += "" + "" + TextFormatting.BOLD + "Breed: " + ChickenBreeds.valueOf(chicken.getBreedFromVariant(chicken.getVariant()).toString().toUpperCase()) + TextFormatting.RESET;
+            page += "" + "" + TextFormatting.BOLD + "Breed: " + ChickenBreeds.valueOf(chicken.getReadableBreed().toUpperCase()) + TextFormatting.RESET;
             page += "\n" + TextFormatting.RESET + "" + TextFormatting.BOLD + "" + "Variant: " + chicken.getVariant();
 //            page += "\n" + TextFormatting.RESET + "" + TextFormatting.BOLD + "" + "Child Type: " + chicken.getChickType();
             page += "\n" + TextFormatting.RESET + "" + TextFormatting.BOLD + "" + "Sex: " + chicken.getSex().toString() + TextFormatting.RESET;
@@ -48,7 +48,7 @@ public class StudBookInfo implements ReadBookScreen.IBookInfo {
             HotRabbitEntity rabbit = (HotRabbitEntity) entity;
             stats = rabbit.getStats();
 
-            page += "" + "" + TextFormatting.BOLD + "Breed: " + RabbitBreeds.valueOf(rabbit.getBreedFromVariant(rabbit.getVariant()).toString().toUpperCase()) + TextFormatting.RESET;
+            page += "" + "" + TextFormatting.BOLD + "Breed: " + RabbitBreeds.valueOf(rabbit.getReadableBreed().toUpperCase()) + TextFormatting.RESET;
             page += "\n" + TextFormatting.RESET + "" + TextFormatting.BOLD + "" + "Variant: " + rabbit.getVariant();
             page += "\n" + TextFormatting.RESET + "" + TextFormatting.BOLD + "" + "Sex: " + rabbit.getSex().toString() + TextFormatting.RESET;
 

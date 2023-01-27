@@ -81,6 +81,8 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     public abstract Stats getStats();
 
+    public abstract String getReadableBreed();
+
     public Sex getSex() {
         return Sex.fromBool(entityData.get(SEX));
     }

@@ -92,6 +92,11 @@ public class HotRabbitEntity extends LivestockEntity {
         return Ingredient.of(RABBIT_FOODS).test(stack);
     }
 
+    @Override
+    public String getReadableBreed() {
+        return getBreedFromVariant(getVariant()).toString();
+    }
+
     public void setStats(RabbitStats stats) {
         setTameness(stats.tameness);
         setCarcassQuality(stats.carcassQuality);
