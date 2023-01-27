@@ -21,7 +21,7 @@ public class FindFoodGoal extends MoveToBlockGoal {
     @Override
     public boolean canUse() {
         if (!(entity.getHunger().getValue() < entity.getHunger().getMax())) return false;
-        else if (entity.getHunger().isLow()) return super.canUse();
+        if (entity.getHunger().isLow()) return super.canUse();
         else return entity.getRandom().nextInt(entity.isBaby() ? 50 : 1000) == 0 && super.canUse();
     }
 

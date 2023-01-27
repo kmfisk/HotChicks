@@ -164,7 +164,7 @@ public abstract class LivestockEntity extends AnimalEntity {
     @Override
     public void aiStep() {
         super.aiStep();
-        if (isAlive()) {
+        if (isAlive() && !level.isClientSide) {
             if (HotChicksConfig.hunger.get() && getHunger().getValue() > 0) hunger.tick();
             if (getHealth() < getMaxHealth() && tickCount % 20 == 0 && getHunger().getValue() == getHunger().getMax()) heal(1.0F);
         }
@@ -190,7 +190,7 @@ public abstract class LivestockEntity extends AnimalEntity {
                 return ActionResultType.sidedSuccess(level.isClientSide);
             }
         }
-        if (stack.getItem() == Items.STICK) {
+        if (stack.getItem() == Items.STICK && !level.isClientSide) {
             player.displayClientMessage(new StringTextComponent("Hunger: " +
                     getHunger().getValue() + " / " + getHunger().getMax() +
                     " -> " + getHunger().getTicks()), true);
