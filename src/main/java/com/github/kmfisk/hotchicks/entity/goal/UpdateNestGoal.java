@@ -7,9 +7,15 @@ import net.minecraft.util.math.BlockPos;
 
 public class UpdateNestGoal extends Goal {
     private final HotChickenEntity chicken;
+    private final int searchRange;
+    private final int verticalSearchRange;
+    protected int verticalSearchStart;
 
-    public UpdateNestGoal(HotChickenEntity chicken) {
+    public UpdateNestGoal(HotChickenEntity chicken, int searchRange, int verticalSearchRange) {
         this.chicken = chicken;
+        this.searchRange = searchRange;
+        this.verticalSearchStart = 0;
+        this.verticalSearchRange = verticalSearchRange;
     }
 
     @Override
@@ -25,13 +31,12 @@ public class UpdateNestGoal extends Goal {
 
     @Override
     public void start() {
+        int i = this.searchRange;
+        int j = this.verticalSearchRange;
         chicken.remainingCooldownBeforeLocatingNewNest = 200;
-
-        int i = 4;
-        int j = 2;
         BlockPos chickenPos = chicken.blockPosition();
         BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
-        for (int k = 0; k <= j; k = k > 0 ? -k : 1 - k) {
+        for (int k = verticalSearchRange; k <= j; k = k > 0 ? -k : 1 - k) {
             for (int l = 0; l < i; ++l) {
                 for (int i1 = 0; i1 <= l; i1 = i1 > 0 ? -i1 : 1 - i1) {
                     for (int j1 = i1 < l && i1 > -l ? l : 0; j1 <= l; j1 = j1 > 0 ? -j1 : 1 - j1) {
