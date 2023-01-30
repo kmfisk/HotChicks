@@ -6,25 +6,16 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "minecraft:rabbit_foot"
-        }
-      ],
-      "conditions": [
-        {
-          "condition": "minecraft:killed_by_player"
-        },
-        {
-          "condition": "minecraft:random_chance_with_looting",
-          "chance": 0.1,
-          "looting_multiplier": 0.03
-        }
-      ]
-    },
-    {
-      "rolls": 1,
-      "entries": [
-        {
-          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 2.0,
+                "max": 3.0,
+                "type": "minecraft:uniform"
+              }
+            }
+          ],
           "name": "hotchicks:gelatin"
         }
       ],
@@ -41,7 +32,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hotchicks:poor_rabbit_hide",
+          "name": "hotchicks:poor_cattle_hide",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -54,7 +45,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:fair_rabbit_hide",
+          "name": "hotchicks:fair_cattle_hide",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -67,7 +58,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:good_rabbit_hide",
+          "name": "hotchicks:good_cattle_hide",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -80,7 +71,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:prime_rabbit_hide",
+          "name": "hotchicks:prime_cattle_hide",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -93,7 +84,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:choice_rabbit_hide",
+          "name": "hotchicks:choice_cattle_hide",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -111,7 +102,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hotchicks:poor_rabbit_carcass",
+          "name": "hotchicks:poor_cattle_carcass",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -124,7 +115,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:fair_rabbit_carcass",
+          "name": "hotchicks:fair_cattle_carcass",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -137,7 +128,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:good_rabbit_carcass",
+          "name": "hotchicks:good_cattle_carcass",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -150,7 +141,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:prime_rabbit_carcass",
+          "name": "hotchicks:prime_cattle_carcass",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -163,7 +154,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:choice_rabbit_carcass",
+          "name": "hotchicks:choice_cattle_carcass",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",

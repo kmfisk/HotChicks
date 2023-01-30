@@ -59,6 +59,7 @@ public class HotItems {
     public static final RegistryObject<Item> GOOD_RABBIT_HIDE = REGISTRAR.register("good_rabbit_hide", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
     public static final RegistryObject<Item> FAIR_RABBIT_HIDE = REGISTRAR.register("fair_rabbit_hide", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
     public static final RegistryObject<Item> POOR_RABBIT_HIDE = REGISTRAR.register("poor_rabbit_hide", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> GELATIN = REGISTRAR.register("gelatin", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
 
     // CROP BLOCK ITEMS
     public static final RegistryObject<Item> BLUEBERRIES = REGISTRAR.register("blueberries", () -> new BlockNamedItem(HotBlocks.BLUEBERRY_BUSH.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.BLUEBERRY)));
