@@ -301,8 +301,38 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     @Override
-    protected void onOffspringSpawnedFromEgg(PlayerEntity pPlayer, MobEntity pChild) {
-        super.onOffspringSpawnedFromEgg(pPlayer, pChild); // todo
+    protected void onOffspringSpawnedFromEgg(PlayerEntity player, MobEntity entity) {
+        if (entity instanceof HotChickenEntity) {
+            HotChickenEntity child = (HotChickenEntity) entity;
+
+            boolean colorMorph = random.nextFloat() <= 0.1;
+            ChickenBreeds breed1 = getBreedFromVariant();
+            ChickenStats stats = (ChickenStats) getStats().average(getStats(), true).mutate(0.2);
+
+            if (stats.tameness < 85) child.setVariant(0);
+            else {
+                int childVariant;
+                ChickenBreeds childBreed;
+
+                if (breed1 != ChickenBreeds.JUNGLEFOWL)
+                    childVariant = colorMorph ? ChickenBreeds.randomFromBreed(random, breed1) : getVariant();
+                else {
+                    if (this.random.nextFloat() <= 0.8)
+                        childVariant = ChickenBreeds.randomBasedOnBiome(random, getBiome());
+                    else childVariant = random.nextInt(getMaxVariants()) + 1;
+                }
+
+                child.setVariant(childVariant);
+                childBreed = child.getBreedFromVariant();
+
+                if (childBreed != ChickenBreeds.JUNGLEFOWL && random.nextFloat() <= 0.8)
+                    stats = (ChickenStats) stats.average(childBreed.getStats(), false);
+            }
+
+            child.setBaby(true);
+            child.setStats(stats);
+            child.setSex(Sex.fromBool(random.nextBoolean()));
+        }
     }
 
     @Override

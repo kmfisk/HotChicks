@@ -190,8 +190,39 @@ public class HotRabbitEntity extends LivestockEntity {
     }
 
     @Override
-    protected void onOffspringSpawnedFromEgg(PlayerEntity pPlayer, MobEntity pChild) {
-        super.onOffspringSpawnedFromEgg(pPlayer, pChild); // todo
+    protected void onOffspringSpawnedFromEgg(PlayerEntity player, MobEntity entity) {
+        if (entity instanceof HotRabbitEntity) {
+            HotRabbitEntity child = (HotRabbitEntity) entity;
+
+            boolean colorMorph = random.nextFloat() <= 0.1;
+            RabbitBreeds breed1 = getBreedFromVariant();
+            RabbitStats stats = (RabbitStats) getStats().average(getStats(), true).mutate(0.2);
+
+            if (stats.tameness < 95) child.setVariant(0);
+            else {
+                int childVariant;
+                RabbitBreeds childBreed;
+
+                if (breed1 != RabbitBreeds.COTTONTAIL)
+                    childVariant = colorMorph ? RabbitBreeds.randomFromBreed(random, breed1) : getVariant();
+                else {
+                    if (random.nextFloat() <= 0.8F)
+                        childVariant = RabbitBreeds.randomBasedOnBiome(random, getBiome());
+                    else childVariant = random.nextInt(getMaxVariants()) + 1;
+                }
+
+                child.setVariant(childVariant);
+                childBreed = child.getBreedFromVariant();
+
+                if (childBreed != RabbitBreeds.COTTONTAIL && random.nextFloat() <= 0.8F)
+                    stats = (RabbitStats) stats.average(childBreed.getStats(), false);
+
+            }
+
+            child.setBaby(true);
+            child.setStats(stats);
+            child.setSex(Sex.fromBool(random.nextBoolean()));
+        }
     }
 
     @Override
