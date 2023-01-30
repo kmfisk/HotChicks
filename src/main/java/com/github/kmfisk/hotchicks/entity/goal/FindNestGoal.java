@@ -58,7 +58,7 @@ public class FindNestGoal extends Goal {
                         dropAndBlacklistNest();
                     else if (lastPath != null && chicken.getNavigation().getPath().sameAs(lastPath)) {
                         ++ticksStuck;
-                        if (ticksStuck > 60) {
+                        if (ticksStuck > 100) {
                             dropNest();
                             ticksStuck = 0;
                         }

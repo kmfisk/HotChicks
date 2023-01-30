@@ -7,27 +7,29 @@ import net.minecraft.util.RegistryKey;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.fml.RegistryObject;
 
 import java.util.Random;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public enum ChickenBreeds {
-    JUNGLEFOWL(50, 0, 0, 0, HotItems.WHITE_EGG.get(), 1),
-    AMERAUCANA(85, 2, 1, 2, HotItems.BLUE_EGG.get(), 7),
-    BARRED_ROCK(85, 3, 3, 3, HotItems.WHITE_EGG.get(), 1),
-    LEGHORN(85, 1, 2, 4, HotItems.WHITE_EGG.get(), 1),
-    MARANS(85, 3, 1, 2, HotItems.CHOCOLATE_EGG.get(), 4),
-    OLIVE_EGGER(85, 2, 1, 2, HotItems.GREEN_EGG.get(), 7),
-    ORPINGTON(85, 3, 3, 1, HotItems.BROWN_EGG.get(), 4),
-    RHODE_ISLAND_RED(85, 3, 2, 2, HotItems.BROWN_EGG.get(), 3),
-    SILKIE(85, 3, 1, 1, HotItems.WHITE_EGG.get(), 5);
+    JUNGLEFOWL(50, 0, 0, 0, HotItems.WHITE_EGG, 1),
+    AMERAUCANA(85, 2, 1, 2, HotItems.BLUE_EGG, 7),
+    BARRED_ROCK(85, 3, 3, 3, HotItems.WHITE_EGG, 1),
+    LEGHORN(85, 1, 2, 4, HotItems.WHITE_EGG, 1),
+    MARANS(85, 3, 1, 2, HotItems.CHOCOLATE_EGG, 4),
+    OLIVE_EGGER(85, 2, 1, 2, HotItems.GREEN_EGG, 7),
+    ORPINGTON(85, 3, 3, 1, HotItems.BROWN_EGG, 4),
+    RHODE_ISLAND_RED(85, 3, 2, 2, HotItems.BROWN_EGG, 3),
+    SILKIE(85, 3, 1, 1, HotItems.WHITE_EGG, 5);
 
     public static final int MAX_VARIANTS = 32;
     private final ChickenStats stats;
-    private final Item eggColor;
+    private final Supplier<Item> eggColor;
     private final int variants;
 
-    ChickenBreeds(int tameness, int carcassQuality, int growthRate, int eggSpeed, Item eggColor, int variants) {
+    ChickenBreeds(int tameness, int carcassQuality, int growthRate, int eggSpeed, Supplier<Item> eggColor, int variants) {
         this.stats = new ChickenStats(tameness, carcassQuality, growthRate, eggSpeed);
         this.eggColor = eggColor;
         this.variants = variants;
@@ -38,7 +40,7 @@ public enum ChickenBreeds {
     }
 
     public Item getEggColor() {
-        return eggColor;
+        return eggColor.get();
     }
 
     public static int randomFromBreed(Random random, ChickenBreeds breeds) {
