@@ -173,8 +173,8 @@ public abstract class LivestockEntity extends AnimalEntity {
                 heal(1.0F);
         }
 
-        if (HotChicksConfig.hunger.get() && getHunger().isLow()) {
-            for (int i = 0; i < 2; ++i)
+        if (level.isClientSide && HotChicksConfig.hunger.get() && getHunger().isLow()) {
+            if (tickCount % 10 == 0)
                 level.addParticle(ParticleTypes.SMOKE, getRandomX(1.0D), getRandomY() + 0.5D, getRandomZ(1.0D), random.nextGaussian() * 0.02D, random.nextGaussian() * 0.02D, random.nextGaussian() * 0.02D);
         }
     }
