@@ -208,6 +208,11 @@ public abstract class LivestockEntity extends AnimalEntity {
         return super.mobInteract(player, hand);
     }
 
+    @Override
+    protected boolean shouldDropLoot() {
+        return !getHunger().isLow() && super.shouldDropLoot();
+    }
+
     public static boolean checkLivestockSpawnRules(EntityType<? extends LivestockEntity> entityType, IServerWorld world, SpawnReason spawnReason, BlockPos pos, Random random) {
         BlockState blockState = world.getBlockState(pos.below());
         return (blockState.is(Blocks.GRASS_BLOCK) || blockState.is(Blocks.SNOW) || blockState.is(BlockTags.ICE)
