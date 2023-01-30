@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "hotchicks:item/spawn_egg_chicken_leghorn"
+  }
+}

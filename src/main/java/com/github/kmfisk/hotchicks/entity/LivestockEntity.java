@@ -82,6 +82,8 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     public abstract Stats getStats();
 
+    public abstract void setupStats(String breed);
+
     public abstract String getReadableBreed();
 
     public Sex getSex() {

@@ -1,6 +1,7 @@
 package com.github.kmfisk.hotchicks.item;
 
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
@@ -18,21 +19,23 @@ public class HotEggItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        CompoundNBT tag = stack.getOrCreateTag();
+    public void inventoryTick(ItemStack stack, World level, Entity entity, int itemSlot, boolean isSelected) {
+        super.inventoryTick(stack, level, entity, itemSlot, isSelected); // todo
+    }
 
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable World level, List<ITextComponent> tooltip, ITooltipFlag flag) {
+        CompoundNBT tag = stack.getOrCreateTag();
         TextFormatting gray = TextFormatting.GRAY;
-        if (tag.getBoolean("Infertile")) {
-            tooltip.add(new StringTextComponent(gray + "Infertile"));
-            super.appendHoverText(stack, worldIn, tooltip, flagIn);
-            return;
+        if (tag.getBoolean("Infertile")) tooltip.add(new StringTextComponent(gray + "Infertile"));
+
+        if (tag.contains("CarcassQuality")) {
+            tooltip.add(new StringTextComponent(gray + "Carcass Quality: " + tag.getInt("CarcassQuality")));
+            tooltip.add(new StringTextComponent(gray + "Growth Rate: " + tag.getInt("GrowthRate")));
+            tooltip.add(new StringTextComponent(gray + "Egg Speed: " + tag.getInt("EggSpeed")));
+            tooltip.add(new StringTextComponent(gray + "Tameness: " + tag.getInt("Tameness")));
+            tooltip.add(new StringTextComponent(gray + tag.getString("Breed")));
+            tooltip.add(new StringTextComponent(gray + "Time Left: " + tag.getInt("TimeLeft") / 20));
         }
-        tooltip.add(new StringTextComponent(gray + "Carcass Quality: " + tag.getInt("CarcassQuality")));
-        tooltip.add(new StringTextComponent(gray + "Growth Rate: " + tag.getInt("GrowthRate")));
-        tooltip.add(new StringTextComponent(gray + "Egg Speed: " + tag.getInt("EggSpeed")));
-        tooltip.add(new StringTextComponent(gray + "Tameness: " + tag.getInt("Tameness")));
-        tooltip.add(new StringTextComponent(gray + tag.getString("Breed")));
-        tooltip.add(new StringTextComponent(gray + "Time Left: " + tag.getInt("TimeLeft") / 20));
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 }

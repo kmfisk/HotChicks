@@ -152,6 +152,43 @@ public class HotChickenEntity extends LivestockEntity {
         );
     }
 
+    @Override
+    public void setupStats(String breed) {
+        ChickenBreeds chickenBreeds = ChickenBreeds.valueOf(breed.toUpperCase());
+        switch (chickenBreeds) {
+            default:
+            case JUNGLEFOWL:
+                setVariant(0);
+                break;
+            case AMERAUCANA:
+                setVariant(random.nextInt(7) + 1);
+                break;
+            case BARRED_ROCK:
+                setVariant(8);
+                break;
+            case LEGHORN:
+                setVariant(9);
+                break;
+            case MARANS:
+                setVariant(random.nextInt(4) + 10);
+                break;
+            case OLIVE_EGGER:
+                setVariant(random.nextInt(7) + 14);
+                break;
+            case ORPINGTON:
+                setVariant(random.nextInt(4) + 21);
+                break;
+            case RHODE_ISLAND_RED:
+                setVariant(random.nextInt(3) + 25);
+                break;
+            case SILKIE:
+                setVariant(random.nextInt(5) + 28);
+                break;
+        }
+
+        setStats(chickenBreeds.getStats());
+    }
+
     public int getMaxEggTimer() {
         return getStats().getEggSpeedForStat();
     }
@@ -261,6 +298,11 @@ public class HotChickenEntity extends LivestockEntity {
     @Override
     public AgeableEntity getBreedOffspring(ServerWorld world, AgeableEntity entity) {
         return HotEntities.CHICKEN.get().create(world);
+    }
+
+    @Override
+    protected void onOffspringSpawnedFromEgg(PlayerEntity pPlayer, MobEntity pChild) {
+        super.onOffspringSpawnedFromEgg(pPlayer, pChild); // todo
     }
 
     @Override

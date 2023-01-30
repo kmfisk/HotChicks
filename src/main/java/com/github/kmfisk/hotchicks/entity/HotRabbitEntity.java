@@ -117,6 +117,37 @@ public class HotRabbitEntity extends LivestockEntity {
     }
 
     @Override
+    public void setupStats(String breed) {
+        RabbitBreeds rabbitBreeds = RabbitBreeds.valueOf(breed.toUpperCase());
+        switch (rabbitBreeds) {
+            default:
+            case COTTONTAIL:
+                setVariant(0);
+                break;
+            case AMERICAN_CHINCHILLA:
+                setVariant(random.nextInt(2) + 1);
+                break;
+            case CALIFORNIA:
+                setVariant(3);
+                break;
+            case DUTCH:
+                setVariant(random.nextInt(6) + 4);
+                break;
+            case FLEMISH_GIANT:
+                setVariant(random.nextInt(5) + 10);
+                break;
+            case NEW_ZEALAND:
+                setVariant(random.nextInt(3) + 15);
+                break;
+            case REX:
+                setVariant(random.nextInt(9) + 18);
+                break;
+        }
+
+        setStats(rabbitBreeds.getStats());
+    }
+
+    @Override
     public void addAdditionalSaveData(CompoundNBT nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("HideQuality", this.getHideQuality());
@@ -156,6 +187,11 @@ public class HotRabbitEntity extends LivestockEntity {
     @Override
     public AgeableEntity getBreedOffspring(ServerWorld world, AgeableEntity entity) {
         return HotEntities.RABBIT.get().create(world);
+    }
+
+    @Override
+    protected void onOffspringSpawnedFromEgg(PlayerEntity pPlayer, MobEntity pChild) {
+        super.onOffspringSpawnedFromEgg(pPlayer, pChild); // todo
     }
 
     @Override
