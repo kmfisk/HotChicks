@@ -17,6 +17,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -168,7 +169,13 @@ public abstract class LivestockEntity extends AnimalEntity {
         super.aiStep();
         if (isAlive() && !level.isClientSide) {
             if (HotChicksConfig.hunger.get() && getHunger().getValue() > 0) hunger.tick();
-            if (getHealth() < getMaxHealth() && tickCount % 20 == 0 && getHunger().getValue() == getHunger().getMax()) heal(1.0F);
+            if (getHealth() < getMaxHealth() && tickCount % 20 == 0 && getHunger().getValue() == getHunger().getMax())
+                heal(1.0F);
+        }
+
+        if (HotChicksConfig.hunger.get() && getHunger().isLow()) {
+            for (int i = 0; i < 2; ++i)
+                level.addParticle(ParticleTypes.SMOKE, getRandomX(1.0D), getRandomY() + 0.5D, getRandomZ(1.0D), random.nextGaussian() * 0.02D, random.nextGaussian() * 0.02D, random.nextGaussian() * 0.02D);
         }
     }
 
