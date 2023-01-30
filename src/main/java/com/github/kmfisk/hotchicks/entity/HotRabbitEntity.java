@@ -94,7 +94,7 @@ public class HotRabbitEntity extends LivestockEntity {
 
     @Override
     public String getReadableBreed() {
-        return getBreedFromVariant(getVariant()).toString();
+        return getBreedFromVariant().toString();
     }
 
     public void setStats(RabbitStats stats) {
@@ -130,14 +130,14 @@ public class HotRabbitEntity extends LivestockEntity {
         this.setLitterSize(nbt.getInt("LitterSize"));
     }
 
-    public RabbitBreeds getBreedFromVariant(int variant) {
-        if (variant == 0) return RabbitBreeds.COTTONTAIL;
-        if (variant <= 2) return RabbitBreeds.AMERICAN_CHINCHILLA;
-        if (variant == 3) return RabbitBreeds.CALIFORNIA;
-        if (variant <= 9) return RabbitBreeds.DUTCH;
-        if (variant <= 14) return RabbitBreeds.FLEMISH_GIANT;
-        if (variant <= 17) return RabbitBreeds.NEW_ZEALAND;
-        if (variant <= 26) return RabbitBreeds.REX;
+    public RabbitBreeds getBreedFromVariant() {
+        if (getVariant() == 0) return RabbitBreeds.COTTONTAIL;
+        if (getVariant() <= 2) return RabbitBreeds.AMERICAN_CHINCHILLA;
+        if (getVariant() == 3) return RabbitBreeds.CALIFORNIA;
+        if (getVariant() <= 9) return RabbitBreeds.DUTCH;
+        if (getVariant() <= 14) return RabbitBreeds.FLEMISH_GIANT;
+        if (getVariant() <= 17) return RabbitBreeds.NEW_ZEALAND;
+        if (getVariant() <= 26) return RabbitBreeds.REX;
 
         return RabbitBreeds.COTTONTAIL;
     }
@@ -212,8 +212,8 @@ public class HotRabbitEntity extends LivestockEntity {
 
             boolean inheritMotherGenes = random.nextFloat() <= 0.6;
             boolean colorMorph = random.nextFloat() <= 0.1;
-            RabbitBreeds breed1 = getBreedFromVariant(getVariant());
-            RabbitBreeds breed2 = parent.getBreedFromVariant(parent.getVariant());
+            RabbitBreeds breed1 = getBreedFromVariant();
+            RabbitBreeds breed2 = parent.getBreedFromVariant();
             RabbitStats stats = (RabbitStats) getStats().average(parent.getStats(), true).mutate(0.2);
 
             if (stats.tameness < 95) child.setVariant(0);
@@ -247,14 +247,15 @@ public class HotRabbitEntity extends LivestockEntity {
                         if (random.nextFloat() <= 0.8F)
                             childVariant = RabbitBreeds.randomBasedOnBiome(random, getBiome());
                         else childVariant = random.nextInt(getMaxVariants()) + 1;
-                        childBreed = getBreedFromVariant(childVariant);
                     }
                 }
 
-                if (childBreed != RabbitBreeds.COTTONTAIL && random.nextFloat() <= 0.8F)
-                    stats = (RabbitStats) stats.average(childBreed.stats, false);
-
                 child.setVariant(childVariant);
+                childBreed = child.getBreedFromVariant();
+
+                if (childBreed != RabbitBreeds.COTTONTAIL && random.nextFloat() <= 0.8F)
+                    stats = (RabbitStats) stats.average(childBreed.getStats(), false);
+
             }
 
             child.setBaby(true);

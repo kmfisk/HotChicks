@@ -130,6 +130,6 @@ public class ChickenSpawnEggItem extends Item {
                 break;
         }
 
-        chicken.setStats(breed.stats);
+        chicken.setStats(breed.getStats());
     }
 }

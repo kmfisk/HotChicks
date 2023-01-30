@@ -124,6 +124,6 @@ public class RabbitSpawnEggItem extends Item {
                 break;
         }
 
-        rabbit.setStats(breed.stats);
+        rabbit.setStats(breed.getStats());
     }
 }

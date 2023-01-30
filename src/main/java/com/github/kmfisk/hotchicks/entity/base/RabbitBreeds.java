@@ -19,12 +19,16 @@ public enum RabbitBreeds {
     REX(95, 1, 4, 1, 2, 9);
 
     public static final int MAX_VARIANTS = 26;
-    public final RabbitStats stats;
-    public final int variants;
+    private final RabbitStats stats;
+    private final int variants;
 
     RabbitBreeds(int tameness, int carcassQuality, int hideQuality, int growthRate, int litterSize, int variants) {
         this.stats = new RabbitStats(tameness, carcassQuality, hideQuality, growthRate, litterSize);
         this.variants = variants;
+    }
+
+    public RabbitStats getStats() {
+        return stats;
     }
 
     public static int randomFromBreed(Random random, RabbitBreeds breeds) {

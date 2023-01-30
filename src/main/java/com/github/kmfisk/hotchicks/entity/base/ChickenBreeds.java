@@ -1,6 +1,8 @@
 package com.github.kmfisk.hotchicks.entity.base;
 
 import com.github.kmfisk.hotchicks.entity.stats.ChickenStats;
+import com.github.kmfisk.hotchicks.item.HotItems;
+import net.minecraft.item.Item;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
@@ -10,23 +12,33 @@ import java.util.Random;
 import java.util.Set;
 
 public enum ChickenBreeds {
-    JUNGLEFOWL(50, 0, 0, 0, 1),
-    AMERAUCANA(85, 2, 1, 2, 7),
-    BARRED_ROCK(85, 3, 3, 3, 1),
-    LEGHORN(85, 1, 2, 4, 1),
-    MARANS(85, 3, 1, 2, 4),
-    OLIVE_EGGER(85, 2, 1, 2, 7),
-    ORPINGTON(85, 3, 3, 1, 4),
-    RHODE_ISLAND_RED(85, 3, 2, 2, 3),
-    SILKIE(85, 3, 1, 1, 5);
+    JUNGLEFOWL(50, 0, 0, 0, HotItems.WHITE_EGG.get(), 1),
+    AMERAUCANA(85, 2, 1, 2, HotItems.BLUE_EGG.get(), 7),
+    BARRED_ROCK(85, 3, 3, 3, HotItems.WHITE_EGG.get(), 1),
+    LEGHORN(85, 1, 2, 4, HotItems.WHITE_EGG.get(), 1),
+    MARANS(85, 3, 1, 2, HotItems.CHOCOLATE_EGG.get(), 4),
+    OLIVE_EGGER(85, 2, 1, 2, HotItems.GREEN_EGG.get(), 7),
+    ORPINGTON(85, 3, 3, 1, HotItems.BROWN_EGG.get(), 4),
+    RHODE_ISLAND_RED(85, 3, 2, 2, HotItems.BROWN_EGG.get(), 3),
+    SILKIE(85, 3, 1, 1, HotItems.WHITE_EGG.get(), 5);
 
     public static final int MAX_VARIANTS = 32;
-    public final ChickenStats stats;
-    public final int variants;
+    private final ChickenStats stats;
+    private final Item eggColor;
+    private final int variants;
 
-    ChickenBreeds(int tameness, int carcassQuality, int growthRate, int eggSpeed, int variants) {
+    ChickenBreeds(int tameness, int carcassQuality, int growthRate, int eggSpeed, Item eggColor, int variants) {
         this.stats = new ChickenStats(tameness, carcassQuality, growthRate, eggSpeed);
+        this.eggColor = eggColor;
         this.variants = variants;
+    }
+
+    public ChickenStats getStats() {
+        return stats;
+    }
+
+    public Item getEggColor() {
+        return eggColor;
     }
 
     public static int randomFromBreed(Random random, ChickenBreeds breeds) {

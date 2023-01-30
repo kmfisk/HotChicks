@@ -40,7 +40,7 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
         boolean isChild = chicken.isBaby();
         if (isChild)
             model = chickModel;
-        else if (chicken.getBreedFromVariant(chicken.getVariant()) == ChickenBreeds.SILKIE)
+        else if (chicken.getBreedFromVariant() == ChickenBreeds.SILKIE)
             model = chicken.getSex() == LivestockEntity.Sex.MALE ? roosterSilkieModel : henSilkieModel;
         else
             model = chicken.getSex() == LivestockEntity.Sex.MALE ? roosterModel : henModel;
@@ -87,7 +87,7 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
             return new ResourceLocation(HotChicks.MOD_ID, "textures/entity/chicken/chick_" + baby + ".png");
         }
 
-        switch (chicken.getBreedFromVariant(variant)) {
+        switch (chicken.getBreedFromVariant()) {
             default: case JUNGLEFOWL:
                 location = "textures/entity/chicken/junglefowl/junglefowl" + sex;
                 break;

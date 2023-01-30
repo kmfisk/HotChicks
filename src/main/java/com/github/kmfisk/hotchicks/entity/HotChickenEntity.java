@@ -116,7 +116,7 @@ public class HotChickenEntity extends LivestockEntity {
 
     @Override
     public String getReadableBreed() {
-        return getBreedFromVariant(getVariant()).toString();
+        return getBreedFromVariant().toString();
     }
 
     public void setEggSpeed(int eggSpeed) {
@@ -173,16 +173,16 @@ public class HotChickenEntity extends LivestockEntity {
         this.setEggTimer(nbt.getInt("EggTimer"));
     }
 
-    public ChickenBreeds getBreedFromVariant(int variant) {
-        if (variant == 0) return ChickenBreeds.JUNGLEFOWL;
-        if (variant <= 7) return ChickenBreeds.AMERAUCANA;
-        if (variant == 8) return ChickenBreeds.BARRED_ROCK;
-        if (variant == 9) return ChickenBreeds.LEGHORN;
-        if (variant <= 13) return ChickenBreeds.MARANS;
-        if (variant <= 20) return ChickenBreeds.OLIVE_EGGER;
-        if (variant <= 24) return ChickenBreeds.ORPINGTON;
-        if (variant <= 27) return ChickenBreeds.RHODE_ISLAND_RED;
-        if (variant <= 32) return ChickenBreeds.SILKIE;
+    public ChickenBreeds getBreedFromVariant() {
+        if (getVariant() == 0) return ChickenBreeds.JUNGLEFOWL;
+        if (getVariant() <= 7) return ChickenBreeds.AMERAUCANA;
+        if (getVariant() == 8) return ChickenBreeds.BARRED_ROCK;
+        if (getVariant() == 9) return ChickenBreeds.LEGHORN;
+        if (getVariant() <= 13) return ChickenBreeds.MARANS;
+        if (getVariant() <= 20) return ChickenBreeds.OLIVE_EGGER;
+        if (getVariant() <= 24) return ChickenBreeds.ORPINGTON;
+        if (getVariant() <= 27) return ChickenBreeds.RHODE_ISLAND_RED;
+        if (getVariant() <= 32) return ChickenBreeds.SILKIE;
 
         return ChickenBreeds.JUNGLEFOWL;
     }
@@ -319,8 +319,8 @@ public class HotChickenEntity extends LivestockEntity {
 
             boolean inheritMotherGenes = random.nextFloat() <= 0.6;
             boolean colorMorph = random.nextFloat() <= 0.1;
-            ChickenBreeds breed1 = getBreedFromVariant(getVariant());
-            ChickenBreeds breed2 = parent.getBreedFromVariant(parent.getVariant());
+            ChickenBreeds breed1 = getBreedFromVariant();
+            ChickenBreeds breed2 = parent.getBreedFromVariant();
             ChickenStats stats = (ChickenStats) getStats().average(parent.getStats(), true).mutate(0.2);
 
             if (stats.tameness < 85) child.setVariant(0);
@@ -354,21 +354,22 @@ public class HotChickenEntity extends LivestockEntity {
                         if (this.random.nextFloat() <= 0.8)
                             childVariant = ChickenBreeds.randomBasedOnBiome(random, getBiome());
                         else childVariant = random.nextInt(getMaxVariants()) + 1;
-                        childBreed = getBreedFromVariant(childVariant);
                     }
                 }
 
-                if (childBreed != ChickenBreeds.JUNGLEFOWL && random.nextFloat() <= 0.8)
-                    stats = (ChickenStats) stats.average(childBreed.stats, false);
-
                 child.setVariant(childVariant);
+                childBreed = child.getBreedFromVariant();
+
+                if (childBreed != ChickenBreeds.JUNGLEFOWL && random.nextFloat() <= 0.8)
+                    stats = (ChickenStats) stats.average(childBreed.getStats(), false);
+
             }
 
             child.setBaby(true);
             child.setStats(stats);
             child.setSex(Sex.fromBool(random.nextBoolean()));
 
-            ItemStack stack = HotItems.WHITE_EGG.get().getDefaultInstance();
+            ItemStack stack = getBreedFromVariant().getEggColor().getDefaultInstance();
             CompoundNBT tags = stack.getOrCreateTag();
             child.save(tags);
             ResourceLocation key = EntityType.getKey(child.getType());

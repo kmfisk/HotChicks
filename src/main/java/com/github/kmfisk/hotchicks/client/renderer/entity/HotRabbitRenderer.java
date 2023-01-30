@@ -35,7 +35,7 @@ public class HotRabbitRenderer extends MobRenderer<HotRabbitEntity, HotRabbitMod
         String sex = rabbit.getSex() == LivestockEntity.Sex.MALE ? "_buck.png" : "_doe.png";
         int variant = rabbit.getVariant();
 
-        switch (rabbit.getBreedFromVariant(variant)) {
+        switch (rabbit.getBreedFromVariant()) {
             default:
             case COTTONTAIL:
                 location = "textures/entity/rabbit/cottontail/cottontail" + sex;
