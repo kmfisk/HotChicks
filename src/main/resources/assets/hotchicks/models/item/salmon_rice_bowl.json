@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "hotchicks:item/salmon_rice_bowl"
+  }
+}

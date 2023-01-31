@@ -145,6 +145,7 @@ public class TrellisBlock extends Block implements IGrowable {
     }
 
     static {
+        fullTrellises.put(new ResourceLocation(HotChicks.MOD_ID, "cucumber"), HotBlocks.CUCUMBER_TRELLIS);
         fullTrellises.put(new ResourceLocation(HotChicks.MOD_ID, "grapes"), HotBlocks.GRAPE_TRELLIS);
         fullTrellises.put(new ResourceLocation(HotChicks.MOD_ID, "kiwi"), HotBlocks.KIWI_TRELLIS);
         fullTrellises.put(new ResourceLocation(HotChicks.MOD_ID, "tomato"), HotBlocks.TOMATO_TRELLIS);

@@ -1,0 +1,6 @@
+{
+  "parent": "hotchicks:block/trellis/cucumber_stage0",
+  "textures": {
+    "crop": "hotchicks:block/trellis/cucumbers/cucumbers_stage3"
+  }
+}
