@@ -1,8 +1,9 @@
 package com.github.kmfisk.hotchicks.entity;
 
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
-import com.github.kmfisk.hotchicks.entity.base.HungerStat;
+import com.github.kmfisk.hotchicks.entity.base.CareStat;
 import com.github.kmfisk.hotchicks.entity.goal.FindFoodGoal;
+import com.github.kmfisk.hotchicks.entity.goal.FindWaterGoal;
 import com.github.kmfisk.hotchicks.entity.stats.Stats;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -18,6 +19,8 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.potion.PotionUtils;
+import net.minecraft.potion.Potions;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -42,17 +45,21 @@ public abstract class LivestockEntity extends AnimalEntity {
     public static final DataParameter<Integer> GROWTH_RATE = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> LITTER_SIZE = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> HUNGER = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
-    private final HungerStat hunger;
+    public static final DataParameter<Integer> THIRST = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
+    private final CareStat hunger;
+    private final CareStat thirst;
 
     public LivestockEntity(EntityType<? extends AnimalEntity> type, World world) {
         super(type, world);
-        hunger = new HungerStat(this, HUNGER, getMaxHunger(), HotChicksConfig.hungerDepletion.get());
+        hunger = new CareStat(this, HUNGER, getMaxCareStat(), HotChicksConfig.hungerDepletion.get());
+        thirst = new CareStat(this, THIRST, getMaxCareStat(), HotChicksConfig.thirstDepletion.get());
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(2, new FindFoodGoal(this, 16, 2));
+        this.goalSelector.addGoal(2, new FindWaterGoal(this, 16, 1));
     }
 
     public void defineSynchedData() {
@@ -63,6 +70,7 @@ public abstract class LivestockEntity extends AnimalEntity {
         this.entityData.define(CARCASS_QUALITY, 0);
         this.entityData.define(GROWTH_RATE, 0);
         this.entityData.define(HUNGER, 0);
+        this.entityData.define(THIRST, 0);
     }
 
     @Override
@@ -76,7 +84,7 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     public abstract int getMaxVariants();
 
-    public abstract int getMaxHunger();
+    public abstract int getMaxCareStat();
 
     public abstract boolean isEdibleFood(ItemStack stack);
 
@@ -142,8 +150,12 @@ public abstract class LivestockEntity extends AnimalEntity {
         return this.entityData.get(LITTER_SIZE);
     }
 
-    public HungerStat getHunger() {
+    public CareStat getHunger() {
         return hunger;
+    }
+
+    public CareStat getThirst() {
+        return thirst;
     }
 
     public void addAdditionalSaveData(CompoundNBT nbt) {
@@ -154,6 +166,7 @@ public abstract class LivestockEntity extends AnimalEntity {
         nbt.putInt("CarcassQuality", this.getCarcassQuality());
         nbt.putInt("GrowthRate", this.getGrowthRate());
         nbt.put("Hunger", hunger.toTag());
+        nbt.put("Thirst", thirst.toTag());
     }
 
     public void readAdditionalSaveData(CompoundNBT nbt) {
@@ -164,6 +177,7 @@ public abstract class LivestockEntity extends AnimalEntity {
         this.setCarcassQuality(nbt.getInt("CarcassQuality"));
         this.setGrowthRate(nbt.getInt("GrowthRate"));
         hunger.fromTag(nbt.getCompound("Hunger"));
+        thirst.fromTag(nbt.getCompound("Thirst"));
     }
 
     @Override
@@ -171,11 +185,12 @@ public abstract class LivestockEntity extends AnimalEntity {
         super.aiStep();
         if (isAlive() && !level.isClientSide) {
             if (HotChicksConfig.hunger.get() && getHunger().getValue() > 0) hunger.tick();
-            if (getHealth() < getMaxHealth() && tickCount % 20 == 0 && getHunger().getValue() == getHunger().getMax())
+            if (HotChicksConfig.thirst.get() && getThirst().getValue() > 0) thirst.tick();
+            if (getHealth() < getMaxHealth() && tickCount % 20 == 0 && getHunger().getValue() == getHunger().getMax() && getThirst().getValue() == getThirst().getMax())
                 heal(1.0F);
         }
 
-        if (level.isClientSide && HotChicksConfig.hunger.get() && getHunger().isLow()) {
+        if (level.isClientSide && HotChicksConfig.hunger.get() && (getHunger().isLow() || getThirst().isLow())) {
             if (tickCount % 10 == 0)
                 level.addParticle(ParticleTypes.SMOKE, getRandomX(1.0D), getRandomY() + 0.5D, getRandomZ(1.0D), random.nextGaussian() * 0.02D, random.nextGaussian() * 0.02D, random.nextGaussian() * 0.02D);
         }
@@ -183,7 +198,7 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     @Override
     public boolean canFallInLove() {
-        return !getHunger().isLow() && super.canFallInLove();
+        return !getHunger().isLow() && !getThirst().isLow() && super.canFallInLove();
     }
 
     @Override
@@ -201,10 +216,20 @@ public abstract class LivestockEntity extends AnimalEntity {
                 return ActionResultType.sidedSuccess(level.isClientSide);
             }
         }
+        if (stack.getItem() == Items.WATER_BUCKET || (stack.getItem() == Items.POTION && PotionUtils.getPotion(stack) == Potions.WATER)) {
+            if (getThirst().getValue() < getThirst().getMax()) {
+                usePlayerItem(player, stack);
+                thirst.increment(stack.getItem() == Items.WATER_BUCKET ? 3 : 1);
+                return ActionResultType.sidedSuccess(level.isClientSide);
+            }
+        }
         if (stack.getItem() == Items.STICK && !level.isClientSide) {
-            player.displayClientMessage(new StringTextComponent("Hunger: " +
+            if (player.isDiscrete()) player.displayClientMessage(new StringTextComponent("Hunger: " +
                     getHunger().getValue() + " / " + getHunger().getMax() +
                     " -> " + getHunger().getTicks()), true);
+            else player.displayClientMessage(new StringTextComponent("Thirst: " +
+                    getThirst().getValue() + " / " + getThirst().getMax() +
+                    " -> " + getThirst().getTicks()), true);
         }
 
         return super.mobInteract(player, hand);
@@ -212,7 +237,7 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     @Override
     protected boolean shouldDropLoot() {
-        return !getHunger().isLow() && super.shouldDropLoot();
+        return !getHunger().isLow() && !getThirst().isLow() && super.shouldDropLoot();
     }
 
     public static boolean checkLivestockSpawnRules(EntityType<? extends LivestockEntity> entityType, IServerWorld world, SpawnReason spawnReason, BlockPos pos, Random random) {

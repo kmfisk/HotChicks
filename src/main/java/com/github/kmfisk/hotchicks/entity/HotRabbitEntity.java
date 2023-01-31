@@ -83,7 +83,7 @@ public class HotRabbitEntity extends LivestockEntity {
     }
 
     @Override
-    public int getMaxHunger() {
+    public int getMaxCareStat() {
         return 6;
     }
 

@@ -4,7 +4,7 @@ import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 
-public final class HungerStat {
+public final class CareStat {
     private final LivestockEntity entity;
     private final DataParameter<Integer> data;
     private final int max;
@@ -12,7 +12,7 @@ public final class HungerStat {
     private int ticks;
     private int saturationTimer;
 
-    public HungerStat(LivestockEntity entity, DataParameter<Integer> data, int max, int depleteTimer) {
+    public CareStat(LivestockEntity entity, DataParameter<Integer> data, int max, int depleteTimer) {
         this.entity = entity;
         this.data = data;
         this.max = max;

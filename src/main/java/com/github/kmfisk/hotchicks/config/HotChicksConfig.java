@@ -10,6 +10,8 @@ public class HotChicksConfig {
     public static ForgeConfigSpec.ConfigValue<Integer> breedingCooldown;
     public static ForgeConfigSpec.BooleanValue hunger;
     public static ForgeConfigSpec.ConfigValue<Integer> hungerDepletion;
+    public static ForgeConfigSpec.BooleanValue thirst;
+    public static ForgeConfigSpec.ConfigValue<Integer> thirstDepletion;
 
     static {
         ForgeConfigSpec.Builder configBuilder = new ForgeConfigSpec.Builder();
@@ -49,6 +51,15 @@ public class HotChicksConfig {
                         " By default, animals will lose 1 hunger point every 12000 ticks.",
                         " Default: 12000")
                 .define("depletion_rate", 12000);
+        builder.pop();
+
+        builder.push("Thirst");
+        thirst = builder.define("enabled", true);
+        thirstDepletion = builder
+                .comment(" Depletion rate is in minecraft ticks.",
+                        " By default, animals will lose 1 thirst point every 8000 ticks.",
+                        " Default: 8000")
+                .define("depletion_rate", 8000);
         builder.pop();
     }
 }
