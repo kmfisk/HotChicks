@@ -62,7 +62,7 @@ public class BananaTreeBlock extends DoublePlantBlock implements IGrowable {
         int i = state.getValue(AGE);
         if (i != 1 && player.getItemInHand(hand).getItem() == Items.BONE_MEAL)
             return ActionResultType.PASS;
-        else if (i > 0 && player.getItemInHand(hand).getItem() == Items.SHEARS) {
+        else if (i > 0) {
             BlockPos pos1 = state.getValue(HALF) == DoubleBlockHalf.LOWER ? pos.above() : pos.below();
             BlockState state1 = level.getBlockState(pos1);
             dropHarvestItem(level, pos);
