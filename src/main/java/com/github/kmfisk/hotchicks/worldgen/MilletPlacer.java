@@ -26,13 +26,13 @@ public class MilletPlacer extends ColumnBlockPlacer {
         BlockPos.Mutable blockpos$mutable = pos.mutable();
 
 
-        world.setBlock(blockpos$mutable, state.setValue(TallCropsBlock.AGE, 5).setValue(TallCropsBlock.TYPE, 0), 2);
+        world.setBlock(blockpos$mutable, state.setValue(TallCropsBlock.AGE, 5).setValue(TallCropsBlock.HEIGHT, 0), 2);
         blockpos$mutable.move(Direction.UP);
 
-        world.setBlock(blockpos$mutable, state.setValue(TallCropsBlock.AGE, 5).setValue(TallCropsBlock.TYPE, 1), 2);
+        world.setBlock(blockpos$mutable, state.setValue(TallCropsBlock.AGE, 5).setValue(TallCropsBlock.HEIGHT, 1), 2);
         blockpos$mutable.move(Direction.UP);
 
-        world.setBlock(blockpos$mutable, state.setValue(TallCropsBlock.AGE, 5).setValue(TallCropsBlock.TYPE, 2), 2);
+        world.setBlock(blockpos$mutable, state.setValue(TallCropsBlock.AGE, 5).setValue(TallCropsBlock.HEIGHT, 2), 2);
         blockpos$mutable.move(Direction.UP);
 
     }

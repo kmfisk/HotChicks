@@ -8,46 +8,46 @@
     },
 
 
-    "age=2,type=0": {
+    "age=2,height=0": {
       "model": "hotchicks:block/millet/millet_bottom_2"
     },
-    "age=2,type=1": {
+    "age=2,height=1": {
       "model": "hotchicks:block/millet/millet_middle_2"
     },
-    "age=2,type=2": {
+    "age=2,height=2": {
       "model": "hotchicks:block/millet/millet_middle_2"
     },
 
 
-    "age=3,type=0": {
+    "age=3,height=0": {
       "model": "hotchicks:block/millet/millet_bottom_3"
     },
-    "age=3,type=1": {
+    "age=3,height=1": {
       "model": "hotchicks:block/millet/millet_middle_3"
     },
-    "age=3,type=2": {
+    "age=3,height=2": {
       "model": "hotchicks:block/millet/millet_top_3"
     },
 
 
-    "age=4,type=0": {
+    "age=4,height=0": {
       "model": "hotchicks:block/millet/millet_bottom_4"
     },
-    "age=4,type=1": {
+    "age=4,height=1": {
       "model": "hotchicks:block/millet/millet_middle_4"
     },
-    "age=4,type=2": {
+    "age=4,height=2": {
       "model": "hotchicks:block/millet/millet_top_4"
     },
 
 
-    "age=5,type=0": {
+    "age=5,height=0": {
       "model": "hotchicks:block/millet/millet_bottom_5"
     },
-    "age=5,type=1": {
+    "age=5,height=1": {
       "model": "hotchicks:block/millet/millet_middle_5"
     },
-    "age=5,type=2": {
+    "age=5,height=2": {
       "model": "hotchicks:block/millet/millet_top_5"
     }
   }

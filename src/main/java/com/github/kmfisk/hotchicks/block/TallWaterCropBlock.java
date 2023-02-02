@@ -8,6 +8,7 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
+import net.minecraft.state.IntegerProperty;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -34,6 +35,11 @@ public class TallWaterCropBlock extends TallCropsBlock implements ILiquidContain
         return state.is(this) || (state.isFaceSturdy(level, pos, Direction.UP) && !state.is(Blocks.MAGMA_BLOCK));
     }
 
+    @Override
+    public IntegerProperty getHeightProperty() {
+        return IntegerProperty.create("height", 0, 1);
+    }
+
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
@@ -48,9 +54,9 @@ public class TallWaterCropBlock extends TallCropsBlock implements ILiquidContain
 
     @Override
     public boolean canSurvive(BlockState state, IWorldReader level, BlockPos pos) {
-        if (state.getValue(TYPE) > 0) {
+        if (state.getValue(getHeightProperty()) > 0) {
             BlockState blockState = level.getBlockState(pos.below());
-            return blockState.is(this) && blockState.getValue(TYPE) == 0;
+            return blockState.is(this) && blockState.getValue(getHeightProperty()) == 0;
         } else {
             FluidState fluidstate = level.getFluidState(pos);
             return super.canSurvive(state, level, pos) && fluidstate.is(FluidTags.WATER) && fluidstate.getAmount() == 8;
@@ -59,7 +65,7 @@ public class TallWaterCropBlock extends TallCropsBlock implements ILiquidContain
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        if (state.getValue(TYPE) > 0) return super.getFluidState(state);
+        if (state.getValue(getHeightProperty()) > 0) return super.getFluidState(state);
         else return Fluids.WATER.getSource(false);
     }
 

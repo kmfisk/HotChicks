@@ -6,6 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
@@ -18,14 +19,14 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 public class TallCropsBlock extends BushBlock implements IGrowable {
-    public static final IntegerProperty AGE = IntegerProperty.create("age", 0, 5);
-    public static final IntegerProperty TYPE = IntegerProperty.create("type", 0, 2);
+    public static final IntegerProperty AGE = BlockStateProperties.AGE_5;
+    public static final IntegerProperty HEIGHT = IntegerProperty.create("height", 0, 2);
 
     private final Supplier<? extends Item> item;
 
     public TallCropsBlock(Properties properties, Supplier<? extends Item> item) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0).setValue(TYPE, 0));
+        this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0).setValue(this.getHeightProperty(), 0));
         this.item = item;
     }
 
@@ -43,6 +44,10 @@ public class TallCropsBlock extends BushBlock implements IGrowable {
         return state.is(this) || state.is(Blocks.GRASS_BLOCK) || state.is(Blocks.DIRT) || state.is(Blocks.COARSE_DIRT) || state.is(Blocks.PODZOL);
     }
 
+    public IntegerProperty getHeightProperty() {
+        return HEIGHT;
+    }
+
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
@@ -58,17 +63,17 @@ public class TallCropsBlock extends BushBlock implements IGrowable {
     @Override
     public void randomTick(BlockState state, ServerWorld level, BlockPos pos, Random random) {
         int age = state.getValue(AGE);
-        if (age < 5 && state.getValue(TYPE) == 0 && level.getRawBrightness(pos.above(), 0) >= 9 && ForgeHooks.onCropsGrowPre(level, pos, state, random.nextInt(5) == 0)) {
+        if (age < 5 && state.getValue(getHeightProperty()) == 0 && level.getRawBrightness(pos.above(), 0) >= 9 && ForgeHooks.onCropsGrowPre(level, pos, state, random.nextInt(5) == 0)) {
             level.setBlock(pos, state.setValue(AGE, age + 1), 2);
             ForgeHooks.onCropsGrowPost(level, pos, state);
             if (age + 1 == 2) {
-                level.setBlockAndUpdate(pos.above(), defaultBlockState().setValue(AGE, age + 1).setValue(TYPE, 1));
+                level.setBlockAndUpdate(pos.above(), defaultBlockState().setValue(AGE, age + 1).setValue(getHeightProperty(), 1));
                 ForgeHooks.onCropsGrowPost(level, pos.above(), state);
             } else if (age + 1 > 2) {
-                level.setBlockAndUpdate(pos.above(), defaultBlockState().setValue(AGE, age + 1).setValue(TYPE, 1));
+                level.setBlockAndUpdate(pos.above(), defaultBlockState().setValue(AGE, age + 1).setValue(getHeightProperty(), 1));
                 ForgeHooks.onCropsGrowPost(level, pos.above(), state);
                 if (hasThirdBlock()) {
-                    level.setBlockAndUpdate(pos.above().above(), defaultBlockState().setValue(AGE, age + 1).setValue(TYPE, 2));
+                    level.setBlockAndUpdate(pos.above().above(), defaultBlockState().setValue(AGE, age + 1).setValue(getHeightProperty(), 2));
                     ForgeHooks.onCropsGrowPost(level, pos.above().above(), state);
                 }
             }
@@ -77,7 +82,7 @@ public class TallCropsBlock extends BushBlock implements IGrowable {
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(AGE, TYPE);
+        builder.add(AGE, getHeightProperty());
     }
 
     @Override
@@ -98,13 +103,13 @@ public class TallCropsBlock extends BushBlock implements IGrowable {
             if (i > 1) {
                 BlockPos pos1, pos2;
                 int type1, type2;
-                if (state.getValue(TYPE) == 0) {
+                if (state.getValue(getHeightProperty()) == 0) {
                     pos1 = pos.above();
                     type1 = 1;
                     pos2 = pos.above().above();
                     type2 = 2;
 
-                } else if (state.getValue(TYPE) == 1) {
+                } else if (state.getValue(getHeightProperty()) == 1) {
                     pos1 = pos.below();
                     type1 = 0;
                     pos2 = pos.above();
@@ -117,9 +122,9 @@ public class TallCropsBlock extends BushBlock implements IGrowable {
                     type2 = 0;
                 }
 
-                level.setBlock(pos1, defaultBlockState().setValue(AGE, i).setValue(TYPE, type1), 2);
+                level.setBlock(pos1, defaultBlockState().setValue(AGE, i).setValue(getHeightProperty(), type1), 2);
                 if (i > 2 && hasThirdBlock())
-                    level.setBlock(pos2, defaultBlockState().setValue(AGE, i).setValue(TYPE, type2), 2);
+                    level.setBlock(pos2, defaultBlockState().setValue(AGE, i).setValue(getHeightProperty(), type2), 2);
             }
         }
     }
@@ -130,13 +135,13 @@ public class TallCropsBlock extends BushBlock implements IGrowable {
             super.onRemove(state, level, pos, newState, isMoving);
             return;
         }
-        int type = state.getValue(TYPE);
+        int height = state.getValue(getHeightProperty());
         int age = state.getValue(AGE);
-        if (type == 1) {
-            if (age > 2) level.destroyBlock(pos.above(), false);
+        if (height == 1) {
+            if (age > 2 && hasThirdBlock()) level.destroyBlock(pos.above(), false);
             level.destroyBlock(pos.below(), false);
         }
-        if (type == 2) {
+        if (hasThirdBlock() && height == 2) {
             level.destroyBlock(pos.below(), false);
             level.destroyBlock(pos.below().below(), false);
         }
