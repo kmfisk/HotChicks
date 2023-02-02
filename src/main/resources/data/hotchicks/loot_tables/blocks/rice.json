@@ -34,7 +34,7 @@
           "condition": "minecraft:block_state_property",
           "block": "hotchicks:rice",
           "properties": {
-            "age": "7"
+            "age": "5"
           }
         }
       ]

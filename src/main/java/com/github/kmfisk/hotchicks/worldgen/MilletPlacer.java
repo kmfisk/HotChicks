@@ -1,7 +1,7 @@
 package com.github.kmfisk.hotchicks.worldgen;
 
 
-import com.github.kmfisk.hotchicks.block.CornBlock;
+import com.github.kmfisk.hotchicks.block.TallCropsBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -26,13 +26,13 @@ public class MilletPlacer extends ColumnBlockPlacer {
         BlockPos.Mutable blockpos$mutable = pos.mutable();
 
 
-        world.setBlock(blockpos$mutable, state.setValue(CornBlock.AGE, 5).setValue(CornBlock.TYPE, 0), 2);
+        world.setBlock(blockpos$mutable, state.setValue(TallCropsBlock.AGE, 5).setValue(TallCropsBlock.TYPE, 0), 2);
         blockpos$mutable.move(Direction.UP);
 
-        world.setBlock(blockpos$mutable, state.setValue(CornBlock.AGE, 5).setValue(CornBlock.TYPE, 1), 2);
+        world.setBlock(blockpos$mutable, state.setValue(TallCropsBlock.AGE, 5).setValue(TallCropsBlock.TYPE, 1), 2);
         blockpos$mutable.move(Direction.UP);
 
-        world.setBlock(blockpos$mutable, state.setValue(CornBlock.AGE, 5).setValue(CornBlock.TYPE, 2), 2);
+        world.setBlock(blockpos$mutable, state.setValue(TallCropsBlock.AGE, 5).setValue(TallCropsBlock.TYPE, 2), 2);
         blockpos$mutable.move(Direction.UP);
 
     }
