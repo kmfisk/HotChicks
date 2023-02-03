@@ -40,6 +40,15 @@ public class TallWaterCropBlock extends TallCropsBlock implements ILiquidContain
         return IntegerProperty.create("height", 0, 1);
     }
 
+    @Override
+    public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, IWorld pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
+        BlockState blockstate = super.updateShape(pState, pFacing, pFacingState, pLevel, pCurrentPos, pFacingPos);
+        if (!blockstate.isAir())
+            pLevel.getLiquidTicks().scheduleTick(pCurrentPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
+
+        return blockstate;
+    }
+
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
@@ -55,8 +64,8 @@ public class TallWaterCropBlock extends TallCropsBlock implements ILiquidContain
     @Override
     public boolean canSurvive(BlockState state, IWorldReader level, BlockPos pos) {
         if (state.getValue(getHeightProperty()) > 0) {
-            BlockState blockState = level.getBlockState(pos.below());
-            return blockState.is(this) && blockState.getValue(getHeightProperty()) == 0;
+            BlockState belowState = level.getBlockState(pos.below());
+            return belowState.is(this) && belowState.getValue(getHeightProperty()) == 0;
         } else {
             FluidState fluidstate = level.getFluidState(pos);
             return super.canSurvive(state, level, pos) && fluidstate.is(FluidTags.WATER) && fluidstate.getAmount() == 8;
