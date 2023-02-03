@@ -120,20 +120,20 @@ public class TroughBlock extends ContainerBlock {
     }
 
    /* @Nullable
-    public static IInventory getChestInventory(TroughBlock chest, BlockState state, World world, BlockPos pos, boolean override) {
-        return chest.combine(state, world, pos, override).apply(INVENTORY_MERGER).orElse(null);
+    public static IInventory getChestInventory(TroughBlock chest, BlockState state, World level, BlockPos pos, boolean override) {
+        return chest.combine(state, level, pos, override).apply(INVENTORY_MERGER).orElse(null);
     }*/
 
-    public TileEntityMerger.ICallbackWrapper<? extends TroughTileEntity> combine(BlockState state, World world, BlockPos pos, boolean override) {
+    public TileEntityMerger.ICallbackWrapper<? extends TroughTileEntity> combine(BlockState state, World level, BlockPos pos, boolean override) {
         BiPredicate<IWorld, BlockPos> bipredicate;
-        if (override) bipredicate = (worldIn, posIn) -> false;
+        if (override) bipredicate = (level1, pos1) -> false;
         else bipredicate = ChestBlock::isChestBlockedAt;
 
-        return TileEntityMerger.combineWithNeigbour(HotTileEntities.TROUGH.get(), TroughBlock::getChestMergerType, TroughBlock::getDirectionToAttached, FACING, state, world, pos, bipredicate);
+        return TileEntityMerger.combineWithNeigbour(HotTileEntities.TROUGH.get(), TroughBlock::getChestMergerType, TroughBlock::getDirectionToAttached, FACING, state, level, pos, bipredicate);
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld world, BlockPos pos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld level, BlockPos pos, BlockPos facingPos) {
         if (facingState.is(this) && facing.getAxis().isHorizontal()) {
             ChestType facingChestType = facingState.getValue(TYPE);
             if (state.getValue(TYPE) == ChestType.SINGLE && facingChestType != ChestType.SINGLE && state.getValue(FACING) == facingState.getValue(FACING) && getDirectionToAttached(facingState) == facing.getOpposite())
@@ -141,11 +141,11 @@ public class TroughBlock extends ContainerBlock {
 
         } else if (getDirectionToAttached(state) == facing) return state.setValue(TYPE, ChestType.SINGLE);
 
-        return super.updateShape(state, facing, facingState, world, pos, facingPos);
+        return super.updateShape(state, facing, facingState, level, pos, facingPos);
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, IBlockReader level, BlockPos pos, ISelectionContext context) {
         if (state.getValue(TYPE) == ChestType.SINGLE) {
             return SHAPE_SINGLE;
         } else {
@@ -205,21 +205,21 @@ public class TroughBlock extends ContainerBlock {
     }
 
     @Override
-    public void setPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(World level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         if (stack.hasCustomHoverName()) {
-            TileEntity tileentity = worldIn.getBlockEntity(pos);
+            TileEntity tileentity = level.getBlockEntity(pos);
             if (tileentity instanceof TroughTileEntity)
                 ((TroughTileEntity) tileentity).setCustomName(stack.getHoverName());
         }
     }
 
     @Override
-    public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, World level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
-            TileEntity tileentity = worldIn.getBlockEntity(pos);
-            if (tileentity instanceof IInventory) worldIn.updateNeighbourForOutputSignal(pos, this);
+            TileEntity tileentity = level.getBlockEntity(pos);
+            if (tileentity instanceof IInventory) level.updateNeighbourForOutputSignal(pos, this);
 
-            super.onRemove(state, worldIn, pos, newState, isMoving);
+            super.onRemove(state, level, pos, newState, isMoving);
         }
     }
 
@@ -229,14 +229,14 @@ public class TroughBlock extends ContainerBlock {
     }
 
     @Override
-    public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
     @Nullable
     @Override
-    public INamedContainerProvider getMenuProvider(BlockState state, World worldIn, BlockPos pos) {
-        return this.combine(state, worldIn, pos, false).apply(CONTAINER_MERGER).orElse(null);
+    public INamedContainerProvider getMenuProvider(BlockState state, World level, BlockPos pos) {
+        return this.combine(state, level, pos, false).apply(CONTAINER_MERGER).orElse(null);
     }
 
     @Override
@@ -245,62 +245,62 @@ public class TroughBlock extends ContainerBlock {
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, IBlockReader level, BlockPos pos, PathType type) {
         return false;
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        ItemStack itemstack = player.getItemInHand(handIn);
+    public ActionResultType use(BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+        ItemStack itemstack = player.getItemInHand(hand);
 
         Item item = itemstack.getItem();
         TroughFillType contains = state.getValue(CONTAINS);
         if (item == Items.WATER_BUCKET && contains == TroughFillType.NONE) {
-            if (!player.abilities.instabuild) player.setItemInHand(handIn, new ItemStack(Items.BUCKET));
+            if (!player.abilities.instabuild) player.setItemInHand(hand, new ItemStack(Items.BUCKET));
 
-            worldIn.setBlockAndUpdate(pos, state.setValue(CONTAINS, TroughFillType.WATER));
+            level.setBlockAndUpdate(pos, state.setValue(CONTAINS, TroughFillType.WATER));
             if (state.getValue(TYPE) != ChestType.SINGLE) {
                 BlockPos connectedSlot = pos.offset(new BlockPos(state.getValue(FACING).getNormal()).rotate(state.getValue(TYPE) == ChestType.LEFT ? Rotation.CLOCKWISE_90 : Rotation.COUNTERCLOCKWISE_90));
 
-                BlockState connectedState = worldIn.getBlockState(connectedSlot);
-                worldIn.setBlockAndUpdate(connectedSlot, connectedState.setValue(CONTAINS, TroughFillType.WATER));
+                BlockState connectedState = level.getBlockState(connectedSlot);
+                level.setBlockAndUpdate(connectedSlot, connectedState.setValue(CONTAINS, TroughFillType.WATER));
             }
 
-            worldIn.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            return ActionResultType.sidedSuccess(worldIn.isClientSide);
+            level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            return ActionResultType.sidedSuccess(level.isClientSide);
 
         } else if (item == Items.BUCKET && contains == TroughFillType.WATER) {
-            player.setItemInHand(handIn, new ItemStack(Items.WATER_BUCKET));
-            worldIn.setBlockAndUpdate(pos, state.setValue(CONTAINS, TroughFillType.NONE));
+            player.setItemInHand(hand, new ItemStack(Items.WATER_BUCKET));
+            level.setBlockAndUpdate(pos, state.setValue(CONTAINS, TroughFillType.NONE));
 
             TroughFillType troughFillType = state.getValue(TroughBlock.CONTAINS);
 
             if (state.getValue(TroughBlock.TYPE) != ChestType.SINGLE && troughFillType == TroughFillType.WATER) {
                 BlockPos connectedSlot = pos.offset(new BlockPos(state.getValue(TroughBlock.FACING).getNormal()).rotate(state.getValue(TroughBlock.TYPE) == ChestType.LEFT ? Rotation.CLOCKWISE_90 : Rotation.COUNTERCLOCKWISE_90));
 
-                BlockState connectedState = worldIn.getBlockState(connectedSlot);
-                worldIn.setBlockAndUpdate(connectedSlot, connectedState.setValue(TroughBlock.CONTAINS, TroughFillType.NONE));
+                BlockState connectedState = level.getBlockState(connectedSlot);
+                level.setBlockAndUpdate(connectedSlot, connectedState.setValue(TroughBlock.CONTAINS, TroughFillType.NONE));
             }
 
-            worldIn.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            return ActionResultType.sidedSuccess(worldIn.isClientSide);
+            level.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            return ActionResultType.sidedSuccess(level.isClientSide);
 
         } else if (contains != TroughFillType.WATER) {
-            if (worldIn.isClientSide) return ActionResultType.SUCCESS;
+            if (level.isClientSide) return ActionResultType.SUCCESS;
             else {
-                INamedContainerProvider inamedcontainerprovider = this.getMenuProvider(state, worldIn, pos);
+                INamedContainerProvider inamedcontainerprovider = this.getMenuProvider(state, level, pos);
                 if (inamedcontainerprovider != null) player.openMenu(inamedcontainerprovider);
 
                 return ActionResultType.CONSUME;
             }
         }
 
-        return ActionResultType.sidedSuccess(worldIn.isClientSide);
+        return ActionResultType.sidedSuccess(level.isClientSide);
     }
 
     @Nullable
     @Override
-    public TileEntity newBlockEntity(IBlockReader worldIn) {
+    public TileEntity newBlockEntity(IBlockReader level) {
         return HotTileEntities.TROUGH.get().create();
     }
 
@@ -310,8 +310,8 @@ public class TroughBlock extends ContainerBlock {
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos) {
-        return Container.getRedstoneSignalFromBlockEntity(worldIn.getBlockEntity(pos));
+    public int getAnalogOutputSignal(BlockState blockState, World level, BlockPos pos) {
+        return Container.getRedstoneSignalFromBlockEntity(level.getBlockEntity(pos));
     }
 
     @Override

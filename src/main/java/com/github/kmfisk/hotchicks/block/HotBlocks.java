@@ -29,7 +29,7 @@ public class HotBlocks {
 //    public static final RegistryObject<Block> RABBIT_WIRE_DOOR = registerWithItem("rabbit_wire_door", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
     public static final RegistryObject<Block> TRELLIS = registerWithItem("trellis", () -> new TrellisBlock(null));
     public static final RegistryObject<Block> TROUGH_BLOCK = registerWithItem("wooden_trough", () -> new TroughBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD)));
-    public static final RegistryObject<Block> METAL_TROUGH_BLOCK = registerWithItem("metal_trough", () -> new MetalTroughBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD)));
+    public static final RegistryObject<Block> METAL_TROUGH_BLOCK = registerWithItem("metal_trough", () -> new MetalTroughBlock(AbstractBlock.Properties.of(Material.METAL).strength(2.5F).sound(SoundType.METAL)));
 //    public static final RegistryObject<Block> WATER_BOTTLE = registerWithItem("water_bottle", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
 
     /*public static final Map<String, RegistryObject<Block>> PLANTERS = new HashMap<>();
