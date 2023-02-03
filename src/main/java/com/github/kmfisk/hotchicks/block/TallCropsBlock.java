@@ -1,14 +1,19 @@
 package com.github.kmfisk.hotchicks.block;
 
 import net.minecraft.block.*;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeHooks;
@@ -30,10 +35,6 @@ public class TallCropsBlock extends BushBlock implements IGrowable {
         this.item = item;
     }
 
-    public boolean hasThirdBlock() {
-        return true;
-    }
-
     @Override
     public ItemStack getCloneItemStack(IBlockReader level, BlockPos pos, BlockState state) {
         return new ItemStack(item.get());
@@ -44,15 +45,49 @@ public class TallCropsBlock extends BushBlock implements IGrowable {
         return state.is(this) || state.is(Blocks.GRASS_BLOCK) || state.is(Blocks.DIRT) || state.is(Blocks.COARSE_DIRT) || state.is(Blocks.PODZOL);
     }
 
+    public boolean hasThirdBlock() {
+        return true;
+    }
+
     public IntegerProperty getHeightProperty() {
         return HEIGHT;
+    }
+
+    @Override
+    public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, IWorld pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
+        int height = pState.getValue(getHeightProperty());
+        if (pFacing.getAxis() != Direction.Axis.Y || height == 0 != (pFacing == Direction.UP) || pFacingState.is(this) && pFacingState.getValue(getHeightProperty()) != height)
+            return height == 0 && pFacing == Direction.DOWN && !pState.canSurvive(pLevel, pCurrentPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(pState, pFacing, pFacingState, pLevel, pCurrentPos, pFacingPos);
+        else return Blocks.AIR.defaultBlockState();
     }
 
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
         BlockPos blockpos = context.getClickedPos();
-        return blockpos.getY() < 255 && context.getLevel().getBlockState(blockpos.above()).canBeReplaced(context) ? super.getStateForPlacement(context) : null;
+        return blockpos.getY() < 255 /*&& context.getLevel().getBlockState(blockpos.above()).canBeReplaced(context)
+                && (!hasThirdBlock() || context.getLevel().getBlockState(blockpos.above(2)).canBeReplaced(context))*/
+                ? super.getStateForPlacement(context) : null;
+    }
+
+    @Override
+    public boolean canSurvive(BlockState state, IWorldReader level, BlockPos pos) {
+        if (state.getValue(getHeightProperty()) == 0) return super.canSurvive(state, level, pos);
+        else {
+            BlockState bottomMostState = level.getBlockState(pos.below());
+            if (hasThirdBlock() && state.getValue(getHeightProperty()) == 2)
+                bottomMostState = level.getBlockState(pos.below().below());
+
+            if (state.getBlock() != this) return super.canSurvive(state, level, pos);
+
+            boolean bottomCheck = bottomMostState.is(this) && bottomMostState.getValue(getHeightProperty()) == 0;
+            if (hasThirdBlock() && state.getValue(getHeightProperty()) == 2) {
+                BlockState middleState = level.getBlockState(pos.below());
+                return bottomCheck && middleState.is(this) && middleState.getValue(getHeightProperty()) == 1;
+            }
+
+            return bottomCheck;
+        }
     }
 
     @Override
@@ -75,6 +110,49 @@ public class TallCropsBlock extends BushBlock implements IGrowable {
                 if (hasThirdBlock()) {
                     level.setBlockAndUpdate(pos.above().above(), defaultBlockState().setValue(AGE, age + 1).setValue(getHeightProperty(), 2));
                     ForgeHooks.onCropsGrowPost(level, pos.above().above(), state);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void playerWillDestroy(World level, BlockPos pos, BlockState state, PlayerEntity player) {
+        if (!level.isClientSide) {
+            if (player.isCreative()) preventCreativeDropFromParts(level, pos, state, player);
+            else dropResources(state, level, pos, null, player, player.getMainHandItem());
+        }
+
+        super.playerWillDestroy(level, pos, state, player);
+    }
+
+    @Override
+    public void playerDestroy(World level, PlayerEntity player, BlockPos pos, BlockState state, @Nullable TileEntity tileEntity, ItemStack stack) {
+        super.playerDestroy(level, player, pos, Blocks.AIR.defaultBlockState(), tileEntity, stack);
+    }
+
+    protected void preventCreativeDropFromParts(World level, BlockPos pos, BlockState state, PlayerEntity player) {
+        int height = state.getValue(getHeightProperty());
+        BlockPos belowPos = pos.below();
+        BlockState belowState = level.getBlockState(belowPos);
+        if (height > 0) {
+            if (height == 1 && hasThirdBlock()) {
+                BlockPos abovePos = pos.above();
+                BlockState aboveState = level.getBlockState(abovePos);
+                if (aboveState.getBlock() == state.getBlock() && aboveState.getValue(getHeightProperty()) == 2) {
+                    level.setBlock(abovePos, Blocks.AIR.defaultBlockState(), 35);
+                    level.levelEvent(player, 2001, abovePos, Block.getId(aboveState));
+                }
+            }
+            if (belowState.getBlock() == state.getBlock() && belowState.getValue(getHeightProperty()) < 2) {
+                level.setBlock(belowPos, Blocks.AIR.defaultBlockState(), 35);
+                level.levelEvent(player, 2001, belowPos, Block.getId(belowState));
+            }
+            if (height == 2) {
+                BlockPos belowPos1 = pos.below().below();
+                BlockState belowState1 = level.getBlockState(belowPos1);
+                if (belowState1.getBlock() == state.getBlock() && belowState1.getValue(getHeightProperty()) == 0) {
+                    level.setBlock(belowPos1, Blocks.AIR.defaultBlockState(), 35);
+                    level.levelEvent(player, 2001, belowPos1, Block.getId(belowState1));
                 }
             }
         }
@@ -150,7 +228,7 @@ public class TallCropsBlock extends BushBlock implements IGrowable {
     }
 
     @Override
-    public PlantType getPlantType(IBlockReader world, BlockPos pos) {
+    public PlantType getPlantType(IBlockReader level, BlockPos pos) {
         return PlantType.PLAINS;
     }
 }
