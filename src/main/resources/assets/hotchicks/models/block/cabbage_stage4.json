@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:block/crop",
+  "parent": "minecraft:block/cross",
   "textures": {
-    "crop": "hotchicks:block/cabbage_stage4"
+    "cross": "hotchicks:block/cabbage_stage4"
   }
 }

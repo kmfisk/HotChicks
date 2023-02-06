@@ -1,0 +1,6 @@
+{
+  "parent": "hotchicks:block/trellis_crop",
+  "textures": {
+    "crop": "hotchicks:block/peas_stage0"
+  }
+}

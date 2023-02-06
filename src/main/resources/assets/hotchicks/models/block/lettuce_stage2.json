@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/crop",
   "textures": {
-    "crop": "hotchicks:block/lettuce/lettuce_stage2"
+    "crop": "hotchicks:block/lettuce_stage2"
   }
 }

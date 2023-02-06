@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cross",
-  "textures": {
-    "cross": "hotchicks:block/blueberry/blueberry_stage3"
-  }
-}

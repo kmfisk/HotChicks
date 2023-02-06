@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "hotchicks:block/strawberry_stage2"
+  }
+}

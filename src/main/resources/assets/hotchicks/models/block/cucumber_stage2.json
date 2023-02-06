@@ -1,0 +1,6 @@
+{
+  "parent": "hotchicks:block/cucumber_stage0",
+  "textures": {
+    "crop": "hotchicks:block/cucumber_stage2"
+  }
+}

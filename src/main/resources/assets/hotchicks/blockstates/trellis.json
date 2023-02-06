@@ -1,19 +1,19 @@
 {
   "multipart": [
     { "when": { "facing": "north" },
-      "apply": { "model": "hotchicks:block/trellis/empty_trellis" }
+      "apply": { "model": "hotchicks:block/trellis_empty" }
     },
 
     { "when": { "facing": "south" },
-      "apply": { "model": "hotchicks:block/trellis/empty_trellis", "y": 180 }
+      "apply": { "model": "hotchicks:block/trellis_empty", "y": 180 }
     },
 
     { "when": { "facing": "east" },
-      "apply": { "model": "hotchicks:block/trellis/empty_trellis", "y": 90 }
+      "apply": { "model": "hotchicks:block/trellis_empty", "y": 90 }
     },
 
     { "when": { "facing": "west" },
-      "apply": { "model": "hotchicks:block/trellis/empty_trellis", "y": 270 }
+      "apply": { "model": "hotchicks:block/trellis_empty", "y": 270 }
     }
   ]
 }

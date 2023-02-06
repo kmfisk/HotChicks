@@ -1,0 +1,6 @@
+{
+  "parent": "hotchicks:block/grape_stage0",
+  "textures": {
+    "crop": "hotchicks:block/peas_stage1"
+  }
+}

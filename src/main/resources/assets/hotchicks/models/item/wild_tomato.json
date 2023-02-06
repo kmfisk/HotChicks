@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "hotchicks:block/trellis/tomato/tomato_stage5"
+    "layer0": "hotchicks:block/tomato_stage5"
   }
 }

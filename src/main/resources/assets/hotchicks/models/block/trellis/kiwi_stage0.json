@@ -1,6 +1,0 @@
-{
-  "parent": "hotchicks:block/trellis/grape_stage0",
-  "textures": {
-    "crop": "hotchicks:block/trellis/kiwi/kiwi_stage0"
-  }
-}

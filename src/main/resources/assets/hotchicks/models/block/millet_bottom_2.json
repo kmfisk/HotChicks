@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "hotchicks:block/millet_bottom_2"
+  }
+}
