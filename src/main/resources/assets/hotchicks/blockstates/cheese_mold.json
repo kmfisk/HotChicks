@@ -1,0 +1,19 @@
+{
+  "multipart": [
+    {
+      "apply": { "model": "hotchicks:block/cheese_mold_empty" }
+    },
+    {
+      "when": { "age": "1|2" },
+      "apply": { "model": "hotchicks:block/cheese_mold_milk" }
+    },
+    {
+      "when": { "age": "3|4|5|6|7|8|9|10|11|12|13|14" },
+      "apply": { "model": "hotchicks:block/cheese_mold_soft_cheese" }
+    },
+    {
+      "when": { "age": "15" },
+      "apply": { "model": "hotchicks:block/cheese_mold_hard_cheese" }
+    }
+  ]
+}

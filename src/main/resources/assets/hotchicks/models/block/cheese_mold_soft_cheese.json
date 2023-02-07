@@ -1,0 +1,6 @@
+{
+	"parent": "hotchicks:block/cheese_mold_fill",
+	"textures": {
+		"2": "hotchicks:block/cheese_mold_soft_cheese"
+	}
+}
