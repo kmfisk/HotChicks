@@ -39,12 +39,12 @@ public class CheeseMoldBlock extends Block {
 
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader level, BlockPos pos, ISelectionContext context) {
-        return state.getValue(AGE) < 2 ? SHAPE_1 : VoxelShapes.block();
+        return state.getValue(AGE) < 6 ? SHAPE_1 : VoxelShapes.block();
     }
 
     @Override
     public VoxelShape getInteractionShape(BlockState state, IBlockReader level, BlockPos pos) {
-        return state.getValue(AGE) < 2 ? INSIDE_1 : VoxelShapes.empty();
+        return state.getValue(AGE) < 6 ? INSIDE_1 : VoxelShapes.empty();
     }
 
     @Override
@@ -55,11 +55,13 @@ public class CheeseMoldBlock extends Block {
 
     @Override
     public void randomTick(BlockState state, ServerWorld level, BlockPos pos, Random random) {
-        int age = state.getValue(AGE);
-        if (age == 2 || age == 14)
-            level.playSound(null, pos, SoundEvents.COMPOSTER_READY, SoundCategory.BLOCKS, 1.0F, 1.0F);
-        level.setBlock(pos, state.cycle(AGE), 2);
-        level.updateNeighbourForOutputSignal(pos, this);
+        if (random.nextBoolean()) {
+            int age = state.getValue(AGE);
+            if (age == 5 || age == 14)
+                level.playSound(null, pos, SoundEvents.COMPOSTER_READY, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            level.setBlock(pos, state.cycle(AGE), 2);
+            level.updateNeighbourForOutputSignal(pos, this);
+        }
     }
 
     @Override

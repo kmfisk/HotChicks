@@ -1,13 +1,12 @@
 {
 	"parent": "hotchicks:block/cheese_mold_empty",
-	"ambientocclusion": false,
 	"elements": [
 		{
 			"name": "cheese",
 			"from": [3, 2.8, 3],
 			"to": [13, 15.8, 13],
 			"faces": {
-				"up": {"uv": [0, 0, 10, 10], "texture": "#2"}
+				"up": {"uv": [0, 0, 10, 10], "texture": "#2", "cullface": "up" }
 			}
 		}
 	]
