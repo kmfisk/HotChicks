@@ -4,15 +4,15 @@ import com.github.kmfisk.hotchicks.item.HotItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.pathfinding.PathType;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.IBooleanFunction;
@@ -22,10 +22,12 @@ import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.Tags;
 
 import java.util.Random;
 
 public class CheeseMoldBlock extends Block {
+    public static final Tags.IOptionalNamedTag<Item> MILKS = ItemTags.createOptional(new ResourceLocation("forge", "milk"));
     public static final IntegerProperty AGE = BlockStateProperties.AGE_15;
     private static final VoxelShape INSIDE_1 = box(3.0D, 3.0D, 3.0D, 13.0D, 16.0D, 13.0D);
     protected static final VoxelShape SHAPE_1 = VoxelShapes.join(VoxelShapes.block(), INSIDE_1, IBooleanFunction.ONLY_FIRST);
@@ -64,7 +66,7 @@ public class CheeseMoldBlock extends Block {
     public ActionResultType use(BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         ItemStack itemStack = player.getItemInHand(hand);
         int age = state.getValue(AGE);
-        if (age == 0 && itemStack.getItem() == HotItems.BOTTLED_MILK.get()) { // todo: milk tag
+        if (age == 0 && Ingredient.of(MILKS).test(itemStack)) {
             if (!level.isClientSide) {
                 if (!player.abilities.instabuild) itemStack.shrink(1);
                 level.playSound(null, pos, SoundEvents.BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
