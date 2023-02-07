@@ -1,0 +1,11 @@
+{
+  "multipart": [
+    {
+      "apply": { "model": "hotchicks:block/food_crock_empty" }
+    },
+    {
+      "when": { "filled": "true" },
+      "apply": { "model": "hotchicks:block/food_crock_full" }
+    }
+  ]
+}

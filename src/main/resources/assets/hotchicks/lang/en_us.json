@@ -28,6 +28,9 @@
 
   "__comment": "Blocks",
   "block.hotchicks.cheese_mold": "Cheese Mold",
+  "block.hotchicks.food_crock": "Food Crock",
+  "container.hotchicks.food_crock": "Wooden Trough",
+  "block.hotchicks.water_bottle": "Water Bottle",
   "block.hotchicks.nest_box": "Nest Box",
   "container.hotchicks.nest_box": "Nest Box",
   "block.hotchicks.nest": "Nest",
