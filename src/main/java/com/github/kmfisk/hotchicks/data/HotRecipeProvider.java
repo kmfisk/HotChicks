@@ -43,18 +43,13 @@ public class HotRecipeProvider extends RecipeProvider {
                 )
         ));
 
-        consumer.accept(smeltingRecipeResult(HotItems.COOKED_BEEF_STEAK.get(),
-                Ingredient.of(HotItems.BEEF_STEAK.get()),
-                0.35F, 200
-        ));
-        consumer.accept(cookingRecipeResult("smoking", HotItems.COOKED_BEEF_STEAK.get(),
-                Ingredient.of(HotItems.BEEF_STEAK.get()),
-                0.35F, 100, IRecipeSerializer.SMOKING_RECIPE
-        ));
-        consumer.accept(cookingRecipeResult("campfire", HotItems.COOKED_BEEF_STEAK.get(),
-                Ingredient.of(HotItems.BEEF_STEAK.get()),
-                0.35F, 600, IRecipeSerializer.CAMPFIRE_COOKING_RECIPE
-        ));
+        cookRecipes(consumer, HotItems.COOKED_BEEF_STEAK.get(), Ingredient.of(HotItems.BEEF_STEAK.get()), 0.35F);
+    }
+
+    private static void cookRecipes(Consumer<IFinishedRecipe> consumer, IItemProvider iItemProvider, Ingredient recipe, float experience) {
+        consumer.accept(smeltingRecipeResult(iItemProvider, recipe, experience, 200));
+        consumer.accept(cookingRecipeResult("smoking", iItemProvider, recipe, experience, 100, IRecipeSerializer.SMOKING_RECIPE));
+        consumer.accept(cookingRecipeResult("campfire", iItemProvider, recipe, experience, 600, IRecipeSerializer.CAMPFIRE_COOKING_RECIPE));
     }
 
     public static ShapedRecipeBuilder.Result shapedRecipeResult(IItemProvider iItemProvider, int outputNum, List<String> recipe, Map<Character, Ingredient> recipeMapKey) {
