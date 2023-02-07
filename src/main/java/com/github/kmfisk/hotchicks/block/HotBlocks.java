@@ -5,12 +5,15 @@ import com.github.kmfisk.hotchicks.block.trees.*;
 import com.github.kmfisk.hotchicks.item.HotItems;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -25,9 +28,9 @@ public class HotBlocks {
 //    public static final RegistryObject<Block> FRUIT_CRATE = registerWithItem("fruit_crate", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
     public static final RegistryObject<Block> NEST_BOX = registerWithItem("nest_box", () -> new NestBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD)));
     public static final RegistryObject<Block> NEST = registerWithItem("nest", () -> new NestBoxBlock(AbstractBlock.Properties.of(Material.GRASS).strength(0.5F).sound(SoundType.GRASS).noOcclusion()));
-//    public static final RegistryObject<Block> RABBIT_WIRE = registerWithItem("rabbit_wire", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
-//    public static final RegistryObject<Block> RABBIT_FLOORING = registerWithItem("rabbit_flooring", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
-//    public static final RegistryObject<Block> RABBIT_WIRE_DOOR = registerWithItem("rabbit_wire_door", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
+    public static final RegistryObject<Block> HUTCH_BARS = registerWithItem("hutch_bars", () -> new HutchBarsBlock(AbstractBlock.Properties.of(Material.HEAVY_METAL, MaterialColor.NONE).strength(2.0F, 3.0F).sound(SoundType.METAL).noOcclusion()));
+    public static final RegistryObject<Block> HUTCH_FLOOR = registerWithItem("hutch_floor", () -> new HutchFloorBlock(AbstractBlock.Properties.of(Material.HEAVY_METAL).strength(2.0F, 3.0F).sound(SoundType.METAL).noOcclusion().isRedstoneConductor(HotBlocks::never).isSuffocating(HotBlocks::never).isViewBlocking(HotBlocks::never)));
+    public static final RegistryObject<Block> HUTCH_GATE = registerWithItem("hutch_gate", () -> new HotFenceGateBlock(AbstractBlock.Properties.of(Material.HEAVY_METAL, MaterialColor.NONE).strength(2.0F, 3.0F).sound(SoundType.METAL).noOcclusion()));
     public static final RegistryObject<Block> TRELLIS = registerWithItem("trellis", () -> new TrellisBlock(null));
     public static final RegistryObject<Block> TROUGH_BLOCK = registerWithItem("wooden_trough", () -> new TroughBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD)));
     public static final RegistryObject<Block> METAL_TROUGH_BLOCK = registerWithItem("metal_trough", () -> new MetalTroughBlock(AbstractBlock.Properties.of(Material.METAL).strength(2.5F).sound(SoundType.METAL)));
@@ -108,8 +111,15 @@ public class HotBlocks {
         return registryObject;
     }
 
+    private static boolean never(BlockState state, IBlockReader reader, BlockPos pos) {
+        return false;
+    }
+
     public static void setRenderLayers() {
         RenderType cutoutMipped = RenderType.cutoutMipped();
+        RenderTypeLookup.setRenderLayer(HUTCH_BARS.get(), cutoutMipped);
+        RenderTypeLookup.setRenderLayer(HUTCH_FLOOR.get(), cutoutMipped);
+        RenderTypeLookup.setRenderLayer(HUTCH_GATE.get(), cutoutMipped);
         RenderTypeLookup.setRenderLayer(TRELLIS.get(), cutoutMipped);
         RenderTypeLookup.setRenderLayer(CUCUMBER_TRELLIS.get(), cutoutMipped);
         RenderTypeLookup.setRenderLayer(GRAPE_TRELLIS.get(), cutoutMipped);
