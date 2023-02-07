@@ -5,12 +5,14 @@ import com.github.kmfisk.hotchicks.block.entity.HotTileEntities;
 import com.github.kmfisk.hotchicks.client.ColorEvents;
 import com.github.kmfisk.hotchicks.client.HotSounds;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
+import com.github.kmfisk.hotchicks.data.HotRecipeProvider;
 import com.github.kmfisk.hotchicks.entity.HotEntities;
 import com.github.kmfisk.hotchicks.entity.merchant.villager.HotVillagerTrades;
 import com.github.kmfisk.hotchicks.inventory.HotContainerTypes;
 import com.github.kmfisk.hotchicks.item.HotItems;
-import com.github.kmfisk.hotchicks.loot.*;
+import com.github.kmfisk.hotchicks.loot.HotGlobalLootModifier;
 import com.github.kmfisk.hotchicks.worldgen.HotFeatures;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -22,6 +24,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
@@ -50,6 +53,7 @@ public class HotChicks {
 
         bus.addListener(this::setup);
         bus.addListener(this::registerAttributes);
+        bus.addListener(this::gatherData);
 
         bus.addListener(this::setupClient);
 
@@ -61,10 +65,6 @@ public class HotChicks {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, HotChicksConfig.CONFIG_SPEC);
     }
 
-    private void registerAttributes(final EntityAttributeCreationEvent event) {
-        HotEntities.registerAttributes((type, builder) -> event.put(type, builder.build()));
-    }
-
     private void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(HotFeatures::registerFeatures);
         HotEntities.registerSpawnPlacements();
@@ -74,5 +74,15 @@ public class HotChicks {
         HotEntities.registerRenderers();
         HotBlocks.setRenderLayers();
         HotContainerTypes.registerFactories();
+    }
+
+    private void registerAttributes(final EntityAttributeCreationEvent event) {
+        HotEntities.registerAttributes((type, builder) -> event.put(type, builder.build()));
+    }
+
+    private void gatherData(final GatherDataEvent event) {
+        System.out.println("Generating hotchicks Data!");
+        DataGenerator dataGenerator = event.getGenerator();
+        if (event.includeServer()) dataGenerator.addProvider(new HotRecipeProvider(dataGenerator));
     }
 }
