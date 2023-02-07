@@ -35,6 +35,10 @@ public class FoodCrockTileEntity extends LockableTileEntity implements ISidedInv
         super(HotTileEntities.FOOD_CROCK.get());
     }
 
+    public NonNullList<ItemStack> getItems() {
+        return items;
+    }
+
     @Override
     protected Container createMenu(int id, PlayerInventory playerInventory) {
         return new FoodCrockContainer(id, playerInventory, this);
