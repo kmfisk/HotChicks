@@ -100,8 +100,7 @@ public class LivestockCrateItem extends Item {
                     stack.shrink(1);
                     player.setItemInHand(context.getHand(), new ItemStack(this));
 
-                    ITextComponent displayName = tags.contains("DisplayName") ? new StringTextComponent(tags.getString("DisplayName")) : new TranslationTextComponent(Util.makeDescriptionId("entity", new ResourceLocation(tags.getString("id"))));
-                    player.displayClientMessage(new TranslationTextComponent("chat.hotchicks.livestock_crate.release", displayName), true);
+                    player.displayClientMessage(new TranslationTextComponent("chat.hotchicks.livestock_crate.release", entity.getDisplayName()), true);
                 }
             }
 
