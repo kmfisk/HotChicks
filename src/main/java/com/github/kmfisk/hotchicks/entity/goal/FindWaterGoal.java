@@ -3,6 +3,7 @@ package com.github.kmfisk.hotchicks.entity.goal;
 import com.github.kmfisk.hotchicks.block.HotBlocks;
 import com.github.kmfisk.hotchicks.block.TroughBlock;
 import com.github.kmfisk.hotchicks.block.TroughFillType;
+import com.github.kmfisk.hotchicks.block.WaterBottleBlock;
 import com.github.kmfisk.hotchicks.block.entity.TroughTileEntity;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import net.minecraft.block.BlockState;
@@ -42,7 +43,8 @@ public class FindWaterGoal extends MoveToBlockGoal {
         if (isReachedTarget()) {
             if (entity.tickCount % 20 == 0) {
                 BlockState blockState = entity.level.getBlockState(blockPos);
-                if (blockState.getBlock() instanceof TroughBlock && blockState.getValue(TroughBlock.CONTAINS) == TroughFillType.WATER)
+                boolean flag1 = blockState.getBlock() instanceof TroughBlock && blockState.getValue(TroughBlock.CONTAINS) == TroughFillType.WATER;
+                if (flag1 || blockState.getBlock() instanceof WaterBottleBlock)
                     if (entity.getThirst().getValue() < entity.getThirst().getMax()) entity.getThirst().increment(1);
             }
         }

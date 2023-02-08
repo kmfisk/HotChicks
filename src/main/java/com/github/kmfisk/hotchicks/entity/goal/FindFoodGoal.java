@@ -42,7 +42,7 @@ public class FindFoodGoal extends MoveToBlockGoal {
         if (isReachedTarget()) {
             if (entity.tickCount % 20 == 0) {
                 TileEntity tileEntity = entity.level.getBlockEntity(blockPos);
-                if (tileEntity instanceof TroughTileEntity) {
+                if (tileEntity instanceof IInventory) {
                     IInventory inventory = (IInventory) tileEntity;
                     for (int i = 0; i < inventory.getContainerSize(); i++) {
                         ItemStack stack = inventory.getItem(i);
