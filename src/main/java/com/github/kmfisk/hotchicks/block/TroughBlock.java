@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.DoubleSidedInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
@@ -217,7 +218,10 @@ public class TroughBlock extends ContainerBlock {
     public void onRemove(BlockState state, World level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
             TileEntity tileentity = level.getBlockEntity(pos);
-            if (tileentity instanceof IInventory) level.updateNeighbourForOutputSignal(pos, this);
+            if (tileentity instanceof IInventory) {
+                InventoryHelper.dropContents(level, pos, (IInventory) tileentity);
+                level.updateNeighbourForOutputSignal(pos, this);
+            }
 
             super.onRemove(state, level, pos, newState, isMoving);
         }
