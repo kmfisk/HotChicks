@@ -1,0 +1,24 @@
+{
+  "replace": false,
+  "values": [
+    "hotchicks:cucumber_trellis",
+    "hotchicks:grape_trellis",
+    "hotchicks:kiwi_trellis",
+    "hotchicks:pea_trellis",
+    "hotchicks:tomato_trellis",
+    "hotchicks:banana_tree",
+    "hotchicks:blueberry_bush",
+    "hotchicks:cabbage",
+    "hotchicks:corn",
+    "hotchicks:cotton_bush",
+    "hotchicks:garlic",
+    "hotchicks:kale",
+    "hotchicks:lettuce",
+    "hotchicks:millet",
+    "hotchicks:oats",
+    "hotchicks:okra_bush",
+    "hotchicks:pepper_bush",
+    "hotchicks:rice",
+    "hotchicks:strawberry_bush"
+  ]
+}

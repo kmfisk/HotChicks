@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "hotchicks:food_crock",
+    "hotchicks:hutch_bars",
+    "hotchicks:metal_trough",
+    "hotchicks:water_bottle"
+  ]
+}

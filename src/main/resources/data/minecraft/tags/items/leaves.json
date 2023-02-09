@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+    "hotchicks:fruit_leaves",
+    "hotchicks:citrus_leaves",
+    "hotchicks:ficus_leaves",
+    "hotchicks:tropical_fruit_leaves",
+    "hotchicks:citron_leaves",
+    "hotchicks:fig_leaves",
+    "hotchicks:grapefruit_leaves",
+    "hotchicks:lemon_leaves",
+    "hotchicks:lime_leaves",
+    "hotchicks:mandarin_leaves",
+    "hotchicks:mango_leaves",
+    "hotchicks:orange_leaves",
+    "hotchicks:papeda_leaves",
+    "hotchicks:peach_leaves",
+    "hotchicks:pomegranate_leaves",
+    "hotchicks:pomelo_leaves",
+    "hotchicks:red_apple_leaves",
+    "hotchicks:yuzu_leaves"
+  ]
+}

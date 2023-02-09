@@ -1,0 +1,19 @@
+{
+  "replace": false,
+  "values": [
+    "hotchicks:citron_seed",
+    "hotchicks:fig_seed",
+    "hotchicks:grapefruit_seed",
+    "hotchicks:lemon_seed",
+    "hotchicks:lime_seed",
+    "hotchicks:mandarin_seed",
+    "hotchicks:mango_seed",
+    "hotchicks:orange_seed",
+    "hotchicks:papeda_seed",
+    "hotchicks:peach_seed",
+    "hotchicks:pomegranate_seed",
+    "hotchicks:pomelo_seed",
+    "hotchicks:red_apple_seed",
+    "hotchicks:yuzu_seed"
+  ]
+}
