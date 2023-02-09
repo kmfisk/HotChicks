@@ -2,7 +2,8 @@ package com.github.kmfisk.hotchicks.entity.stats;
 
 public class ChickenStats extends Stats {
     public ChickenStats(int tameness, int carcassQuality, int growthRate, int eggSpeed) {
-        super(tameness, carcassQuality, growthRate, eggSpeed);
+        super(tameness, carcassQuality, growthRate);
+        this.eggSpeed = eggSpeed;
     }
 
     @Override

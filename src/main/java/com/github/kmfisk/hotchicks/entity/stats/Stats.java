@@ -12,22 +12,12 @@ public class Stats {
     public int growthRate;
     public int eggSpeed;
     public int litterSize;
+    public int milkYield;
 
     public Stats(int tameness, int carcassQuality, int growthRate) {
         this.tameness = tameness;
         this.carcassQuality = carcassQuality;
         this.growthRate = growthRate;
-    }
-
-    public Stats(int tameness, int carcassQuality, int growthRate, int eggSpeed) {
-        this(tameness, carcassQuality, growthRate);
-        this.eggSpeed = eggSpeed;
-    }
-
-    public Stats(int tameness, int carcassQuality, int hideQuality, int growthRate, int litterSize) {
-        this(tameness, carcassQuality, growthRate);
-        this.hideQuality = hideQuality;
-        this.litterSize = litterSize;
     }
 
     public Stats copy() {
@@ -84,7 +74,8 @@ public class Stats {
         HIDE_QUALITY(0, 4),
         GROWTH_RATE(0, 4),
         EGG_SPEED(0, 4),
-        LITTER_SIZE(0, 4);
+        LITTER_SIZE(0, 4),
+        MILK_YIELD(0, 4);
 
         public final int min;
         public final int max;

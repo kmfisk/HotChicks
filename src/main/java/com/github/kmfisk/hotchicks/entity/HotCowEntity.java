@@ -2,9 +2,9 @@ package com.github.kmfisk.hotchicks.entity;
 
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
-import com.github.kmfisk.hotchicks.entity.base.RabbitBreeds;
+import com.github.kmfisk.hotchicks.entity.base.CowBreeds;
 import com.github.kmfisk.hotchicks.entity.goal.LivestockAvoidPlayerGoal;
-import com.github.kmfisk.hotchicks.entity.stats.RabbitStats;
+import com.github.kmfisk.hotchicks.entity.stats.CowStats;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -33,27 +33,26 @@ import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 
 import javax.annotation.Nullable;
 
-import static com.github.kmfisk.hotchicks.entity.base.RabbitBreeds.*;
+import static com.github.kmfisk.hotchicks.entity.base.CowBreeds.*;
 
-public class HotRabbitEntity extends LivestockEntity {
-    public static final Tags.IOptionalNamedTag<Item> RABBIT_FOODS = ItemTags.createOptional(new ResourceLocation(HotChicks.MOD_ID, "rabbit_foods"));
+public class HotCowEntity extends LivestockEntity {
+    public static final Tags.IOptionalNamedTag<Item> COW_FOODS = ItemTags.createOptional(new ResourceLocation(HotChicks.MOD_ID, "cow_foods"));
 
-    public HotRabbitEntity(EntityType<? extends AnimalEntity> type, World world) {
+    public HotCowEntity(EntityType<? extends AnimalEntity> type, World world) {
         super(type, world);
     }
 
-    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+    public static AttributeModifierMap.MutableAttribute registerAttributes() { // todo
         return createMobAttributes().add(Attributes.MAX_HEALTH, 8.0D).add(Attributes.MOVEMENT_SPEED, 0.25).add(Attributes.ATTACK_DAMAGE, 1.0D);
     }
 
     @Override
-    protected void registerGoals() {
+    protected void registerGoals() { // todo
         super.registerGoals();
         this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(1, new PanicGoal(this, 1.4D));
         this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D));
         this.goalSelector.addGoal(4, new LivestockAvoidPlayerGoal<>(this, PlayerEntity.class, 16.0F, 0.8D, 1.33D));
-        this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, false, Ingredient.of(RABBIT_FOODS)));
+        this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, false, Ingredient.of(COW_FOODS)));
         this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
@@ -64,34 +63,34 @@ public class HotRabbitEntity extends LivestockEntity {
     public void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(HIDE_QUALITY, 3);
-        this.entityData.define(LITTER_SIZE, 2);
+        this.entityData.define(MILK_YIELD, 2);
     }
 
     @Override
     public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficultyInstance, SpawnReason spawnReason, @Nullable ILivingEntityData entityData, @Nullable CompoundNBT nbt) {
         entityData = super.finalizeSpawn(world, difficultyInstance, spawnReason, entityData, nbt);
-        setStats(new RabbitStats(random.nextInt(25) + random.nextInt(35), random.nextInt(3), random.nextInt(3), random.nextInt(3), random.nextInt(3)));
+        setStats(new CowStats(random.nextInt(25) + random.nextInt(35), random.nextInt(3), random.nextInt(3), random.nextInt(3), random.nextInt(3)));
         return entityData;
     }
 
     @Override
     public float getMaleRatio() {
-        return 0.5F;
+        return 0.25F;
     }
 
     @Override
     public int getMaxVariants() {
-        return RabbitBreeds.MAX_VARIANTS;
+        return CowBreeds.MAX_VARIANTS;
     }
 
     @Override
     public int getMaxCareStat() {
         return 6;
-    }
+    } // todo
 
     @Override
     public boolean isEdibleFood(ItemStack stack) {
-        return Ingredient.of(RABBIT_FOODS).test(stack);
+        return Ingredient.of(COW_FOODS).test(stack);
     }
 
     @Override
@@ -99,125 +98,141 @@ public class HotRabbitEntity extends LivestockEntity {
         return getBreedFromVariant().toString();
     }
 
-    public void setStats(RabbitStats stats) {
+    public void setStats(CowStats stats) {
         setTameness(stats.tameness);
         setCarcassQuality(stats.carcassQuality);
         setHideQuality(stats.hideQuality);
         setGrowthRate(stats.growthRate);
-        setLitterSize(stats.litterSize);
+        setMilkYield(stats.milkYield);
     }
 
     @Override
-    public RabbitStats getStats() {
-        return new RabbitStats(
+    public CowStats getStats() {
+        return new CowStats(
                 getTameness(),
                 getCarcassQuality(),
                 getHideQuality(),
                 getGrowthRate(),
-                getLitterSize()
+                getMilkYield()
         );
     }
 
     @Override
     public void setupStats(String breed) {
-        RabbitBreeds rabbitBreeds = RabbitBreeds.valueOf(breed.toUpperCase());
-        switch (rabbitBreeds) {
+        CowBreeds cowBreeds = CowBreeds.valueOf(breed.toUpperCase());
+        switch (cowBreeds) {
             default:
-            case COTTONTAIL:
+            case AUROCHS:
                 setVariant(0);
                 break;
-            case AMERICAN_CHINCHILLA:
-                setVariant(random.nextInt(AMERICAN_CHINCHILLA.getVariantCountOfBreed()) + 1);
+            case ANGUS:
+                setVariant(random.nextInt(ANGUS.getVariantCountOfBreed()) + 1);
                 break;
-            case CALIFORNIA:
-                setVariant(3);
+            case BRAHMA:
+                setVariant(random.nextInt(BRAHMA.getVariantCountOfBreed()) + 3);
                 break;
-            case DUTCH:
-                setVariant(random.nextInt(DUTCH.getVariantCountOfBreed()) + 4);
+            case BROWN_SWISS:
+                setVariant(8);
                 break;
-            case FLEMISH_GIANT:
-                setVariant(random.nextInt(FLEMISH_GIANT.getVariantCountOfBreed()) + 10);
+            case GUERNSEY:
+                setVariant(random.nextInt(GUERNSEY.getVariantCountOfBreed()) + 9);
                 break;
-            case NEW_ZEALAND:
-                setVariant(random.nextInt(NEW_ZEALAND.getVariantCountOfBreed()) + 15);
+            case HEREFORD:
+                setVariant(random.nextInt(HEREFORD.getVariantCountOfBreed()) + 11);
                 break;
-            case REX:
-                setVariant(random.nextInt(REX.getVariantCountOfBreed()) + 18);
+            case HIGHLAND:
+                setVariant(random.nextInt(HIGHLAND.getVariantCountOfBreed()) + 15);
+                break;
+            case HOLSTEIN:
+                setVariant(random.nextInt(HOLSTEIN.getVariantCountOfBreed()) + 19);
+                break;
+            case JERSEY:
+                setVariant(23);
+                break;
+            case LAKENVELDER:
+                setVariant(random.nextInt(LAKENVELDER.getVariantCountOfBreed()) + 24);
+                break;
+            case LONGHORN:
+                setVariant(random.nextInt(LONGHORN.getVariantCountOfBreed()) + 26);
                 break;
         }
 
-        setStats(rabbitBreeds.getStats());
+        setStats(cowBreeds.getStats());
     }
 
     @Override
     public void addAdditionalSaveData(CompoundNBT nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("HideQuality", this.getHideQuality());
-        nbt.putInt("LitterSize", this.getLitterSize());
+        nbt.putInt("MilkYield", this.getMilkYield());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundNBT nbt) {
         super.readAdditionalSaveData(nbt);
         this.setHideQuality(nbt.getInt("HideQuality"));
-        this.setLitterSize(nbt.getInt("LitterSize"));
+        this.setMilkYield(nbt.getInt("MilkYield"));
     }
 
-    public RabbitBreeds getBreedFromVariant() {
-        if (getVariant() == 0) return RabbitBreeds.COTTONTAIL;
-        if (getVariant() <= 2) return RabbitBreeds.AMERICAN_CHINCHILLA;
-        if (getVariant() == 3) return RabbitBreeds.CALIFORNIA;
-        if (getVariant() <= 9) return RabbitBreeds.DUTCH;
-        if (getVariant() <= 14) return FLEMISH_GIANT;
-        if (getVariant() <= 17) return NEW_ZEALAND;
-        if (getVariant() <= 26) return REX;
+    public CowBreeds getBreedFromVariant() {
+        if (getVariant() == 0) return CowBreeds.AUROCHS;
+        if (getVariant() <= 2) return ANGUS;
+        if (getVariant() <= 7) return BRAHMA;
+        if (getVariant() == 8) return CowBreeds.BROWN_SWISS;
+        if (getVariant() <= 10) return GUERNSEY;
+        if (getVariant() <= 14) return CowBreeds.HEREFORD;
+        if (getVariant() <= 18) return CowBreeds.HIGHLAND;
+        if (getVariant() <= 22) return CowBreeds.HOLSTEIN;
+        if (getVariant() == 23) return CowBreeds.JERSEY;
+        if (getVariant() <= 25) return CowBreeds.LAKENVELDER;
+        if (getVariant() <= 30) return CowBreeds.LONGHORN;
 
-        return RabbitBreeds.COTTONTAIL;
+        return CowBreeds.AUROCHS;
     }
 
     @Override
-    protected float getStandingEyeHeight(Pose pose, EntitySize size) {
-        return size.height * 0.65F;
+    protected float getStandingEyeHeight(Pose pose, EntitySize size) { // todo
+        return super.getStandingEyeHeight(pose, size);
     }
 
     @Override
     public boolean isFood(ItemStack stack) {
-        return stack.getItem() == Items.CARROT;
+        return stack.getItem() == Items.WHEAT;
     }
 
     @Nullable
     @Override
     public AgeableEntity getBreedOffspring(ServerWorld world, AgeableEntity entity) {
-        return HotEntities.RABBIT.get().create(world);
+        return HotEntities.COW.get().create(world);
     }
 
     @Override
     protected void onOffspringSpawnedFromEgg(PlayerEntity player, MobEntity entity) {
-        if (entity instanceof HotRabbitEntity) {
-            HotRabbitEntity child = (HotRabbitEntity) entity;
+        if (entity instanceof HotCowEntity) {
+            HotCowEntity child = (HotCowEntity) entity;
 
             boolean colorMorph = random.nextFloat() <= 0.1;
-            RabbitBreeds breed1 = getBreedFromVariant();
-            RabbitStats stats = (RabbitStats) getStats().average(getStats(), true).mutate(0.2);
+            CowBreeds breed1 = getBreedFromVariant();
+            CowStats stats = (CowStats) getStats().average(getStats(), true).mutate(0.2);
 
-            if (stats.tameness < 95) child.setVariant(0);
+            if (stats.tameness < 75) child.setVariant(0);
             else {
                 int childVariant;
-                RabbitBreeds childBreed;
+                CowBreeds childBreed;
 
-                if (breed1 != RabbitBreeds.COTTONTAIL)
-                    childVariant = colorMorph ? RabbitBreeds.randomFromBreed(random, breed1) : getVariant();
+                if (breed1 != CowBreeds.AUROCHS)
+                    childVariant = colorMorph ? CowBreeds.randomFromBreed(random, breed1) : getVariant();
                 else {
                     if (random.nextFloat() <= 0.8F)
-                        childVariant = RabbitBreeds.randomBasedOnBiome(random, getBiome());
+                        childVariant = CowBreeds.randomBasedOnBiome(random, getBiome());
                     else childVariant = random.nextInt(getMaxVariants()) + 1;
                 }
 
                 child.setVariant(childVariant);
                 childBreed = child.getBreedFromVariant();
 
-                if (childBreed != RabbitBreeds.COTTONTAIL && random.nextFloat() <= 0.8F)
-                    stats = (RabbitStats) stats.average(childBreed.getStats(), false);
+                if (childBreed != CowBreeds.AUROCHS && random.nextFloat() <= 0.8F)
+                    stats = (CowStats) stats.average(childBreed.getStats(), false);
 
             }
 
@@ -229,35 +244,27 @@ public class HotRabbitEntity extends LivestockEntity {
 
     @Override
     public boolean canMate(AnimalEntity mate) {
-        if (!(mate instanceof HotRabbitEntity)) return false;
+        if (!(mate instanceof HotCowEntity)) return false;
         else {
-            HotRabbitEntity rabbit = (HotRabbitEntity) mate;
-            if (rabbit == this) return false;
-            else return this.isInLove() && rabbit.isInLove() && rabbit.getSex() != this.getSex();
+            HotCowEntity cow = (HotCowEntity) mate;
+            if (cow == this) return false;
+            else return this.isInLove() && cow.isInLove() && cow.getSex() != this.getSex();
         }
     }
 
     @Override
     public void spawnChildFromBreeding(ServerWorld world, AnimalEntity entity) {
-        if (entity instanceof HotRabbitEntity) {
-            HotRabbitEntity partner = (HotRabbitEntity) entity;
-            int babyCount = getStats().randomLitterSize();
-            if (babyCount > 0) for (int i = 0; i < babyCount; i++) createChild(world, partner);
-            else {
-                setAge(6000);
-                partner.setAge(6000);
-                resetLove();
-                partner.resetLove();
-                level.broadcastEntityEvent(this, (byte) 6);
-            }
+        if (entity instanceof HotCowEntity) {
+            HotCowEntity partner = (HotCowEntity) entity;
+            createChild(world, partner);
         }
     }
 
-    public void createChild(ServerWorld world, HotRabbitEntity parent) {
-        HotRabbitEntity child = (HotRabbitEntity) getBreedOffspring(world, parent);
+    public void createChild(ServerWorld world, HotCowEntity parent) {
+        HotCowEntity child = (HotCowEntity) getBreedOffspring(world, parent);
         final BabyEntitySpawnEvent event = new BabyEntitySpawnEvent(this, parent, child);
         final boolean cancelled = MinecraftForge.EVENT_BUS.post(event);
-        child = (HotRabbitEntity) event.getChild();
+        child = (HotCowEntity) event.getChild();
         if (cancelled) {
             setAge(6000);
             parent.setAge(6000);
@@ -281,16 +288,16 @@ public class HotRabbitEntity extends LivestockEntity {
 
             boolean inheritMotherGenes = random.nextFloat() <= 0.6;
             boolean colorMorph = random.nextFloat() <= 0.1;
-            RabbitBreeds breed1 = getBreedFromVariant();
-            RabbitBreeds breed2 = parent.getBreedFromVariant();
-            RabbitStats stats = (RabbitStats) getStats().average(parent.getStats(), true).mutate(0.2);
+            CowBreeds breed1 = getBreedFromVariant();
+            CowBreeds breed2 = parent.getBreedFromVariant();
+            CowStats stats = (CowStats) getStats().average(parent.getStats(), true).mutate(0.2);
 
-            if (stats.tameness < 95) child.setVariant(0);
+            if (stats.tameness < 75) child.setVariant(0);
             else {
                 int childVariant;
-                RabbitBreeds childBreed;
+                CowBreeds childBreed;
 
-                if (breed1 != RabbitBreeds.COTTONTAIL && breed2 != RabbitBreeds.COTTONTAIL) {
+                if (breed1 != CowBreeds.AUROCHS && breed2 != CowBreeds.AUROCHS) {
                     if (breed1.equals(breed2)) {
                         childBreed = breed1;
                         childVariant = inheritMotherGenes ? getVariant() : parent.getVariant();
@@ -303,18 +310,18 @@ public class HotRabbitEntity extends LivestockEntity {
                             childVariant = parent.getVariant();
                         }
                     }
-                    if (colorMorph) childVariant = RabbitBreeds.randomFromBreed(random, childBreed);
+                    if (colorMorph) childVariant = CowBreeds.randomFromBreed(random, childBreed);
 
                 } else {
-                    if (breed1 != RabbitBreeds.COTTONTAIL && inheritMotherGenes) {
+                    if (breed1 != CowBreeds.AUROCHS && inheritMotherGenes) {
                         childBreed = breed1;
-                        childVariant = colorMorph ? RabbitBreeds.randomFromBreed(random, childBreed) : getVariant();
-                    } else if (breed2 != RabbitBreeds.COTTONTAIL && !inheritMotherGenes) {
+                        childVariant = colorMorph ? CowBreeds.randomFromBreed(random, childBreed) : getVariant();
+                    } else if (breed2 != CowBreeds.AUROCHS && !inheritMotherGenes) {
                         childBreed = breed2;
-                        childVariant = colorMorph ? RabbitBreeds.randomFromBreed(random, childBreed) : parent.getVariant();
+                        childVariant = colorMorph ? CowBreeds.randomFromBreed(random, childBreed) : parent.getVariant();
                     } else {
                         if (random.nextFloat() <= 0.8F)
-                            childVariant = RabbitBreeds.randomBasedOnBiome(random, getBiome());
+                            childVariant = CowBreeds.randomBasedOnBiome(random, getBiome());
                         else childVariant = random.nextInt(getMaxVariants()) + 1;
                     }
                 }
@@ -322,8 +329,8 @@ public class HotRabbitEntity extends LivestockEntity {
                 child.setVariant(childVariant);
                 childBreed = child.getBreedFromVariant();
 
-                if (childBreed != RabbitBreeds.COTTONTAIL && random.nextFloat() <= 0.8F)
-                    stats = (RabbitStats) stats.average(childBreed.getStats(), false);
+                if (childBreed != CowBreeds.AUROCHS && random.nextFloat() <= 0.8F)
+                    stats = (CowStats) stats.average(childBreed.getStats(), false);
 
             }
 
@@ -338,10 +345,5 @@ public class HotRabbitEntity extends LivestockEntity {
             if (world.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))
                 world.addFreshEntity(new ExperienceOrbEntity(world, getX(), getY(), getZ(), random.nextInt(7) + 1));
         }
-    }
-
-    @Override
-    public boolean causeFallDamage(float fallDistance, float damageMultiplier) {
-        return false;
     }
 }

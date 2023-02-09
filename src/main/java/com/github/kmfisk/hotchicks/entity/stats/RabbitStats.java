@@ -2,7 +2,9 @@ package com.github.kmfisk.hotchicks.entity.stats;
 
 public class RabbitStats extends Stats {
     public RabbitStats(int tameness, int carcassQuality, int hideQuality, int growthRate, int litterSize) {
-        super(tameness, carcassQuality, hideQuality, growthRate, litterSize);
+        super(tameness, carcassQuality, growthRate);
+        this.hideQuality = hideQuality;
+        this.litterSize = litterSize;
     }
 
     @Override

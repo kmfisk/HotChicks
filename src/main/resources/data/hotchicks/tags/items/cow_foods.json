@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:wheat",
+    "hotchicks:corn",
+    "hotchicks:oats",
+    "hotchicks:lettuce",
+    "#forge:seeds",
+    "#minecraft:saplings"
+  ]
+}

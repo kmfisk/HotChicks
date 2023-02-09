@@ -2,6 +2,7 @@ package com.github.kmfisk.hotchicks.entity;
 
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.client.renderer.entity.HotChickenRenderer;
+import com.github.kmfisk.hotchicks.client.renderer.entity.HotCowRenderer;
 import com.github.kmfisk.hotchicks.client.renderer.entity.HotRabbitRenderer;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -41,6 +42,12 @@ public class HotEntities {
                     2, 4, 10))*/
             .data(hotRabbitEntityBuilder -> hotRabbitEntityBuilder.sized(0.6f, 0.5f).clientTrackingRange(10))
             .build(REGISTRAR, "rabbit");
+
+    public static RegistryObject<EntityType<HotCowEntity>> COW = new Builder<>(HotCowEntity::new, EntityClassification.CREATURE)
+            .attributes(HotCowEntity::registerAttributes)
+            .renderer(() -> HotCowRenderer::new)
+            .data(hotCowEntityBuilder -> hotCowEntityBuilder.sized(1.0f, 1.0f).clientTrackingRange(10))
+            .build(REGISTRAR, "cow");
 
     public static void registerSpawnPlacements() {
         EntitySpawnPlacementRegistry.register(CHICKEN.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING, LivestockEntity::checkLivestockSpawnRules);

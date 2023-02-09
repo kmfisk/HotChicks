@@ -31,6 +31,10 @@ public enum RabbitBreeds {
         return stats;
     }
 
+    public int getVariantCountOfBreed() {
+        return variants;
+    }
+
     public static int randomFromBreed(Random random, RabbitBreeds breeds) {
         switch (breeds) {
             default:
@@ -59,7 +63,7 @@ public enum RabbitBreeds {
             return randomFromBreed(random, CALIFORNIA);
         if (biomeTypes.contains(BiomeDictionary.Type.SAVANNA) || (biomeTypes.contains(BiomeDictionary.Type.HOT) && biomeTypes.contains(BiomeDictionary.Type.SANDY)))
             return randomFromBreed(random, DUTCH);
-        if (biomeTypes.contains(BiomeDictionary.Type.MOUNTAIN) && !biomeTypes.contains(BiomeDictionary.Type.HOT) && !biomeTypes.contains(BiomeDictionary.Type.COLD))
+        if (biomeTypes.contains(BiomeDictionary.Type.MOUNTAIN) && !biomeTypes.contains(BiomeDictionary.Type.HOT))
             return randomFromBreed(random, FLEMISH_GIANT);
         if (biomeTypes.contains(BiomeDictionary.Type.PLAINS) && !biomeTypes.contains(BiomeDictionary.Type.HOT) && !biomeTypes.contains(BiomeDictionary.Type.COLD))
             return randomFromBreed(random, NEW_ZEALAND);

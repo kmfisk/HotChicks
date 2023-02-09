@@ -44,6 +44,7 @@ public abstract class LivestockEntity extends AnimalEntity {
     public static final DataParameter<Integer> HIDE_QUALITY = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> GROWTH_RATE = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> LITTER_SIZE = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
+    public static final DataParameter<Integer> MILK_YIELD = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> HUNGER = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> THIRST = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     private final CareStat hunger;
@@ -148,6 +149,14 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     public int getLitterSize() {
         return this.entityData.get(LITTER_SIZE);
+    }
+
+    public void setMilkYield(int milkYield) {
+        this.entityData.set(MILK_YIELD, milkYield);
+    }
+
+    public int getMilkYield() {
+        return this.entityData.get(MILK_YIELD);
     }
 
     public CareStat getHunger() {

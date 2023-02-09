@@ -39,6 +39,10 @@ public enum ChickenBreeds {
         return stats;
     }
 
+    public int getVariantCountOfBreed() {
+        return variants;
+    }
+
     public Item getEggColor() {
         return eggColor.get();
     }
