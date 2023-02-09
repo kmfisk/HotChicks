@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "hotchicks:block/red_barn_slab"
+    },
+    "type=double": {
+      "model": "hotchicks:block/red_barn_planks"
+    },
+    "type=top": {
+      "model": "hotchicks:block/red_barn_slab_top"
+    }
+  }
+}

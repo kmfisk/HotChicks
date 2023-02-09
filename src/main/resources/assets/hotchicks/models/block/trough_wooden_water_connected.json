@@ -4,7 +4,7 @@
 		"0": "minecraft:block/barrel_side",
 		"1": "minecraft:block/barrel_bottom",
 		"2": "minecraft:block/water_still",
-		"particle": "minecraft:block/barrel_side"
+		"particle": "#0"
 	},
 	"elements": [
 		{

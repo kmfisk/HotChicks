@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "hotchicks:block/dark_siding",
+    "top": "hotchicks:block/dark_siding",
+    "side": "hotchicks:block/dark_siding"
+  }
+}

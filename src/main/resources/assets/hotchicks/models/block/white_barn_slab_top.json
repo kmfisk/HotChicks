@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "hotchicks:block/white_barn_planks",
+    "top": "hotchicks:block/white_barn_planks",
+    "side": "hotchicks:block/white_barn_planks"
+  }
+}

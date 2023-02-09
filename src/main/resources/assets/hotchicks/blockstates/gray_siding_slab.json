@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "hotchicks:block/gray_siding_slab"
+    },
+    "type=double": {
+      "model": "hotchicks:block/gray_siding"
+    },
+    "type=top": {
+      "model": "hotchicks:block/gray_siding_slab_top"
+    }
+  }
+}

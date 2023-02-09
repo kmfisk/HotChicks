@@ -4,7 +4,7 @@
 		"0": "minecraft:block/cauldron_side",
 		"1": "minecraft:block/cauldron_inner",
 		"2": "minecraft:block/cauldron_top",
-		"particle": "minecraft:block/cauldron_side"
+		"particle": "#0"
 	},
 	"elements": [
 		{

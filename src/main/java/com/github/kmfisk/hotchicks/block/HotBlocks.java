@@ -18,6 +18,8 @@ import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class HotBlocks {
@@ -36,13 +38,30 @@ public class HotBlocks {
     public static final RegistryObject<Block> METAL_TROUGH_BLOCK = registerWithItem("metal_trough", () -> new MetalTroughBlock(AbstractBlock.Properties.of(Material.METAL).strength(2.5F).sound(SoundType.METAL)));
     public static final RegistryObject<Block> WATER_BOTTLE = registerWithItem("water_bottle", () -> new WaterBottleBlock(AbstractBlock.Properties.of(Material.CLAY).noOcclusion()));
 
-    /*public static final Map<String, RegistryObject<Block>> PLANTERS = new HashMap<>();
+    //    public static final Map<String, RegistryObject<Block>> PLANTERS = new HashMap<>();
+    public static final Map<String, RegistryObject<Block>> BARN_PLANKS = new HashMap<>();
+    public static final Map<String, RegistryObject<Block>> BARN_STAIRS = new HashMap<>();
+    public static final Map<String, RegistryObject<Block>> BARN_SLABS = new HashMap<>();
+    public static final Map<String, RegistryObject<Block>> SIDING_PLANKS = new HashMap<>();
+    public static final Map<String, RegistryObject<Block>> SIDING_STAIRS = new HashMap<>();
+    public static final Map<String, RegistryObject<Block>> SIDING_SLABS = new HashMap<>();
 
     static {
-        String[] woodTypes = new String[]{"oak", "spruce", "birch", "acacia", "jungle", "dark_oak", "crimson", "warped"};
-        for (String woodType : woodTypes)
-            PLANTERS.put(woodType, registerWithItem(woodType + "_planter", () -> new Block(AbstractBlock.Properties.of(Material.WOOD))));
-    }*/
+        /*for (String woodType : new String[]{"oak", "spruce", "birch", "acacia", "jungle", "dark_oak", "crimson", "warped"})
+            PLANTERS.put(woodType, registerWithItem(woodType + "_planter", () -> new Block(AbstractBlock.Properties.of(Material.WOOD))));*/
+
+        for (String color : new String[]{"blue", "green", "red", "white"}) {
+            BARN_PLANKS.put(color, registerWithItem(color + "_barn_planks", () -> new Block(AbstractBlock.Properties.of(Material.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD))));
+            BARN_STAIRS.put(color, registerWithItem(color + "_barn_stairs", () -> new StairsBlock(Blocks.OAK_PLANKS::defaultBlockState, AbstractBlock.Properties.copy(Blocks.OAK_PLANKS))));
+            BARN_SLABS.put(color, registerWithItem(color + "_barn_slab", () -> new SlabBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD))));
+        }
+
+        for (String color : new String[]{"dark", "gray", "tan"}) {
+            SIDING_PLANKS.put(color, registerWithItem(color + "_siding", () -> new Block(AbstractBlock.Properties.of(Material.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD))));
+            SIDING_STAIRS.put(color, registerWithItem(color + "_siding_stairs", () -> new StairsBlock(Blocks.OAK_PLANKS::defaultBlockState, AbstractBlock.Properties.copy(Blocks.OAK_PLANKS))));
+            SIDING_SLABS.put(color, registerWithItem(color + "_siding_slab", () -> new SlabBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD))));
+        }
+    }
 
     // CROP BLOCKS
     public static final RegistryObject<Block> BANANA_TREE = registerWithItem("banana_tree", () -> new BananaTreeBlock(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH)));

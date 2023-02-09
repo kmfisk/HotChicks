@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "hotchicks:block/tan_siding_slab"
+    },
+    "type=double": {
+      "model": "hotchicks:block/tan_siding"
+    },
+    "type=top": {
+      "model": "hotchicks:block/tan_siding_slab_top"
+    }
+  }
+}

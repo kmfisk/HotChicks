@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "hotchicks:block/white_barn_slab"
+    },
+    "type=double": {
+      "model": "hotchicks:block/white_barn_planks"
+    },
+    "type=top": {
+      "model": "hotchicks:block/white_barn_slab_top"
+    }
+  }
+}

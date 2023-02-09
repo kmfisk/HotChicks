@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "hotchicks:block/tan_siding",
+    "top": "hotchicks:block/tan_siding",
+    "side": "hotchicks:block/tan_siding"
+  }
+}

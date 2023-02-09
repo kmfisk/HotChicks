@@ -3,7 +3,7 @@
 	"textures": {
 		"0": "minecraft:block/barrel_side",
 		"1": "minecraft:block/barrel_bottom",
-		"particle": "minecraft:block/barrel_side"
+		"particle": "#0"
 	},
 	"elements": [
 		{
