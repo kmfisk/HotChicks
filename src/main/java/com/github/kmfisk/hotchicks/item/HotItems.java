@@ -32,6 +32,17 @@ public class HotItems {
     public static final RegistryObject<Item> FLEMISH_GIANT_SPAWN_EGG = REGISTRAR.register("flemish_giant_rabbit_spawn_egg", () -> new HotSpawnEggItem("flemish_giant", HotEntities.RABBIT, new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
     public static final RegistryObject<Item> NEW_ZEALAND_SPAWN_EGG = REGISTRAR.register("new_zealand_rabbit_spawn_egg", () -> new HotSpawnEggItem("new_zealand", HotEntities.RABBIT, new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
     public static final RegistryObject<Item> REX_SPAWN_EGG = REGISTRAR.register("rex_rabbit_spawn_egg", () -> new HotSpawnEggItem("rex", HotEntities.RABBIT, new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> AUROCHS_SPAWN_EGG = REGISTRAR.register("aurochs_cow_spawn_egg", () -> new HotSpawnEggItem("aurochs", HotEntities.COW, new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> ANGUS_SPAWN_EGG = REGISTRAR.register("angus_cow_spawn_egg", () -> new HotSpawnEggItem("angus", HotEntities.COW, new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> BRAHMA_SPAWN_EGG = REGISTRAR.register("brahma_cow_spawn_egg", () -> new HotSpawnEggItem("brahma", HotEntities.COW, new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> BROWN_SWISS_SPAWN_EGG = REGISTRAR.register("brown_swiss_cow_spawn_egg", () -> new HotSpawnEggItem("brown_swiss", HotEntities.COW, new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> GUERNSEY_SPAWN_EGG = REGISTRAR.register("guernsey_cow_spawn_egg", () -> new HotSpawnEggItem("guernsey", HotEntities.COW, new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> HEREFORD_SPAWN_EGG = REGISTRAR.register("hereford_cow_spawn_egg", () -> new HotSpawnEggItem("hereford", HotEntities.COW, new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> HIGHLAND_SPAWN_EGG = REGISTRAR.register("highland_cow_spawn_egg", () -> new HotSpawnEggItem("highland", HotEntities.COW, new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> HOLSTEIN_SPAWN_EGG = REGISTRAR.register("holstein_cow_spawn_egg", () -> new HotSpawnEggItem("holstein", HotEntities.COW, new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> JERSEY_SPAWN_EGG = REGISTRAR.register("jersey_cow_spawn_egg", () -> new HotSpawnEggItem("jersey", HotEntities.COW, new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> LAKENVELDER_SPAWN_EGG = REGISTRAR.register("lakenvelder_cow_spawn_egg", () -> new HotSpawnEggItem("lakenvelder", HotEntities.COW, new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> LONGHORN_SPAWN_EGG = REGISTRAR.register("longhorn_cow_spawn_egg", () -> new HotSpawnEggItem("longhorn", HotEntities.COW, new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
 
     // ENTITY ITEMS
     public static final RegistryObject<Item> BLUE_EGG = REGISTRAR.register("blue_egg", () -> new HotEggItem(new Item.Properties().stacksTo(16).tab(HotChicks.HOT_CHICKS_GROUP)));
@@ -39,8 +50,7 @@ public class HotItems {
     public static final RegistryObject<Item> CHOCOLATE_EGG = REGISTRAR.register("chocolate_egg", () -> new HotEggItem(new Item.Properties().stacksTo(16).tab(HotChicks.HOT_CHICKS_GROUP)));
     public static final RegistryObject<Item> GREEN_EGG = REGISTRAR.register("green_egg", () -> new HotEggItem(new Item.Properties().stacksTo(16).tab(HotChicks.HOT_CHICKS_GROUP)));
     public static final RegistryObject<Item> WHITE_EGG = REGISTRAR.register("white_egg", () -> new HotEggItem(new Item.Properties().stacksTo(16).tab(HotChicks.HOT_CHICKS_GROUP)));
-    public static final RegistryObject<Item> BEEF_STEAK = REGISTRAR.register("beef_steak", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.BEEF_STEAK)));
-    public static final RegistryObject<Item> COOKED_BEEF_STEAK = REGISTRAR.register("cooked_beef_steak", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.COOKED_BEEF_STEAK)));
+    public static final RegistryObject<Item> GELATIN = REGISTRAR.register("gelatin", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
     public static final RegistryObject<Item> CHOICE_CHICKEN_CARCASS = REGISTRAR.register("choice_chicken_carcass", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
     public static final RegistryObject<Item> PRIME_CHICKEN_CARCASS = REGISTRAR.register("prime_chicken_carcass", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
     public static final RegistryObject<Item> GOOD_CHICKEN_CARCASS = REGISTRAR.register("good_chicken_carcass", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
@@ -60,7 +70,18 @@ public class HotItems {
     public static final RegistryObject<Item> GOOD_RABBIT_HIDE = REGISTRAR.register("good_rabbit_hide", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
     public static final RegistryObject<Item> FAIR_RABBIT_HIDE = REGISTRAR.register("fair_rabbit_hide", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
     public static final RegistryObject<Item> POOR_RABBIT_HIDE = REGISTRAR.register("poor_rabbit_hide", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
-    public static final RegistryObject<Item> GELATIN = REGISTRAR.register("gelatin", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> CHOICE_BEEF_PRIMAL = REGISTRAR.register("choice_beef_primal", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> PRIME_BEEF_PRIMAL = REGISTRAR.register("prime_beef_primal", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> GOOD_BEEF_PRIMAL = REGISTRAR.register("good_beef_primal", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> FAIR_BEEF_PRIMAL = REGISTRAR.register("fair_beef_primal", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> POOR_BEEF_PRIMAL = REGISTRAR.register("poor_beef_primal", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> BEEF_STEAK = REGISTRAR.register("beef_steak", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.BEEF_STEAK)));
+    public static final RegistryObject<Item> COOKED_BEEF_STEAK = REGISTRAR.register("cooked_beef_steak", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.COOKED_BEEF_STEAK)));
+    public static final RegistryObject<Item> CHOICE_COW_HIDE = REGISTRAR.register("choice_cow_hide", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> PRIME_COW_HIDE = REGISTRAR.register("prime_cow_hide", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> GOOD_COW_HIDE = REGISTRAR.register("good_cow_hide", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> FAIR_COW_HIDE = REGISTRAR.register("fair_cow_hide", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> POOR_COW_HIDE = REGISTRAR.register("poor_cow_hide", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
 
     // CROP BLOCK ITEMS
     public static final RegistryObject<Item> BANANA = REGISTRAR.register("banana", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.BANANA)));

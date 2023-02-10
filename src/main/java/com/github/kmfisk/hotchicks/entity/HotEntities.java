@@ -46,7 +46,7 @@ public class HotEntities {
     public static RegistryObject<EntityType<HotCowEntity>> COW = new Builder<>(HotCowEntity::new, EntityClassification.CREATURE)
             .attributes(HotCowEntity::registerAttributes)
             .renderer(() -> HotCowRenderer::new)
-            .data(hotCowEntityBuilder -> hotCowEntityBuilder.sized(1.0f, 1.0f).clientTrackingRange(10))
+            .data(hotCowEntityBuilder -> hotCowEntityBuilder.sized(1.6f, 2.2f).clientTrackingRange(10))
             .build(REGISTRAR, "cow");
 
     public static void registerSpawnPlacements() {

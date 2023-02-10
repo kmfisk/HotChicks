@@ -19,22 +19,18 @@ public class HotCowRenderer extends MobRenderer<HotCowEntity, HotCowModel> {
     public static final String[] GUERNSEY = new String[]{"red", "tan"};
     public static final String[] HEREFORD_HOLSTEIN = new String[]{"heavy", "lowfat", "skim", "whole"};
     public static final String[] HIGHLAND = new String[]{"black", "red", "tan", "white"};
-    public final HotCowModel bullModel;
-    public final HotCowModel cowModel;
+    public final HotCowModel adultModel;
     public final HotCowModel calfModel;
 
     public HotCowRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new HotCowModel.Cow(), 1.0F);
-        bullModel = new HotCowModel.Bull();
-        cowModel = new HotCowModel.Cow();
+        super(renderManagerIn, new HotCowModel.Adult(), 1.0F);
+        adultModel = new HotCowModel.Adult();
         calfModel = new HotCowModel.Calf();
     }
 
     @Override
     public void render(HotCowEntity cow, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-        if (cow.isBaby()) model = calfModel;
-        else model = cow.getSex() == LivestockEntity.Sex.MALE ? bullModel : cowModel;
-
+        model = cow.isBaby() ? calfModel : adultModel;
         super.render(cow, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
     }
 
@@ -49,7 +45,7 @@ public class HotCowRenderer extends MobRenderer<HotCowEntity, HotCowModel> {
         switch (cow.getBreedFromVariant()) {
             default:
             case AUROCHS:
-                location = "textures/entity/cow/aurochs/aurochs_" + sex;
+                location = "textures/entity/cow/aurochs/aurochs" + sex;
                 break;
             case ANGUS:
                 location = "textures/entity/cow/angus/angus_" + ANGUS_LAKENVELDER[variant - 1] + sex;
@@ -58,7 +54,7 @@ public class HotCowRenderer extends MobRenderer<HotCowEntity, HotCowModel> {
                 location = "textures/entity/cow/brahma/brahma_" + BRAHMA_LONGHORN[variant - 3] + sex;
                 break;
             case BROWN_SWISS:
-                location = "textures/entity/cow/brown_swiss/brown_swiss_tan_" + sex;
+                location = "textures/entity/cow/brown_swiss/brown_swiss_tan" + sex;
                 break;
             case GUERNSEY:
                 location = "textures/entity/cow/guernsey/guernsey_" + GUERNSEY[variant - 9] + sex;
@@ -73,7 +69,7 @@ public class HotCowRenderer extends MobRenderer<HotCowEntity, HotCowModel> {
                 location = "textures/entity/cow/holstein/holstein_" + HEREFORD_HOLSTEIN[variant - 19] + sex;
                 break;
             case JERSEY:
-                location = "textures/entity/cow/jersey/jersey_tan_" + sex;
+                location = "textures/entity/cow/jersey/jersey_tan" + sex;
                 break;
             case LAKENVELDER:
                 location = "textures/entity/cow/lakenvelder/lakenvelder_" + ANGUS_LAKENVELDER[variant - 24] + sex;

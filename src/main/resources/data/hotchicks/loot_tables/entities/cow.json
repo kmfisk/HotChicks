@@ -32,7 +32,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hotchicks:poor_cattle_hide",
+          "name": "hotchicks:poor_cow_hide",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -45,7 +45,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:fair_cattle_hide",
+          "name": "hotchicks:fair_cow_hide",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -58,7 +58,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:good_cattle_hide",
+          "name": "hotchicks:good_cow_hide",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -71,7 +71,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:prime_cattle_hide",
+          "name": "hotchicks:prime_cow_hide",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -84,7 +84,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:choice_cattle_hide",
+          "name": "hotchicks:choice_cow_hide",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -102,7 +102,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "hotchicks:poor_cattle_carcass",
+          "name": "hotchicks:poor_beef_primal",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -115,7 +115,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:fair_cattle_carcass",
+          "name": "hotchicks:fair_beef_primal",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -128,7 +128,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:good_cattle_carcass",
+          "name": "hotchicks:good_beef_primal",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -141,7 +141,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:prime_cattle_carcass",
+          "name": "hotchicks:prime_beef_primal",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -154,7 +154,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:choice_cattle_carcass",
+          "name": "hotchicks:choice_beef_primal",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
