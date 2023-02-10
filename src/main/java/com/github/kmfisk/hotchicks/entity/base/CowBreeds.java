@@ -1,14 +1,18 @@
 package com.github.kmfisk.hotchicks.entity.base;
 
+import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.entity.stats.CowStats;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
 
@@ -42,8 +46,8 @@ public enum CowBreeds {
         return variants;
     }
 
-    public static int randomFromBreed(Random random, CowBreeds breeds) {
-        switch (breeds) {
+    public static int randomFromBreed(Random random, CowBreeds breed) {
+        switch (breed) {
             default:
             case AUROCHS:
                 return 0;
@@ -95,5 +99,9 @@ public enum CowBreeds {
 
         if (possibleVariants.isEmpty()) return random.nextInt(MAX_VARIANTS) + 1;
         else return possibleVariants.get(random.nextInt(possibleVariants.size())); // todo
+    }
+
+    public TextComponent getLocalizedName() {
+        return new TranslationTextComponent("breed." + HotChicks.MOD_ID + ".cow." + name().toLowerCase(Locale.ROOT));
     }
 }

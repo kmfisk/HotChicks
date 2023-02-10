@@ -1,14 +1,18 @@
 package com.github.kmfisk.hotchicks.entity.base;
 
+import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.entity.stats.ChickenStats;
 import com.github.kmfisk.hotchicks.item.HotItems;
 import net.minecraft.item.Item;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.RegistryObject;
 
+import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -47,8 +51,8 @@ public enum ChickenBreeds {
         return eggColor.get();
     }
 
-    public static int randomFromBreed(Random random, ChickenBreeds breeds) {
-        switch (breeds) {
+    public static int randomFromBreed(Random random, ChickenBreeds breed) {
+        switch (breed) {
             default:
             case JUNGLEFOWL:
                 return 0;
@@ -90,5 +94,9 @@ public enum ChickenBreeds {
         if (biomeTypes.contains(BiomeDictionary.Type.SNOWY))
             return randomFromBreed(random, SILKIE);
         return random.nextInt(MAX_VARIANTS) + 1;
+    }
+
+    public TextComponent getLocalizedName() {
+        return new TranslationTextComponent("breed." + HotChicks.MOD_ID + ".chicken." + name().toLowerCase(Locale.ROOT));
     }
 }

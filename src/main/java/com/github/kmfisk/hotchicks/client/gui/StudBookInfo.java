@@ -1,15 +1,15 @@
 package com.github.kmfisk.hotchicks.client.gui;
 
+import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
+import com.github.kmfisk.hotchicks.entity.HotCowEntity;
 import com.github.kmfisk.hotchicks.entity.HotRabbitEntity;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
-import com.github.kmfisk.hotchicks.entity.base.ChickenBreeds;
-import com.github.kmfisk.hotchicks.entity.base.RabbitBreeds;
-import com.github.kmfisk.hotchicks.entity.stats.Stats;
 import net.minecraft.client.gui.screen.ReadBookScreen;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.ITextProperties;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -25,52 +25,56 @@ public class StudBookInfo implements ReadBookScreen.IBookInfo {
     }
 
     private static List<String> readPages(LivestockEntity entity) {
-        Stats stats;
         String page = "";
+        String name = entity.getName().getString();
+
+        page += TextFormatting.BOLD + name;
+        page += "\n" + entity.getReadableBreed() + " " + entity.getSex().getLocalizedName().getString();
+        page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.variant", entity.getVariant())).getString();
+        page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.health", entity.getHealth(), entity.getMaxHealth())).getString();
+        page += "\n" + TextFormatting.RESET + "";
+
+        page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.tameness", entity.getTameness())).getString();
+        page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.carcass_quality", entity.getCarcassQuality())).getString();
+        page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.growth_rate", entity.getGrowthRate())).getString();
 
         if (entity instanceof HotChickenEntity) {
             HotChickenEntity chicken = (HotChickenEntity) entity;
-            stats = chicken.getStats();
-
-            page += "" + "" + TextFormatting.BOLD + "Breed: " + ChickenBreeds.valueOf(chicken.getReadableBreed().toUpperCase()) + TextFormatting.RESET;
-            page += "\n" + TextFormatting.RESET + "" + TextFormatting.BOLD + "" + "Variant: " + chicken.getVariant();
-//            page += "\n" + TextFormatting.RESET + "" + TextFormatting.BOLD + "" + "Child Type: " + chicken.getChickType();
-            page += "\n" + TextFormatting.RESET + "" + TextFormatting.BOLD + "" + "Sex: " + chicken.getSex().toString() + TextFormatting.RESET;
-
-            page += "\n\n" + TextFormatting.RESET + "" + "Carcass Quality: " + stats.carcassQuality;
-            page += "\n" + TextFormatting.RESET + "" + "Growth Rate: " + stats.growthRate;
-            page += "\n" + TextFormatting.RESET + "" + "Egg Speed: " + stats.eggSpeed;
-            page += "\n" + TextFormatting.RESET + "" + "Tameness: " + chicken.getTameness();
+            page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.egg_speed", chicken.getEggSpeed())).getString();
+            page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.egg_color", chicken.getBreedFromVariant().getEggColor().getDescription())).getString();
             page += "\n" + TextFormatting.RESET + "" + "Holding Egg: " + !chicken.getMainHandItem().isEmpty();
-        }
 
-        if (entity instanceof HotRabbitEntity) {
+        } else if (entity instanceof HotRabbitEntity) {
             HotRabbitEntity rabbit = (HotRabbitEntity) entity;
-            stats = rabbit.getStats();
+            page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.hide_quality", rabbit.getHideQuality())).getString();
+            page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.litter_size", rabbit.getLitterSize())).getString();
 
-            page += "" + "" + TextFormatting.BOLD + "Breed: " + RabbitBreeds.valueOf(rabbit.getReadableBreed().toUpperCase()) + TextFormatting.RESET;
-            page += "\n" + TextFormatting.RESET + "" + TextFormatting.BOLD + "" + "Variant: " + rabbit.getVariant();
-            page += "\n" + TextFormatting.RESET + "" + TextFormatting.BOLD + "" + "Sex: " + rabbit.getSex().toString() + TextFormatting.RESET;
-
-            page += "\n\n" + TextFormatting.RESET + "" + "Carcass Quality: " + stats.carcassQuality;
-            page += "\n\n" + TextFormatting.RESET + "" + "Hide Quality: " + stats.hideQuality;
-            page += "\n" + TextFormatting.RESET + "" + "Growth Rate: " + stats.growthRate;
-            page += "\n" + TextFormatting.RESET + "" + "Litter Size: " + stats.litterSize;
-            page += "\n" + TextFormatting.RESET + "" + "Tameness: " + rabbit.getTameness();
+        } else if (entity instanceof HotCowEntity) {
+            HotCowEntity cow = (HotCowEntity) entity;
+            page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.hide_quality", cow.getHideQuality())).getString();
+            page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.milk_yield", cow.getMilkYield())).getString();
         }
+
+        page += "\n";
+
+        if (entity.getHunger().isLow() && entity.getThirst().isLow())
+            page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.unhappy", name)).getString();
+        else if (entity.getHunger().isLow())
+            page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.hungry", name)).getString();
+        else if (entity.getThirst().isLow())
+            page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.thirsty", name)).getString();
 
         ArrayList<String> pages = new ArrayList<>();
         pages.add(page);
         return pages;
     }
 
-    /**
-     * Returns the size of the book
-     */
+    @Override
     public int getPageCount() {
         return this.pages.size();
     }
 
+    @Override
     public ITextProperties getPageRaw(int p_230456_1_) {
         String s = this.pages.get(p_230456_1_);
 

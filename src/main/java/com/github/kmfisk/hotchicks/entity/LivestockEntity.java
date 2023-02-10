@@ -1,5 +1,6 @@
 package com.github.kmfisk.hotchicks.entity;
 
+import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.base.CareStat;
 import com.github.kmfisk.hotchicks.entity.goal.FindFoodGoal;
@@ -29,6 +30,8 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
@@ -36,6 +39,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
+import java.util.Locale;
 import java.util.Random;
 
 public abstract class LivestockEntity extends AnimalEntity {
@@ -310,6 +314,10 @@ public abstract class LivestockEntity extends AnimalEntity {
 
         public boolean toBool() {
             return this == MALE;
+        }
+
+        public TextComponent getLocalizedName() {
+            return new TranslationTextComponent("data." + HotChicks.MOD_ID + ".sex." + name().toLowerCase(Locale.ROOT));
         }
     }
 }

@@ -1,11 +1,15 @@
 package com.github.kmfisk.hotchicks.entity.base;
 
+import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.entity.stats.RabbitStats;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.text.TextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 
+import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
 
@@ -35,8 +39,8 @@ public enum RabbitBreeds {
         return variants;
     }
 
-    public static int randomFromBreed(Random random, RabbitBreeds breeds) {
-        switch (breeds) {
+    public static int randomFromBreed(Random random, RabbitBreeds breed) {
+        switch (breed) {
             default:
             case COTTONTAIL:
                 return 0;
@@ -70,5 +74,9 @@ public enum RabbitBreeds {
         if (biomeTypes.contains(BiomeDictionary.Type.FOREST) && !biomeTypes.contains(BiomeDictionary.Type.SAVANNA) && !biomeTypes.contains(BiomeDictionary.Type.JUNGLE) && !biomeTypes.contains(BiomeDictionary.Type.WET) && !biomeTypes.contains(BiomeDictionary.Type.CONIFEROUS))
             return randomFromBreed(random, REX);
         return random.nextInt(MAX_VARIANTS) + 1;
+    }
+
+    public TextComponent getLocalizedName() {
+        return new TranslationTextComponent("breed." + HotChicks.MOD_ID + ".rabbit." + name().toLowerCase(Locale.ROOT));
     }
 }

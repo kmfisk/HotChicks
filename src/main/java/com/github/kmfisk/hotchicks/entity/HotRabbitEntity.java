@@ -43,7 +43,7 @@ public class HotRabbitEntity extends LivestockEntity {
     }
 
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return createMobAttributes().add(Attributes.MAX_HEALTH, 8.0D).add(Attributes.MOVEMENT_SPEED, 0.25).add(Attributes.ATTACK_DAMAGE, 1.0D);
+        return createMobAttributes().add(Attributes.MAX_HEALTH, 8.0D).add(Attributes.MOVEMENT_SPEED, 0.3D).add(Attributes.ATTACK_DAMAGE, 1.0D);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class HotRabbitEntity extends LivestockEntity {
 
     @Override
     public String getReadableBreed() {
-        return getBreedFromVariant().toString();
+        return getBreedFromVariant().getLocalizedName().getString();
     }
 
     public void setStats(RabbitStats stats) {

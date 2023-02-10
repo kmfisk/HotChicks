@@ -43,7 +43,7 @@ public class HotCowEntity extends LivestockEntity {
     }
 
     public static AttributeModifierMap.MutableAttribute registerAttributes() { // todo
-        return createMobAttributes().add(Attributes.MAX_HEALTH, 8.0D).add(Attributes.MOVEMENT_SPEED, 0.25).add(Attributes.ATTACK_DAMAGE, 1.0D);
+        return createMobAttributes().add(Attributes.MAX_HEALTH, 24.0D).add(Attributes.MOVEMENT_SPEED, 0.2D).add(Attributes.ATTACK_DAMAGE, 1.0D);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class HotCowEntity extends LivestockEntity {
 
     @Override
     public String getReadableBreed() {
-        return getBreedFromVariant().toString();
+        return getBreedFromVariant().getLocalizedName().getString();
     }
 
     public void setStats(CowStats stats) {
