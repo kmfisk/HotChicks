@@ -23,7 +23,7 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.IServerWorld;
@@ -67,6 +67,7 @@ public class HotCowEntity extends LivestockEntity {
         super.defineSynchedData();
         this.entityData.define(HIDE_QUALITY, 3);
         this.entityData.define(MILK_YIELD, 2);
+        this.entityData.define(AVAILABLE_MILK, 0);
         this.entityData.define(GESTATION_TIMER, 0);
     }
 
@@ -169,6 +170,7 @@ public class HotCowEntity extends LivestockEntity {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("HideQuality", getHideQuality());
         nbt.putInt("MilkYield", getMilkYield());
+        nbt.putInt("AvailableMilk", getAvailableMilk());
         if (!getSex().toBool()) {
             nbt.putInt("Gestation", getGestationTimer());
             if (isPregnant()) nbt.put("Children", children);
@@ -180,6 +182,7 @@ public class HotCowEntity extends LivestockEntity {
         super.readAdditionalSaveData(nbt);
         setHideQuality(nbt.getInt("HideQuality"));
         setMilkYield(nbt.getInt("MilkYield"));
+        setAvailableMilk(nbt.getInt("AvailableMilk"));
         if (!getSex().toBool()) {
             setGestationTimer(nbt.getInt("Gestation"));
             if (nbt.contains("Children")) {
@@ -347,18 +350,34 @@ public class HotCowEntity extends LivestockEntity {
                 CompoundNBT childNBT = new CompoundNBT();
                 child.save(childNBT);
 
-//                if (getSex() == Sex.FEMALE) {
                 children.add(childNBT);
                 setGestationTimer(HotChicksConfig.gestationSpeed.get());
-//                } else if (father.getSex() == Sex.FEMALE) {
-//                    father.children.add(childNBT);
-//                    father.setGestationTimer(HotChicksConfig.gestationSpeed.get());
-//                }
 
                 level.broadcastEntityEvent(this, (byte) 18);
                 if (level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))
                     level.addFreshEntity(new ExperienceOrbEntity(level, getX(), getY(), getZ(), random.nextInt(7) + 1));
             }
         }
+    }
+
+    @Override
+    public void spawnChildrenFromPregnancy(ServerWorld level) {
+        super.spawnChildrenFromPregnancy(level);
+        setAvailableMilk(getStats().getMilkYieldForStat());
+    }
+
+    @Override
+    public ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (!isBaby() && stack.getItem() == Items.BUCKET) {
+            if (getSex() == Sex.FEMALE && getAvailableMilk() > 0) {
+                player.playSound(SoundEvents.COW_MILK, 1.0F, 1.0F);
+                ItemStack filledResult = DrinkHelper.createFilledResult(stack, player, Items.MILK_BUCKET.getDefaultInstance());
+                player.setItemInHand(hand, filledResult);
+                setAvailableMilk(Math.max(0, getAvailableMilk() - 1));
+                return ActionResultType.sidedSuccess(this.level.isClientSide);
+            }
+        }
+        return super.mobInteract(player, hand);
     }
 }

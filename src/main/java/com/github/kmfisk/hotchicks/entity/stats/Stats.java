@@ -68,6 +68,14 @@ public class Stats {
         return HotChicksConfig.eggSpeed.get() * (5 - eggSpeed);
     }
 
+    public int getMilkYieldForStat() {
+        if (milkYield == 1) return 2;
+        if (milkYield == 2) return 4;
+        if (milkYield == 3) return 8;
+        if (milkYield == 4) return 16;
+        return 0;
+    }
+
     public enum StatType {
         TAMENESS(0, 100),
         CARCASS_QUALITY(0, 4),

@@ -56,6 +56,7 @@ public abstract class LivestockEntity extends AnimalEntity {
     public static final DataParameter<Integer> GROWTH_RATE = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> LITTER_SIZE = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> MILK_YIELD = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
+    public static final DataParameter<Integer> AVAILABLE_MILK = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> GESTATION_TIMER = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> HUNGER = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> THIRST = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
@@ -190,6 +191,14 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     public int getMilkYield() {
         return entityData.get(MILK_YIELD);
+    }
+
+    public void setAvailableMilk(int availableMilk) {
+        entityData.set(AVAILABLE_MILK, availableMilk);
+    }
+
+    public int getAvailableMilk() {
+        return entityData.get(AVAILABLE_MILK);
     }
 
     public boolean isPregnant() {
