@@ -1,6 +1,7 @@
 package com.github.kmfisk.hotchicks.client.renderer.entity;
 
 import com.github.kmfisk.hotchicks.HotChicks;
+import com.github.kmfisk.hotchicks.client.renderer.entity.layers.ChickenBandLayer;
 import com.github.kmfisk.hotchicks.client.renderer.entity.model.HotChickenModel;
 import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
@@ -28,6 +29,7 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
 
     public HotChickenRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new HotChickenModel.Hen(), 0.3F);
+        this.addLayer(new ChickenBandLayer(this));
         roosterModel = new HotChickenModel.Rooster();
         roosterSilkieModel = new HotChickenModel.RoosterSilkie();
         henModel = new HotChickenModel.Hen();

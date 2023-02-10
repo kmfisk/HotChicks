@@ -12,6 +12,8 @@ import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.DyeColor;
+import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
@@ -39,6 +41,7 @@ import java.util.Random;
 public abstract class LivestockEntity extends AnimalEntity {
     public static final DataParameter<Boolean> SEX = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.BOOLEAN);
     public static final DataParameter<Integer> VARIANT = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
+    public static final DataParameter<Byte> TAG_COLOR = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.BYTE);
     public static final DataParameter<Integer> TAMENESS = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> CARCASS_QUALITY = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> HIDE_QUALITY = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
@@ -67,6 +70,7 @@ public abstract class LivestockEntity extends AnimalEntity {
         super.defineSynchedData();
         this.entityData.define(SEX, false);
         this.entityData.define(VARIANT, 0);
+        this.entityData.define(TAG_COLOR, (byte) 0);
         this.entityData.define(TAMENESS, 50);
         this.entityData.define(CARCASS_QUALITY, 0);
         this.entityData.define(GROWTH_RATE, 0);
@@ -109,6 +113,25 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     public int getVariant() {
         return this.entityData.get(VARIANT);
+    }
+
+    public void setTagged(boolean tagged) {
+        byte b0 = this.entityData.get(TAG_COLOR);
+        if (tagged) this.entityData.set(TAG_COLOR, (byte) (b0 | 16));
+        else this.entityData.set(TAG_COLOR, (byte) (b0 & -17));
+    }
+
+    public boolean isTagged() {
+        return (this.entityData.get(TAG_COLOR) & 16) != 0;
+    }
+
+    public void setTagColor(DyeColor color) {
+        byte b0 = this.entityData.get(TAG_COLOR);
+        this.entityData.set(TAG_COLOR, (byte) (b0 & 240 | color.getId() & 15));
+    }
+
+    public DyeColor getTagColor() {
+        return DyeColor.byId(this.entityData.get(TAG_COLOR) & 15);
     }
 
     public void setTameness(int tameness) {
@@ -169,22 +192,26 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     public void addAdditionalSaveData(CompoundNBT nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putBoolean("Sex", this.getSex().toBool());
-        nbt.putInt("Variant", this.getVariant());
-        nbt.putInt("Tameness", this.getTameness());
-        nbt.putInt("CarcassQuality", this.getCarcassQuality());
-        nbt.putInt("GrowthRate", this.getGrowthRate());
+        nbt.putBoolean("Sex", getSex().toBool());
+        nbt.putInt("Variant", getVariant());
+        nbt.putBoolean("Tagged", isTagged());
+        nbt.putByte("TagColor", (byte) getTagColor().getId());
+        nbt.putInt("Tameness", getTameness());
+        nbt.putInt("CarcassQuality", getCarcassQuality());
+        nbt.putInt("GrowthRate", getGrowthRate());
         nbt.put("Hunger", hunger.toTag());
         nbt.put("Thirst", thirst.toTag());
     }
 
     public void readAdditionalSaveData(CompoundNBT nbt) {
         super.readAdditionalSaveData(nbt);
-        this.setSex(Sex.fromBool(nbt.getBoolean("Sex")));
-        this.setVariant(nbt.getInt("Variant"));
-        this.setTameness(nbt.getInt("Tameness"));
-        this.setCarcassQuality(nbt.getInt("CarcassQuality"));
-        this.setGrowthRate(nbt.getInt("GrowthRate"));
+        setSex(Sex.fromBool(nbt.getBoolean("Sex")));
+        setVariant(nbt.getInt("Variant"));
+        setTagged(nbt.getBoolean("Tagged"));
+        setTagColor(DyeColor.byId(nbt.getByte("TagColor")));
+        setTameness(nbt.getInt("Tameness"));
+        setCarcassQuality(nbt.getInt("CarcassQuality"));
+        setGrowthRate(nbt.getInt("GrowthRate"));
         hunger.fromTag(nbt.getCompound("Hunger"));
         thirst.fromTag(nbt.getCompound("Thirst"));
     }
@@ -224,13 +251,27 @@ public abstract class LivestockEntity extends AnimalEntity {
                 hunger.increment(1);
                 return ActionResultType.sidedSuccess(level.isClientSide);
             }
-        }
-        if (stack.getItem() == Items.WATER_BUCKET || (stack.getItem() == Items.POTION && PotionUtils.getPotion(stack) == Potions.WATER)) {
+        } else if (stack.getItem() == Items.WATER_BUCKET || (stack.getItem() == Items.POTION && PotionUtils.getPotion(stack) == Potions.WATER)) {
             if (getThirst().getValue() < getThirst().getMax()) {
                 usePlayerItem(player, stack);
                 thirst.increment(stack.getItem() == Items.WATER_BUCKET ? 3 : 1);
                 return ActionResultType.sidedSuccess(level.isClientSide);
             }
+        }
+        if (stack.getItem() instanceof DyeItem) {
+            DyeColor dyeColor = ((DyeItem) stack.getItem()).getDyeColor();
+            if (!isTagged() || dyeColor != getTagColor()) {
+                setTagged(true);
+                setTagColor(dyeColor);
+                if (!player.abilities.instabuild) stack.shrink(1);
+                return ActionResultType.sidedSuccess(level.isClientSide);
+            }
+        } else if (isTagged() && stack.getItem() == Items.SHEARS) {
+            ItemStack dyeItem = new ItemStack(DyeItem.byColor(getTagColor()));
+            if (!player.abilities.instabuild && !player.inventory.add(dyeItem))
+                player.drop(dyeItem, false);
+            setTagged(false);
+            return ActionResultType.sidedSuccess(level.isClientSide);
         }
         if (stack.getItem() == Items.STICK && !level.isClientSide) {
             if (player.isDiscrete()) player.displayClientMessage(new StringTextComponent("Hunger: " +

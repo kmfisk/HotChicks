@@ -1,6 +1,7 @@
 package com.github.kmfisk.hotchicks.client.renderer.entity;
 
 import com.github.kmfisk.hotchicks.HotChicks;
+import com.github.kmfisk.hotchicks.client.renderer.entity.layers.RabbitTagLayer;
 import com.github.kmfisk.hotchicks.client.renderer.entity.model.HotRabbitModel;
 import com.github.kmfisk.hotchicks.entity.HotRabbitEntity;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
@@ -22,6 +23,7 @@ public class HotRabbitRenderer extends MobRenderer<HotRabbitEntity, HotRabbitMod
 
     public HotRabbitRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new HotRabbitModel(), 0.3F);
+        this.addLayer(new RabbitTagLayer(this));
     }
 
     @Override

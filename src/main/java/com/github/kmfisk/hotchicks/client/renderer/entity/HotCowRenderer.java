@@ -1,6 +1,7 @@
 package com.github.kmfisk.hotchicks.client.renderer.entity;
 
 import com.github.kmfisk.hotchicks.HotChicks;
+import com.github.kmfisk.hotchicks.client.renderer.entity.layers.CowBellLayer;
 import com.github.kmfisk.hotchicks.client.renderer.entity.model.HotCowModel;
 import com.github.kmfisk.hotchicks.entity.HotCowEntity;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
@@ -24,6 +25,7 @@ public class HotCowRenderer extends MobRenderer<HotCowEntity, HotCowModel> {
 
     public HotCowRenderer(EntityRendererManager renderManagerIn) {
         super(renderManagerIn, new HotCowModel.Adult(), 1.0F);
+        this.addLayer(new CowBellLayer(this));
         adultModel = new HotCowModel.Adult();
         calfModel = new HotCowModel.Calf();
     }
