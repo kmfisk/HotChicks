@@ -5,9 +5,11 @@ import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.base.CareStat;
 import com.github.kmfisk.hotchicks.entity.goal.FindFoodGoal;
 import com.github.kmfisk.hotchicks.entity.goal.FindWaterGoal;
+import com.github.kmfisk.hotchicks.entity.stats.RabbitStats;
 import com.github.kmfisk.hotchicks.entity.stats.Stats;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.SpawnReason;
@@ -18,6 +20,7 @@ import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
@@ -36,6 +39,7 @@ import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
@@ -52,8 +56,10 @@ public abstract class LivestockEntity extends AnimalEntity {
     public static final DataParameter<Integer> GROWTH_RATE = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> LITTER_SIZE = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> MILK_YIELD = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
+    public static final DataParameter<Integer> GESTATION_TIMER = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> HUNGER = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> THIRST = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
+    protected final ListNBT children = new ListNBT();
     private final CareStat hunger;
     private final CareStat thirst;
 
@@ -84,7 +90,7 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     @Override
     public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficultyInstance, SpawnReason spawnReason, @Nullable ILivingEntityData entityData, @Nullable CompoundNBT nbt) {
-        setSex(Sex.fromBool(random.nextFloat() <= this.getMaleRatio()));
+        setSex(Sex.fromBool(random.nextFloat() <= getMaleRatio()));
         setVariant(0);
         return super.finalizeSpawn(world, difficultyInstance, spawnReason, entityData, nbt);
     }
@@ -108,34 +114,34 @@ public abstract class LivestockEntity extends AnimalEntity {
     }
 
     public void setSex(Sex sex) {
-        this.entityData.set(SEX, sex.toBool());
+        entityData.set(SEX, sex.toBool());
     }
 
     public void setVariant(int variant) {
-        this.entityData.set(VARIANT, variant);
+        entityData.set(VARIANT, variant);
     }
 
     public int getVariant() {
-        return this.entityData.get(VARIANT);
+        return entityData.get(VARIANT);
     }
 
     public void setTagged(boolean tagged) {
-        byte b0 = this.entityData.get(TAG_COLOR);
-        if (tagged) this.entityData.set(TAG_COLOR, (byte) (b0 | 16));
-        else this.entityData.set(TAG_COLOR, (byte) (b0 & -17));
+        byte b0 = entityData.get(TAG_COLOR);
+        if (tagged) entityData.set(TAG_COLOR, (byte) (b0 | 16));
+        else entityData.set(TAG_COLOR, (byte) (b0 & -17));
     }
 
     public boolean isTagged() {
-        return (this.entityData.get(TAG_COLOR) & 16) != 0;
+        return (entityData.get(TAG_COLOR) & 16) != 0;
     }
 
     public void setTagColor(DyeColor color) {
-        byte b0 = this.entityData.get(TAG_COLOR);
-        this.entityData.set(TAG_COLOR, (byte) (b0 & 240 | color.getId() & 15));
+        byte b0 = entityData.get(TAG_COLOR);
+        entityData.set(TAG_COLOR, (byte) (b0 & 240 | color.getId() & 15));
     }
 
     public DyeColor getTagColor() {
-        return DyeColor.byId(this.entityData.get(TAG_COLOR) & 15);
+        return DyeColor.byId(entityData.get(TAG_COLOR) & 15);
     }
 
     public void setTameness(int tameness) {
@@ -147,43 +153,55 @@ public abstract class LivestockEntity extends AnimalEntity {
     }
 
     public void setCarcassQuality(int carcassQuality) {
-        this.entityData.set(CARCASS_QUALITY, carcassQuality);
+        entityData.set(CARCASS_QUALITY, carcassQuality);
     }
 
     public int getCarcassQuality() {
-        return this.entityData.get(CARCASS_QUALITY);
+        return entityData.get(CARCASS_QUALITY);
     }
 
     public void setHideQuality(int hideQuality) {
-        this.entityData.set(HIDE_QUALITY, hideQuality);
+        entityData.set(HIDE_QUALITY, hideQuality);
     }
 
     public int getHideQuality() {
-        return this.entityData.get(HIDE_QUALITY);
+        return entityData.get(HIDE_QUALITY);
     }
 
     public void setGrowthRate(int growthRate) {
-        this.entityData.set(GROWTH_RATE, growthRate);
+        entityData.set(GROWTH_RATE, growthRate);
     }
 
     public int getGrowthRate() {
-        return this.entityData.get(GROWTH_RATE);
+        return entityData.get(GROWTH_RATE);
     }
 
     public void setLitterSize(int litterSize) {
-        this.entityData.set(LITTER_SIZE, litterSize);
+        entityData.set(LITTER_SIZE, litterSize);
     }
 
     public int getLitterSize() {
-        return this.entityData.get(LITTER_SIZE);
+        return entityData.get(LITTER_SIZE);
     }
 
     public void setMilkYield(int milkYield) {
-        this.entityData.set(MILK_YIELD, milkYield);
+        entityData.set(MILK_YIELD, milkYield);
     }
 
     public int getMilkYield() {
-        return this.entityData.get(MILK_YIELD);
+        return entityData.get(MILK_YIELD);
+    }
+
+    public boolean isPregnant() {
+        return entityData.get(GESTATION_TIMER) != 0;
+    }
+
+    public int getGestationTimer() {
+        return entityData.get(GESTATION_TIMER);
+    }
+
+    public void setGestationTimer(int maxGestationTime) {
+        entityData.set(GESTATION_TIMER, maxGestationTime);
     }
 
     public CareStat getHunger() {
@@ -238,7 +256,53 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     @Override
     public boolean canFallInLove() {
-        return !getHunger().isLow() && !getThirst().isLow() && super.canFallInLove();
+        boolean lowHealth = getHealth() < getMaxHealth();
+        return !lowHealth && !getHunger().isLow() && !getThirst().isLow() && super.canFallInLove();
+    }
+
+    @Override
+    public boolean canMate(AnimalEntity otherAnimal) {
+        if (otherAnimal.getType() != getType()) return false;
+        else {
+            LivestockEntity livestockEntity = (LivestockEntity) otherAnimal;
+            if (livestockEntity.getSex() == getSex()) return false;
+            return super.canMate(otherAnimal);
+        }
+    }
+
+    @Override
+    public void spawnChildFromBreeding(ServerWorld level, AnimalEntity mate) {
+        if (mate instanceof LivestockEntity && ((LivestockEntity) mate).getSex() == Sex.MALE) {
+            LivestockEntity partner = (LivestockEntity) mate;
+            if (getStats() instanceof RabbitStats) {
+                int babyCount = getStats().randomLitterSize();
+                if (babyCount > 0) for (int i = 0; i < babyCount; i++) createChild(level, partner);
+                else {
+                    setAge(6000);
+                    partner.setAge(6000);
+                    resetLove();
+                    partner.resetLove();
+                    level.broadcastEntityEvent(this, (byte) 6);
+                }
+            } else createChild(level, partner);
+        }
+    }
+
+    public abstract void createChild(ServerWorld level, LivestockEntity parent);
+
+    public void spawnChildrenFromPregnancy(ServerWorld level) {
+        for (int i = 0; i < children.size(); i++) {
+            CompoundNBT childNBT = children.getCompound(i);
+            Entity child = EntityType.loadEntityRecursive(childNBT, level, entity -> entity);
+            if (child != null) {
+                child.moveTo(getX(), getY(), getZ(), 0.0F, 0.0F);
+                level.addFreshEntity(child);
+                level.broadcastEntityEvent(this, (byte) 18);
+            }
+        }
+
+        children.clear();
+        setGestationTimer(0);
     }
 
     @Override
@@ -299,9 +363,9 @@ public abstract class LivestockEntity extends AnimalEntity {
     }
 
     protected Biome getBiome() {
-        int x = MathHelper.floor(this.getX());
-        int z = MathHelper.floor(this.getZ());
-        return this.level.getBiome(new BlockPos(x, 0, z));
+        int x = MathHelper.floor(getX());
+        int z = MathHelper.floor(getZ());
+        return level.getBiome(new BlockPos(x, 0, z));
     }
 
     public enum Sex {

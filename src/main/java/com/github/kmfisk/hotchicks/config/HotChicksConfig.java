@@ -7,6 +7,7 @@ public class HotChicksConfig {
     public static ForgeConfigSpec.ConfigValue<Integer> growthSpeed;
     public static ForgeConfigSpec.ConfigValue<Integer> eggSpeed;
     public static ForgeConfigSpec.ConfigValue<Integer> hatchSpeed;
+    public static ForgeConfigSpec.ConfigValue<Integer> gestationSpeed;
     public static ForgeConfigSpec.ConfigValue<Integer> breedingCooldown;
     public static ForgeConfigSpec.BooleanValue hunger;
     public static ForgeConfigSpec.ConfigValue<Integer> hungerDepletion;
@@ -36,11 +37,16 @@ public class HotChicksConfig {
                         " By default, an egg will have a hatch timer of 24,000 ticks.",
                         " Default: 24000")
                 .define("hatch_speed", 24000);
+        gestationSpeed = builder
+                .comment(" Gestation speed is in minecraft ticks, and is the same for all animals.",
+                        " By default, an expectant mother will have a gestation timer of 24,000 ticks.",
+                        " Default: 24000")
+                .define("gestation_speed", 24000);
         breedingCooldown = builder
                 .comment(" Breeding cooldown is in minecraft ticks, and will be multiplied by the total of 5 minus the entity's growth rate stat.",
                         " For example, by default, a hen with a 2 in growth rate will have a breeding cooldown of 54,000 ticks; that is (18000 * (5 - 2)).",
                         " This only applies to the female on a successful breeding, unsuccessful attempts and males are always set to minecraft's default of 6000 ticks.",
-                        " Default: 12000")
+                        " Default: 18000")
                 .define("breeding_cooldown", 18000);
         builder.pop();
 

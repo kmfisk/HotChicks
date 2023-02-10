@@ -357,8 +357,9 @@ public class HotCowModel extends SegmentedModel<HotCowEntity> {
         }
     }
 
-    public static class Calf extends HotCowModel {
+    public static class Calf extends Adult {
         public Calf() {
+            super();
         }
 
         @Override

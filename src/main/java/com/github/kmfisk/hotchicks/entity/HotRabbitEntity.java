@@ -4,6 +4,8 @@ import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.base.RabbitBreeds;
 import com.github.kmfisk.hotchicks.entity.goal.LivestockAvoidPlayerGoal;
+import com.github.kmfisk.hotchicks.entity.goal.LivestockBirthGoal;
+import com.github.kmfisk.hotchicks.entity.goal.LivestockBreedGoal;
 import com.github.kmfisk.hotchicks.entity.stats.RabbitStats;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.*;
@@ -51,7 +53,8 @@ public class HotRabbitEntity extends LivestockEntity {
         super.registerGoals();
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.4D));
-        this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D));
+        this.goalSelector.addGoal(2, new LivestockBirthGoal(this));
+        this.goalSelector.addGoal(3, new LivestockBreedGoal(this, 1.0D));
         this.goalSelector.addGoal(4, new LivestockAvoidPlayerGoal<>(this, PlayerEntity.class, 16.0F, 0.8D, 1.33D));
         this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, false, Ingredient.of(RABBIT_FOODS)));
         this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1D));
@@ -65,6 +68,7 @@ public class HotRabbitEntity extends LivestockEntity {
         super.defineSynchedData();
         this.entityData.define(HIDE_QUALITY, 3);
         this.entityData.define(LITTER_SIZE, 2);
+        this.entityData.define(GESTATION_TIMER, 0);
     }
 
     @Override
@@ -152,15 +156,26 @@ public class HotRabbitEntity extends LivestockEntity {
     @Override
     public void addAdditionalSaveData(CompoundNBT nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putInt("HideQuality", this.getHideQuality());
-        nbt.putInt("LitterSize", this.getLitterSize());
+        nbt.putInt("HideQuality", getHideQuality());
+        nbt.putInt("LitterSize", getLitterSize());
+        if (!getSex().toBool()) {
+            nbt.putInt("Gestation", getGestationTimer());
+            if (isPregnant()) nbt.put("Children", children);
+        }
     }
 
     @Override
     public void readAdditionalSaveData(CompoundNBT nbt) {
         super.readAdditionalSaveData(nbt);
-        this.setHideQuality(nbt.getInt("HideQuality"));
-        this.setLitterSize(nbt.getInt("LitterSize"));
+        setHideQuality(nbt.getInt("HideQuality"));
+        setLitterSize(nbt.getInt("LitterSize"));
+        if (!getSex().toBool()) {
+            setGestationTimer(nbt.getInt("Gestation"));
+            if (nbt.contains("Children")) {
+                children.clear();
+                children.addAll(nbt.getList("Children", 10));
+            }
+        }
     }
 
     public RabbitBreeds getBreedFromVariant() {
@@ -183,6 +198,11 @@ public class HotRabbitEntity extends LivestockEntity {
     @Override
     public boolean isFood(ItemStack stack) {
         return stack.getItem() == Items.CARROT;
+    }
+
+    @Override
+    public boolean canFallInLove() {
+        return (getSex() == Sex.MALE || !isPregnant()) && super.canFallInLove();
     }
 
     @Nullable
@@ -228,115 +248,102 @@ public class HotRabbitEntity extends LivestockEntity {
     }
 
     @Override
-    public boolean canMate(AnimalEntity mate) {
-        if (!(mate instanceof HotRabbitEntity)) return false;
-        else {
-            HotRabbitEntity rabbit = (HotRabbitEntity) mate;
-            if (rabbit == this) return false;
-            else return this.isInLove() && rabbit.isInLove() && rabbit.getSex() != this.getSex();
-        }
-    }
-
-    @Override
-    public void spawnChildFromBreeding(ServerWorld world, AnimalEntity entity) {
-        if (entity instanceof HotRabbitEntity) {
-            HotRabbitEntity partner = (HotRabbitEntity) entity;
-            int babyCount = getStats().randomLitterSize();
-            if (babyCount > 0) for (int i = 0; i < babyCount; i++) createChild(world, partner);
-            else {
+    public void createChild(ServerWorld level, LivestockEntity livestockEntity) {
+        if (livestockEntity instanceof HotRabbitEntity) {
+            HotRabbitEntity father = (HotRabbitEntity) livestockEntity;
+            HotRabbitEntity child = (HotRabbitEntity) getBreedOffspring(level, father);
+            final BabyEntitySpawnEvent event = new BabyEntitySpawnEvent(this, father, child);
+            final boolean cancelled = MinecraftForge.EVENT_BUS.post(event);
+            child = (HotRabbitEntity) event.getChild();
+            if (cancelled) {
                 setAge(6000);
-                partner.setAge(6000);
+                father.setAge(6000);
                 resetLove();
-                partner.resetLove();
-                level.broadcastEntityEvent(this, (byte) 6);
+                father.resetLove();
+                return;
             }
-        }
-    }
-
-    public void createChild(ServerWorld world, HotRabbitEntity parent) {
-        HotRabbitEntity child = (HotRabbitEntity) getBreedOffspring(world, parent);
-        final BabyEntitySpawnEvent event = new BabyEntitySpawnEvent(this, parent, child);
-        final boolean cancelled = MinecraftForge.EVENT_BUS.post(event);
-        child = (HotRabbitEntity) event.getChild();
-        if (cancelled) {
-            setAge(6000);
-            parent.setAge(6000);
-            resetLove();
-            parent.resetLove();
-            return;
-        }
-        if (child != null) {
-            ServerPlayerEntity serverplayerentity = getLoveCause();
-            if (serverplayerentity == null && parent.getLoveCause() != null) serverplayerentity = parent.getLoveCause();
-            if (serverplayerentity != null) {
-                serverplayerentity.awardStat(Stats.ANIMALS_BRED);
-                CriteriaTriggers.BRED_ANIMALS.trigger(serverplayerentity, this, parent, child);
-            }
-
-            int breedingCooldown = HotChicksConfig.breedingCooldown.get();
-            setAge(getSex() == Sex.MALE ? 6000 : breedingCooldown);
-            parent.setAge(parent.getSex() == Sex.MALE ? 6000 : breedingCooldown);
-            resetLove();
-            parent.resetLove();
-
-            boolean inheritMotherGenes = random.nextFloat() <= 0.6;
-            boolean colorMorph = random.nextFloat() <= 0.1;
-            RabbitBreeds breed1 = getBreedFromVariant();
-            RabbitBreeds breed2 = parent.getBreedFromVariant();
-            RabbitStats stats = (RabbitStats) getStats().average(parent.getStats(), true).mutate(0.2);
-
-            if (stats.tameness < 95) child.setVariant(0);
-            else {
-                int childVariant;
-                RabbitBreeds childBreed;
-
-                if (breed1 != RabbitBreeds.COTTONTAIL && breed2 != RabbitBreeds.COTTONTAIL) {
-                    if (breed1.equals(breed2)) {
-                        childBreed = breed1;
-                        childVariant = inheritMotherGenes ? getVariant() : parent.getVariant();
-                    } else {
-                        if (inheritMotherGenes) {
-                            childBreed = breed1;
-                            childVariant = getVariant();
-                        } else {
-                            childBreed = breed2;
-                            childVariant = parent.getVariant();
-                        }
-                    }
-                    if (colorMorph) childVariant = RabbitBreeds.randomFromBreed(random, childBreed);
-
-                } else {
-                    if (breed1 != RabbitBreeds.COTTONTAIL && inheritMotherGenes) {
-                        childBreed = breed1;
-                        childVariant = colorMorph ? RabbitBreeds.randomFromBreed(random, childBreed) : getVariant();
-                    } else if (breed2 != RabbitBreeds.COTTONTAIL && !inheritMotherGenes) {
-                        childBreed = breed2;
-                        childVariant = colorMorph ? RabbitBreeds.randomFromBreed(random, childBreed) : parent.getVariant();
-                    } else {
-                        if (random.nextFloat() <= 0.8F)
-                            childVariant = RabbitBreeds.randomBasedOnBiome(random, getBiome());
-                        else childVariant = random.nextInt(getMaxVariants()) + 1;
-                    }
+            if (child != null) {
+                ServerPlayerEntity serverplayerentity = getLoveCause();
+                if (serverplayerentity == null && father.getLoveCause() != null)
+                    serverplayerentity = father.getLoveCause();
+                if (serverplayerentity != null) {
+                    serverplayerentity.awardStat(Stats.ANIMALS_BRED);
+                    CriteriaTriggers.BRED_ANIMALS.trigger(serverplayerentity, this, father, child);
                 }
 
-                child.setVariant(childVariant);
-                childBreed = child.getBreedFromVariant();
+                int breedingCooldown = HotChicksConfig.breedingCooldown.get();
+                setAge(breedingCooldown);
+                father.setAge(6000);
+                resetLove();
+                father.resetLove();
+                child.setBaby(true);
 
-                if (childBreed != RabbitBreeds.COTTONTAIL && random.nextFloat() <= 0.8F)
-                    stats = (RabbitStats) stats.average(childBreed.getStats(), false);
+                boolean inheritMotherGenes = random.nextFloat() <= 0.6;
+                boolean colorMorph = random.nextFloat() <= 0.1;
+                RabbitBreeds breed1 = getBreedFromVariant();
+                RabbitBreeds breed2 = father.getBreedFromVariant();
+                RabbitStats stats = (RabbitStats) getStats().average(father.getStats(), true).mutate(0.2);
 
+                if (stats.tameness < 95) child.setVariant(0);
+                else {
+                    int childVariant;
+                    RabbitBreeds childBreed;
+
+                    if (breed1 != RabbitBreeds.COTTONTAIL && breed2 != RabbitBreeds.COTTONTAIL) {
+                        if (breed1.equals(breed2)) {
+                            childBreed = breed1;
+                            childVariant = inheritMotherGenes ? getVariant() : father.getVariant();
+                        } else {
+                            if (inheritMotherGenes) {
+                                childBreed = breed1;
+                                childVariant = getVariant();
+                            } else {
+                                childBreed = breed2;
+                                childVariant = father.getVariant();
+                            }
+                        }
+                        if (colorMorph) childVariant = RabbitBreeds.randomFromBreed(random, childBreed);
+
+                    } else {
+                        if (breed1 != RabbitBreeds.COTTONTAIL && inheritMotherGenes) {
+                            childBreed = breed1;
+                            childVariant = colorMorph ? RabbitBreeds.randomFromBreed(random, childBreed) : getVariant();
+                        } else if (breed2 != RabbitBreeds.COTTONTAIL && !inheritMotherGenes) {
+                            childBreed = breed2;
+                            childVariant = colorMorph ? RabbitBreeds.randomFromBreed(random, childBreed) : father.getVariant();
+                        } else {
+                            if (random.nextFloat() <= 0.8F)
+                                childVariant = RabbitBreeds.randomBasedOnBiome(random, getBiome());
+                            else childVariant = random.nextInt(getMaxVariants()) + 1;
+                        }
+                    }
+
+                    child.setVariant(childVariant);
+                    childBreed = child.getBreedFromVariant();
+
+                    if (childBreed != RabbitBreeds.COTTONTAIL && random.nextFloat() <= 0.8F)
+                        stats = (RabbitStats) stats.average(childBreed.getStats(), false);
+
+                }
+
+                child.setStats(stats);
+                child.setSex(Sex.fromBool(random.nextBoolean()));
+
+                CompoundNBT childNBT = new CompoundNBT();
+                child.save(childNBT);
+
+//                if (getSex() == Sex.FEMALE) {
+                children.add(childNBT);
+                setGestationTimer(HotChicksConfig.gestationSpeed.get());
+//                } else if (father.getSex() == Sex.FEMALE) {
+//                    father.children.add(childNBT);
+//                    father.setGestationTimer(HotChicksConfig.gestationSpeed.get());
+//                }
+
+                level.broadcastEntityEvent(this, (byte) 18);
+                if (level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))
+                    level.addFreshEntity(new ExperienceOrbEntity(level, getX(), getY(), getZ(), random.nextInt(7) + 1));
             }
-
-            child.setBaby(true);
-            child.setStats(stats);
-            child.setSex(Sex.fromBool(random.nextBoolean()));
-
-            child.moveTo(getX(), getY(), getZ(), 0.0F, 0.0F); // todo: pregnancy
-            world.addFreshEntityWithPassengers(child);
-
-            world.broadcastEntityEvent(this, (byte) 18);
-            if (world.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))
-                world.addFreshEntity(new ExperienceOrbEntity(world, getX(), getY(), getZ(), random.nextInt(7) + 1));
         }
     }
 

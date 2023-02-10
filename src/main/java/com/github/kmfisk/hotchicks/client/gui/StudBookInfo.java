@@ -48,11 +48,13 @@ public class StudBookInfo implements ReadBookScreen.IBookInfo {
             HotRabbitEntity rabbit = (HotRabbitEntity) entity;
             page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.hide_quality", rabbit.getHideQuality())).getString();
             page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.litter_size", rabbit.getLitterSize())).getString();
+            page += "\n" + TextFormatting.RESET + "" + "Pregnant: " + rabbit.isPregnant();
 
         } else if (entity instanceof HotCowEntity) {
             HotCowEntity cow = (HotCowEntity) entity;
             page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.hide_quality", cow.getHideQuality())).getString();
             page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.milk_yield", cow.getMilkYield())).getString();
+            page += "\n" + TextFormatting.RESET + "" + "Pregnant: " + cow.isPregnant();
         }
 
         page += "\n";

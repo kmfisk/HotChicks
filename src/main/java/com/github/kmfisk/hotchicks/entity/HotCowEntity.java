@@ -4,6 +4,8 @@ import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.base.CowBreeds;
 import com.github.kmfisk.hotchicks.entity.goal.LivestockAvoidPlayerGoal;
+import com.github.kmfisk.hotchicks.entity.goal.LivestockBirthGoal;
+import com.github.kmfisk.hotchicks.entity.goal.LivestockBreedGoal;
 import com.github.kmfisk.hotchicks.entity.stats.CowStats;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.*;
@@ -50,7 +52,8 @@ public class HotCowEntity extends LivestockEntity {
     protected void registerGoals() { // todo
         super.registerGoals();
         this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(3, new BreedGoal(this, 1.0D));
+        this.goalSelector.addGoal(2, new LivestockBirthGoal(this));
+        this.goalSelector.addGoal(3, new LivestockBreedGoal(this, 1.0D));
         this.goalSelector.addGoal(4, new LivestockAvoidPlayerGoal<>(this, PlayerEntity.class, 16.0F, 0.8D, 1.33D));
         this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, false, Ingredient.of(COW_FOODS)));
         this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1D));
@@ -64,6 +67,7 @@ public class HotCowEntity extends LivestockEntity {
         super.defineSynchedData();
         this.entityData.define(HIDE_QUALITY, 3);
         this.entityData.define(MILK_YIELD, 2);
+        this.entityData.define(GESTATION_TIMER, 0);
     }
 
     @Override
@@ -163,15 +167,26 @@ public class HotCowEntity extends LivestockEntity {
     @Override
     public void addAdditionalSaveData(CompoundNBT nbt) {
         super.addAdditionalSaveData(nbt);
-        nbt.putInt("HideQuality", this.getHideQuality());
-        nbt.putInt("MilkYield", this.getMilkYield());
+        nbt.putInt("HideQuality", getHideQuality());
+        nbt.putInt("MilkYield", getMilkYield());
+        if (!getSex().toBool()) {
+            nbt.putInt("Gestation", getGestationTimer());
+            if (isPregnant()) nbt.put("Children", children);
+        }
     }
 
     @Override
     public void readAdditionalSaveData(CompoundNBT nbt) {
         super.readAdditionalSaveData(nbt);
-        this.setHideQuality(nbt.getInt("HideQuality"));
-        this.setMilkYield(nbt.getInt("MilkYield"));
+        setHideQuality(nbt.getInt("HideQuality"));
+        setMilkYield(nbt.getInt("MilkYield"));
+        if (!getSex().toBool()) {
+            setGestationTimer(nbt.getInt("Gestation"));
+            if (nbt.contains("Children")) {
+                children.clear();
+                children.addAll(nbt.getList("Children", 10));
+            }
+        }
     }
 
     public CowBreeds getBreedFromVariant() {
@@ -198,6 +213,11 @@ public class HotCowEntity extends LivestockEntity {
     @Override
     public boolean isFood(ItemStack stack) {
         return stack.getItem() == Items.WHEAT;
+    }
+
+    @Override
+    public boolean canFallInLove() {
+        return (getSex() == Sex.MALE || !isPregnant()) && super.canFallInLove();
     }
 
     @Nullable
@@ -243,107 +263,102 @@ public class HotCowEntity extends LivestockEntity {
     }
 
     @Override
-    public boolean canMate(AnimalEntity mate) {
-        if (!(mate instanceof HotCowEntity)) return false;
-        else {
-            HotCowEntity cow = (HotCowEntity) mate;
-            if (cow == this) return false;
-            else return this.isInLove() && cow.isInLove() && cow.getSex() != this.getSex();
-        }
-    }
-
-    @Override
-    public void spawnChildFromBreeding(ServerWorld world, AnimalEntity entity) {
-        if (entity instanceof HotCowEntity) {
-            HotCowEntity partner = (HotCowEntity) entity;
-            createChild(world, partner);
-        }
-    }
-
-    public void createChild(ServerWorld world, HotCowEntity parent) {
-        HotCowEntity child = (HotCowEntity) getBreedOffspring(world, parent);
-        final BabyEntitySpawnEvent event = new BabyEntitySpawnEvent(this, parent, child);
-        final boolean cancelled = MinecraftForge.EVENT_BUS.post(event);
-        child = (HotCowEntity) event.getChild();
-        if (cancelled) {
-            setAge(6000);
-            parent.setAge(6000);
-            resetLove();
-            parent.resetLove();
-            return;
-        }
-        if (child != null) {
-            ServerPlayerEntity serverplayerentity = getLoveCause();
-            if (serverplayerentity == null && parent.getLoveCause() != null) serverplayerentity = parent.getLoveCause();
-            if (serverplayerentity != null) {
-                serverplayerentity.awardStat(Stats.ANIMALS_BRED);
-                CriteriaTriggers.BRED_ANIMALS.trigger(serverplayerentity, this, parent, child);
+    public void createChild(ServerWorld level, LivestockEntity livestockEntity) {
+        if (livestockEntity instanceof HotCowEntity) {
+            HotCowEntity father = (HotCowEntity) livestockEntity;
+            HotCowEntity child = (HotCowEntity) getBreedOffspring(level, father);
+            final BabyEntitySpawnEvent event = new BabyEntitySpawnEvent(this, father, child);
+            final boolean cancelled = MinecraftForge.EVENT_BUS.post(event);
+            child = (HotCowEntity) event.getChild();
+            if (cancelled) {
+                setAge(6000);
+                father.setAge(6000);
+                resetLove();
+                father.resetLove();
+                return;
             }
-
-            int breedingCooldown = HotChicksConfig.breedingCooldown.get();
-            setAge(getSex() == Sex.MALE ? 6000 : breedingCooldown);
-            parent.setAge(parent.getSex() == Sex.MALE ? 6000 : breedingCooldown);
-            resetLove();
-            parent.resetLove();
-
-            boolean inheritMotherGenes = random.nextFloat() <= 0.6;
-            boolean colorMorph = random.nextFloat() <= 0.1;
-            CowBreeds breed1 = getBreedFromVariant();
-            CowBreeds breed2 = parent.getBreedFromVariant();
-            CowStats stats = (CowStats) getStats().average(parent.getStats(), true).mutate(0.2);
-
-            if (stats.tameness < 75) child.setVariant(0);
-            else {
-                int childVariant;
-                CowBreeds childBreed;
-
-                if (breed1 != CowBreeds.AUROCHS && breed2 != CowBreeds.AUROCHS) {
-                    if (breed1.equals(breed2)) {
-                        childBreed = breed1;
-                        childVariant = inheritMotherGenes ? getVariant() : parent.getVariant();
-                    } else {
-                        if (inheritMotherGenes) {
-                            childBreed = breed1;
-                            childVariant = getVariant();
-                        } else {
-                            childBreed = breed2;
-                            childVariant = parent.getVariant();
-                        }
-                    }
-                    if (colorMorph) childVariant = CowBreeds.randomFromBreed(random, childBreed);
-
-                } else {
-                    if (breed1 != CowBreeds.AUROCHS && inheritMotherGenes) {
-                        childBreed = breed1;
-                        childVariant = colorMorph ? CowBreeds.randomFromBreed(random, childBreed) : getVariant();
-                    } else if (breed2 != CowBreeds.AUROCHS && !inheritMotherGenes) {
-                        childBreed = breed2;
-                        childVariant = colorMorph ? CowBreeds.randomFromBreed(random, childBreed) : parent.getVariant();
-                    } else {
-                        if (random.nextFloat() <= 0.8F)
-                            childVariant = CowBreeds.randomBasedOnBiome(random, getBiome());
-                        else childVariant = random.nextInt(getMaxVariants()) + 1;
-                    }
+            if (child != null) {
+                ServerPlayerEntity serverplayerentity = getLoveCause();
+                if (serverplayerentity == null && father.getLoveCause() != null)
+                    serverplayerentity = father.getLoveCause();
+                if (serverplayerentity != null) {
+                    serverplayerentity.awardStat(Stats.ANIMALS_BRED);
+                    CriteriaTriggers.BRED_ANIMALS.trigger(serverplayerentity, this, father, child);
                 }
 
-                child.setVariant(childVariant);
-                childBreed = child.getBreedFromVariant();
+                int breedingCooldown = HotChicksConfig.breedingCooldown.get();
+                setAge(breedingCooldown);
+                father.setAge(6000);
+                resetLove();
+                father.resetLove();
+                child.setBaby(true);
 
-                if (childBreed != CowBreeds.AUROCHS && random.nextFloat() <= 0.8F)
-                    stats = (CowStats) stats.average(childBreed.getStats(), false);
+                boolean inheritMotherGenes = random.nextFloat() <= 0.6;
+                boolean colorMorph = random.nextFloat() <= 0.1;
+                CowBreeds breed1 = getBreedFromVariant();
+                CowBreeds breed2 = father.getBreedFromVariant();
+                CowStats stats = (CowStats) getStats().average(father.getStats(), true).mutate(0.2);
 
+                if (stats.tameness < 75) child.setVariant(0);
+                else {
+                    int childVariant;
+                    CowBreeds childBreed;
+
+                    if (breed1 != CowBreeds.AUROCHS && breed2 != CowBreeds.AUROCHS) {
+                        if (breed1.equals(breed2)) {
+                            childBreed = breed1;
+                            childVariant = inheritMotherGenes ? getVariant() : father.getVariant();
+                        } else {
+                            if (inheritMotherGenes) {
+                                childBreed = breed1;
+                                childVariant = getVariant();
+                            } else {
+                                childBreed = breed2;
+                                childVariant = father.getVariant();
+                            }
+                        }
+                        if (colorMorph) childVariant = CowBreeds.randomFromBreed(random, childBreed);
+
+                    } else {
+                        if (breed1 != CowBreeds.AUROCHS && inheritMotherGenes) {
+                            childBreed = breed1;
+                            childVariant = colorMorph ? CowBreeds.randomFromBreed(random, childBreed) : getVariant();
+                        } else if (breed2 != CowBreeds.AUROCHS && !inheritMotherGenes) {
+                            childBreed = breed2;
+                            childVariant = colorMorph ? CowBreeds.randomFromBreed(random, childBreed) : father.getVariant();
+                        } else {
+                            if (random.nextFloat() <= 0.8F)
+                                childVariant = CowBreeds.randomBasedOnBiome(random, getBiome());
+                            else childVariant = random.nextInt(getMaxVariants()) + 1;
+                        }
+                    }
+
+                    child.setVariant(childVariant);
+                    childBreed = child.getBreedFromVariant();
+
+                    if (childBreed != CowBreeds.AUROCHS && random.nextFloat() <= 0.8F)
+                        stats = (CowStats) stats.average(childBreed.getStats(), false);
+
+                }
+
+                child.setStats(stats);
+                child.setSex(Sex.fromBool(random.nextBoolean()));
+
+                CompoundNBT childNBT = new CompoundNBT();
+                child.save(childNBT);
+
+//                if (getSex() == Sex.FEMALE) {
+                children.add(childNBT);
+                setGestationTimer(HotChicksConfig.gestationSpeed.get());
+//                } else if (father.getSex() == Sex.FEMALE) {
+//                    father.children.add(childNBT);
+//                    father.setGestationTimer(HotChicksConfig.gestationSpeed.get());
+//                }
+
+                level.broadcastEntityEvent(this, (byte) 18);
+                if (level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))
+                    level.addFreshEntity(new ExperienceOrbEntity(level, getX(), getY(), getZ(), random.nextInt(7) + 1));
             }
-
-            child.setBaby(true);
-            child.setStats(stats);
-            child.setSex(Sex.fromBool(random.nextBoolean()));
-
-            child.moveTo(getX(), getY(), getZ(), 0.0F, 0.0F); // todo: pregnancy
-            world.addFreshEntityWithPassengers(child);
-
-            world.broadcastEntityEvent(this, (byte) 18);
-            if (world.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))
-                world.addFreshEntity(new ExperienceOrbEntity(world, getX(), getY(), getZ(), random.nextInt(7) + 1));
         }
     }
 }

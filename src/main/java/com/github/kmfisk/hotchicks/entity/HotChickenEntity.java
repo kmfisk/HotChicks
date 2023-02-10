@@ -70,7 +70,7 @@ public class HotChickenEntity extends LivestockEntity {
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.4D));
         this.goalSelector.addGoal(2, new LayEggsGoal(this));
-        this.goalSelector.addGoal(3, new ChickenBreedGoal(this, 1.0D));
+        this.goalSelector.addGoal(3, new LivestockBreedGoal(this, 1.0D));
         this.goalSelector.addGoal(4, new LivestockAvoidPlayerGoal<>(this, PlayerEntity.class, 16.0F, 0.8D, 1.33D));
         this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, false, Ingredient.of(CHICKEN_FOODS)));
         this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1D));
@@ -122,19 +122,19 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     public void setEggSpeed(int eggSpeed) {
-        this.entityData.set(EGG_SPEED, eggSpeed);
+        entityData.set(EGG_SPEED, eggSpeed);
     }
 
     public int getEggSpeed() {
-        return this.entityData.get(EGG_SPEED);
+        return entityData.get(EGG_SPEED);
     }
 
     public void setEggTimer(int i) {
-        this.entityData.set(EGG_TIMER, i);
+        entityData.set(EGG_TIMER, i);
     }
 
     public int getEggTimer() {
-        return this.entityData.get(EGG_TIMER);
+        return entityData.get(EGG_TIMER);
     }
 
     public void setStats(ChickenStats stats) {
@@ -199,8 +199,8 @@ public class HotChickenEntity extends LivestockEntity {
     public void addAdditionalSaveData(CompoundNBT nbt) {
         super.addAdditionalSaveData(nbt);
         if (hasNest()) nbt.put("NestPos", NBTUtil.writeBlockPos(getNestPos()));
-        nbt.putInt("EggSpeed", this.getEggSpeed());
-        nbt.putInt("EggTimer", this.getEggTimer());
+        nbt.putInt("EggSpeed", getEggSpeed());
+        nbt.putInt("EggTimer", getEggTimer());
     }
 
     @Override
@@ -208,8 +208,8 @@ public class HotChickenEntity extends LivestockEntity {
         nestPos = null;
         if (nbt.contains("NestPos")) nestPos = NBTUtil.readBlockPos(nbt.getCompound("NestPos"));
         super.readAdditionalSaveData(nbt);
-        this.setEggSpeed(nbt.getInt("EggSpeed"));
-        this.setEggTimer(nbt.getInt("EggTimer"));
+        setEggSpeed(nbt.getInt("EggSpeed"));
+        setEggTimer(nbt.getInt("EggTimer"));
     }
 
     public ChickenBreeds getBreedFromVariant() {
@@ -275,7 +275,7 @@ public class HotChickenEntity extends LivestockEntity {
 
     @Override
     protected float getStandingEyeHeight(Pose pose, EntitySize size) {
-        return this.isBaby() ? size.height * 0.85F : size.height * 0.92F;
+        return isBaby() ? size.height * 0.85F : size.height * 0.92F;
     }
 
     @Override
@@ -288,8 +288,8 @@ public class HotChickenEntity extends LivestockEntity {
         super.baseTick();
 
         if (!getMainHandItem().isEmpty() && getSex() == Sex.FEMALE) {
-            int eggTimer = this.getEggTimer();
-            if (eggTimer < this.getMaxEggTimer()) {
+            int eggTimer = getEggTimer();
+            if (eggTimer < getMaxEggTimer()) {
                 ++eggTimer;
                 setEggTimer(eggTimer);
             } /*else setEggTimer(0);*/
@@ -319,7 +319,7 @@ public class HotChickenEntity extends LivestockEntity {
                 if (breed1 != ChickenBreeds.JUNGLEFOWL)
                     childVariant = colorMorph ? ChickenBreeds.randomFromBreed(random, breed1) : getVariant();
                 else {
-                    if (this.random.nextFloat() <= 0.8)
+                    if (random.nextFloat() <= 0.8)
                         childVariant = ChickenBreeds.randomBasedOnBiome(random, getBiome());
                     else childVariant = random.nextInt(getMaxVariants()) + 1;
                 }
@@ -343,119 +343,107 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     @Override
-    public boolean canMate(AnimalEntity mate) {
-        if (!(mate instanceof HotChickenEntity)) return false;
-        else {
-            HotChickenEntity chicken = (HotChickenEntity) mate;
-            if (chicken == this)
-                return false;
-            else
-                return this.isInLove() && chicken.isInLove() && chicken.getSex() != this.getSex();
-        }
-    }
-
-    @Override
-    public void spawnChildFromBreeding(ServerWorld world, AnimalEntity entity) {
-        if (entity instanceof HotChickenEntity) createChild(world, (HotChickenEntity) entity);
-    }
-
-    public void createChild(ServerWorld world, HotChickenEntity parent) {
-        HotChickenEntity child = (HotChickenEntity) getBreedOffspring(world, parent);
-        final BabyEntitySpawnEvent event = new BabyEntitySpawnEvent(this, parent, child);
-        final boolean cancelled = MinecraftForge.EVENT_BUS.post(event);
-        child = (HotChickenEntity) event.getChild();
-        if (cancelled) {
-            setAge(6000);
-            parent.setAge(6000);
-            resetLove();
-            parent.resetLove();
-            return;
-        }
-
-        if (child != null) {
-            ServerPlayerEntity serverplayerentity = getLoveCause();
-            if (serverplayerentity == null && parent.getLoveCause() != null) serverplayerentity = parent.getLoveCause();
-            if (serverplayerentity != null) {
-                serverplayerentity.awardStat(Stats.ANIMALS_BRED);
-                CriteriaTriggers.BRED_ANIMALS.trigger(serverplayerentity, this, parent, child);
-            }
-
-            int breedingCooldown = HotChicksConfig.breedingCooldown.get();
-            setAge(getSex() == Sex.MALE ? 6000 : breedingCooldown);
-            parent.setAge(parent.getSex() == Sex.MALE ? 6000 : breedingCooldown);
-            resetLove();
-            parent.resetLove();
-
-            if (!getMainHandItem().isEmpty()) {
-                world.broadcastEntityEvent(this, (byte) 19);
+    public void createChild(ServerWorld level, LivestockEntity livestockEntity) {
+        if (livestockEntity instanceof HotChickenEntity) {
+            HotChickenEntity father = (HotChickenEntity) livestockEntity;
+            HotChickenEntity child = (HotChickenEntity) getBreedOffspring(level, father);
+            final BabyEntitySpawnEvent event = new BabyEntitySpawnEvent(this, father, child);
+            final boolean cancelled = MinecraftForge.EVENT_BUS.post(event);
+            child = (HotChickenEntity) event.getChild();
+            if (cancelled) {
+                setAge(6000);
+                father.setAge(6000);
+                resetLove();
+                father.resetLove();
                 return;
             }
 
-            boolean inheritMotherGenes = random.nextFloat() <= 0.6;
-            boolean colorMorph = random.nextFloat() <= 0.1;
-            ChickenBreeds breed1 = getBreedFromVariant();
-            ChickenBreeds breed2 = parent.getBreedFromVariant();
-            ChickenStats stats = (ChickenStats) getStats().average(parent.getStats(), true).mutate(0.2);
-
-            if (stats.tameness < 85) child.setVariant(0);
-            else {
-                int childVariant;
-                ChickenBreeds childBreed;
-
-                if (breed1 != ChickenBreeds.JUNGLEFOWL && breed2 != ChickenBreeds.JUNGLEFOWL) {
-                    if (breed1.equals(breed2)) {
-                        childBreed = breed1;
-                        childVariant = inheritMotherGenes ? getVariant() : parent.getVariant();
-                    } else {
-                        if (inheritMotherGenes) {
-                            childBreed = breed1;
-                            childVariant = getVariant();
-                        } else {
-                            childBreed = breed2;
-                            childVariant = parent.getVariant();
-                        }
-                    }
-                    if (colorMorph) childVariant = ChickenBreeds.randomFromBreed(random, childBreed);
-
-                } else {
-                    if (breed1 != ChickenBreeds.JUNGLEFOWL && inheritMotherGenes) {
-                        childBreed = breed1;
-                        childVariant = colorMorph ? ChickenBreeds.randomFromBreed(random, childBreed) : getVariant();
-                    } else if (breed2 != ChickenBreeds.JUNGLEFOWL && !inheritMotherGenes) {
-                        childBreed = breed2;
-                        childVariant = colorMorph ? ChickenBreeds.randomFromBreed(random, childBreed) : parent.getVariant();
-                    } else {
-                        if (this.random.nextFloat() <= 0.8)
-                            childVariant = ChickenBreeds.randomBasedOnBiome(random, getBiome());
-                        else childVariant = random.nextInt(getMaxVariants()) + 1;
-                    }
+            if (child != null) {
+                ServerPlayerEntity serverplayerentity = getLoveCause();
+                if (serverplayerentity == null && father.getLoveCause() != null)
+                    serverplayerentity = father.getLoveCause();
+                if (serverplayerentity != null) {
+                    serverplayerentity.awardStat(Stats.ANIMALS_BRED);
+                    CriteriaTriggers.BRED_ANIMALS.trigger(serverplayerentity, this, father, child);
                 }
 
-                child.setVariant(childVariant);
-                childBreed = child.getBreedFromVariant();
+                int breedingCooldown = HotChicksConfig.breedingCooldown.get();
+                setAge(getSex() == Sex.MALE ? 6000 : breedingCooldown);
+                father.setAge(father.getSex() == Sex.MALE ? 6000 : breedingCooldown);
+                resetLove();
+                father.resetLove();
+                child.setBaby(true);
 
-                if (childBreed != ChickenBreeds.JUNGLEFOWL && random.nextFloat() <= 0.8)
-                    stats = (ChickenStats) stats.average(childBreed.getStats(), false);
+                if (!getMainHandItem().isEmpty()) {
+                    level.broadcastEntityEvent(this, (byte) 19);
+                    return;
+                }
 
+                boolean inheritMotherGenes = random.nextFloat() <= 0.6;
+                boolean colorMorph = random.nextFloat() <= 0.1;
+                ChickenBreeds breed1 = getBreedFromVariant();
+                ChickenBreeds breed2 = father.getBreedFromVariant();
+                ChickenStats stats = (ChickenStats) getStats().average(father.getStats(), true).mutate(0.2);
+
+                if (stats.tameness < 85) child.setVariant(0);
+                else {
+                    int childVariant;
+                    ChickenBreeds childBreed;
+
+                    if (breed1 != ChickenBreeds.JUNGLEFOWL && breed2 != ChickenBreeds.JUNGLEFOWL) {
+                        if (breed1.equals(breed2)) {
+                            childBreed = breed1;
+                            childVariant = inheritMotherGenes ? getVariant() : father.getVariant();
+                        } else {
+                            if (inheritMotherGenes) {
+                                childBreed = breed1;
+                                childVariant = getVariant();
+                            } else {
+                                childBreed = breed2;
+                                childVariant = father.getVariant();
+                            }
+                        }
+                        if (colorMorph) childVariant = ChickenBreeds.randomFromBreed(random, childBreed);
+
+                    } else {
+                        if (breed1 != ChickenBreeds.JUNGLEFOWL && inheritMotherGenes) {
+                            childBreed = breed1;
+                            childVariant = colorMorph ? ChickenBreeds.randomFromBreed(random, childBreed) : getVariant();
+                        } else if (breed2 != ChickenBreeds.JUNGLEFOWL && !inheritMotherGenes) {
+                            childBreed = breed2;
+                            childVariant = colorMorph ? ChickenBreeds.randomFromBreed(random, childBreed) : father.getVariant();
+                        } else {
+                            if (random.nextFloat() <= 0.8)
+                                childVariant = ChickenBreeds.randomBasedOnBiome(random, getBiome());
+                            else childVariant = random.nextInt(getMaxVariants()) + 1;
+                        }
+                    }
+
+                    child.setVariant(childVariant);
+                    childBreed = child.getBreedFromVariant();
+
+                    if (childBreed != ChickenBreeds.JUNGLEFOWL && random.nextFloat() <= 0.8)
+                        stats = (ChickenStats) stats.average(childBreed.getStats(), false);
+
+                }
+
+                child.setStats(stats);
+                child.setSex(Sex.fromBool(random.nextBoolean()));
+
+                ItemStack stack = getBreedFromVariant().getEggColor().getDefaultInstance();
+                CompoundNBT tags = stack.getOrCreateTag();
+                child.save(tags);
+                ResourceLocation key = EntityType.getKey(child.getType());
+                tags.putString("id", key.toString());
+                tags.putString("Breed", getReadableBreed());
+                tags.putInt("TimeLeft", HotChicksConfig.hatchSpeed.get());
+                stack.setTag(tags);
+                setItemInHand(Hand.MAIN_HAND, stack);
+
+                level.broadcastEntityEvent(this, (byte) 18);
+                if (level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))
+                    level.addFreshEntity(new ExperienceOrbEntity(level, getX(), getY(), getZ(), random.nextInt(7) + 1));
             }
-
-            child.setBaby(true);
-            child.setStats(stats);
-            child.setSex(Sex.fromBool(random.nextBoolean()));
-
-            ItemStack stack = getBreedFromVariant().getEggColor().getDefaultInstance();
-            CompoundNBT tags = stack.getOrCreateTag();
-            child.save(tags);
-            ResourceLocation key = EntityType.getKey(child.getType());
-            tags.putString("id", key.toString());
-            tags.putString("Breed", getReadableBreed());
-            tags.putInt("TimeLeft", HotChicksConfig.hatchSpeed.get());
-            stack.setTag(tags);
-            setItemInHand(Hand.MAIN_HAND, stack);
-
-            world.broadcastEntityEvent(this, (byte) 18);
-            if (world.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))
-                world.addFreshEntity(new ExperienceOrbEntity(world, getX(), getY(), getZ(), random.nextInt(7) + 1));
         }
     }
 
@@ -464,10 +452,10 @@ public class HotChickenEntity extends LivestockEntity {
     public void handleEntityEvent(byte id) {
         if (id == 19) {
             for (int i = 0; i < 7; ++i) {
-                double d0 = this.random.nextGaussian() * 0.02D;
-                double d1 = this.random.nextGaussian() * 0.02D;
-                double d2 = this.random.nextGaussian() * 0.02D;
-                this.level.addParticle(ParticleTypes.ANGRY_VILLAGER, this.getRandomX(1.0D), this.getRandomY() + 0.5D, this.getRandomZ(1.0D), d0, d1, d2);
+                double d0 = random.nextGaussian() * 0.02D;
+                double d1 = random.nextGaussian() * 0.02D;
+                double d2 = random.nextGaussian() * 0.02D;
+                level.addParticle(ParticleTypes.ANGRY_VILLAGER, getRandomX(1.0D), getRandomY() + 0.5D, getRandomZ(1.0D), d0, d1, d2);
             }
         } else
             super.handleEntityEvent(id);
@@ -486,7 +474,7 @@ public class HotChickenEntity extends LivestockEntity {
     @Nullable
     @Override
     protected SoundEvent getAmbientSound() {
-        if (this.getSex() == Sex.MALE && this.random.nextInt(10) == 0)
+        if (getSex() == Sex.MALE && random.nextInt(10) == 0)
             return HotSounds.ROOSTER_CROW.get();
         return HotSounds.CHICKEN_AMBIENT.get();
     }
@@ -505,15 +493,15 @@ public class HotChickenEntity extends LivestockEntity {
 
     @Override
     protected void playStepSound(BlockPos pos, BlockState state) {
-        this.playSound(SoundEvents.CHICKEN_STEP, 0.15F, 1.0F);
+        playSound(SoundEvents.CHICKEN_STEP, 0.15F, 1.0F);
     }
 
     @Override
     public boolean doHurtTarget(Entity entity) {
-        boolean flag = entity.hurt(DamageSource.mobAttack(this), (float) ((int) this.getAttributeValue(Attributes.ATTACK_DAMAGE)));
+        boolean flag = entity.hurt(DamageSource.mobAttack(this), (float) ((int) getAttributeValue(Attributes.ATTACK_DAMAGE)));
         if (flag) {
-            this.doEnchantDamageEffects(this, entity);
-            this.playSound(this.getSex() == Sex.MALE ? HotSounds.ROOSTER_ATTACK.get() : HotSounds.CHICKEN_ATTACK.get(), 1.0F, 1.0F);
+            doEnchantDamageEffects(this, entity);
+            playSound(getSex() == Sex.MALE ? HotSounds.ROOSTER_ATTACK.get() : HotSounds.CHICKEN_ATTACK.get(), 1.0F, 1.0F);
         }
 
         return flag;
