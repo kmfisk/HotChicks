@@ -267,9 +267,6 @@ public abstract class LivestockEntity extends AnimalEntity {
                 return ActionResultType.sidedSuccess(level.isClientSide);
             }
         } else if (isTagged() && stack.getItem() == Items.SHEARS) {
-            ItemStack dyeItem = new ItemStack(DyeItem.byColor(getTagColor()));
-            if (!player.abilities.instabuild && !player.inventory.add(dyeItem))
-                player.drop(dyeItem, false);
             setTagged(false);
             return ActionResultType.sidedSuccess(level.isClientSide);
         }
