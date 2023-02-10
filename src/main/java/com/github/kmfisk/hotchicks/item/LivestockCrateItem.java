@@ -1,15 +1,17 @@
 package com.github.kmfisk.hotchicks.item;
 
+import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.passive.*;
+import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
@@ -20,11 +22,14 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class LivestockCrateItem extends Item {
+    public static final Tags.IOptionalNamedTag<EntityType<?>> CRATEABLE_ENTITIES = EntityTypeTags.createOptional(new ResourceLocation(HotChicks.MOD_ID, "crateables"));
+
     public LivestockCrateItem(Properties properties) {
         super(properties);
     }
@@ -36,9 +41,10 @@ public class LivestockCrateItem extends Item {
             return ActionResultType.PASS;
         }
 
-        boolean tameable = target instanceof TameableEntity && (!((TameableEntity) target).isTame() || ((TameableEntity) target).isOwnedBy(player));
-        boolean vanilla = target instanceof ChickenEntity || target instanceof CowEntity || target instanceof PigEntity || target instanceof RabbitEntity || target instanceof SheepEntity;
-        if (target instanceof LivestockEntity || tameable || vanilla) {
+        if (target instanceof TameableEntity && ((TameableEntity) target).isTame() && ((TameableEntity) target).getOwner() != player)
+            return ActionResultType.PASS;
+
+        else if (target.getType().is(CRATEABLE_ENTITIES)) {
             if (player.level.isClientSide) return ActionResultType.SUCCESS;
             ItemStack capturedEntityItem = caughtEntityItem(target, player);
             player.setItemInHand(hand, capturedEntityItem);
@@ -61,7 +67,8 @@ public class LivestockCrateItem extends Item {
         ResourceLocation key = EntityType.getKey(target.getType());
         tags.putString("id", key.toString());
         if (target.hasCustomName()) tags.putString("DisplayName", target.getDisplayName().getString());
-        if (target instanceof LivestockEntity) tags.putString("LivestockBreed", ((LivestockEntity) target).getReadableBreed());
+        if (target instanceof LivestockEntity)
+            tags.putString("LivestockBreed", ((LivestockEntity) target).getReadableBreed());
 
         target.remove();
         player.displayClientMessage(new TranslationTextComponent("chat.hotchicks.livestock_crate.capture", target.getDisplayName()), true);

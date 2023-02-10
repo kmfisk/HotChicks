@@ -44,12 +44,12 @@ public class HotCowEntity extends LivestockEntity {
         super(type, world);
     }
 
-    public static AttributeModifierMap.MutableAttribute registerAttributes() { // todo
+    public static AttributeModifierMap.MutableAttribute registerAttributes() {
         return createMobAttributes().add(Attributes.MAX_HEALTH, 24.0D).add(Attributes.MOVEMENT_SPEED, 0.2D).add(Attributes.ATTACK_DAMAGE, 1.0D);
     }
 
     @Override
-    protected void registerGoals() { // todo
+    protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(2, new LivestockBirthGoal(this));
