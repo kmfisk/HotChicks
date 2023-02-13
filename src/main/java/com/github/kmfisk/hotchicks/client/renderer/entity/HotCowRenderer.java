@@ -16,10 +16,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class HotCowRenderer extends MobRenderer<HotCowEntity, HotCowModel> {
     public static final String[] ANGUS_LAKENVELDER = new String[]{"black", "red"};
-    public static final String[] BRAHMA_LONGHORN = new String[]{"black", "gray", "red", "tan", "white"};
+    public static final String[] BRAHMA = new String[]{"black", "gray", "red", "tan", "white"};
     public static final String[] GUERNSEY = new String[]{"red", "tan"};
     public static final String[] HEREFORD_HOLSTEIN = new String[]{"heavy", "lowfat", "skim", "whole"};
     public static final String[] HIGHLAND = new String[]{"black", "red", "tan", "white"};
+    public static final String[] LONGHORN = new String[]{"black", "blue", "red", "tan", "white"};
     public final HotCowModel adultModel;
     public final HotCowModel calfModel;
 
@@ -53,7 +54,7 @@ public class HotCowRenderer extends MobRenderer<HotCowEntity, HotCowModel> {
                 location = "textures/entity/cow/angus/angus_" + ANGUS_LAKENVELDER[variant - 1] + sex;
                 break;
             case BRAHMA:
-                location = "textures/entity/cow/brahma/brahma_" + BRAHMA_LONGHORN[variant - 3] + sex;
+                location = "textures/entity/cow/brahma/brahma_" + BRAHMA[variant - 3] + sex;
                 break;
             case BROWN_SWISS:
                 location = "textures/entity/cow/brown_swiss/brown_swiss_tan" + sex;
@@ -77,7 +78,7 @@ public class HotCowRenderer extends MobRenderer<HotCowEntity, HotCowModel> {
                 location = "textures/entity/cow/lakenvelder/lakenvelder_" + ANGUS_LAKENVELDER[variant - 24] + sex;
                 break;
             case LONGHORN:
-                location = "textures/entity/cow/longhorn/longhorn_" + BRAHMA_LONGHORN[variant - 26] + sex;
+                location = "textures/entity/cow/longhorn/longhorn_" + LONGHORN[variant - 26] + sex;
                 break;
         }
 
