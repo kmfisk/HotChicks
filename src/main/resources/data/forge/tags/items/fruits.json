@@ -1,0 +1,27 @@
+{
+  "replace": false,
+  "values": [
+    "hotchicks:banana",
+    "hotchicks:blueberries",
+    "hotchicks:strawberry",
+    "hotchicks:grapes",
+    "hotchicks:kiwi",
+    "hotchicks:citron",
+    "hotchicks:fig",
+    "hotchicks:grapefruit",
+    "hotchicks:lemon",
+    "hotchicks:lime",
+    "hotchicks:mandarin",
+    "hotchicks:mango",
+    "hotchicks:orange",
+    "hotchicks:papeda",
+    "hotchicks:peach",
+    "hotchicks:pomegranate",
+    "hotchicks:pomelo",
+    "hotchicks:yuzu",
+    "minecraft:apple",
+    "minecraft:chorus_fruit",
+    "minecraft:melon",
+    "minecraft:sweet_berries"
+  ]
+}

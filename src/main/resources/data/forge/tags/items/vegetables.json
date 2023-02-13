@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "hotchicks:cabbage",
+    "hotchicks:corn",
+    "hotchicks:kale",
+    "hotchicks:lettuce",
+    "hotchicks:okra",
+    "hotchicks:peppers",
+    "hotchicks:cucumber",
+    "hotchicks:tomato",
+    "minecraft:beetroot",
+    "minecraft:carrot",
+    "minecraft:potato",
+    "minecraft:pumpkin"
+  ]
+}

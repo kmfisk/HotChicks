@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "hotchicks:chicken_quarter",
+    "hotchicks:rabbit_quarter",
+    "minecraft:chicken",
+    "minecraft:rabbit"
+  ]
+}

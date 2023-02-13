@@ -27,7 +27,7 @@ import net.minecraftforge.common.Tags;
 import java.util.Random;
 
 public class CheeseMoldBlock extends Block {
-    public static final Tags.IOptionalNamedTag<Item> MILKS = ItemTags.createOptional(new ResourceLocation("forge", "milk"));
+    public static final Tags.IOptionalNamedTag<Item> MILKS = ItemTags.createOptional(new ResourceLocation("forge", "milks"));
     public static final IntegerProperty AGE = BlockStateProperties.AGE_15;
     private static final VoxelShape INSIDE_1 = box(3.0D, 3.0D, 3.0D, 13.0D, 16.0D, 13.0D);
     protected static final VoxelShape SHAPE_1 = VoxelShapes.join(VoxelShapes.block(), INSIDE_1, IBooleanFunction.ONLY_FIRST);
