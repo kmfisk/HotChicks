@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "tag": "forge:raw_fishes/salmon"
+    },
+    {
+      "item": "hotchicks:rice"
+    },
+    {
+      "item": "minecraft:carrot"
+    },
+    {
+      "item": "hotchicks:yuzu"
+    },
+    {
+      "item": "minecraft:kelp"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:salmon_rice_bowl"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hotchicks",
+  "pattern": [
+    "FFF",
+    "FCF",
+    "FFF"
+  ],
+  "key": {
+    "F": {
+      "item": "minecraft:stick"
+    },
+    "C": {
+      "item": "hotchicks:hutch_bars"
+    }
+  },
+  "result": {
+    "item": "hotchicks:hutch_floor",
+    "count": 4
+  }
+}

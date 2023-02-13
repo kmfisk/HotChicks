@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "tag": "forge:raw_meats/porkchop"
+    },
+    {
+      "item": "minecraft:honey_bottle"
+    },
+    {
+      "item": "hotchicks:peach"
+    },
+    {
+      "item": "minecraft:potato"
+    },
+    {
+      "item": "hotchicks:peppers"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:glazed_pork_chop"
+  }
+}

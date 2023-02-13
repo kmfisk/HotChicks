@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "item": "hotchicks:strawberry"
+    },
+    {
+      "item": "hotchicks:kiwi"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "tag": "forge:milks"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:pavlova",
+    "count": 4
+  }
+}

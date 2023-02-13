@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "tag": "forge:raw_meats/porkchop"
+    },
+    {
+      "item": "minecraft:bread"
+    },
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:fruits"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:farmers_breakfast"
+  }
+}

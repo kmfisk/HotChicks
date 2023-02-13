@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "minecraft:bucket"
+    },
+    {
+      "tag": "forge:raw_meats/beef"
+    },
+    {
+      "tag": "forge:raw_meats/beef"
+    },
+    {
+      "item": "hotchicks:garlic"
+    },
+    {
+      "item": "hotchicks:peppers"
+    },
+    {
+      "item": "hotchicks:tomato"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:beef_chili_soup",
+    "count": 4
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "minecraft:bowl"
+    },
+    {
+      "tag": "forge:fruits"
+    },
+    {
+      "tag": "forge:milks"
+    },
+    {
+      "item": "hotchicks:oats"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:oatmeal"
+  }
+}

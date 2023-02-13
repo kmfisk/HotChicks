@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "hotchicks:butter_block"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:butter",
+    "count": 4
+  }
+}

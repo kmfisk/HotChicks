@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "hotchicks:cucumber"
+    },
+    {
+      "item": "hotchicks:cucumber"
+    },
+    {
+      "tag": "forge:seeds"
+    },
+    {
+      "item": "hotchicks:garlic"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:pickles",
+    "count": 3
+  }
+}

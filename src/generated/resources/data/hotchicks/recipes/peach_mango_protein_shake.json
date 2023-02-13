@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:milks"
+    },
+    {
+      "tag": "forge:milks"
+    },
+    {
+      "tag": "forge:milks"
+    },
+    {
+      "item": "hotchicks:lemon"
+    },
+    {
+      "item": "hotchicks:peach"
+    },
+    {
+      "item": "hotchicks:mango"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:peach_mango_protein_shake",
+    "count": 2
+  }
+}

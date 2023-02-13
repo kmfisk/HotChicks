@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "minecraft:bucket"
+    },
+    {
+      "tag": "forge:cooked_meats/cooked_chicken"
+    },
+    {
+      "tag": "forge:cooked_meats/cooked_porkchop"
+    },
+    {
+      "item": "hotchicks:garlic"
+    },
+    {
+      "item": "hotchicks:peppers"
+    },
+    {
+      "item": "hotchicks:okra"
+    },
+    {
+      "item": "hotchicks:rice"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:gumbo_soup",
+    "count": 4
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:milks"
+    },
+    {
+      "tag": "forge:milks"
+    },
+    {
+      "tag": "forge:milks"
+    },
+    {
+      "item": "hotchicks:orange"
+    },
+    {
+      "item": "hotchicks:grapefruit"
+    },
+    {
+      "item": "hotchicks:mandarin"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:creamsicle_protein_shake",
+    "count": 2
+  }
+}

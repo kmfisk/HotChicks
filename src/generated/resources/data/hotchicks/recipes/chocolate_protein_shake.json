@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:milks"
+    },
+    {
+      "tag": "forge:milks"
+    },
+    {
+      "tag": "forge:milks"
+    },
+    {
+      "item": "minecraft:cocoa_beans"
+    },
+    {
+      "item": "minecraft:cocoa_beans"
+    },
+    {
+      "item": "hotchicks:banana"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:chocolate_protein_shake",
+    "count": 2
+  }
+}

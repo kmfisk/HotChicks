@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "minecraft:bucket"
+    },
+    {
+      "item": "minecraft:carrot"
+    },
+    {
+      "item": "hotchicks:peas"
+    },
+    {
+      "item": "hotchicks:garlic"
+    },
+    {
+      "tag": "forge:cooked_meats/cooked_porkchop"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:split_pea_soup",
+    "count": 4
+  }
+}

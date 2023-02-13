@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "tag": "forge:cooked_meats"
+    },
+    {
+      "tag": "forge:mushrooms"
+    },
+    {
+      "item": "minecraft:carrot"
+    },
+    {
+      "item": "hotchicks:peppers"
+    },
+    {
+      "item": "hotchicks:lettuce"
+    },
+    {
+      "item": "hotchicks:lettuce"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:lettuce_wrap",
+    "count": 2
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "hotchicks:cabbage"
+    },
+    {
+      "item": "hotchicks:cabbage"
+    },
+    {
+      "item": "hotchicks:peppers"
+    },
+    {
+      "item": "hotchicks:garlic"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:kimchi",
+    "count": 3
+  }
+}

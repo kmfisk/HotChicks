@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "minecraft:bucket"
+    },
+    {
+      "item": "minecraft:potato"
+    },
+    {
+      "item": "minecraft:carrot"
+    },
+    {
+      "item": "hotchicks:garlic"
+    },
+    {
+      "tag": "forge:milks"
+    },
+    {
+      "item": "hotchicks:soft_cheese"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:potato_soup",
+    "count": 4
+  }
+}

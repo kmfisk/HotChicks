@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "minecraft:bowl"
+    },
+    {
+      "item": "hotchicks:lettuce"
+    },
+    {
+      "item": "hotchicks:kale"
+    },
+    {
+      "item": "hotchicks:cabbage"
+    },
+    {
+      "item": "hotchicks:peppers"
+    },
+    {
+      "item": "minecraft:egg"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:power_salad"
+  }
+}

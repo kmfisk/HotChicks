@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "tag": "forge:fruits/citrus"
+    },
+    {
+      "tag": "forge:fruits/citrus"
+    },
+    {
+      "tag": "forge:fruits/citrus"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "minecraft:ice"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:citrus_cooler",
+    "count": 2
+  }
+}

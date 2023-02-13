@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "minecraft:bucket"
+    },
+    {
+      "item": "minecraft:carrot"
+    },
+    {
+      "item": "minecraft:potato"
+    },
+    {
+      "item": "hotchicks:garlic"
+    },
+    {
+      "item": "hotchicks:peas"
+    },
+    {
+      "item": "hotchicks:tomato"
+    },
+    {
+      "item": "hotchicks:corn"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:veggie_soup",
+    "count": 4
+  }
+}

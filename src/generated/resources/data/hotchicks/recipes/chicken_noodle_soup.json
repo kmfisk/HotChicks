@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "minecraft:bucket"
+    },
+    {
+      "tag": "forge:raw_meats/chicken"
+    },
+    {
+      "item": "minecraft:carrot"
+    },
+    {
+      "item": "hotchicks:peas"
+    },
+    {
+      "item": "hotchicks:garlic"
+    },
+    {
+      "item": "minecraft:wheat"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:chicken_noodle_soup",
+    "count": 4
+  }
+}

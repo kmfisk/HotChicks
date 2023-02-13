@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:milks"
+    },
+    {
+      "tag": "forge:milks"
+    },
+    {
+      "tag": "forge:milks"
+    },
+    {
+      "item": "hotchicks:blueberries"
+    },
+    {
+      "item": "hotchicks:kale"
+    },
+    {
+      "item": "hotchicks:oats"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:superfood_protein_shake",
+    "count": 2
+  }
+}

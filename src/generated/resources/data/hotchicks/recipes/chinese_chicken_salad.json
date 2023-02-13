@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "minecraft:bowl"
+    },
+    {
+      "tag": "forge:cooked_meats/cooked_chicken"
+    },
+    {
+      "item": "hotchicks:cabbage"
+    },
+    {
+      "item": "minecraft:carrot"
+    },
+    {
+      "item": "hotchicks:mandarin"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:chinese_chicken_salad"
+  }
+}

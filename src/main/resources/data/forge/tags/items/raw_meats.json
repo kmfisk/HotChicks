@@ -1,0 +1,10 @@
+{
+  "replace": false,
+  "values": [
+    "#forge:raw_meats/beef",
+    "#forge:raw_meats/chicken",
+    "#forge:raw_meats/mutton",
+    "#forge:raw_meats/porkchop",
+    "#forge:raw_meats/rabbit"
+  ]
+}

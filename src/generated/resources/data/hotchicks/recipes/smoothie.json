@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "tag": "forge:fruits"
+    },
+    {
+      "tag": "forge:fruits"
+    },
+    {
+      "tag": "forge:fruits"
+    },
+    {
+      "item": "minecraft:sugar"
+    },
+    {
+      "item": "minecraft:snow_block"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:smoothie",
+    "count": 2
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "tag": "forge:milks"
+    },
+    {
+      "tag": "forge:milks"
+    },
+    {
+      "tag": "forge:milks"
+    },
+    {
+      "item": "hotchicks:banana"
+    },
+    {
+      "item": "hotchicks:mango"
+    },
+    {
+      "item": "hotchicks:kiwi"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:tropical_protein_shake",
+    "count": 2
+  }
+}

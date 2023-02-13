@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "minecraft:bowl"
+    },
+    {
+      "item": "hotchicks:lettuce"
+    },
+    {
+      "item": "hotchicks:lettuce"
+    },
+    {
+      "item": "minecraft:dandelion"
+    },
+    {
+      "item": "hotchicks:garlic"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:dandelion_salad"
+  }
+}

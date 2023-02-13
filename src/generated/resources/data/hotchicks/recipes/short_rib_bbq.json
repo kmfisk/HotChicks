@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "tag": "forge:raw_meats/beef"
+    },
+    {
+      "item": "minecraft:honey_bottle"
+    },
+    {
+      "item": "minecraft:apple"
+    },
+    {
+      "item": "hotchicks:peppers"
+    },
+    {
+      "item": "hotchicks:garlic"
+    },
+    {
+      "item": "hotchicks:rice"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:short_rib_bbq"
+  }
+}

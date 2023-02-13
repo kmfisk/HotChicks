@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "minecraft:bowl"
+    },
+    {
+      "item": "hotchicks:lettuce"
+    },
+    {
+      "tag": "forge:cooked_meats/cooked_chicken"
+    },
+    {
+      "item": "minecraft:apple"
+    },
+    {
+      "item": "hotchicks:grapes"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:chicken_salad"
+  }
+}

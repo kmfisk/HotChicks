@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "minecraft:bucket"
+    },
+    {
+      "tag": "forge:raw_meats/beef"
+    },
+    {
+      "tag": "forge:raw_meats/beef"
+    },
+    {
+      "tag": "forge:milks"
+    },
+    {
+      "tag": "forge:mushrooms"
+    },
+    {
+      "tag": "forge:mushrooms"
+    },
+    {
+      "item": "hotchicks:garlic"
+    },
+    {
+      "item": "hotchicks:butter"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:beef_stroganoff_soup",
+    "count": 4
+  }
+}

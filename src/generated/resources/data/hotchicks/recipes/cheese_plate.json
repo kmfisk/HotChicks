@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "hotchicks:hard_cheese"
+    },
+    {
+      "item": "hotchicks:soft_cheese"
+    },
+    {
+      "item": "hotchicks:grapes"
+    },
+    {
+      "item": "hotchicks:pomegranate"
+    },
+    {
+      "item": "hotchicks:fig"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:cheese_plate",
+    "count": 2
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "minecraft:bucket"
+    },
+    {
+      "tag": "forge:raw_meats/rabbit"
+    },
+    {
+      "item": "minecraft:carrot"
+    },
+    {
+      "tag": "forge:mushrooms"
+    },
+    {
+      "item": "hotchicks:peppers"
+    },
+    {
+      "tag": "forge:milks"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:braised_rabbit_soup",
+    "count": 4
+  }
+}

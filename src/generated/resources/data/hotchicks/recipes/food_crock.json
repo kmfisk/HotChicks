@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hotchicks",
+  "pattern": [
+    "FCF",
+    " F "
+  ],
+  "key": {
+    "F": {
+      "item": "minecraft:clay_ball"
+    },
+    "C": {
+      "item": "minecraft:bowl"
+    }
+  },
+  "result": {
+    "item": "hotchicks:food_crock",
+    "count": 2
+  }
+}

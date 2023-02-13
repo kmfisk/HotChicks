@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "tag": "forge:raw_meats/porkchop"
+    },
+    {
+      "item": "minecraft:wheat"
+    },
+    {
+      "tag": "forge:eggs"
+    },
+    {
+      "item": "hotchicks:rice"
+    },
+    {
+      "item": "hotchicks:cabbage"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:pork_cutlet"
+  }
+}

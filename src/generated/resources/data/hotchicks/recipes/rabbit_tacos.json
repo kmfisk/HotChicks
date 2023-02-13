@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "tag": "forge:raw_meats/rabbit"
+    },
+    {
+      "item": "hotchicks:corn"
+    },
+    {
+      "item": "hotchicks:corn"
+    },
+    {
+      "item": "hotchicks:lettuce"
+    },
+    {
+      "item": "minecraft:carrot"
+    },
+    {
+      "item": "hotchicks:lime"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:rabbit_tacos",
+    "count": 2
+  }
+}

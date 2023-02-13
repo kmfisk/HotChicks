@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "tag": "forge:raw_meats/porkchop"
+    },
+    {
+      "item": "hotchicks:rice"
+    },
+    {
+      "item": "hotchicks:rice"
+    },
+    {
+      "tag": "forge:mushrooms"
+    },
+    {
+      "item": "minecraft:carrot"
+    },
+    {
+      "item": "hotchicks:cabbage"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:cabbage_rolls"
+  }
+}
