@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "hotchicks:fair_chicken_carcass"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:chicken_quarter"
+  }
+}

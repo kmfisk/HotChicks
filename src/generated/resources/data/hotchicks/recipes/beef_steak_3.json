@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "hotchicks:prime_beef_primal"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:beef_steak",
+    "count": 3
+  }
+}

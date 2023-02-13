@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "hotchicks:yuzu"
+    },
+    {
+      "item": "hotchicks:yuzu"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:yuzu_seed"
+  }
+}

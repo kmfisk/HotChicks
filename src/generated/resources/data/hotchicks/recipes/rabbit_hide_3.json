@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "hotchicks:prime_rabbit_hide"
+    }
+  ],
+  "result": {
+    "item": "minecraft:leather",
+    "count": 3
+  }
+}

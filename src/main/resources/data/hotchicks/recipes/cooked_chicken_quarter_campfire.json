@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:campfire_cooking",
-  "ingredient": {
-    "item": "hotchicks:chicken_quarter"
-  },
-  "result": "hotchicks:cooked_chicken_quarter",
-  "experience": 0.35,
-  "cookingtime": 600
-}

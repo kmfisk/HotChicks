@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hotchicks",
+  "pattern": [
+    "S S",
+    "SFS"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:wheat"
+    },
+    "F": {
+      "item": "minecraft:feather"
+    }
+  },
+  "result": {
+    "item": "hotchicks:nest",
+    "count": 2
+  }
+}

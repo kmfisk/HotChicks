@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "hotchicks:grapefruit"
+    },
+    {
+      "item": "hotchicks:grapefruit"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:grapefruit_seed"
+  }
+}

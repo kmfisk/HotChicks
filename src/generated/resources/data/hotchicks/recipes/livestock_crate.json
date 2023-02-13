@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hotchicks",
+  "pattern": [
+    "TTT",
+    "PCP",
+    "PPP"
+  ],
+  "key": {
+    "T": {
+      "tag": "minecraft:wooden_trapdoors"
+    },
+    "C": {
+      "item": "minecraft:chest"
+    },
+    "P": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "result": {
+    "item": "hotchicks:livestock_crate"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "minecraft:wheat"
+    },
+    {
+      "item": "hotchicks:gelatin"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:glue",
+    "count": 4
+  }
+}

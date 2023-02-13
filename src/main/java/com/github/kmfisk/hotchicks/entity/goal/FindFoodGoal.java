@@ -59,7 +59,7 @@ public class FindFoodGoal extends MoveToBlockGoal {
 
     @Override
     protected boolean isValidTarget(IWorldReader level, BlockPos pos) {
-        if (level.getBlockState(pos).is(HotBlocks.TROUGH_BLOCK.get()) || level.getBlockState(pos).is(HotBlocks.METAL_TROUGH_BLOCK.get())) {
+        if (level.getBlockState(pos).is(HotBlocks.WOODEN_TROUGH.get()) || level.getBlockState(pos).is(HotBlocks.METAL_TROUGH.get())) {
             TileEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity instanceof TroughTileEntity)
                 return ((TroughTileEntity) tileEntity).getItems().stream().anyMatch(entity::isEdibleFood);

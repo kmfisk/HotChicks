@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "hotchicks:papeda_seed"
+    },
+    {
+      "item": "hotchicks:mandarin_seed"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:yuzu_seed",
+    "count": 2
+  }
+}

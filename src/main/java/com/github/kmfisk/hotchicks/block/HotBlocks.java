@@ -34,8 +34,8 @@ public class HotBlocks {
     public static final RegistryObject<Block> HUTCH_FLOOR = registerWithItem("hutch_floor", () -> new HutchFloorBlock(AbstractBlock.Properties.of(Material.HEAVY_METAL).strength(2.0F, 3.0F).sound(SoundType.METAL).noOcclusion().isRedstoneConductor(HotBlocks::never).isSuffocating(HotBlocks::never).isViewBlocking(HotBlocks::never)));
     public static final RegistryObject<Block> HUTCH_GATE = registerWithItem("hutch_gate", () -> new HotFenceGateBlock(AbstractBlock.Properties.of(Material.HEAVY_METAL, MaterialColor.NONE).strength(2.0F, 3.0F).sound(SoundType.METAL).noOcclusion()));
     public static final RegistryObject<Block> TRELLIS = registerWithItem("trellis", () -> new TrellisBlock(null));
-    public static final RegistryObject<Block> TROUGH_BLOCK = registerWithItem("wooden_trough", () -> new TroughBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD)));
-    public static final RegistryObject<Block> METAL_TROUGH_BLOCK = registerWithItem("metal_trough", () -> new MetalTroughBlock(AbstractBlock.Properties.of(Material.METAL).strength(2.5F).sound(SoundType.METAL)));
+    public static final RegistryObject<Block> WOODEN_TROUGH = registerWithItem("wooden_trough", () -> new TroughBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD)));
+    public static final RegistryObject<Block> METAL_TROUGH = registerWithItem("metal_trough", () -> new MetalTroughBlock(AbstractBlock.Properties.of(Material.METAL).strength(2.5F).sound(SoundType.METAL)));
     public static final RegistryObject<Block> WATER_BOTTLE = registerWithItem("water_bottle", () -> new WaterBottleBlock(AbstractBlock.Properties.of(Material.CLAY).noOcclusion()));
 
     //    public static final Map<String, RegistryObject<Block>> PLANTERS = new HashMap<>();

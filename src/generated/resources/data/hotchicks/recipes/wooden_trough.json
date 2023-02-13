@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hotchicks",
+  "pattern": [
+    "S S",
+    "SSS",
+    "N N"
+  ],
+  "key": {
+    "S": {
+      "tag": "minecraft:planks"
+    },
+    "N": {
+      "item": "minecraft:iron_nugget"
+    }
+  },
+  "result": {
+    "item": "hotchicks:wooden_trough",
+    "count": 2
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smoking",
+  "group": "hotchicks",
+  "ingredient": {
+    "item": "hotchicks:chicken_quarter"
+  },
+  "result": "hotchicks:cooked_chicken_quarter",
+  "experience": 0.35,
+  "cookingtime": 100
+}

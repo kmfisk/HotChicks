@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "hotchicks:citron_seed"
+    },
+    {
+      "item": "hotchicks:papeda_seed"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:lime_seed",
+    "count": 2
+  }
+}
