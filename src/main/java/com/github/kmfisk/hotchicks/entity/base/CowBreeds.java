@@ -98,7 +98,7 @@ public enum CowBreeds {
             possibleVariants.add(randomFromBreed(random, BRAHMA));
 
         if (possibleVariants.isEmpty()) return random.nextInt(MAX_VARIANTS) + 1;
-        else return possibleVariants.get(random.nextInt(possibleVariants.size())); // todo
+        else return possibleVariants.get(random.nextInt(possibleVariants.size()));
     }
 
     public TextComponent getLocalizedName() {

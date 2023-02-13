@@ -3,6 +3,7 @@ package com.github.kmfisk.hotchicks.entity.base;
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.entity.stats.ChickenStats;
 import com.github.kmfisk.hotchicks.item.HotItems;
+import com.google.common.collect.Lists;
 import net.minecraft.item.Item;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.registry.Registry;
@@ -12,6 +13,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.fml.RegistryObject;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
@@ -76,24 +78,28 @@ public enum ChickenBreeds {
     }
 
     public static int randomBasedOnBiome(Random random, Biome biome) {
+        List<Integer> possibleVariants = Lists.newArrayList();
+
         Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(RegistryKey.create(Registry.BIOME_REGISTRY, biome.getRegistryName()));
         if (biomeTypes.contains(BiomeDictionary.Type.PLAINS) && !biomeTypes.contains(BiomeDictionary.Type.HOT) && !biomeTypes.contains(BiomeDictionary.Type.COLD))
-            return randomFromBreed(random, LEGHORN);
+            possibleVariants.add(randomFromBreed(random, LEGHORN));
         if (biomeTypes.contains(BiomeDictionary.Type.FOREST) && !biomeTypes.contains(BiomeDictionary.Type.SAVANNA) && !biomeTypes.contains(BiomeDictionary.Type.JUNGLE) && !biomeTypes.contains(BiomeDictionary.Type.WET) && !biomeTypes.contains(BiomeDictionary.Type.CONIFEROUS))
-            return randomFromBreed(random, RHODE_ISLAND_RED);
+            possibleVariants.add(randomFromBreed(random, RHODE_ISLAND_RED));
         if (biomeTypes.contains(BiomeDictionary.Type.FOREST) && biomeTypes.contains(BiomeDictionary.Type.DENSE))
-            return randomFromBreed(random, BARRED_ROCK);
+            possibleVariants.add(randomFromBreed(random, BARRED_ROCK));
         if (biomeTypes.contains(BiomeDictionary.Type.HOT) && biomeTypes.contains(BiomeDictionary.Type.SANDY))
-            return randomFromBreed(random, ORPINGTON);
+            possibleVariants.add(randomFromBreed(random, ORPINGTON));
         if (biomeTypes.contains(BiomeDictionary.Type.MOUNTAIN) && !biomeTypes.contains(BiomeDictionary.Type.HOT))
-            return randomFromBreed(random, AMERAUCANA);
+            possibleVariants.add(randomFromBreed(random, AMERAUCANA));
         if (biomeTypes.contains(BiomeDictionary.Type.JUNGLE))
-            return randomFromBreed(random, OLIVE_EGGER);
+            possibleVariants.add(randomFromBreed(random, OLIVE_EGGER));
         if (biomeTypes.contains(BiomeDictionary.Type.SWAMP))
-            return randomFromBreed(random, MARANS);
+            possibleVariants.add(randomFromBreed(random, MARANS));
         if (biomeTypes.contains(BiomeDictionary.Type.SNOWY))
-            return randomFromBreed(random, SILKIE);
-        return random.nextInt(MAX_VARIANTS) + 1;
+            possibleVariants.add(randomFromBreed(random, SILKIE));
+
+        if (possibleVariants.isEmpty()) return random.nextInt(MAX_VARIANTS) + 1;
+        else return possibleVariants.get(random.nextInt(possibleVariants.size()));
     }
 
     public TextComponent getLocalizedName() {
