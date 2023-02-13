@@ -66,8 +66,8 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     public LivestockEntity(EntityType<? extends AnimalEntity> type, World world) {
         super(type, world);
-        hunger = new CareStat(this, HUNGER, getMaxCareStat(), HotChicksConfig.hungerDepletion.get());
-        thirst = new CareStat(this, THIRST, getMaxCareStat(), HotChicksConfig.thirstDepletion.get());
+        hunger = new CareStat(this, HUNGER, getMaxCareStat(), getHungerDepletion());
+        thirst = new CareStat(this, THIRST, getMaxCareStat(), getThirstDepletion());
     }
 
     @Override
@@ -101,6 +101,10 @@ public abstract class LivestockEntity extends AnimalEntity {
     public abstract int getMaxVariants();
 
     public abstract int getMaxCareStat();
+
+    public abstract int getHungerDepletion();
+
+    public abstract int getThirstDepletion();
 
     public abstract boolean isEdibleFood(ItemStack stack);
 

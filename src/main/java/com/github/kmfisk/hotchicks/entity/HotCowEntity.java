@@ -2,6 +2,7 @@ package com.github.kmfisk.hotchicks.entity;
 
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
+import com.github.kmfisk.hotchicks.entity.base.CareStat;
 import com.github.kmfisk.hotchicks.entity.base.CowBreeds;
 import com.github.kmfisk.hotchicks.entity.goal.LivestockAvoidPlayerGoal;
 import com.github.kmfisk.hotchicks.entity.goal.LivestockBirthGoal;
@@ -90,8 +91,18 @@ public class HotCowEntity extends LivestockEntity {
 
     @Override
     public int getMaxCareStat() {
-        return 6;
-    } // todo
+        return 16;
+    }
+
+    @Override
+    public int getHungerDepletion() {
+        return HotChicksConfig.hungerDepletion.get() / 4;
+    }
+
+    @Override
+    public int getThirstDepletion() {
+        return HotChicksConfig.thirstDepletion.get() / 4;
+    }
 
     @Override
     public boolean isEdibleFood(ItemStack stack) {

@@ -94,6 +94,16 @@ public class HotRabbitEntity extends LivestockEntity {
     }
 
     @Override
+    public int getHungerDepletion() {
+        return HotChicksConfig.hungerDepletion.get();
+    }
+
+    @Override
+    public int getThirstDepletion() {
+        return HotChicksConfig.thirstDepletion.get();
+    }
+
+    @Override
     public boolean isEdibleFood(ItemStack stack) {
         return Ingredient.of(RABBIT_FOODS).test(stack);
     }

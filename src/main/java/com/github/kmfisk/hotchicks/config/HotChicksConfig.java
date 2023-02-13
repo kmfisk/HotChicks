@@ -54,7 +54,7 @@ public class HotChicksConfig {
         hunger = builder.define("enabled", true);
         hungerDepletion = builder
                 .comment(" Depletion rate is in minecraft ticks.",
-                        " By default, animals will lose 1 hunger point every 12000 ticks.",
+                        " By default, small animals will lose 1 hunger point every 12000 ticks, large animals will lose 1 hunger point every 3000 ticks.",
                         " Default: 12000")
                 .define("depletion_rate", 12000);
         builder.pop();
@@ -63,7 +63,7 @@ public class HotChicksConfig {
         thirst = builder.define("enabled", true);
         thirstDepletion = builder
                 .comment(" Depletion rate is in minecraft ticks.",
-                        " By default, animals will lose 1 thirst point every 8000 ticks.",
+                        " By default, small animals will lose 1 thirst point every 8000 ticks, large animals will lose 1 thirst point every 2000 ticks.",
                         " Default: 8000")
                 .define("depletion_rate", 8000);
         builder.pop();
