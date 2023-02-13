@@ -177,7 +177,7 @@ public class HotRabbitModel extends SegmentedModel<HotRabbitEntity> {
     public void renderToBuffer(MatrixStack matrixStack, IVertexBuilder buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         if (young) {
             matrixStack.pushPose();
-            float f1 = 1.0F / 2.0F;
+            float f1 = 0.5f;
             matrixStack.scale(f1, f1, f1);
             matrixStack.translate(0.0D, 24.0F / 16.0F, 0.0D);
             parts().forEach((renderer) -> renderer.render(matrixStack, buffer, packedLight, packedOverlay, red, green, blue, alpha));

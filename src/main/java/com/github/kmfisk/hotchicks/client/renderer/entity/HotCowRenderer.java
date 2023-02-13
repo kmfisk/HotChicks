@@ -42,7 +42,7 @@ public class HotCowRenderer extends MobRenderer<HotCowEntity, HotCowModel> {
         String sex = cow.getSex() == LivestockEntity.Sex.MALE ? "_bull.png" : "_cow.png";
         int variant = cow.getVariant();
 
-        if (cow.isBaby()) return new ResourceLocation(HotChicks.MOD_ID, "textures/entity/cow/calf" + ".png");
+        if (cow.isBaby()) sex = "_cow.png";
 
         switch (cow.getBreedFromVariant()) {
             default:
