@@ -51,6 +51,7 @@ public class HotItems {
     public static final RegistryObject<Item> GREEN_EGG = REGISTRAR.register("green_egg", () -> new HotEggItem(new Item.Properties().stacksTo(16).tab(HotChicks.HOT_CHICKS_GROUP)));
     public static final RegistryObject<Item> WHITE_EGG = REGISTRAR.register("white_egg", () -> new HotEggItem(new Item.Properties().stacksTo(16).tab(HotChicks.HOT_CHICKS_GROUP)));
     public static final RegistryObject<Item> GELATIN = REGISTRAR.register("gelatin", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> GLUE = REGISTRAR.register("glue", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
     public static final RegistryObject<Item> CHOICE_CHICKEN_CARCASS = REGISTRAR.register("choice_chicken_carcass", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
     public static final RegistryObject<Item> PRIME_CHICKEN_CARCASS = REGISTRAR.register("prime_chicken_carcass", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
     public static final RegistryObject<Item> GOOD_CHICKEN_CARCASS = REGISTRAR.register("good_chicken_carcass", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));

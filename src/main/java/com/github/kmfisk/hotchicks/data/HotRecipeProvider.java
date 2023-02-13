@@ -36,6 +36,15 @@ public class HotRecipeProvider extends RecipeProvider {
                         .build()
         ));
 
+        consumer.accept(shapelessRecipeResult(HotItems.GLUE.get(), 4,
+                ImmutableList.of(
+                        Ingredient.of(Items.WHEAT),
+                        Ingredient.of(Items.WHEAT),
+                        Ingredient.of(HotItems.GELATIN.get()),
+                        Ingredient.of(HotItems.GELATIN.get())
+                )
+        ));
+
         consumer.accept(shapelessRecipeResult(HotBlocks.RED_APPLE_SAPLING.get(), 1,
                 ImmutableList.of(
                         Ingredient.of(Items.APPLE),
