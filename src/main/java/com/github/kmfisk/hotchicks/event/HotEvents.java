@@ -1,8 +1,13 @@
 package com.github.kmfisk.hotchicks.event;
 
 import com.github.kmfisk.hotchicks.HotChicks;
+import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.HotEntities;
 import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.ChickenEntity;
+import net.minecraft.entity.passive.CowEntity;
+import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.util.RegistryKey;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.MobSpawnInfo;
@@ -11,6 +16,7 @@ import net.minecraft.world.gen.feature.Features;
 import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -22,7 +28,27 @@ import static com.github.kmfisk.hotchicks.worldgen.HotFeatures.*;
 @Mod.EventBusSubscriber(modid = HotChicks.MOD_ID)
 public class HotEvents {
     @SubscribeEvent
+    public static void joinWorldEvent(EntityJoinWorldEvent event) {
+        if (!event.getWorld().isClientSide) {
+            boolean chickens = event.getEntity().getClass() == ChickenEntity.class && HotChicksConfig.removeVanillaChickens.get();
+            boolean cows = event.getEntity().getClass() == CowEntity.class && HotChicksConfig.removeVanillaCows.get();
+            boolean rabbits = event.getEntity().getClass() == RabbitEntity.class && HotChicksConfig.removeVanillaRabbits.get();
+            if (chickens || cows || rabbits) {
+                LivingEntity entity = (LivingEntity) event.getEntity();
+                if (!entity.getPersistentData().contains("HotChicksSpawn")) {
+                    entity.getPersistentData().putBoolean("HotChicksSpawn", true);
+                    event.setCanceled(true);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void biomeLoad(final BiomeLoadingEvent event) {
+        MobSpawnInfo.Spawners chickenSpawner = new MobSpawnInfo.Spawners(HotEntities.CHICKEN.get(), HotChicksConfig.chickenSpawnChance.get(), HotChicksConfig.chickenMinGroup.get(), HotChicksConfig.chickenMaxGroup.get());
+        MobSpawnInfo.Spawners cowSpawner = new MobSpawnInfo.Spawners(HotEntities.COW.get(), HotChicksConfig.cowSpawnChance.get(), HotChicksConfig.cowMinGroup.get(), HotChicksConfig.cowMaxGroup.get());
+        MobSpawnInfo.Spawners rabbitSpawner = new MobSpawnInfo.Spawners(HotEntities.RABBIT.get(), HotChicksConfig.rabbitSpawnChance.get(), HotChicksConfig.rabbitMinGroup.get(), HotChicksConfig.rabbitMaxGroup.get());
+
         Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(RegistryKey.create(Registry.BIOME_REGISTRY, event.getName()));
 
         if (biomeTypes.contains(BiomeDictionary.Type.OVERWORLD)) {
@@ -38,7 +64,7 @@ public class HotEvents {
 
             if (biomeTypes.contains(BiomeDictionary.Type.FOREST)) {
                 if (!biomeTypes.contains(BiomeDictionary.Type.SAVANNA) && !biomeTypes.contains(BiomeDictionary.Type.JUNGLE) && !biomeTypes.contains(BiomeDictionary.Type.WET) && !biomeTypes.contains(BiomeDictionary.Type.CONIFEROUS)) {
-                    event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(HotEntities.CHICKEN.get(), 16, 2, 4));
+                    event.getSpawns().getSpawner(EntityClassification.CREATURE).add(chickenSpawner);
                     event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> RED_APPLE.decorated(Features.Placements.HEIGHTMAP_SQUARE).decorated(Placement.COUNT_EXTRA.configured(new AtSurfaceWithExtraConfig(0, 0.1f, 1))));
                     event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> PEACH.decorated(Features.Placements.HEIGHTMAP_SQUARE).decorated(Placement.COUNT_EXTRA.configured(new AtSurfaceWithExtraConfig(0, 0.05f, 1))));
                     event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> STRAWBERRY_BUSH);
@@ -55,8 +81,8 @@ public class HotEvents {
             }
 
             if (biomeTypes.contains(BiomeDictionary.Type.SAVANNA)) {
-                event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(HotEntities.COW.get(), 16, 2, 4));
-                event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(HotEntities.RABBIT.get(), 16, 2, 4));
+                event.getSpawns().getSpawner(EntityClassification.CREATURE).add(cowSpawner);
+                event.getSpawns().getSpawner(EntityClassification.CREATURE).add(rabbitSpawner);
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> PEACH.decorated(Features.Placements.HEIGHTMAP_SQUARE).decorated(Placement.COUNT_EXTRA.configured(new AtSurfaceWithExtraConfig(0, 0.02f, 1))));
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> POMEGRANATE.decorated(Features.Placements.HEIGHTMAP_SQUARE).decorated(Placement.COUNT_EXTRA.configured(new AtSurfaceWithExtraConfig(0, 0.02f, 1))));
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> FIG.decorated(Features.Placements.HEIGHTMAP_SQUARE).decorated(Placement.COUNT_EXTRA.configured(new AtSurfaceWithExtraConfig(0, 0.1f, 1))));
@@ -67,7 +93,7 @@ public class HotEvents {
             }
 
             if (biomeTypes.contains(BiomeDictionary.Type.JUNGLE)) {
-                event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(HotEntities.CHICKEN.get(), 16, 2, 4));
+                event.getSpawns().getSpawner(EntityClassification.CREATURE).add(chickenSpawner);
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> MANGO.decorated(Features.Placements.HEIGHTMAP_SQUARE).decorated(Placement.COUNT_EXTRA.configured(new AtSurfaceWithExtraConfig(0, 0.1f, 1))));
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> POMEGRANATE.decorated(Features.Placements.HEIGHTMAP_SQUARE).decorated(Placement.COUNT_EXTRA.configured(new AtSurfaceWithExtraConfig(0, 0.1f, 1))));
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> FIG.decorated(Features.Placements.HEIGHTMAP_SQUARE).decorated(Placement.COUNT_EXTRA.configured(new AtSurfaceWithExtraConfig(1, 0.1f, 1))));
@@ -78,8 +104,8 @@ public class HotEvents {
 
             if (biomeTypes.contains(BiomeDictionary.Type.PLAINS)) {
                 if (!biomeTypes.contains(BiomeDictionary.Type.HOT) && !biomeTypes.contains(BiomeDictionary.Type.COLD)) {
-                    event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(HotEntities.COW.get(), 16, 2, 4));
-                    event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(HotEntities.RABBIT.get(), 16, 2, 4));
+                    event.getSpawns().getSpawner(EntityClassification.CREATURE).add(cowSpawner);
+                    event.getSpawns().getSpawner(EntityClassification.CREATURE).add(rabbitSpawner);
                     event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> CORN);
                     event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> OAT);
                     event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> WILD_TOMATO);
@@ -87,8 +113,8 @@ public class HotEvents {
             }
 
             if (biomeTypes.contains(BiomeDictionary.Type.CONIFEROUS) && !biomeTypes.contains(BiomeDictionary.Type.SNOWY)) {
-                event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(HotEntities.CHICKEN.get(), 16, 2, 4));
-                event.getSpawns().getSpawner(EntityClassification.CREATURE).add(new MobSpawnInfo.Spawners(HotEntities.RABBIT.get(), 16, 2, 4));
+                event.getSpawns().getSpawner(EntityClassification.CREATURE).add(chickenSpawner);
+                event.getSpawns().getSpawner(EntityClassification.CREATURE).add(rabbitSpawner);
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> BLUEBERRY_BUSH);
             }
 

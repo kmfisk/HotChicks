@@ -4,6 +4,18 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 public class HotChicksConfig {
     public static final ForgeConfigSpec CONFIG_SPEC;
+    public static ForgeConfigSpec.BooleanValue removeVanillaChickens;
+    public static ForgeConfigSpec.ConfigValue<Integer> chickenSpawnChance;
+    public static ForgeConfigSpec.ConfigValue<Integer> chickenMinGroup;
+    public static ForgeConfigSpec.ConfigValue<Integer> chickenMaxGroup;
+    public static ForgeConfigSpec.BooleanValue removeVanillaCows;
+    public static ForgeConfigSpec.ConfigValue<Integer> cowSpawnChance;
+    public static ForgeConfigSpec.ConfigValue<Integer> cowMinGroup;
+    public static ForgeConfigSpec.ConfigValue<Integer> cowMaxGroup;
+    public static ForgeConfigSpec.BooleanValue removeVanillaRabbits;
+    public static ForgeConfigSpec.ConfigValue<Integer> rabbitSpawnChance;
+    public static ForgeConfigSpec.ConfigValue<Integer> rabbitMinGroup;
+    public static ForgeConfigSpec.ConfigValue<Integer> rabbitMaxGroup;
     public static ForgeConfigSpec.ConfigValue<Integer> growthSpeed;
     public static ForgeConfigSpec.ConfigValue<Integer> eggSpeed;
     public static ForgeConfigSpec.ConfigValue<Integer> hatchSpeed;
@@ -21,6 +33,27 @@ public class HotChicksConfig {
     }
 
     private static void setupConfig(ForgeConfigSpec.Builder builder) {
+        builder.push("Spawns");
+        builder.push("Chickens");
+        chickenSpawnChance = builder.define("chance", 16);
+        chickenMinGroup = builder.define("min", 2);
+        chickenMaxGroup = builder.define("max", 4);
+        removeVanillaChickens = builder.define("removeVanilla", true);
+        builder.pop();
+        builder.push("Cows");
+        cowSpawnChance = builder.define("chance", 16);
+        cowMinGroup = builder.define("min", 2);
+        cowMaxGroup = builder.define("max", 4);
+        removeVanillaCows = builder.define("removeVanilla", true);
+        builder.pop();
+        builder.push("Rabbits");
+        rabbitSpawnChance = builder.define("chance", 16);
+        rabbitMinGroup = builder.define("min", 2);
+        rabbitMaxGroup = builder.define("max", 4);
+        removeVanillaRabbits = builder.define("removeVanilla", true);
+        builder.pop();
+        builder.pop();
+
         builder.push("Timers");
         growthSpeed = builder
                 .comment(" Growth speed is in minecraft ticks, and will be multiplied by the total of 5 minus the entity's stat.",
