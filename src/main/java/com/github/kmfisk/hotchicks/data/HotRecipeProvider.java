@@ -204,7 +204,7 @@ public class HotRecipeProvider extends RecipeProvider {
         consumer.accept(shapelessRecipeResult(HotItems.GARDEN_SALAD.get(), 1,
                 ImmutableList.of(Ingredient.of(Items.BOWL), Ingredient.of(HotItems.LETTUCE.get()), Ingredient.of(HotItems.CORN.get()), Ingredient.of(HotItems.TOMATO.get()), Ingredient.of(HotItems.PEPPERS.get()))));
         consumer.accept(shapelessRecipeResult(HotItems.POWER_SALAD.get(), 1,
-                ImmutableList.of(Ingredient.of(Items.BOWL), Ingredient.of(HotItems.LETTUCE.get()), Ingredient.of(HotItems.KALE.get()), Ingredient.of(HotItems.CABBAGE.get()), Ingredient.of(HotItems.PEPPERS.get()), Ingredient.of(Items.EGG))));
+                ImmutableList.of(Ingredient.of(Items.BOWL), Ingredient.of(HotItems.LETTUCE.get()), Ingredient.of(HotItems.KALE.get()), Ingredient.of(HotItems.CABBAGE.get()), Ingredient.of(HotItems.PEPPERS.get()), Ingredient.of(Tags.Items.EGGS))));
         consumer.accept(shapelessRecipeResult(HotItems.SALMON_RICE_BOWL.get(), 1,
                 ImmutableList.of(Ingredient.of(HotItemTags.RAW_SALMONS), Ingredient.of(HotItems.RICE.get()), Ingredient.of(Items.CARROT), Ingredient.of(HotItems.YUZU.get()), Ingredient.of(Items.KELP))));
         consumer.accept(shapelessRecipeResult(HotItems.SHAKSHUKA.get(), 1,
@@ -212,23 +212,23 @@ public class HotRecipeProvider extends RecipeProvider {
         consumer.accept(shapelessRecipeResult(HotItems.SHORT_RIB_BBQ.get(), 1,
                 ImmutableList.of(Ingredient.of(HotItemTags.RAW_BEEFS), Ingredient.of(Items.HONEY_BOTTLE), Ingredient.of(Items.APPLE), Ingredient.of(HotItems.PEPPERS.get()), Ingredient.of(HotItems.GARLIC.get()), Ingredient.of(HotItems.RICE.get()))));
         consumer.accept(shapelessRecipeResult(HotItems.BEEF_CHILI_SOUP.get(), 4,
-                ImmutableList.of(Ingredient.of(Items.BUCKET), Ingredient.of(HotItemTags.RAW_BEEFS), Ingredient.of(HotItemTags.RAW_BEEFS), Ingredient.of(HotItems.GARLIC.get()), Ingredient.of(HotItems.PEPPERS.get()), Ingredient.of(HotItems.TOMATO.get()))));
+                ImmutableList.of(Ingredient.of(Items.WATER_BUCKET), Ingredient.of(HotItemTags.RAW_BEEFS), Ingredient.of(HotItemTags.RAW_BEEFS), Ingredient.of(HotItems.GARLIC.get()), Ingredient.of(HotItems.PEPPERS.get()), Ingredient.of(HotItems.TOMATO.get()))));
         consumer.accept(shapelessRecipeResult(HotItems.BEEF_STROGANOFF_SOUP.get(), 4,
-                ImmutableList.of(Ingredient.of(Items.BUCKET), Ingredient.of(HotItemTags.RAW_BEEFS), Ingredient.of(HotItemTags.RAW_BEEFS), Ingredient.of(HotItemTags.MILKS), Ingredient.of(Tags.Items.MUSHROOMS), Ingredient.of(Tags.Items.MUSHROOMS), Ingredient.of(HotItems.GARLIC.get()), Ingredient.of(HotItems.BUTTER.get()))));
+                ImmutableList.of(Ingredient.of(Items.WATER_BUCKET), Ingredient.of(HotItemTags.RAW_BEEFS), Ingredient.of(HotItemTags.RAW_BEEFS), Ingredient.of(HotItemTags.MILKS), Ingredient.of(Tags.Items.MUSHROOMS), Ingredient.of(Tags.Items.MUSHROOMS), Ingredient.of(HotItems.GARLIC.get()), Ingredient.of(HotItems.BUTTER.get()))));
         consumer.accept(shapelessRecipeResult(HotItems.BRAISED_RABBIT_SOUP.get(), 4,
-                ImmutableList.of(Ingredient.of(Items.BUCKET), Ingredient.of(HotItemTags.RAW_RABBITS), Ingredient.of(Items.CARROT), Ingredient.of(Tags.Items.MUSHROOMS), Ingredient.of(HotItems.PEPPERS.get()), Ingredient.of(HotItemTags.MILKS))));
+                ImmutableList.of(Ingredient.of(Items.WATER_BUCKET), Ingredient.of(HotItemTags.RAW_RABBITS), Ingredient.of(Items.CARROT), Ingredient.of(Tags.Items.MUSHROOMS), Ingredient.of(HotItems.PEPPERS.get()), Ingredient.of(HotItemTags.MILKS))));
         consumer.accept(shapelessRecipeResult(HotItems.CHICKEN_NOODLE_SOUP.get(), 4,
-                ImmutableList.of(Ingredient.of(Items.BUCKET), Ingredient.of(HotItemTags.RAW_CHICKENS), Ingredient.of(Items.CARROT), Ingredient.of(HotItems.PEAS.get()), Ingredient.of(HotItems.GARLIC.get()), Ingredient.of(Items.WHEAT))));
+                ImmutableList.of(Ingredient.of(Items.WATER_BUCKET), Ingredient.of(HotItemTags.RAW_CHICKENS), Ingredient.of(Items.CARROT), Ingredient.of(HotItems.PEAS.get()), Ingredient.of(HotItems.GARLIC.get()), Ingredient.of(Items.WHEAT))));
         consumer.accept(shapelessRecipeResult(HotItems.GUMBO_SOUP.get(), 4,
-                ImmutableList.of(Ingredient.of(Items.BUCKET), Ingredient.of(HotItemTags.COOKED_CHICKENS), Ingredient.of(HotItemTags.COOKED_PORKCHOPS), Ingredient.of(HotItems.GARLIC.get()), Ingredient.of(HotItems.PEPPERS.get()), Ingredient.of(HotItems.OKRA.get()), Ingredient.of(HotItems.RICE.get()))));
+                ImmutableList.of(Ingredient.of(Items.WATER_BUCKET), Ingredient.of(HotItemTags.COOKED_CHICKENS), Ingredient.of(HotItemTags.COOKED_PORKCHOPS), Ingredient.of(HotItems.GARLIC.get()), Ingredient.of(HotItems.PEPPERS.get()), Ingredient.of(HotItems.OKRA.get()), Ingredient.of(HotItems.RICE.get()))));
         consumer.accept(shapelessRecipeResult(HotItems.POTATO_SOUP.get(), 4,
-                ImmutableList.of(Ingredient.of(Items.BUCKET), Ingredient.of(Items.POTATO), Ingredient.of(Items.CARROT), Ingredient.of(HotItems.GARLIC.get()), Ingredient.of(HotItemTags.MILKS), Ingredient.of(HotItems.SOFT_CHEESE.get()))));
+                ImmutableList.of(Ingredient.of(Items.WATER_BUCKET), Ingredient.of(Items.POTATO), Ingredient.of(Items.CARROT), Ingredient.of(HotItems.GARLIC.get()), Ingredient.of(HotItemTags.MILKS), Ingredient.of(HotItems.SOFT_CHEESE.get()))));
         consumer.accept(shapelessRecipeResult(HotItems.SPLIT_PEA_SOUP.get(), 4,
-                ImmutableList.of(Ingredient.of(Items.BUCKET), Ingredient.of(Items.CARROT), Ingredient.of(HotItems.PEAS.get()), Ingredient.of(HotItems.GARLIC.get()), Ingredient.of(HotItemTags.COOKED_PORKCHOPS))));
+                ImmutableList.of(Ingredient.of(Items.WATER_BUCKET), Ingredient.of(Items.CARROT), Ingredient.of(HotItems.PEAS.get()), Ingredient.of(HotItems.GARLIC.get()), Ingredient.of(HotItemTags.COOKED_PORKCHOPS))));
         consumer.accept(shapelessRecipeResult(HotItems.VEGGIE_SOUP.get(), 4,
-                ImmutableList.of(Ingredient.of(Items.BUCKET), Ingredient.of(Items.CARROT), Ingredient.of(Items.POTATO), Ingredient.of(HotItems.GARLIC.get()), Ingredient.of(HotItems.PEAS.get()), Ingredient.of(HotItems.TOMATO.get()), Ingredient.of(HotItems.CORN.get()))));
+                ImmutableList.of(Ingredient.of(Items.WATER_BUCKET), Ingredient.of(Items.CARROT), Ingredient.of(Items.POTATO), Ingredient.of(HotItems.GARLIC.get()), Ingredient.of(HotItems.PEAS.get()), Ingredient.of(HotItems.TOMATO.get()), Ingredient.of(HotItems.CORN.get()))));
         consumer.accept(shapelessRecipeResult(HotItems.WILD_MUSHROOM_SOUP.get(), 4,
-                ImmutableList.of(Ingredient.of(Items.BUCKET), Ingredient.of(Tags.Items.MUSHROOMS), Ingredient.of(Tags.Items.MUSHROOMS), Ingredient.of(Tags.Items.MUSHROOMS), Ingredient.of(Items.CARROT), Ingredient.of(Items.POTATO), Ingredient.of(HotItems.GARLIC.get()))));
+                ImmutableList.of(Ingredient.of(Items.WATER_BUCKET), Ingredient.of(Tags.Items.MUSHROOMS), Ingredient.of(Tags.Items.MUSHROOMS), Ingredient.of(Tags.Items.MUSHROOMS), Ingredient.of(Items.CARROT), Ingredient.of(Items.POTATO), Ingredient.of(HotItems.GARLIC.get()))));
     }
 
     private static void cookRecipes(Consumer<IFinishedRecipe> consumer, IItemProvider iItemProvider, Ingredient recipe, float experience) {

@@ -3,7 +3,7 @@
   "group": "hotchicks",
   "ingredients": [
     {
-      "item": "minecraft:bucket"
+      "item": "minecraft:water_bucket"
     },
     {
       "tag": "forge:raw_meats/chicken"

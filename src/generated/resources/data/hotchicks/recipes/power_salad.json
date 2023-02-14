@@ -18,7 +18,7 @@
       "item": "hotchicks:peppers"
     },
     {
-      "item": "minecraft:egg"
+      "tag": "forge:eggs"
     }
   ],
   "result": {
