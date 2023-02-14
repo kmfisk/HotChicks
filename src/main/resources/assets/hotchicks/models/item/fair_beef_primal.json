@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "hotchicks:item/beef_primal"
+    "layer0": "hotchicks:item/fair_beef_primal"
   }
 }
