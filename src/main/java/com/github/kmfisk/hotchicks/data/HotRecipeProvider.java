@@ -150,6 +150,7 @@ public class HotRecipeProvider extends RecipeProvider {
 
         consumer.accept(smeltingRecipeResult(HotBlocks.BUTTER_BLOCK.get(), Ingredient.of(Items.MILK_BUCKET), 0.35F, 200));
         consumer.accept(shapelessRecipeResult(HotItems.BUTTER.get(), 4, ImmutableList.of(Ingredient.of(HotBlocks.BUTTER_BLOCK.get()))));
+        consumer.accept(shapelessRecipeResult(HotItems.BOTTLED_MILK.get(), 4, ImmutableList.of(Ingredient.of(Items.MILK_BUCKET))));
         consumer.accept(shapedRecipeResult(HotItems.PLANT_MILK.get(), 4, ImmutableList.of("PPP", "PWP", "PPP"),
                 ImmutableMap.<Character, Ingredient>builder().put('P', Ingredient.of(HotItemTags.PLANT_MILK_INGREDIENTS)).put('W', Ingredient.of(Items.WATER_BUCKET)).build()));
         consumer.accept(shapelessRecipeResult(HotItems.CITRUS_COOLER.get(), 2,
