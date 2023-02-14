@@ -25,7 +25,6 @@ import java.util.function.Supplier;
 public class HotBlocks {
     public static final DeferredRegister<Block> REGISTRAR = DeferredRegister.create(ForgeRegistries.BLOCKS, HotChicks.MOD_ID);
 
-    public static final RegistryObject<Block> BUTTER_BLOCK = registerWithItem("butter_block", () -> new Block(AbstractBlock.Properties.of(Material.VEGETABLE, MaterialColor.COLOR_YELLOW).strength(0.6F).sound(SoundType.SLIME_BLOCK)));
     public static final RegistryObject<Block> CHEESE_MOLD = registerWithItem("cheese_mold", () -> new CheeseMoldBlock(AbstractBlock.Properties.of(Material.WOOD).strength(0.6F).sound(SoundType.WOOD).noOcclusion()));
     public static final RegistryObject<Block> FOOD_CROCK = registerWithItem("food_crock", () -> new FoodCrockBlock(AbstractBlock.Properties.of(Material.CLAY).noOcclusion()));
 //    public static final RegistryObject<Block> FRUIT_CRATE = registerWithItem("fruit_crate", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
