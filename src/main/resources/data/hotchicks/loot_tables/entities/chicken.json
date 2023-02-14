@@ -87,7 +87,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:prime_chicken_carcass",
+          "name": "hotchicks:choice_chicken_carcass",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -100,7 +100,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:choice_chicken_carcass",
+          "name": "hotchicks:prime_chicken_carcass",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",

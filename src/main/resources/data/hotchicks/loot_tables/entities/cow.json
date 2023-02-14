@@ -71,7 +71,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:prime_cowhide",
+          "name": "hotchicks:choice_cowhide",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -84,7 +84,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:choice_cowhide",
+          "name": "hotchicks:prime_cowhide",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -141,7 +141,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:prime_beef_primal",
+          "name": "hotchicks:choice_beef_primal",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -154,7 +154,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:choice_beef_primal",
+          "name": "hotchicks:prime_beef_primal",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",

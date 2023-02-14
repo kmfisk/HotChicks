@@ -80,7 +80,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:prime_rabbit_hide",
+          "name": "hotchicks:choice_rabbit_hide",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -93,7 +93,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:choice_rabbit_hide",
+          "name": "hotchicks:prime_rabbit_hide",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -150,7 +150,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:prime_rabbit_carcass",
+          "name": "hotchicks:choice_rabbit_carcass",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",
@@ -163,7 +163,7 @@
         },
         {
           "type": "minecraft:item",
-          "name": "hotchicks:choice_rabbit_carcass",
+          "name": "hotchicks:prime_rabbit_carcass",
           "conditions": [
             {
               "condition": "minecraft:entity_properties",

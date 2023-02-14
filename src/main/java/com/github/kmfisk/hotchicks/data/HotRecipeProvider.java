@@ -64,9 +64,9 @@ public class HotRecipeProvider extends RecipeProvider {
         consumer.accept(namedShapelessRecipeResult("chicken_quarter_2", HotItems.CHICKEN_QUARTER.get(), 2,
                 ImmutableList.of(Ingredient.of(HotItems.GOOD_CHICKEN_CARCASS.get()))));
         consumer.accept(namedShapelessRecipeResult("chicken_quarter_3", HotItems.CHICKEN_QUARTER.get(), 3,
-                ImmutableList.of(Ingredient.of(HotItems.PRIME_CHICKEN_CARCASS.get()))));
-        consumer.accept(namedShapelessRecipeResult("chicken_quarter_4", HotItems.CHICKEN_QUARTER.get(), 4,
                 ImmutableList.of(Ingredient.of(HotItems.CHOICE_CHICKEN_CARCASS.get()))));
+        consumer.accept(namedShapelessRecipeResult("chicken_quarter_4", HotItems.CHICKEN_QUARTER.get(), 4,
+                ImmutableList.of(Ingredient.of(HotItems.PRIME_CHICKEN_CARCASS.get()))));
         cookRecipes(consumer, HotItems.COOKED_CHICKEN_QUARTER.get(), Ingredient.of(HotItems.CHICKEN_QUARTER.get()), 0.35F);
         consumer.accept(namedShapelessRecipeResult("rabbit_quarter_0", Items.ROTTEN_FLESH, 2,
                 ImmutableList.of(Ingredient.of(HotItems.POOR_RABBIT_CARCASS.get()))));
@@ -75,9 +75,9 @@ public class HotRecipeProvider extends RecipeProvider {
         consumer.accept(namedShapelessRecipeResult("rabbit_quarter_2", HotItems.RABBIT_QUARTER.get(), 2,
                 ImmutableList.of(Ingredient.of(HotItems.GOOD_RABBIT_CARCASS.get()))));
         consumer.accept(namedShapelessRecipeResult("rabbit_quarter_3", HotItems.RABBIT_QUARTER.get(), 3,
-                ImmutableList.of(Ingredient.of(HotItems.PRIME_RABBIT_CARCASS.get()))));
-        consumer.accept(namedShapelessRecipeResult("rabbit_quarter_4", HotItems.RABBIT_QUARTER.get(), 4,
                 ImmutableList.of(Ingredient.of(HotItems.CHOICE_RABBIT_CARCASS.get()))));
+        consumer.accept(namedShapelessRecipeResult("rabbit_quarter_4", HotItems.RABBIT_QUARTER.get(), 4,
+                ImmutableList.of(Ingredient.of(HotItems.PRIME_RABBIT_CARCASS.get()))));
         cookRecipes(consumer, HotItems.COOKED_RABBIT_QUARTER.get(), Ingredient.of(HotItems.RABBIT_QUARTER.get()), 0.35F);
         consumer.accept(namedShapelessRecipeResult("beef_steak_0", Items.ROTTEN_FLESH, 2,
                 ImmutableList.of(Ingredient.of(HotItems.POOR_BEEF_PRIMAL.get()))));
@@ -86,9 +86,9 @@ public class HotRecipeProvider extends RecipeProvider {
         consumer.accept(namedShapelessRecipeResult("beef_steak_2", HotItems.BEEF_STEAK.get(), 2,
                 ImmutableList.of(Ingredient.of(HotItems.GOOD_BEEF_PRIMAL.get()))));
         consumer.accept(namedShapelessRecipeResult("beef_steak_3", HotItems.BEEF_STEAK.get(), 3,
-                ImmutableList.of(Ingredient.of(HotItems.PRIME_BEEF_PRIMAL.get()))));
-        consumer.accept(namedShapelessRecipeResult("beef_steak_4", HotItems.BEEF_STEAK.get(), 4,
                 ImmutableList.of(Ingredient.of(HotItems.CHOICE_BEEF_PRIMAL.get()))));
+        consumer.accept(namedShapelessRecipeResult("beef_steak_4", HotItems.BEEF_STEAK.get(), 4,
+                ImmutableList.of(Ingredient.of(HotItems.PRIME_BEEF_PRIMAL.get()))));
         cookRecipes(consumer, HotItems.COOKED_BEEF_STEAK.get(), Ingredient.of(HotItems.BEEF_STEAK.get()), 0.35F);
 
         consumer.accept(namedShapelessRecipeResult("rabbit_hide_1", Items.LEATHER, 1,
@@ -96,17 +96,17 @@ public class HotRecipeProvider extends RecipeProvider {
         consumer.accept(namedShapelessRecipeResult("rabbit_hide_2", Items.LEATHER, 2,
                 ImmutableList.of(Ingredient.of(HotItems.GOOD_RABBIT_HIDE.get()))));
         consumer.accept(namedShapelessRecipeResult("rabbit_hide_3", Items.LEATHER, 3,
-                ImmutableList.of(Ingredient.of(HotItems.PRIME_RABBIT_HIDE.get()))));
-        consumer.accept(namedShapelessRecipeResult("rabbit_hide_4", Items.LEATHER, 4,
                 ImmutableList.of(Ingredient.of(HotItems.CHOICE_RABBIT_HIDE.get()))));
+        consumer.accept(namedShapelessRecipeResult("rabbit_hide_4", Items.LEATHER, 4,
+                ImmutableList.of(Ingredient.of(HotItems.PRIME_RABBIT_HIDE.get()))));
         consumer.accept(namedShapelessRecipeResult("cowhide_1", Items.LEATHER, 2,
                 ImmutableList.of(Ingredient.of(HotItems.FAIR_COWHIDE.get()))));
         consumer.accept(namedShapelessRecipeResult("cowhide_2", Items.LEATHER, 4,
                 ImmutableList.of(Ingredient.of(HotItems.GOOD_COWHIDE.get()))));
         consumer.accept(namedShapelessRecipeResult("cowhide_3", Items.LEATHER, 6,
-                ImmutableList.of(Ingredient.of(HotItems.PRIME_COWHIDE.get()))));
-        consumer.accept(namedShapelessRecipeResult("cowhide_4", Items.LEATHER, 8,
                 ImmutableList.of(Ingredient.of(HotItems.CHOICE_COWHIDE.get()))));
+        consumer.accept(namedShapelessRecipeResult("cowhide_4", Items.LEATHER, 8,
+                ImmutableList.of(Ingredient.of(HotItems.PRIME_COWHIDE.get()))));
 
         consumer.accept(shapelessRecipeResult(HotBlocks.CITRON_SAPLING.get(), 1,
                 ImmutableList.of(Ingredient.of(HotItems.CITRON.get()), Ingredient.of(HotItems.CITRON.get()))));
