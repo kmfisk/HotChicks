@@ -51,7 +51,8 @@ public class HotEntities {
 
     public static void registerSpawnPlacements() {
         EntitySpawnPlacementRegistry.register(CHICKEN.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING, LivestockEntity::checkLivestockSpawnRules);
-        EntitySpawnPlacementRegistry.register(RABBIT.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING, LivestockEntity::checkLivestockSpawnRules);
+        EntitySpawnPlacementRegistry.register(RABBIT.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, LivestockEntity::checkLivestockSpawnRules);
+        EntitySpawnPlacementRegistry.register(COW.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, LivestockEntity::checkLivestockSpawnRules);
     }
 
     public static void registerAttributes(BiConsumer<EntityType<? extends LivingEntity>, AttributeModifierMap.MutableAttribute> register) {
