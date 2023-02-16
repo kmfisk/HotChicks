@@ -2,7 +2,6 @@ package com.github.kmfisk.hotchicks.entity;
 
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
-import com.github.kmfisk.hotchicks.entity.base.CareStat;
 import com.github.kmfisk.hotchicks.entity.base.CowBreeds;
 import com.github.kmfisk.hotchicks.entity.goal.LivestockAvoidPlayerGoal;
 import com.github.kmfisk.hotchicks.entity.goal.LivestockBirthGoal;
@@ -182,10 +181,7 @@ public class HotCowEntity extends LivestockEntity {
         nbt.putInt("HideQuality", getHideQuality());
         nbt.putInt("MilkYield", getMilkYield());
         nbt.putInt("AvailableMilk", getAvailableMilk());
-        if (!getSex().toBool()) {
-            nbt.putInt("Gestation", getGestationTimer());
-            if (isPregnant()) nbt.put("Children", children);
-        }
+        if (!getSex().toBool()) nbt.putInt("Gestation", getGestationTimer());
     }
 
     @Override
@@ -194,13 +190,7 @@ public class HotCowEntity extends LivestockEntity {
         setHideQuality(nbt.getInt("HideQuality"));
         setMilkYield(nbt.getInt("MilkYield"));
         setAvailableMilk(nbt.getInt("AvailableMilk"));
-        if (!getSex().toBool()) {
-            setGestationTimer(nbt.getInt("Gestation"));
-            if (nbt.contains("Children")) {
-                children.clear();
-                children.addAll(nbt.getList("Children", 10));
-            }
-        }
+        if (!getSex().toBool()) setGestationTimer(nbt.getInt("Gestation"));
     }
 
     public CowBreeds getBreedFromVariant() {
@@ -227,11 +217,6 @@ public class HotCowEntity extends LivestockEntity {
     @Override
     public boolean isFood(ItemStack stack) {
         return stack.getItem() == Items.WHEAT;
-    }
-
-    @Override
-    public boolean canFallInLove() {
-        return (getSex() == Sex.MALE || !isPregnant()) && super.canFallInLove();
     }
 
     @Nullable

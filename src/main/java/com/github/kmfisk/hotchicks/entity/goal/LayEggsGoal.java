@@ -6,7 +6,6 @@ import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Hand;
 import net.minecraft.world.server.ServerWorld;
 
 public class LayEggsGoal extends Goal {
@@ -40,13 +39,11 @@ public class LayEggsGoal extends Goal {
         TileEntity tileEntity = chicken.level.getBlockEntity(chicken.getNestPos());
         if (tileEntity instanceof NestTileEntity) {
             NestTileEntity nestTileEntity = (NestTileEntity) tileEntity;
-            chicken.setEggTimer(0);
-            ItemStack stack = chicken.getMainHandItem();
 
             for (int i = 0; i < nestTileEntity.getContainerSize(); i++) {
                 if (nestTileEntity.getItem(i) == ItemStack.EMPTY) {
+                    ItemStack stack = chicken.addChildrenDataToItem(chicken.getBreedFromVariant().getEggColor().getDefaultInstance());
                     nestTileEntity.setItem(i, stack);
-                    chicken.setItemInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
                     if (!chicken.level.isClientSide) {
                         for (int j = 0; j < 20; ++j) {
                             double d3 = chicken.getRandom().nextGaussian() * 0.02D;

@@ -54,7 +54,7 @@ public class FindNestGoal extends Goal {
                 if (!(chicken.getNestPos().closerThan(chicken.blockPosition(), tooFarDist))) dropNest();
                 else {
                     chicken.getNavigation().moveTo(chicken.getNestPos().getX(), chicken.getNestPos().getY(), chicken.getNestPos().getZ(), 1.0D);
-                    if (chicken.getNavigation().getPath() == null && !chicken.getNavigation().getPath().canReach())
+                    if (chicken.getNavigation().getPath() == null || !chicken.getNavigation().getPath().canReach())
                         dropAndBlacklistNest();
                     else if (lastPath != null && chicken.getNavigation().getPath().sameAs(lastPath)) {
                         ++ticksStuck;

@@ -168,10 +168,7 @@ public class HotRabbitEntity extends LivestockEntity {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("HideQuality", getHideQuality());
         nbt.putInt("LitterSize", getLitterSize());
-        if (!getSex().toBool()) {
-            nbt.putInt("Gestation", getGestationTimer());
-            if (isPregnant()) nbt.put("Children", children);
-        }
+        if (!getSex().toBool()) nbt.putInt("Gestation", getGestationTimer());
     }
 
     @Override
@@ -179,13 +176,7 @@ public class HotRabbitEntity extends LivestockEntity {
         super.readAdditionalSaveData(nbt);
         setHideQuality(nbt.getInt("HideQuality"));
         setLitterSize(nbt.getInt("LitterSize"));
-        if (!getSex().toBool()) {
-            setGestationTimer(nbt.getInt("Gestation"));
-            if (nbt.contains("Children")) {
-                children.clear();
-                children.addAll(nbt.getList("Children", 10));
-            }
-        }
+        if (!getSex().toBool()) setGestationTimer(nbt.getInt("Gestation"));
     }
 
     public RabbitBreeds getBreedFromVariant() {
@@ -208,11 +199,6 @@ public class HotRabbitEntity extends LivestockEntity {
     @Override
     public boolean isFood(ItemStack stack) {
         return stack.getItem() == Items.CARROT;
-    }
-
-    @Override
-    public boolean canFallInLove() {
-        return (getSex() == Sex.MALE || !isPregnant()) && super.canFallInLove();
     }
 
     @Nullable
@@ -342,13 +328,8 @@ public class HotRabbitEntity extends LivestockEntity {
                 CompoundNBT childNBT = new CompoundNBT();
                 child.save(childNBT);
 
-//                if (getSex() == Sex.FEMALE) {
                 children.add(childNBT);
                 setGestationTimer(HotChicksConfig.gestationSpeed.get());
-//                } else if (father.getSex() == Sex.FEMALE) {
-//                    father.children.add(childNBT);
-//                    father.setGestationTimer(HotChicksConfig.gestationSpeed.get());
-//                }
 
                 level.broadcastEntityEvent(this, (byte) 18);
                 if (level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))

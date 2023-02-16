@@ -54,6 +54,8 @@ public abstract class LivestockEntity extends AnimalEntity {
     public static final DataParameter<Integer> CARCASS_QUALITY = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> HIDE_QUALITY = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> GROWTH_RATE = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
+    public static final DataParameter<Integer> EGG_SPEED = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
+    public static final DataParameter<Integer> EGG_TIMER = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> LITTER_SIZE = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> MILK_YIELD = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
     public static final DataParameter<Integer> AVAILABLE_MILK = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
@@ -181,6 +183,22 @@ public abstract class LivestockEntity extends AnimalEntity {
         return entityData.get(GROWTH_RATE);
     }
 
+    public void setEggSpeed(int eggSpeed) {
+        entityData.set(EGG_SPEED, eggSpeed);
+    }
+
+    public int getEggSpeed() {
+        return entityData.get(EGG_SPEED);
+    }
+
+    public void setEggTimer(int i) {
+        entityData.set(EGG_TIMER, i);
+    }
+
+    public int getEggTimer() {
+        return entityData.get(EGG_TIMER);
+    }
+
     public void setLitterSize(int litterSize) {
         entityData.set(LITTER_SIZE, litterSize);
     }
@@ -205,8 +223,12 @@ public abstract class LivestockEntity extends AnimalEntity {
         return entityData.get(AVAILABLE_MILK);
     }
 
-    public boolean isPregnant() {
-        return entityData.get(GESTATION_TIMER) != 0;
+    public ListNBT getChildren() {
+        return children;
+    }
+
+    public boolean hasChildrenToSpawn() {
+        return !children.isEmpty(); // todo client sync for stud book visuals
     }
 
     public int getGestationTimer() {
@@ -234,6 +256,7 @@ public abstract class LivestockEntity extends AnimalEntity {
         nbt.putInt("Tameness", getTameness());
         nbt.putInt("CarcassQuality", getCarcassQuality());
         nbt.putInt("GrowthRate", getGrowthRate());
+        if (!getSex().toBool()) if (hasChildrenToSpawn()) nbt.put("Children", children);
         nbt.put("Hunger", hunger.toTag());
         nbt.put("Thirst", thirst.toTag());
     }
@@ -247,6 +270,12 @@ public abstract class LivestockEntity extends AnimalEntity {
         setTameness(nbt.getInt("Tameness"));
         setCarcassQuality(nbt.getInt("CarcassQuality"));
         setGrowthRate(nbt.getInt("GrowthRate"));
+        if (!getSex().toBool()) {
+            if (nbt.contains("Children")) {
+                children.clear();
+                children.addAll(nbt.getList("Children", 10));
+            }
+        }
         hunger.fromTag(nbt.getCompound("Hunger"));
         thirst.fromTag(nbt.getCompound("Thirst"));
     }
@@ -270,7 +299,9 @@ public abstract class LivestockEntity extends AnimalEntity {
     @Override
     public boolean canFallInLove() {
         boolean lowHealth = getHealth() < getMaxHealth();
-        return !lowHealth && !getHunger().isLow() && !getThirst().isLow() && super.canFallInLove();
+        boolean unhappy = getHunger().isLow() || getThirst().isLow();
+        boolean alreadyBred = getSex() == Sex.FEMALE && hasChildrenToSpawn();
+        return !lowHealth && !unhappy && !alreadyBred && super.canFallInLove();
     }
 
     @Override
@@ -302,6 +333,16 @@ public abstract class LivestockEntity extends AnimalEntity {
     }
 
     public abstract void createChild(ServerWorld level, LivestockEntity parent);
+
+    public ItemStack addChildrenDataToItem(ItemStack stack) {
+        if (hasChildrenToSpawn()) {
+            stack.setTag(children.getCompound(0));
+            children.clear();
+        }
+
+        setEggTimer(getStats().getEggSpeedForStat());
+        return stack;
+    }
 
     public void spawnChildrenFromPregnancy(ServerWorld level) {
         for (int i = 0; i < children.size(); i++) {
@@ -339,6 +380,7 @@ public abstract class LivestockEntity extends AnimalEntity {
                 return ActionResultType.sidedSuccess(level.isClientSide);
             }
         }
+
         if (stack.getItem() instanceof DyeItem) {
             DyeColor dyeColor = ((DyeItem) stack.getItem()).getDyeColor();
             if (!isTagged() || dyeColor != getTagColor()) {
@@ -351,13 +393,19 @@ public abstract class LivestockEntity extends AnimalEntity {
             setTagged(false);
             return ActionResultType.sidedSuccess(level.isClientSide);
         }
-        if (stack.getItem() == Items.STICK && !level.isClientSide) {
-            if (player.isDiscrete()) player.displayClientMessage(new StringTextComponent("Hunger: " +
-                    getHunger().getValue() + " / " + getHunger().getMax() +
-                    " -> " + getHunger().getTicks()), true);
-            else player.displayClientMessage(new StringTextComponent("Thirst: " +
-                    getThirst().getValue() + " / " + getThirst().getMax() +
-                    " -> " + getThirst().getTicks()), true);
+
+        if (!level.isClientSide) {
+            if (stack.getItem() == Items.STICK) {
+                if (player.isDiscrete()) player.displayClientMessage(new StringTextComponent(
+                        "Hunger: " + getHunger().getValue() + " / " + getHunger().getMax() +
+                                " -> " + getHunger().getTicks()), true);
+                else player.displayClientMessage(new StringTextComponent(
+                        "Thirst: " + getThirst().getValue() + " / " + getThirst().getMax() +
+                                " -> " + getThirst().getTicks()), true);
+            } else if (stack.getItem() == Items.BONE) {
+                if (this instanceof HotChickenEntity) player.displayClientMessage(new StringTextComponent(
+                        "Egg timer: " + getEggTimer()), true);
+            }
         }
 
         return super.mobInteract(player, hand);

@@ -24,14 +24,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.GameRules;
@@ -50,8 +50,6 @@ import static com.github.kmfisk.hotchicks.entity.base.ChickenBreeds.*;
 
 public class HotChickenEntity extends LivestockEntity {
     public static final Tags.IOptionalNamedTag<Item> CHICKEN_FOODS = ItemTags.createOptional(new ResourceLocation(HotChicks.MOD_ID, "chicken_foods"));
-    public static final DataParameter<Integer> EGG_SPEED = EntityDataManager.defineId(HotChickenEntity.class, DataSerializers.INT);
-    public static final DataParameter<Integer> EGG_TIMER = EntityDataManager.defineId(HotChickenEntity.class, DataSerializers.INT);
     public int remainingCooldownBeforeLocatingNewNest = 0;
     private BlockPos nestPos = null;
     public FindNestGoal goToNestGoal;
@@ -93,6 +91,7 @@ public class HotChickenEntity extends LivestockEntity {
     public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficultyInstance, SpawnReason spawnReason, @Nullable ILivingEntityData entityData, @Nullable CompoundNBT nbt) {
         entityData = super.finalizeSpawn(world, difficultyInstance, spawnReason, entityData, nbt);
         setStats(new ChickenStats(random.nextInt(25) + random.nextInt(35), random.nextInt(3), random.nextInt(3), random.nextInt(3)));
+        if (getSex() == Sex.FEMALE) setEggTimer(getStats().getEggSpeedForStat());
         return entityData;
     }
 
@@ -129,22 +128,6 @@ public class HotChickenEntity extends LivestockEntity {
     @Override
     public String getReadableBreed() {
         return getBreedFromVariant().getLocalizedName().getString();
-    }
-
-    public void setEggSpeed(int eggSpeed) {
-        entityData.set(EGG_SPEED, eggSpeed);
-    }
-
-    public int getEggSpeed() {
-        return entityData.get(EGG_SPEED);
-    }
-
-    public void setEggTimer(int i) {
-        entityData.set(EGG_TIMER, i);
-    }
-
-    public int getEggTimer() {
-        return entityData.get(EGG_TIMER);
     }
 
     public void setStats(ChickenStats stats) {
@@ -201,10 +184,6 @@ public class HotChickenEntity extends LivestockEntity {
         setStats(chickenBreeds.getStats());
     }
 
-    public int getMaxEggTimer() {
-        return getStats().getEggSpeedForStat();
-    }
-
     @Override
     public void addAdditionalSaveData(CompoundNBT nbt) {
         super.addAdditionalSaveData(nbt);
@@ -237,7 +216,7 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     public boolean wantsToLayEggs() {
-        return getSex() == Sex.FEMALE && getMainHandItem() != ItemStack.EMPTY && getEggTimer() >= getMaxEggTimer();
+        return getSex() == Sex.FEMALE && getEggTimer() == 0;
     }
 
     public boolean doesNestHaveSpace(BlockPos nestPos) {
@@ -249,7 +228,7 @@ public class HotChickenEntity extends LivestockEntity {
 
     public boolean isValidNestBlock(BlockPos pos) {
         if (level.getBlockState(pos).is(HotBlocks.NEST_BOX.get())) return doesNestHaveSpace(pos);
-        return level.getBlockState(pos).is(HotBlocks.NEST.get()) && doesNestHaveSpace(pos) && level.isEmptyBlock(pos.above());
+        return level.getBlockState(pos).is(HotBlocks.NEST.get()) && doesNestHaveSpace(pos) /*&& level.isEmptyBlock(pos.above())*/;
     }
 
     public boolean hasNest() {
@@ -270,16 +249,16 @@ public class HotChickenEntity extends LivestockEntity {
         super.aiStep();
         if (!level.isClientSide) {
             if (remainingCooldownBeforeLocatingNewNest > 0) --remainingCooldownBeforeLocatingNewNest;
-            if (tickCount % 20 == 0 && !isValidNestBlock())
+            if (tickCount % 20 == 0 && !hasValidNestBlock())
                 nestPos = null;
         }
     }
 
-    private boolean isValidNestBlock() {
+    private boolean hasValidNestBlock() {
         if (!hasNest()) return false;
         else {
             TileEntity tileEntity = level.getBlockEntity(nestPos);
-            return tileEntity instanceof NestTileEntity;
+            return tileEntity instanceof NestTileEntity && doesNestHaveSpace(nestPos);
         }
     }
 
@@ -297,12 +276,12 @@ public class HotChickenEntity extends LivestockEntity {
     public void baseTick() {
         super.baseTick();
 
-        if (!getMainHandItem().isEmpty() && getSex() == Sex.FEMALE) {
+        if (!isBaby() && getSex() == Sex.FEMALE) {
             int eggTimer = getEggTimer();
-            if (eggTimer < getMaxEggTimer()) {
-                ++eggTimer;
+            if (eggTimer > 0) {
+                --eggTimer;
                 setEggTimer(eggTimer);
-            } /*else setEggTimer(0);*/
+            }
         }
     }
 
@@ -348,11 +327,6 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     @Override
-    public boolean canFallInLove() {
-        return getMainHandItem().isEmpty() && super.canFallInLove();
-    }
-
-    @Override
     public void createChild(ServerWorld level, LivestockEntity livestockEntity) {
         if (livestockEntity instanceof HotChickenEntity) {
             HotChickenEntity father = (HotChickenEntity) livestockEntity;
@@ -383,11 +357,6 @@ public class HotChickenEntity extends LivestockEntity {
                 resetLove();
                 father.resetLove();
                 child.setBaby(true);
-
-                if (!getMainHandItem().isEmpty()) {
-                    level.broadcastEntityEvent(this, (byte) 19);
-                    return;
-                }
 
                 boolean inheritMotherGenes = random.nextFloat() <= 0.6;
                 boolean colorMorph = random.nextFloat() <= 0.1;
@@ -440,15 +409,12 @@ public class HotChickenEntity extends LivestockEntity {
                 child.setStats(stats);
                 child.setSex(Sex.fromBool(random.nextBoolean()));
 
-                ItemStack stack = getBreedFromVariant().getEggColor().getDefaultInstance();
-                CompoundNBT tags = stack.getOrCreateTag();
-                child.save(tags);
-                ResourceLocation key = EntityType.getKey(child.getType());
-                tags.putString("id", key.toString());
-                tags.putString("Breed", getReadableBreed());
-                tags.putInt("TimeLeft", HotChicksConfig.hatchSpeed.get());
-                stack.setTag(tags);
-                setItemInHand(Hand.MAIN_HAND, stack);
+                CompoundNBT childNBT = new CompoundNBT();
+                child.save(childNBT);
+                childNBT.putString("Breed", getReadableBreed());
+                childNBT.putInt("TimeLeft", HotChicksConfig.hatchSpeed.get());
+
+                children.add(childNBT);
 
                 level.broadcastEntityEvent(this, (byte) 18);
                 if (level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))

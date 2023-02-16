@@ -42,19 +42,19 @@ public class StudBookInfo implements ReadBookScreen.IBookInfo {
             HotChickenEntity chicken = (HotChickenEntity) entity;
             page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.egg_speed", chicken.getEggSpeed())).getString();
             page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.egg_color", chicken.getBreedFromVariant().getEggColor().getDescription())).getString();
-            page += "\n" + TextFormatting.RESET + "" + "Holding Egg: " + !chicken.getMainHandItem().isEmpty();
+            page += "\n" + TextFormatting.RESET + "" + "Fertile Egg: " + chicken.hasChildrenToSpawn();
 
         } else if (entity instanceof HotRabbitEntity) {
             HotRabbitEntity rabbit = (HotRabbitEntity) entity;
             page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.hide_quality", rabbit.getHideQuality())).getString();
             page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.litter_size", rabbit.getLitterSize())).getString();
-            page += "\n" + TextFormatting.RESET + "" + "Pregnant: " + rabbit.isPregnant();
+            page += "\n" + TextFormatting.RESET + "" + "Pregnant: " + rabbit.hasChildrenToSpawn();
 
         } else if (entity instanceof HotCowEntity) {
             HotCowEntity cow = (HotCowEntity) entity;
             page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.hide_quality", cow.getHideQuality())).getString();
             page += "\n" + (new TranslationTextComponent("data." + HotChicks.MOD_ID + ".stud_book.milk_yield", cow.getMilkYield())).getString();
-            page += "\n" + TextFormatting.RESET + "" + "Pregnant: " + cow.isPregnant();
+            page += "\n" + TextFormatting.RESET + "" + "Pregnant: " + cow.hasChildrenToSpawn();
         }
 
         page += "\n";

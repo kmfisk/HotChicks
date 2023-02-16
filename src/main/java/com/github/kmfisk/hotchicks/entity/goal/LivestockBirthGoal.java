@@ -16,12 +16,12 @@ public class LivestockBirthGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        return mother.isPregnant() && mother.getGestationTimer() > 0;
+        return mother.hasChildrenToSpawn() && mother.getGestationTimer() > 0;
     }
 
     @Override
     public boolean canContinueToUse() {
-        return mother.getGestationTimer() > 0 && mother.isPregnant();
+        return mother.getGestationTimer() > 0 && mother.hasChildrenToSpawn();
     }
 
     @Override

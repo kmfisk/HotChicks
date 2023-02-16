@@ -172,18 +172,20 @@ public class NestTileEntity extends LockableTileEntity implements ITickableTileE
         for (ItemStack item : items) {
             if (item.getItem() instanceof HotEggItem && !item.isEmpty()) {
                 hasEgg = true;
-                CompoundNBT itemTag = item.getTag();
-                int timeLeft = itemTag.getInt("TimeLeft") - 1;
-                if (timeLeft <= 0) {
-                    HotChickenEntity chicken = (HotChickenEntity) EntityType.loadEntityRecursive(itemTag, level, entity -> entity);
-                    if (chicken != null) {
-                        chicken.absMoveTo(getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.2, getBlockPos().getZ() + 0.5);
-                        level.addFreshEntity(chicken);
-                    }
+                if (item.hasTag() && item.getTag().contains("TimeLeft")) {
+                    CompoundNBT itemTag = item.getTag();
+                    int timeLeft = itemTag.getInt("TimeLeft") - 1;
+                    if (timeLeft <= 0) {
+                        HotChickenEntity chicken = (HotChickenEntity) EntityType.loadEntityRecursive(itemTag, level, entity -> entity);
+                        if (chicken != null) {
+                            chicken.absMoveTo(getBlockPos().getX() + 0.5, getBlockPos().getY() + 0.2, getBlockPos().getZ() + 0.5);
+                            level.addFreshEntity(chicken);
+                        }
 
-                    this.items.set(counter, ItemStack.EMPTY);
+                        this.items.set(counter, ItemStack.EMPTY);
 
-                } else itemTag.putInt("TimeLeft", timeLeft);
+                    } else itemTag.putInt("TimeLeft", timeLeft);
+                }
             }
 
             counter += 1;
