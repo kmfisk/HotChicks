@@ -3,16 +3,24 @@ package com.github.kmfisk.hotchicks.event;
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.HotEntities;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.passive.RabbitEntity;
 import net.minecraft.util.RegistryKey;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.biome.MobSpawnInfo;
 import net.minecraft.world.gen.GenerationStage;
 import net.minecraft.world.gen.feature.Features;
+import net.minecraft.world.gen.feature.jigsaw.JigsawPattern;
+import net.minecraft.world.gen.feature.jigsaw.JigsawPatternRegistry;
+import net.minecraft.world.gen.feature.jigsaw.JigsawPiece;
+import net.minecraft.world.gen.feature.jigsaw.SingleJigsawPiece;
+import net.minecraft.world.gen.feature.structure.PlainsVillagePools;
 import net.minecraft.world.gen.placement.AtSurfaceWithExtraConfig;
 import net.minecraft.world.gen.placement.Placement;
 import net.minecraftforge.common.BiomeDictionary;
@@ -20,13 +28,23 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 
 import static com.github.kmfisk.hotchicks.worldgen.HotFeatures.*;
 
 @Mod.EventBusSubscriber(modid = HotChicks.MOD_ID)
 public class HotEvents {
+    @SubscribeEvent
+    public static void onLoadComplete(FMLLoadCompleteEvent event) {
+        changeVillageAnimals();
+    }
+
     @SubscribeEvent
     public static void joinWorldEvent(EntityJoinWorldEvent event) {
         if (!event.getWorld().isClientSide) {
@@ -122,5 +140,50 @@ public class HotEvents {
                 event.getGeneration().getFeatures(GenerationStage.Decoration.LAKES).add(() -> MILLET);
             }
         }
+    }
+
+    private static boolean isVanillaVillageCowPiece(SingleJigsawPiece piece) {
+        return piece.toString().contains("minecraft:village/common/animals/cows");
+    }
+
+    private static boolean keepJigsawPair(Pair<JigsawPiece, Integer> pair) {
+        if (!HotChicksConfig.removeVanillaCows.get()) return true;
+        JigsawPiece piece = pair.getFirst();
+        if (piece instanceof SingleJigsawPiece) return !isVanillaVillageCowPiece((SingleJigsawPiece) piece);
+        return true;
+    }
+
+    public static void changeVillageAnimals() {
+        PlainsVillagePools.bootstrap();
+        ResourceLocation animalsLoc = new ResourceLocation("village/common/animals");
+        java.util.Optional<JigsawPattern> animalsOpt = WorldGenRegistries.TEMPLATE_POOL.getOptional(animalsLoc);
+        if (!animalsOpt.isPresent()) {
+            System.err.println("Trying to overwrite village spawns too soon");
+            return;
+        }
+        JigsawPattern animals = animalsOpt.get();
+        List<Pair<JigsawPiece, Integer>> vanillaList = ObfuscationReflectionHelper.getPrivateValue(JigsawPattern.class, animals, "field_214952_d");
+        List<Pair<JigsawPiece, Integer>> keeperList = new ArrayList<>();
+        for (Pair<JigsawPiece, Integer> p : vanillaList)
+            if (keepJigsawPair(p)) keeperList.add(p);
+
+        List<Pair<Function<JigsawPattern.PlacementBehaviour, ? extends JigsawPiece>, Integer>> customPieces = new ArrayList<>();
+        String modloc = HotChicks.MOD_ID + ":";
+        customPieces.add(new Pair<>(JigsawPiece.legacy(modloc + "village/common/animals/cows_1"), 1));
+        customPieces.add(new Pair<>(JigsawPiece.legacy(modloc + "village/common/animals/cows_2"), 1));
+        customPieces.add(new Pair<>(JigsawPiece.legacy(modloc + "village/common/animals/cows_3"), 1));
+        customPieces.add(new Pair<>(JigsawPiece.legacy(modloc + "village/common/animals/cows_4"), 1));
+        customPieces.add(new Pair<>(JigsawPiece.legacy(modloc + "village/common/animals/cows_5"), 1));
+        customPieces.add(new Pair<>(JigsawPiece.legacy(modloc + "village/common/animals/cows_6"), 1));
+        customPieces.add(new Pair<>(JigsawPiece.legacy(modloc + "village/common/animals/cows_7"), 1));
+        customPieces.add(new Pair<>(JigsawPiece.legacy(modloc + "village/common/animals/cows_8"), 1));
+
+        JigsawPattern.PlacementBehaviour placementBehaviour = JigsawPattern.PlacementBehaviour.RIGID;
+        for (Pair<Function<JigsawPattern.PlacementBehaviour, ? extends JigsawPiece>, Integer> pair : customPieces) {
+            JigsawPiece jigsawPiece = pair.getFirst().apply(placementBehaviour);
+            keeperList.add(new Pair<>(jigsawPiece, pair.getSecond()));
+        }
+
+        JigsawPatternRegistry.register(new JigsawPattern(animalsLoc, new ResourceLocation("empty"), keeperList));
     }
 }

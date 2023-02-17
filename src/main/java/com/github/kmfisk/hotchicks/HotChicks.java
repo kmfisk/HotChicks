@@ -8,6 +8,7 @@ import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.data.HotRecipeProvider;
 import com.github.kmfisk.hotchicks.entity.HotEntities;
 import com.github.kmfisk.hotchicks.entity.merchant.villager.HotVillagerTrades;
+import com.github.kmfisk.hotchicks.event.HotEvents;
 import com.github.kmfisk.hotchicks.inventory.HotContainerTypes;
 import com.github.kmfisk.hotchicks.item.HotItems;
 import com.github.kmfisk.hotchicks.loot.HotGlobalLootModifier;
@@ -56,6 +57,7 @@ public class HotChicks {
         bus.addListener(this::gatherData);
 
         bus.addListener(this::setupClient);
+        bus.addListener(HotEvents::onLoadComplete);
 
         if (FMLEnvironment.dist == Dist.CLIENT) {
             bus.addListener(ColorEvents::registerColorHandlerBlocks);
