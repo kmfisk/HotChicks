@@ -65,6 +65,7 @@ public abstract class LivestockEntity extends AnimalEntity {
     protected final ListNBT children = new ListNBT();
     private final CareStat hunger;
     private final CareStat thirst;
+    private boolean careRequired;
 
     public LivestockEntity(EntityType<? extends AnimalEntity> type, World world) {
         super(type, world);
@@ -247,6 +248,15 @@ public abstract class LivestockEntity extends AnimalEntity {
         return thirst;
     }
 
+    public boolean isCareRequired() {
+        return careRequired;
+    }
+
+    public void setCareRequired() {
+        careRequired = true;
+    }
+
+    @Override
     public void addAdditionalSaveData(CompoundNBT nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putBoolean("Sex", getSex().toBool());
@@ -259,8 +269,10 @@ public abstract class LivestockEntity extends AnimalEntity {
         if (!getSex().toBool()) if (hasChildrenToSpawn()) nbt.put("Children", children);
         nbt.put("Hunger", hunger.toTag());
         nbt.put("Thirst", thirst.toTag());
+        nbt.putBoolean("CareRequired", careRequired);
     }
 
+    @Override
     public void readAdditionalSaveData(CompoundNBT nbt) {
         super.readAdditionalSaveData(nbt);
         setSex(Sex.fromBool(nbt.getBoolean("Sex")));
@@ -278,19 +290,22 @@ public abstract class LivestockEntity extends AnimalEntity {
         }
         hunger.fromTag(nbt.getCompound("Hunger"));
         thirst.fromTag(nbt.getCompound("Thirst"));
+        careRequired = nbt.getBoolean("CareRequired");
     }
 
     @Override
     public void aiStep() {
         super.aiStep();
-        if (isAlive() && !level.isClientSide) {
-            if (HotChicksConfig.hunger.get() && getHunger().getValue() > 0) hunger.tick();
-            if (HotChicksConfig.thirst.get() && getThirst().getValue() > 0) thirst.tick();
+        boolean doHunger = HotChicksConfig.hunger.get();
+        boolean doThirst = HotChicksConfig.thirst.get();
+        if (isAlive() && isCareRequired() && !level.isClientSide) {
+            if (doHunger && getHunger().getValue() > 0) hunger.tick();
+            if (doThirst && getThirst().getValue() > 0) thirst.tick();
             if (getHealth() < getMaxHealth() && tickCount % 20 == 0 && getHunger().getValue() == getHunger().getMax() && getThirst().getValue() == getThirst().getMax())
                 heal(1.0F);
         }
 
-        if (level.isClientSide && HotChicksConfig.hunger.get() && (getHunger().isLow() || getThirst().isLow())) {
+        if (level.isClientSide && ((doHunger && getHunger().isLow()) || (doThirst && getThirst().isLow()))) {
             if (tickCount % 10 == 0)
                 level.addParticle(ParticleTypes.SMOKE, getRandomX(1.0D), getRandomY() + 0.5D, getRandomZ(1.0D), random.nextGaussian() * 0.02D, random.nextGaussian() * 0.02D, random.nextGaussian() * 0.02D);
         }
@@ -362,6 +377,7 @@ public abstract class LivestockEntity extends AnimalEntity {
     @Override
     public void setBaby(boolean baby) {
         setAge(baby ? -(getStats().getGrowthRateForStat()) : 0);
+        setCareRequired();
     }
 
     @Override
@@ -387,6 +403,7 @@ public abstract class LivestockEntity extends AnimalEntity {
                 setTagged(true);
                 setTagColor(dyeColor);
                 if (!player.abilities.instabuild) stack.shrink(1);
+                setCareRequired();
                 return ActionResultType.sidedSuccess(level.isClientSide);
             }
         } else if (isTagged() && stack.getItem() == Items.SHEARS) {
@@ -408,7 +425,10 @@ public abstract class LivestockEntity extends AnimalEntity {
             }
         }
 
-        return super.mobInteract(player, hand);
+        ActionResultType actionResultType = super.mobInteract(player, hand);
+        if (actionResultType.consumesAction()) setCareRequired();
+
+        return actionResultType;
     }
 
     @Override
