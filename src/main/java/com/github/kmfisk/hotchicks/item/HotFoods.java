@@ -10,8 +10,8 @@ public class HotFoods {
     public static final Food COOKED_BEEF_STEAK = new Food.Builder().nutrition(8).saturationMod(0.8F).meat().build();
     public static final Food CHICKEN_QUARTER = new Food.Builder().nutrition(2).saturationMod(0.3F).effect(() -> new EffectInstance(Effects.HUNGER, 600, 0), 0.3F).meat().build();
     public static final Food COOKED_CHICKEN_QUARTER = new Food.Builder().nutrition(6).saturationMod(0.6F).meat().build();
-    public static final Food RABBIT_QUARTER = new Food.Builder().nutrition(2).saturationMod(0.3F).meat().build();
-    public static final Food COOKED_RABBIT_QUARTER = new Food.Builder().nutrition(6).saturationMod(0.6F).meat().build();
+    public static final Food RABBIT_QUARTER = new Food.Builder().nutrition(3).saturationMod(0.3F).meat().build();
+    public static final Food COOKED_RABBIT_QUARTER = new Food.Builder().nutrition(5).saturationMod(0.6F).meat().build();
 
     // CROPS
     public static final Food BANANA = new Food.Builder().nutrition(2).saturationMod(0.5F).build();
