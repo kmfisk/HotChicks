@@ -27,8 +27,8 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
     public final HotChickenModel henSilkieModel;
     public final HotChickenModel chickModel;
 
-    public HotChickenRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new HotChickenModel.Hen(), 0.3F);
+    public HotChickenRenderer(EntityRendererManager rendererManager) {
+        super(rendererManager, new HotChickenModel.Hen(), 0.3F);
         this.addLayer(new ChickenBandLayer(this));
         roosterModel = new HotChickenModel.Rooster();
         roosterSilkieModel = new HotChickenModel.RoosterSilkie();
@@ -38,7 +38,7 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
     }
 
     @Override
-    public void render(HotChickenEntity chicken, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+    public void render(HotChickenEntity chicken, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
         boolean isChild = chicken.isBaby();
         if (isChild)
             model = chickModel;
@@ -47,7 +47,15 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
         else
             model = chicken.getSex() == LivestockEntity.Sex.MALE ? roosterModel : henModel;
 
-        super.render(chicken, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+        super.render(chicken, entityYaw, partialTicks, matrixStack, buffer, packedLight);
+    }
+
+    @Override
+    protected void scale(HotChickenEntity chicken, MatrixStack matrixStack, float partialTicks) {
+        ChickenBreeds chickenBreed = chicken.getBreedFromVariant();
+        if (chickenBreed.equals(ChickenBreeds.LEGHORN)) matrixStack.scale(0.9F, 0.9F, 0.9F);
+        if (chicken.isBaby()) matrixStack.scale(0.5F, 0.5F, 0.5F);
+        super.scale(chicken, matrixStack, partialTicks);
     }
 
     @Override
@@ -59,29 +67,53 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
         if (chicken.isBaby()) {
             int baby;
             switch (variant) {
-                case 9: case 24: case 32: default:
+                case 9:
+                case 24:
+                case 32:
+                default:
                     baby = 1;
                     break;
-                case 26: case 30:
+                case 26:
+                case 30:
                     baby = 2;
                     break;
-                case 23: case 27:
+                case 23:
+                case 27:
                     baby = 3;
                     break;
-                case 13: case 25: case 31:
+                case 13:
+                case 25:
+                case 31:
                     baby = 4;
                     break;
                 case 29:
                     baby = 5;
                     break;
-                case 2: case 3: case 4: case 5: case 6: case 7: case 10:
-                case 15: case 16: case 17: case 18: case 19: case 20: case 22:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case 10:
+                case 15:
+                case 16:
+                case 17:
+                case 18:
+                case 19:
+                case 20:
+                case 22:
                     baby = 6;
                     break;
-                case 1: case 14: case 21: case 28:
+                case 1:
+                case 14:
+                case 21:
+                case 28:
                     baby = 7;
                     break;
-                case 8: case 11: case 12:
+                case 8:
+                case 11:
+                case 12:
                     baby = 8;
                     break;
             }
@@ -90,7 +122,8 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
         }
 
         switch (chicken.getBreedFromVariant()) {
-            default: case JUNGLEFOWL:
+            default:
+            case JUNGLEFOWL:
                 location = "textures/entity/chicken/junglefowl/junglefowl" + sex;
                 break;
             case AMERAUCANA:

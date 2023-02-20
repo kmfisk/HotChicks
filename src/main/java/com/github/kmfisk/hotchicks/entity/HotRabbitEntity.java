@@ -35,8 +35,6 @@ import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 
 import javax.annotation.Nullable;
 
-import static com.github.kmfisk.hotchicks.entity.base.RabbitBreeds.*;
-
 public class HotRabbitEntity extends LivestockEntity {
     public static final Tags.IOptionalNamedTag<Item> RABBIT_FOODS = ItemTags.createOptional(new ResourceLocation(HotChicks.MOD_ID, "rabbit_foods"));
 
@@ -141,22 +139,22 @@ public class HotRabbitEntity extends LivestockEntity {
                 setVariant(0);
                 break;
             case AMERICAN_CHINCHILLA:
-                setVariant(random.nextInt(AMERICAN_CHINCHILLA.getVariantCountOfBreed()) + 1);
+                setVariant(random.nextInt(RabbitBreeds.AMERICAN_CHINCHILLA.getVariantCountOfBreed()) + 1);
                 break;
             case CALIFORNIA:
                 setVariant(3);
                 break;
             case DUTCH:
-                setVariant(random.nextInt(DUTCH.getVariantCountOfBreed()) + 4);
+                setVariant(random.nextInt(RabbitBreeds.DUTCH.getVariantCountOfBreed()) + 4);
                 break;
             case FLEMISH_GIANT:
-                setVariant(random.nextInt(FLEMISH_GIANT.getVariantCountOfBreed()) + 10);
+                setVariant(random.nextInt(RabbitBreeds.FLEMISH_GIANT.getVariantCountOfBreed()) + 10);
                 break;
             case NEW_ZEALAND:
-                setVariant(random.nextInt(NEW_ZEALAND.getVariantCountOfBreed()) + 15);
+                setVariant(random.nextInt(RabbitBreeds.NEW_ZEALAND.getVariantCountOfBreed()) + 15);
                 break;
             case REX:
-                setVariant(random.nextInt(REX.getVariantCountOfBreed()) + 18);
+                setVariant(random.nextInt(RabbitBreeds.REX.getVariantCountOfBreed()) + 18);
                 break;
         }
 
@@ -184,11 +182,28 @@ public class HotRabbitEntity extends LivestockEntity {
         if (getVariant() <= 2) return RabbitBreeds.AMERICAN_CHINCHILLA;
         if (getVariant() == 3) return RabbitBreeds.CALIFORNIA;
         if (getVariant() <= 9) return RabbitBreeds.DUTCH;
-        if (getVariant() <= 14) return FLEMISH_GIANT;
-        if (getVariant() <= 17) return NEW_ZEALAND;
-        if (getVariant() <= 26) return REX;
+        if (getVariant() <= 14) return RabbitBreeds.FLEMISH_GIANT;
+        if (getVariant() <= 17) return RabbitBreeds.NEW_ZEALAND;
+        if (getVariant() <= 26) return RabbitBreeds.REX;
 
         return RabbitBreeds.COTTONTAIL;
+    }
+
+    @Override
+    public float getScale() {
+        switch (getBreedFromVariant()) {
+            default:
+            case COTTONTAIL:
+            case CALIFORNIA:
+            case DUTCH:
+            case REX:
+                return super.getScale();
+            case AMERICAN_CHINCHILLA:
+            case NEW_ZEALAND:
+                return isBaby() ? 0.6F : 1.2F;
+            case FLEMISH_GIANT:
+                return isBaby() ? 0.65F : 1.3F;
+        }
     }
 
     @Override

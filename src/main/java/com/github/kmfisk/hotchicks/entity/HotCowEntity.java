@@ -35,8 +35,6 @@ import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 
 import javax.annotation.Nullable;
 
-import static com.github.kmfisk.hotchicks.entity.base.CowBreeds.*;
-
 public class HotCowEntity extends LivestockEntity {
     public static final Tags.IOptionalNamedTag<Item> COW_FOODS = ItemTags.createOptional(new ResourceLocation(HotChicks.MOD_ID, "cow_foods"));
 
@@ -151,34 +149,34 @@ public class HotCowEntity extends LivestockEntity {
                 setVariant(0);
                 break;
             case ANGUS:
-                setVariant(random.nextInt(ANGUS.getVariantCountOfBreed()) + 1);
+                setVariant(random.nextInt(CowBreeds.ANGUS.getVariantCountOfBreed()) + 1);
                 break;
             case BRAHMA:
-                setVariant(random.nextInt(BRAHMA.getVariantCountOfBreed()) + 3);
+                setVariant(random.nextInt(CowBreeds.BRAHMA.getVariantCountOfBreed()) + 3);
                 break;
             case BROWN_SWISS:
                 setVariant(8);
                 break;
             case GUERNSEY:
-                setVariant(random.nextInt(GUERNSEY.getVariantCountOfBreed()) + 9);
+                setVariant(random.nextInt(CowBreeds.GUERNSEY.getVariantCountOfBreed()) + 9);
                 break;
             case HEREFORD:
-                setVariant(random.nextInt(HEREFORD.getVariantCountOfBreed()) + 11);
+                setVariant(random.nextInt(CowBreeds.HEREFORD.getVariantCountOfBreed()) + 11);
                 break;
             case HIGHLAND:
-                setVariant(random.nextInt(HIGHLAND.getVariantCountOfBreed()) + 15);
+                setVariant(random.nextInt(CowBreeds.HIGHLAND.getVariantCountOfBreed()) + 15);
                 break;
             case HOLSTEIN:
-                setVariant(random.nextInt(HOLSTEIN.getVariantCountOfBreed()) + 19);
+                setVariant(random.nextInt(CowBreeds.HOLSTEIN.getVariantCountOfBreed()) + 19);
                 break;
             case JERSEY:
                 setVariant(23);
                 break;
             case LAKENVELDER:
-                setVariant(random.nextInt(LAKENVELDER.getVariantCountOfBreed()) + 24);
+                setVariant(random.nextInt(CowBreeds.LAKENVELDER.getVariantCountOfBreed()) + 24);
                 break;
             case LONGHORN:
-                setVariant(random.nextInt(LONGHORN.getVariantCountOfBreed()) + 26);
+                setVariant(random.nextInt(CowBreeds.LONGHORN.getVariantCountOfBreed()) + 26);
                 break;
         }
 
@@ -205,10 +203,10 @@ public class HotCowEntity extends LivestockEntity {
 
     public CowBreeds getBreedFromVariant() {
         if (getVariant() == 0) return CowBreeds.AUROCHS;
-        if (getVariant() <= 2) return ANGUS;
-        if (getVariant() <= 7) return BRAHMA;
+        if (getVariant() <= 2) return CowBreeds.ANGUS;
+        if (getVariant() <= 7) return CowBreeds.BRAHMA;
         if (getVariant() == 8) return CowBreeds.BROWN_SWISS;
-        if (getVariant() <= 10) return GUERNSEY;
+        if (getVariant() <= 10) return CowBreeds.GUERNSEY;
         if (getVariant() <= 14) return CowBreeds.HEREFORD;
         if (getVariant() <= 18) return CowBreeds.HIGHLAND;
         if (getVariant() <= 22) return CowBreeds.HOLSTEIN;
@@ -217,6 +215,29 @@ public class HotCowEntity extends LivestockEntity {
         if (getVariant() <= 30) return CowBreeds.LONGHORN;
 
         return CowBreeds.AUROCHS;
+    }
+
+    @Override
+    public float getScale() {
+        switch (getBreedFromVariant()) {
+            case AUROCHS:
+                return isBaby() ? 0.7F : 1.4F;
+            case HEREFORD:
+            case HOLSTEIN:
+            case LONGHORN:
+                return isBaby() ? 0.6F : 1.2F;
+            default:
+            case ANGUS:
+            case BRAHMA:
+            case BROWN_SWISS:
+            case HIGHLAND:
+            case LAKENVELDER:
+                return super.getScale();
+            case GUERNSEY:
+                return isBaby() ? 0.45F : 0.9F;
+            case JERSEY:
+                return isBaby() ? 0.35F : 0.7F;
+        }
     }
 
     @Override

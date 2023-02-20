@@ -5,6 +5,7 @@ import com.github.kmfisk.hotchicks.client.renderer.entity.layers.CowBellLayer;
 import com.github.kmfisk.hotchicks.client.renderer.entity.model.HotCowModel;
 import com.github.kmfisk.hotchicks.entity.HotCowEntity;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
+import com.github.kmfisk.hotchicks.entity.base.CowBreeds;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
@@ -24,17 +25,50 @@ public class HotCowRenderer extends MobRenderer<HotCowEntity, HotCowModel> {
     public final HotCowModel adultModel;
     public final HotCowModel calfModel;
 
-    public HotCowRenderer(EntityRendererManager renderManagerIn) {
-        super(renderManagerIn, new HotCowModel.Adult(), 1.0F);
+    public HotCowRenderer(EntityRendererManager rendererManager) {
+        super(rendererManager, new HotCowModel.Adult(), 1.0F);
         this.addLayer(new CowBellLayer(this));
         adultModel = new HotCowModel.Adult();
         calfModel = new HotCowModel.Calf();
     }
 
     @Override
-    public void render(HotCowEntity cow, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
+    public void render(HotCowEntity cow, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
         model = cow.isBaby() ? calfModel : adultModel;
-        super.render(cow, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
+        super.render(cow, entityYaw, partialTicks, matrixStack, buffer, packedLight);
+    }
+
+    @Override
+    protected void scale(HotCowEntity cow, MatrixStack matrixStack, float partialTicks) {
+        CowBreeds cowBreed = cow.getBreedFromVariant();
+        float scale;
+        switch (cowBreed) {
+            case AUROCHS:
+                scale = 1.4F;
+                break;
+            case HEREFORD:
+            case HOLSTEIN:
+            case LONGHORN:
+                scale = 1.2F;
+                break;
+            default:
+            case ANGUS:
+            case BRAHMA:
+            case BROWN_SWISS:
+            case HIGHLAND:
+            case LAKENVELDER:
+                scale = 1.0F;
+                break;
+            case GUERNSEY:
+                scale = 0.9F;
+                break;
+            case JERSEY:
+                scale = 0.7F;
+                break;
+        }
+
+        matrixStack.scale(scale, scale, scale);
+        super.scale(cow, matrixStack, partialTicks);
     }
 
     @Override

@@ -298,6 +298,12 @@ public abstract class LivestockEntity extends AnimalEntity {
     }
 
     @Override
+    public void onSyncedDataUpdated(DataParameter<?> key) {
+        if (VARIANT.equals(key)) refreshDimensions();
+        super.onSyncedDataUpdated(key);
+    }
+
+    @Override
     public void aiStep() {
         super.aiStep();
         boolean doHunger = HotChicksConfig.hunger.get();

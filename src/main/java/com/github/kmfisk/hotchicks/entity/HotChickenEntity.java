@@ -46,8 +46,6 @@ import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 
 import javax.annotation.Nullable;
 
-import static com.github.kmfisk.hotchicks.entity.base.ChickenBreeds.*;
-
 public class HotChickenEntity extends LivestockEntity {
     public static final Tags.IOptionalNamedTag<Item> CHICKEN_FOODS = ItemTags.createOptional(new ResourceLocation(HotChicks.MOD_ID, "chicken_foods"));
     public int remainingCooldownBeforeLocatingNewNest = 0;
@@ -156,7 +154,7 @@ public class HotChickenEntity extends LivestockEntity {
                 setVariant(0);
                 break;
             case AMERAUCANA:
-                setVariant(random.nextInt(AMERAUCANA.getVariantCountOfBreed()) + 1);
+                setVariant(random.nextInt(ChickenBreeds.AMERAUCANA.getVariantCountOfBreed()) + 1);
                 break;
             case BARRED_ROCK:
                 setVariant(8);
@@ -165,19 +163,19 @@ public class HotChickenEntity extends LivestockEntity {
                 setVariant(9);
                 break;
             case MARANS:
-                setVariant(random.nextInt(MARANS.getVariantCountOfBreed()) + 10);
+                setVariant(random.nextInt(ChickenBreeds.MARANS.getVariantCountOfBreed()) + 10);
                 break;
             case OLIVE_EGGER:
-                setVariant(random.nextInt(OLIVE_EGGER.getVariantCountOfBreed()) + 14);
+                setVariant(random.nextInt(ChickenBreeds.OLIVE_EGGER.getVariantCountOfBreed()) + 14);
                 break;
             case ORPINGTON:
-                setVariant(random.nextInt(ORPINGTON.getVariantCountOfBreed()) + 21);
+                setVariant(random.nextInt(ChickenBreeds.ORPINGTON.getVariantCountOfBreed()) + 21);
                 break;
             case RHODE_ISLAND_RED:
-                setVariant(random.nextInt(RHODE_ISLAND_RED.getVariantCountOfBreed()) + 25);
+                setVariant(random.nextInt(ChickenBreeds.RHODE_ISLAND_RED.getVariantCountOfBreed()) + 25);
                 break;
             case SILKIE:
-                setVariant(random.nextInt(SILKIE.getVariantCountOfBreed()) + 28);
+                setVariant(random.nextInt(ChickenBreeds.SILKIE.getVariantCountOfBreed()) + 28);
                 break;
         }
 
@@ -208,9 +206,9 @@ public class HotChickenEntity extends LivestockEntity {
         if (getVariant() == 9) return ChickenBreeds.LEGHORN;
         if (getVariant() <= 13) return ChickenBreeds.MARANS;
         if (getVariant() <= 20) return ChickenBreeds.OLIVE_EGGER;
-        if (getVariant() <= 24) return ORPINGTON;
-        if (getVariant() <= 27) return RHODE_ISLAND_RED;
-        if (getVariant() <= 32) return SILKIE;
+        if (getVariant() <= 24) return ChickenBreeds.ORPINGTON;
+        if (getVariant() <= 27) return ChickenBreeds.RHODE_ISLAND_RED;
+        if (getVariant() <= 32) return ChickenBreeds.SILKIE;
 
         return ChickenBreeds.JUNGLEFOWL;
     }
@@ -260,6 +258,12 @@ public class HotChickenEntity extends LivestockEntity {
             TileEntity tileEntity = level.getBlockEntity(nestPos);
             return tileEntity instanceof NestTileEntity && doesNestHaveSpace(nestPos);
         }
+    }
+
+    @Override
+    public float getScale() {
+        if (getBreedFromVariant().equals(ChickenBreeds.LEGHORN)) return isBaby() ? 0.45F : 0.9F;
+        return isBaby() ? 0.5F : 1.0F;
     }
 
     @Override
