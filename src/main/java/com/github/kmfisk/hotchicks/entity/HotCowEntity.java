@@ -73,8 +73,11 @@ public class HotCowEntity extends LivestockEntity {
 
     @Override
     public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficultyInstance, SpawnReason spawnReason, @Nullable ILivingEntityData entityData, @Nullable CompoundNBT nbt) {
-        entityData = super.finalizeSpawn(world, difficultyInstance, spawnReason, entityData, nbt);
-        setStats(new CowStats(random.nextInt(25) + random.nextInt(35), random.nextInt(3), random.nextInt(3), random.nextInt(3), random.nextInt(3)));
+        if (nbt != null && nbt.contains("VillageSpawn") && nbt.getInt("VillageSpawn") != 0) initFromVillageSpawn();
+        else {
+            entityData = super.finalizeSpawn(world, difficultyInstance, spawnReason, entityData, nbt);
+            setStats(new CowStats(random.nextInt(25) + random.nextInt(35), random.nextInt(3), random.nextInt(3), random.nextInt(3), random.nextInt(3)));
+        }
         return entityData;
     }
 
@@ -133,7 +136,14 @@ public class HotCowEntity extends LivestockEntity {
     }
 
     @Override
-    public void setupStats(String breed) {
+    public void initFromVillageSpawn() {
+        setSex(Sex.fromBool(random.nextFloat() <= getMaleRatio()));
+        setVariant(CowBreeds.randomBasedOnBiome(random, getBiome()));
+        setStats(getBreedFromVariant().getStats());
+    }
+
+    @Override
+    public void initByBreed(String breed) {
         CowBreeds cowBreeds = CowBreeds.valueOf(breed.toUpperCase());
         switch (cowBreeds) {
             default:

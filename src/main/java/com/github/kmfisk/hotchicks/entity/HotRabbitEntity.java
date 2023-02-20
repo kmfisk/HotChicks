@@ -133,7 +133,7 @@ public class HotRabbitEntity extends LivestockEntity {
     }
 
     @Override
-    public void setupStats(String breed) {
+    public void initByBreed(String breed) {
         RabbitBreeds rabbitBreeds = RabbitBreeds.valueOf(breed.toUpperCase());
         switch (rabbitBreeds) {
             default:

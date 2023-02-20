@@ -99,6 +99,10 @@ public abstract class LivestockEntity extends AnimalEntity {
         return super.finalizeSpawn(world, difficultyInstance, spawnReason, entityData, nbt);
     }
 
+    public void initFromVillageSpawn() {
+
+    }
+
     public abstract float getMaleRatio();
 
     public abstract int getMaxVariants();
@@ -113,7 +117,7 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     public abstract Stats getStats();
 
-    public abstract void setupStats(String breed);
+    public abstract void initByBreed(String breed);
 
     public abstract String getReadableBreed();
 

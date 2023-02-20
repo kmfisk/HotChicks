@@ -42,7 +42,8 @@ import static com.github.kmfisk.hotchicks.worldgen.HotFeatures.*;
 public class HotEvents {
     @SubscribeEvent
     public static void onLoadComplete(FMLLoadCompleteEvent event) {
-        changeVillageAnimals();
+        changeVillageCows(new ResourceLocation("village/common/animals"), 7);
+        changeVillageCows(new ResourceLocation("village/common/butcher_animals"), 3);
     }
 
     @SubscribeEvent
@@ -153,30 +154,21 @@ public class HotEvents {
         return true;
     }
 
-    public static void changeVillageAnimals() {
+    public static void changeVillageCows(ResourceLocation poolLocation, int i) {
         PlainsVillagePools.bootstrap();
-        ResourceLocation animalsLoc = new ResourceLocation("village/common/animals");
-        java.util.Optional<JigsawPattern> animalsOpt = WorldGenRegistries.TEMPLATE_POOL.getOptional(animalsLoc);
-        if (!animalsOpt.isPresent()) {
+        java.util.Optional<JigsawPattern> poolOptional = WorldGenRegistries.TEMPLATE_POOL.getOptional(poolLocation);
+        if (!poolOptional.isPresent()) {
             System.err.println("Trying to overwrite village spawns too soon");
             return;
         }
-        JigsawPattern animals = animalsOpt.get();
-        List<Pair<JigsawPiece, Integer>> vanillaList = ObfuscationReflectionHelper.getPrivateValue(JigsawPattern.class, animals, "field_214952_d");
+        JigsawPattern pool = poolOptional.get();
+        List<Pair<JigsawPiece, Integer>> vanillaList = ObfuscationReflectionHelper.getPrivateValue(JigsawPattern.class, pool, "field_214952_d");
         List<Pair<JigsawPiece, Integer>> keeperList = new ArrayList<>();
         for (Pair<JigsawPiece, Integer> p : vanillaList)
             if (keepJigsawPair(p)) keeperList.add(p);
 
         List<Pair<Function<JigsawPattern.PlacementBehaviour, ? extends JigsawPiece>, Integer>> customPieces = new ArrayList<>();
-        String modloc = HotChicks.MOD_ID + ":";
-        customPieces.add(new Pair<>(JigsawPiece.legacy(modloc + "village/common/animals/cows_1"), 1));
-        customPieces.add(new Pair<>(JigsawPiece.legacy(modloc + "village/common/animals/cows_2"), 1));
-        customPieces.add(new Pair<>(JigsawPiece.legacy(modloc + "village/common/animals/cows_3"), 1));
-        customPieces.add(new Pair<>(JigsawPiece.legacy(modloc + "village/common/animals/cows_4"), 1));
-        customPieces.add(new Pair<>(JigsawPiece.legacy(modloc + "village/common/animals/cows_5"), 1));
-        customPieces.add(new Pair<>(JigsawPiece.legacy(modloc + "village/common/animals/cows_6"), 1));
-        customPieces.add(new Pair<>(JigsawPiece.legacy(modloc + "village/common/animals/cows_7"), 1));
-        customPieces.add(new Pair<>(JigsawPiece.legacy(modloc + "village/common/animals/cows_8"), 1));
+        customPieces.add(new Pair<>(JigsawPiece.legacy(HotChicks.MOD_ID + ":village/common/animals/cows_1"), i));
 
         JigsawPattern.PlacementBehaviour placementBehaviour = JigsawPattern.PlacementBehaviour.RIGID;
         for (Pair<Function<JigsawPattern.PlacementBehaviour, ? extends JigsawPiece>, Integer> pair : customPieces) {
@@ -184,6 +176,6 @@ public class HotEvents {
             keeperList.add(new Pair<>(jigsawPiece, pair.getSecond()));
         }
 
-        JigsawPatternRegistry.register(new JigsawPattern(animalsLoc, new ResourceLocation("empty"), keeperList));
+        JigsawPatternRegistry.register(new JigsawPattern(poolLocation, new ResourceLocation("empty"), keeperList));
     }
 }

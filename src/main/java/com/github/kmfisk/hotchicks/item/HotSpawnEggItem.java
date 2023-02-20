@@ -66,7 +66,7 @@ public class HotSpawnEggItem extends ForgeSpawnEggItem {
             EntityType<?> entitytype = this.getType(itemstack.getTag());
             Entity entity = entitytype.spawn((ServerWorld) world, itemstack, context.getPlayer(), blockpos1, SpawnReason.SPAWN_EGG, true, !Objects.equals(blockpos, blockpos1) && direction == Direction.UP);
             if (entity != null) {
-                if (entity instanceof LivestockEntity) ((LivestockEntity) entity).setupStats(breed);
+                if (entity instanceof LivestockEntity) ((LivestockEntity) entity).initByBreed(breed);
                 itemstack.shrink(1);
             }
 
@@ -90,7 +90,7 @@ public class HotSpawnEggItem extends ForgeSpawnEggItem {
                 Entity entity = entitytype.spawn((ServerWorld) level, itemstack, player, blockpos, SpawnReason.SPAWN_EGG, false, false);
                 if (entity == null) return ActionResult.pass(itemstack);
                 else {
-                    if (entity instanceof LivestockEntity) ((LivestockEntity) entity).setupStats(breed);
+                    if (entity instanceof LivestockEntity) ((LivestockEntity) entity).initByBreed(breed);
                     if (!player.abilities.instabuild) itemstack.shrink(1);
 
                     player.awardStat(Stats.ITEM_USED.get(this));

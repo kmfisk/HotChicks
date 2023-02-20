@@ -148,7 +148,7 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     @Override
-    public void setupStats(String breed) {
+    public void initByBreed(String breed) {
         ChickenBreeds chickenBreeds = ChickenBreeds.valueOf(breed.toUpperCase());
         switch (chickenBreeds) {
             default:
