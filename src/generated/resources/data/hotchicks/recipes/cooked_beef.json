@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "hotchicks:cooked_beef_steak"
+    }
+  ],
+  "result": {
+    "item": "minecraft:cooked_beef"
+  }
+}
