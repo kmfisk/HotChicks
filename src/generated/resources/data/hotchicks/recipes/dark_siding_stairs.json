@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hotchicks",
+  "pattern": [
+    "P  ",
+    "PP ",
+    "PPP"
+  ],
+  "key": {
+    "P": {
+      "item": "hotchicks:dark_siding"
+    }
+  },
+  "result": {
+    "item": "hotchicks:dark_siding_stairs",
+    "count": 4
+  }
+}

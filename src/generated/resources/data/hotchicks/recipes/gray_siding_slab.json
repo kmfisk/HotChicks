@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hotchicks",
+  "pattern": [
+    "PPP"
+  ],
+  "key": {
+    "P": {
+      "item": "hotchicks:gray_siding"
+    }
+  },
+  "result": {
+    "item": "hotchicks:gray_siding_slab",
+    "count": 6
+  }
+}

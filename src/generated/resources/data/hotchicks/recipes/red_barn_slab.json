@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hotchicks",
+  "pattern": [
+    "PPP"
+  ],
+  "key": {
+    "P": {
+      "item": "hotchicks:red_barn_planks"
+    }
+  },
+  "result": {
+    "item": "hotchicks:red_barn_slab",
+    "count": 6
+  }
+}
