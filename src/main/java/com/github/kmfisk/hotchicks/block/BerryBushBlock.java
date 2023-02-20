@@ -44,16 +44,16 @@ public class BerryBushBlock extends BushBlock implements IGrowable {
     }
 
     @Override
-    public ItemStack getCloneItemStack(IBlockReader worldIn, BlockPos pos, BlockState state) {
+    public ItemStack getCloneItemStack(IBlockReader level, BlockPos pos, BlockState state) {
         return item.get().getDefaultInstance();
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, IBlockReader level, BlockPos pos, ISelectionContext context) {
         if (state.getValue(AGE) == 0)
             return BUSHLING_SHAPE;
         else
-            return state.getValue(AGE) < 3 ? GROWING_SHAPE : super.getShape(state, worldIn, pos, context);
+            return state.getValue(AGE) < 3 ? GROWING_SHAPE : super.getShape(state, level, pos, context);
     }
 
     @Override
@@ -62,34 +62,34 @@ public class BerryBushBlock extends BushBlock implements IGrowable {
     }
 
     @Override
-    public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
+    public void randomTick(BlockState state, ServerWorld level, BlockPos pos, Random random) {
         int i = state.getValue(AGE);
-        if (i < 3 && worldIn.getRawBrightness(pos.above(), 0) >= 9 && net.minecraftforge.common.ForgeHooks.onCropsGrowPre(worldIn, pos, state, random.nextInt(5) == 0)) {
-            worldIn.setBlock(pos, state.setValue(AGE, i + 1), 2);
-            net.minecraftforge.common.ForgeHooks.onCropsGrowPost(worldIn, pos, state);
+        if (i < 3 && level.getRawBrightness(pos.above(), 0) >= 9 && net.minecraftforge.common.ForgeHooks.onCropsGrowPre(level, pos, state, random.nextInt(5) == 0)) {
+            level.setBlock(pos, state.setValue(AGE, i + 1), 2);
+            net.minecraftforge.common.ForgeHooks.onCropsGrowPost(level, pos, state);
         }
     }
 
     @Override
-    public void entityInside(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        if (entityIn instanceof LivingEntity && entityIn.getType() != EntityType.FOX && entityIn.getType() != EntityType.BEE)
-            entityIn.makeStuckInBlock(state, new Vector3d(0.8F, 0.75D, 0.8F));
+    public void entityInside(BlockState state, World level, BlockPos pos, Entity entity) {
+        if (entity instanceof LivingEntity && entity.getType() != EntityType.FOX && entity.getType() != EntityType.BEE)
+            entity.makeStuckInBlock(state, new Vector3d(0.8F, 0.75D, 0.8F));
     }
 
     @Override
-    public ActionResultType use(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public ActionResultType use(BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
         int i = state.getValue(AGE);
         boolean flag = i == 3;
-        if (!flag && player.getItemInHand(handIn).getItem() == Items.BONE_MEAL)
+        if (!flag && player.getItemInHand(hand).getItem() == Items.BONE_MEAL)
             return ActionResultType.PASS;
         else if (i > 2) {
-            int j = 1 + worldIn.random.nextInt(2);
-            popResource(worldIn, pos, new ItemStack(item.get(), j));
-            worldIn.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + worldIn.random.nextFloat() * 0.4F);
-            worldIn.setBlock(pos, state.setValue(AGE, 2), 2);
-            return ActionResultType.sidedSuccess(worldIn.isClientSide);
+            int j = 1 + level.random.nextInt(2);
+            popResource(level, pos, new ItemStack(item.get(), j));
+            level.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + level.random.nextFloat() * 0.4F);
+            level.setBlock(pos, state.setValue(AGE, 2), 2);
+            return ActionResultType.sidedSuccess(level.isClientSide);
         } else
-            return super.use(state, worldIn, pos, player, handIn, hit);
+            return super.use(state, level, pos, player, hand, hit);
     }
 
     @Override
@@ -98,18 +98,18 @@ public class BerryBushBlock extends BushBlock implements IGrowable {
     }
 
     @Override
-    public boolean isValidBonemealTarget(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
+    public boolean isValidBonemealTarget(IBlockReader level, BlockPos pos, BlockState state, boolean isClient) {
         return state.getValue(AGE) < 3;
     }
 
     @Override
-    public boolean isBonemealSuccess(World worldIn, Random rand, BlockPos pos, BlockState state) {
+    public boolean isBonemealSuccess(World level, Random rand, BlockPos pos, BlockState state) {
         return true;
     }
 
     @Override
-    public void performBonemeal(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
+    public void performBonemeal(ServerWorld level, Random rand, BlockPos pos, BlockState state) {
         int i = Math.min(3, state.getValue(AGE) + 1);
-        worldIn.setBlock(pos, state.setValue(AGE, i), 2);
+        level.setBlock(pos, state.setValue(AGE, i), 2);
     }
 }

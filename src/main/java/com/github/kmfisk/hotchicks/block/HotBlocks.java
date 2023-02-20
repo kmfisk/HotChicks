@@ -67,10 +67,10 @@ public class HotBlocks {
     public static final RegistryObject<Block> WILD_GRAPE = REGISTRAR.register("wild_grape", CropVineBlock::new);
     public static final RegistryObject<Block> WILD_KIWI = REGISTRAR.register("wild_kiwi", CropVineBlock::new);
     public static final RegistryObject<Block> WILD_PEA = REGISTRAR.register("wild_pea", CropVineBlock::new);
-    public static final RegistryObject<Block> WILD_TOMATO = REGISTRAR.register("wild_tomato", () -> new BushBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().instabreak().sound(SoundType.GRASS)));
-    public static final RegistryObject<Block> WILD_OATS = REGISTRAR.register("wild_oats", () -> new BushBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().instabreak().sound(SoundType.GRASS)));
-    public static final RegistryObject<Block> WILD_GARLIC = REGISTRAR.register("wild_garlic", () -> new BushBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().instabreak().sound(SoundType.GRASS)));
-    public static final RegistryObject<Block> WILD_KALE = REGISTRAR.register("wild_kale", () -> new BushBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> WILD_TOMATO = REGISTRAR.register("wild_tomato", () -> new WildCropBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().instabreak().sound(SoundType.GRASS), HotItems.TOMATO));
+    public static final RegistryObject<Block> WILD_OATS = REGISTRAR.register("wild_oats", () -> new WildCropBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().instabreak().sound(SoundType.GRASS), HotItems.OATS));
+    public static final RegistryObject<Block> WILD_GARLIC = REGISTRAR.register("wild_garlic", () -> new WildCropBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().instabreak().sound(SoundType.GRASS), HotItems.GARLIC));
+    public static final RegistryObject<Block> WILD_KALE = REGISTRAR.register("wild_kale", () -> new WildCropBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().instabreak().sound(SoundType.GRASS), HotItems.KALE));
 
     // CROP BLOCKS
     public static final RegistryObject<Block> BANANA_TREE = registerWithItem("banana_tree", () -> new BananaTreeBlock(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH)));
