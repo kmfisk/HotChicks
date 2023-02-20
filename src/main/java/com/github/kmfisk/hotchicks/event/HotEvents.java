@@ -106,8 +106,8 @@ public class HotEvents {
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> POMEGRANATE.decorated(Features.Placements.HEIGHTMAP_SQUARE).decorated(Placement.COUNT_EXTRA.configured(new AtSurfaceWithExtraConfig(0, 0.02f, 1))));
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> FIG.decorated(Features.Placements.HEIGHTMAP_SQUARE).decorated(Placement.COUNT_EXTRA.configured(new AtSurfaceWithExtraConfig(0, 0.1f, 1))));
                 event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> CITRON.decorated(Features.Placements.HEIGHTMAP_SQUARE).decorated(Placement.COUNT_EXTRA.configured(new AtSurfaceWithExtraConfig(0, 0.1f, 1))));
-                event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> OAT);
-                event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> GARLIC);
+                event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> WILD_OATS);
+                event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> WILD_GARLIC);
                 event.getGeneration().getFeatures(GenerationStage.Decoration.LAKES).add(() -> MILLET);
             }
 
@@ -126,7 +126,7 @@ public class HotEvents {
                     event.getSpawns().getSpawner(EntityClassification.CREATURE).add(cowSpawner);
                     event.getSpawns().getSpawner(EntityClassification.CREATURE).add(rabbitSpawner);
                     event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> CORN);
-                    event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> OAT);
+                    event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> WILD_OATS);
                     event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> WILD_TOMATO);
                 }
             }
@@ -139,6 +139,10 @@ public class HotEvents {
 
             if (biomeTypes.contains(BiomeDictionary.Type.SANDY) && biomeTypes.contains(BiomeDictionary.Type.HOT)) {
                 event.getGeneration().getFeatures(GenerationStage.Decoration.LAKES).add(() -> MILLET);
+            }
+
+            if (biomeTypes.contains(BiomeDictionary.Type.SWAMP)) {
+                event.getGeneration().getFeatures(GenerationStage.Decoration.VEGETAL_DECORATION).add(() -> WILD_KALE);
             }
         }
     }

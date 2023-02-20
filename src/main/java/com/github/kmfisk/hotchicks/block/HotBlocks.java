@@ -63,6 +63,15 @@ public class HotBlocks {
         }
     }
 
+    // WILD CROPS
+    public static final RegistryObject<Block> WILD_GRAPE = REGISTRAR.register("wild_grape", CropVineBlock::new);
+    public static final RegistryObject<Block> WILD_KIWI = REGISTRAR.register("wild_kiwi", CropVineBlock::new);
+    public static final RegistryObject<Block> WILD_PEA = REGISTRAR.register("wild_pea", CropVineBlock::new);
+    public static final RegistryObject<Block> WILD_TOMATO = REGISTRAR.register("wild_tomato", () -> new BushBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> WILD_OATS = REGISTRAR.register("wild_oats", () -> new BushBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> WILD_GARLIC = REGISTRAR.register("wild_garlic", () -> new BushBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> WILD_KALE = REGISTRAR.register("wild_kale", () -> new BushBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().instabreak().sound(SoundType.GRASS)));
+
     // CROP BLOCKS
     public static final RegistryObject<Block> BANANA_TREE = registerWithItem("banana_tree", () -> new BananaTreeBlock(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH)));
     public static final RegistryObject<Block> BLUEBERRY_BUSH = REGISTRAR.register("blueberry_bush", () -> new BerryBushBlock(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH), HotItems.BLUEBERRIES));
@@ -81,13 +90,9 @@ public class HotBlocks {
 
     // TRELLIS CROPS
     public static final RegistryObject<Block> CUCUMBER_TRELLIS = REGISTRAR.register("cucumber_trellis", () -> new TrellisBlock(HotItems.CUCUMBER));
-    public static final RegistryObject<Block> WILD_GRAPE = registerWithItem("wild_grape", CropVineBlock::new);
     public static final RegistryObject<Block> GRAPE_TRELLIS = REGISTRAR.register("grape_trellis", () -> new TrellisBlock(HotItems.GRAPES));
-    public static final RegistryObject<Block> WILD_KIWI = registerWithItem("wild_kiwi", CropVineBlock::new);
     public static final RegistryObject<Block> KIWI_TRELLIS = REGISTRAR.register("kiwi_trellis", () -> new TrellisBlock(HotItems.KIWI));
-    public static final RegistryObject<Block> WILD_PEA = registerWithItem("wild_pea", CropVineBlock::new);
     public static final RegistryObject<Block> PEA_TRELLIS = REGISTRAR.register("pea_trellis", () -> new TrellisBlock(HotItems.PEAS));
-    public static final RegistryObject<Block> WILD_TOMATO = registerWithItem("wild_tomato", () -> new BushBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().strength(0.2F).sound(SoundType.VINE)));
     public static final RegistryObject<Block> TOMATO_TRELLIS = REGISTRAR.register("tomato_trellis", () -> new TrellisBlock(HotItems.TOMATO));
 
     // FRUIT TREES
@@ -192,6 +197,9 @@ public class HotBlocks {
         RenderTypeLookup.setRenderLayer(GRAPEFRUIT_SAPLING.get(), cutout);
         RenderTypeLookup.setRenderLayer(LIME_SAPLING.get(), cutout);
         RenderTypeLookup.setRenderLayer(YUZU_SAPLING.get(), cutout);
+        RenderTypeLookup.setRenderLayer(WILD_OATS.get(), cutout);
+        RenderTypeLookup.setRenderLayer(WILD_GARLIC.get(), cutout);
+        RenderTypeLookup.setRenderLayer(WILD_KALE.get(), cutout);
         RenderTypeLookup.setRenderLayer(WILD_GRAPE.get(), cutout);
         RenderTypeLookup.setRenderLayer(WILD_KIWI.get(), cutout);
         RenderTypeLookup.setRenderLayer(WILD_TOMATO.get(), cutout);

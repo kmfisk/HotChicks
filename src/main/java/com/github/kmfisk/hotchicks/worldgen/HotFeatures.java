@@ -23,30 +23,32 @@ import net.minecraft.world.gen.trunkplacer.StraightTrunkPlacer;
 import java.util.OptionalInt;
 
 public class HotFeatures {
-    public static final ConfiguredFeature<?, ?> CORN = Feature.RANDOM_PATCH.configured((new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.CORN_CROP.get().defaultBlockState()), new MilletPlacer(0, 0))).tries(30).xspread(4).yspread(0).zspread(4).noProjection().needWater().build())
+    public static final ConfiguredFeature<?, ?> CORN = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.CORN_CROP.get().defaultBlockState()), new MilletPlacer(0, 0)).tries(30).xspread(4).yspread(0).zspread(4).noProjection().needWater().build())
             .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
-    public static final ConfiguredFeature<?, ?> MILLET = Feature.RANDOM_PATCH.configured((new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.MILLET_CROP.get().defaultBlockState()), new MilletPlacer(0, 0))).tries(30).xspread(10).yspread(0).zspread(10).noProjection().needWater().build())
-            .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
-
-    public static final ConfiguredFeature<?, ?> OAT = Feature.RANDOM_PATCH.configured((new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.OATS_CROP.get().defaultBlockState()), SimpleBlockPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK.getBlock())).noProjection().build())
-            .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
-    public static final ConfiguredFeature<?, ?> GARLIC = Feature.RANDOM_PATCH.configured((new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.GARLIC_CROP.get().defaultBlockState()), SimpleBlockPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK.getBlock())).noProjection().build())
+    public static final ConfiguredFeature<?, ?> MILLET = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.MILLET_CROP.get().defaultBlockState()), new MilletPlacer(0, 0)).tries(30).xspread(10).yspread(0).zspread(10).noProjection().needWater().build())
             .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
 
-    public static final ConfiguredFeature<?, ?> BLUEBERRY_BUSH = Feature.RANDOM_PATCH.configured((new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.BLUEBERRY_BUSH.get().defaultBlockState()), LowLightPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK.getBlock())).noProjection().build())
+    public static final ConfiguredFeature<?, ?> BLUEBERRY_BUSH = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.BLUEBERRY_BUSH.get().defaultBlockState()), LowLightPlacer.INSTANCE).tries(64).noProjection().build())
             .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE);
-    public static final ConfiguredFeature<?, ?> PEPPER_BUSH = Feature.RANDOM_PATCH.configured((new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.PEPPER_BUSH.get().defaultBlockState().setValue(PepperBerryBushBlock.AGE, 3).setValue(PepperBerryBushBlock.VARIANT, PepperType.getRandom())), SimpleBlockPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK.getBlock())).noProjection().build())
+    public static final ConfiguredFeature<?, ?> PEPPER_BUSH = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.PEPPER_BUSH.get().defaultBlockState().setValue(PepperBerryBushBlock.AGE, 3).setValue(PepperBerryBushBlock.VARIANT, PepperType.getRandom())), SimpleBlockPlacer.INSTANCE).tries(64).noProjection().build())
             .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE);
-    public static final ConfiguredFeature<?, ?> STRAWBERRY_BUSH = Feature.RANDOM_PATCH.configured((new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.STRAWBERRY_BUSH.get().defaultBlockState()), LowLightPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK.getBlock())).noProjection().build())
+    public static final ConfiguredFeature<?, ?> STRAWBERRY_BUSH = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.STRAWBERRY_BUSH.get().defaultBlockState()), LowLightPlacer.INSTANCE).tries(64).noProjection().build())
             .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE);
 
-    public static final ConfiguredFeature<?, ?> WILD_GRAPE = Feature.RANDOM_PATCH.configured((new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.WILD_GRAPE.get().defaultBlockState()), SimpleBlockPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.OAK_LEAVES.getBlock(), Blocks.BIRCH_LEAVES.getBlock())).noProjection().build())
+    public static final ConfiguredFeature<?, ?> WILD_OATS = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.WILD_OATS.get().defaultBlockState()), SimpleBlockPlacer.INSTANCE).tries(64).noProjection().build())
+            .count(FeatureSpread.of(-3, 4)).decorated(Features.Placements.ADD_32).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(5);
+    public static final ConfiguredFeature<?, ?> WILD_GARLIC = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.WILD_GARLIC.get().defaultBlockState()), SimpleBlockPlacer.INSTANCE).tries(64).noProjection().build())
+            .count(FeatureSpread.of(-3, 4)).decorated(Features.Placements.ADD_32).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(5);
+    public static final ConfiguredFeature<?, ?> WILD_KALE = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.WILD_KALE.get().defaultBlockState()), SimpleBlockPlacer.INSTANCE).tries(64).noProjection().build())
+            .count(FeatureSpread.of(-3, 4)).decorated(Features.Placements.ADD_32).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(5);
+    public static final ConfiguredFeature<?, ?> WILD_TOMATO = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.WILD_TOMATO.get().defaultBlockState()), LowLightPlacer.INSTANCE).tries(64).noProjection().build())
+            .count(FeatureSpread.of(-3, 4)).decorated(Features.Placements.ADD_32).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(5);
+
+    public static final ConfiguredFeature<?, ?> WILD_GRAPE = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.WILD_GRAPE.get().defaultBlockState()), SimpleBlockPlacer.INSTANCE).tries(64).whitelist(ImmutableSet.of(Blocks.OAK_LEAVES.getBlock(), Blocks.BIRCH_LEAVES.getBlock())).noProjection().build())
             .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
-    public static final ConfiguredFeature<?, ?> WILD_KIWI = Feature.RANDOM_PATCH.configured((new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.WILD_KIWI.get().defaultBlockState()), LowLightPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.OAK_LOG.getBlock(), Blocks.BIRCH_LOG.getBlock())).noProjection().build())
+    public static final ConfiguredFeature<?, ?> WILD_KIWI = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.WILD_KIWI.get().defaultBlockState()), LowLightPlacer.INSTANCE).tries(64).whitelist(ImmutableSet.of(Blocks.OAK_LOG.getBlock(), Blocks.BIRCH_LOG.getBlock())).noProjection().build())
             .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
-    public static final ConfiguredFeature<?, ?> WILD_TOMATO = Feature.RANDOM_PATCH.configured((new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.WILD_TOMATO.get().defaultBlockState()), LowLightPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.GRASS_BLOCK.getBlock())).noProjection().build())
-            .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
-    public static final ConfiguredFeature<?, ?> WILD_PEA = Feature.RANDOM_PATCH.configured((new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.WILD_PEA.get().defaultBlockState()), LowLightPlacer.INSTANCE)).tries(64).whitelist(ImmutableSet.of(Blocks.OAK_LOG.getBlock(), Blocks.BIRCH_LOG.getBlock())).noProjection().build())
+    public static final ConfiguredFeature<?, ?> WILD_PEA = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.WILD_PEA.get().defaultBlockState()), LowLightPlacer.INSTANCE).tries(64).whitelist(ImmutableSet.of(Blocks.OAK_LOG.getBlock(), Blocks.BIRCH_LOG.getBlock())).noProjection().build())
             .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
 
     public static final ConfiguredFeature<BaseTreeFeatureConfig, ?> RED_APPLE = configureFruitTree(Blocks.OAK_LOG, HotBlocks.RED_APPLE_LEAVES.get(), HotBlocks.FRUIT_LEAVES.get(), new FancyFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(4), 4), new FancyTrunkPlacer(3, 11, 0), 0, 0, 0, OptionalInt.of(4));
@@ -68,8 +70,9 @@ public class HotFeatures {
         register("corn_patches", CORN);
         register("millet_patches", MILLET);
 
-        register("oat_patches", OAT);
-        register("garlic_patches", GARLIC);
+        register("oats_patches", WILD_OATS);
+        register("garlic_patches", WILD_GARLIC);
+        register("kale_patches", WILD_KALE);
 
         register("wild_grape_patches", WILD_GRAPE);
         register("wild_kiwi_patches", WILD_KIWI);
