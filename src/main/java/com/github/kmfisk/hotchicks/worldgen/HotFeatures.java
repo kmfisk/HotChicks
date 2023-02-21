@@ -27,7 +27,7 @@ public class HotFeatures {
     public static final ConfiguredFeature<?, ?> MILLET = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.MILLET_CROP.get().defaultBlockState()), new TallCropsBlockPlacer()).tries(64).xspread(4).yspread(0).zspread(4).noProjection().needWater().build())
             .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
     public static final ConfiguredFeature<?, ?> WILD_RICE = HotFeature.WATER_CROPS.get().configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.RICE_CROP.get().defaultBlockState()), new TallCropsBlockPlacer()).blacklist(ImmutableSet.of(Blocks.WATER.defaultBlockState())).tries(20).xspread(4).yspread(0).zspread(4).noProjection().build())
-            .count(FeatureSpread.of(-3, 4)).decorated(Features.Placements.ADD_32).decorated(Features.Placements.TOP_SOLID_HEIGHTMAP_SQUARE).count(2);
+            .count(FeatureSpread.of(-3, 4)).decorated(Features.Placements.ADD_32).decorated(Features.Placements.TOP_SOLID_HEIGHTMAP_SQUARE);
     public static final ConfiguredFeature<?, ?> BANANA_TREE = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.BANANA_TREE.get().defaultBlockState().setValue(BananaTreeBlock.AGE, 1)), new DoublePlantBlockPlacer()).tries(64).noProjection().build())
             .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE);
 
