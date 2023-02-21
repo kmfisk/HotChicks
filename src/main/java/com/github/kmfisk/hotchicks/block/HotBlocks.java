@@ -64,9 +64,9 @@ public class HotBlocks {
     }
 
     // WILD CROPS
-    public static final RegistryObject<Block> WILD_GRAPE = REGISTRAR.register("wild_grape", CropVineBlock::new);
-    public static final RegistryObject<Block> WILD_KIWI = REGISTRAR.register("wild_kiwi", CropVineBlock::new);
-    public static final RegistryObject<Block> WILD_PEA = REGISTRAR.register("wild_pea", CropVineBlock::new);
+    public static final RegistryObject<Block> WILD_GRAPE = REGISTRAR.register("wild_grape", () -> new CropVineBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().sound(SoundType.VINE), HotItems.GRAPES));
+    public static final RegistryObject<Block> WILD_KIWI = REGISTRAR.register("wild_kiwi", () -> new CropVineBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().sound(SoundType.VINE), HotItems.KIWI));
+    public static final RegistryObject<Block> WILD_PEA = REGISTRAR.register("wild_pea", () -> new CropVineBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().sound(SoundType.VINE), HotItems.PEAS));
     public static final RegistryObject<Block> WILD_TOMATO = REGISTRAR.register("wild_tomato", () -> new WildCropBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().instabreak().sound(SoundType.GRASS), HotItems.TOMATO));
     public static final RegistryObject<Block> WILD_OATS = REGISTRAR.register("wild_oats", () -> new WildCropBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().instabreak().sound(SoundType.GRASS), HotItems.OATS));
     public static final RegistryObject<Block> WILD_GARLIC = REGISTRAR.register("wild_garlic", () -> new WildCropBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().instabreak().sound(SoundType.GRASS), HotItems.GARLIC));

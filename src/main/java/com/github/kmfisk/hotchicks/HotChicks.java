@@ -12,6 +12,7 @@ import com.github.kmfisk.hotchicks.event.HotEvents;
 import com.github.kmfisk.hotchicks.inventory.HotContainerTypes;
 import com.github.kmfisk.hotchicks.item.HotItems;
 import com.github.kmfisk.hotchicks.loot.HotGlobalLootModifier;
+import com.github.kmfisk.hotchicks.worldgen.HotFeature;
 import com.github.kmfisk.hotchicks.worldgen.HotFeatures;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.ItemGroup;
@@ -48,6 +49,7 @@ public class HotChicks {
         HotTileEntities.REGISTRAR.register(bus);
         HotBlocks.REGISTRAR.register(bus);
         HotItems.REGISTRAR.register(bus);
+        HotFeature.REGISTRAR.register(bus);
         HotSounds.REGISTRAR.register(bus);
         HotContainerTypes.REGISTRAR.register(bus);
         HotGlobalLootModifier.REGISTRAR.register(bus);

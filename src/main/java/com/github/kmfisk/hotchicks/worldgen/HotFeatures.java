@@ -44,12 +44,12 @@ public class HotFeatures {
     public static final ConfiguredFeature<?, ?> WILD_TOMATO = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.WILD_TOMATO.get().defaultBlockState()), LowLightPlacer.INSTANCE).tries(64).noProjection().build())
             .count(FeatureSpread.of(-3, 4)).decorated(Features.Placements.ADD_32).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(5);
 
-    public static final ConfiguredFeature<?, ?> WILD_GRAPE = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.WILD_GRAPE.get().defaultBlockState()), SimpleBlockPlacer.INSTANCE).tries(64).whitelist(ImmutableSet.of(Blocks.OAK_LEAVES.getBlock(), Blocks.BIRCH_LEAVES.getBlock())).noProjection().build())
-            .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
-    public static final ConfiguredFeature<?, ?> WILD_KIWI = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.WILD_KIWI.get().defaultBlockState()), LowLightPlacer.INSTANCE).tries(64).whitelist(ImmutableSet.of(Blocks.OAK_LOG.getBlock(), Blocks.BIRCH_LOG.getBlock())).noProjection().build())
-            .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
-    public static final ConfiguredFeature<?, ?> WILD_PEA = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.WILD_PEA.get().defaultBlockState()), LowLightPlacer.INSTANCE).tries(64).whitelist(ImmutableSet.of(Blocks.OAK_LOG.getBlock(), Blocks.BIRCH_LOG.getBlock())).noProjection().build())
-            .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
+    public static final ConfiguredFeature<?, ?> WILD_GRAPE = HotFeature.CROP_VINES.get().configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.WILD_GRAPE.get().defaultBlockState()), SimpleBlockPlacer.INSTANCE).xspread(2).zspread(2).whitelist(ImmutableSet.of(Blocks.OAK_LEAVES.getBlock(), Blocks.BIRCH_LEAVES.getBlock())).noProjection().tries(64).build())
+            .count(FeatureSpread.of(-3, 4)).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(2);
+    public static final ConfiguredFeature<?, ?> WILD_KIWI = HotFeature.CROP_VINES.get().configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.WILD_KIWI.get().defaultBlockState()), LowLightPlacer.INSTANCE).xspread(2).zspread(2).whitelist(ImmutableSet.of(Blocks.OAK_LOG.getBlock(), Blocks.BIRCH_LOG.getBlock())).noProjection().tries(64).build())
+            .count(FeatureSpread.of(-3, 4)).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(5);
+    public static final ConfiguredFeature<?, ?> WILD_PEA = HotFeature.CROP_VINES.get().configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.WILD_PEA.get().defaultBlockState()), LowLightPlacer.INSTANCE).xspread(2).zspread(2).whitelist(ImmutableSet.of(Blocks.OAK_LOG.getBlock(), Blocks.BIRCH_LOG.getBlock())).noProjection().tries(64).build())
+            .count(FeatureSpread.of(-3, 4)).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(5);
 
     public static final ConfiguredFeature<BaseTreeFeatureConfig, ?> RED_APPLE = configureFruitTree(Blocks.OAK_LOG, HotBlocks.RED_APPLE_LEAVES.get(), HotBlocks.FRUIT_LEAVES.get(), new FancyFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(4), 4), new FancyTrunkPlacer(3, 11, 0), 0, 0, 0, OptionalInt.of(4));
     public static final ConfiguredFeature<BaseTreeFeatureConfig, ?> PEACH = configureFruitTree(Blocks.DARK_OAK_LOG, HotBlocks.PEACH_LEAVES.get(), HotBlocks.FRUIT_LEAVES.get(), new BlobFoliagePlacer(FeatureSpread.fixed(2), FeatureSpread.fixed(0), 3), new StraightTrunkPlacer(4, 2, 0), 1, 0, 1, OptionalInt.empty());
@@ -73,11 +73,11 @@ public class HotFeatures {
         register("oats_patches", WILD_OATS);
         register("garlic_patches", WILD_GARLIC);
         register("kale_patches", WILD_KALE);
+        register("tomato_patches", WILD_TOMATO);
 
-        register("wild_grape_patches", WILD_GRAPE);
-        register("wild_kiwi_patches", WILD_KIWI);
-        register("wild_tomato_patches", WILD_TOMATO);
-        register("wild_pea_patches", WILD_PEA);
+        register("grape_patches", WILD_GRAPE);
+        register("kiwi_patches", WILD_KIWI);
+        register("pea_patches", WILD_PEA);
 
         register("blueberry_patches", BLUEBERRY_BUSH);
         register("pepper_patches", PEPPER_BUSH);
