@@ -40,11 +40,6 @@ public class TallCropsBlock extends BushBlock implements IGrowable {
         return new ItemStack(item.get());
     }
 
-    @Override
-    protected boolean mayPlaceOn(BlockState state, IBlockReader level, BlockPos pos) {
-        return state.is(this) || state.is(Blocks.GRASS_BLOCK) || state.is(Blocks.DIRT) || state.is(Blocks.COARSE_DIRT) || state.is(Blocks.PODZOL);
-    }
-
     public boolean hasThirdBlock() {
         return true;
     }
