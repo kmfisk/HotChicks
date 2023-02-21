@@ -10,4 +10,5 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class HotFeature {
     public static final DeferredRegister<Feature<?>> REGISTRAR = DeferredRegister.create(ForgeRegistries.FEATURES, HotChicks.MOD_ID);
     public static final RegistryObject<Feature<BlockClusterFeatureConfig>> CROP_VINES = REGISTRAR.register("crop_vines", () -> new HotVinesFeature(BlockClusterFeatureConfig.CODEC));
+    public static final RegistryObject<Feature<BlockClusterFeatureConfig>> WATER_CROPS = REGISTRAR.register("water_crops", () -> new HotWaterCropFeature(BlockClusterFeatureConfig.CODEC));
 }
