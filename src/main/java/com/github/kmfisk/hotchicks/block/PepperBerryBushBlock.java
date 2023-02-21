@@ -2,7 +2,9 @@ package com.github.kmfisk.hotchicks.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.IGrowable;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,6 +20,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 import java.util.function.Supplier;
 
@@ -26,14 +29,22 @@ public class PepperBerryBushBlock extends BerryBushBlock implements IGrowable {
 
     public PepperBerryBushBlock(Properties properties, Supplier<? extends Item> item) {
         super(properties, item);
-        this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0).setValue(VARIANT, PepperType.getRandom()));
+        this.registerDefaultState(this.stateDefinition.any().setValue(AGE, 0).setValue(VARIANT, PepperType.DEFAULT));
+    }
+
+    @Override
+    public void setPlacedBy(World pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity pPlacer, ItemStack pStack) {
+        super.setPlacedBy(pLevel, pPos, pState, pPlacer, pStack);
+        if (!pLevel.isClientSide) {
+            pLevel.setBlock(pPos, pState.setValue(VARIANT, PepperType.getRandom()), 2);
+        }
     }
 
     @Override
     public void randomTick(BlockState state, ServerWorld worldIn, BlockPos pos, Random random) {
         int i = state.getValue(AGE);
         if (i < 3 && worldIn.getRawBrightness(pos.above(), 0) >= 9 && net.minecraftforge.common.ForgeHooks.onCropsGrowPre(worldIn, pos, state, random.nextInt(5) == 0)) {
-            worldIn.setBlock(pos, state.setValue(AGE, i + 1).setValue(VARIANT, PepperType.getRandom()), 2);
+            worldIn.setBlock(pos, state.setValue(AGE, i + 1), 2);
             net.minecraftforge.common.ForgeHooks.onCropsGrowPost(worldIn, pos, state);
         }
     }
@@ -48,7 +59,7 @@ public class PepperBerryBushBlock extends BerryBushBlock implements IGrowable {
             int j = 1 + worldIn.random.nextInt(2);
             popResource(worldIn, pos, new ItemStack(item.get(), j));
             worldIn.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundCategory.BLOCKS, 1.0F, 0.8F + worldIn.random.nextFloat() * 0.4F);
-            worldIn.setBlock(pos, state.setValue(AGE, 2).setValue(VARIANT, PepperType.getRandom()), 2);
+            worldIn.setBlock(pos, state.setValue(AGE, 2), 2);
             return ActionResultType.sidedSuccess(worldIn.isClientSide);
         } else
             return super.use(state, worldIn, pos, player, handIn, hit);
@@ -56,13 +67,12 @@ public class PepperBerryBushBlock extends BerryBushBlock implements IGrowable {
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
-        builder.add(AGE);
-        builder.add(VARIANT);
+        builder.add(AGE, VARIANT);
     }
 
     @Override
     public void performBonemeal(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
         int i = Math.min(3, state.getValue(AGE) + 1);
-        worldIn.setBlock(pos, state.setValue(AGE, i).setValue(VARIANT, PepperType.getRandom()), 2);
+        worldIn.setBlock(pos, state.setValue(AGE, i), 2);
     }
 }
