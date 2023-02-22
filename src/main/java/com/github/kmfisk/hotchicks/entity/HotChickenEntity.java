@@ -455,7 +455,7 @@ public class HotChickenEntity extends LivestockEntity {
     @Override
     protected SoundEvent getAmbientSound() {
         if (getSex() == Sex.MALE && random.nextInt(10) == 0)
-            return HotSounds.ROOSTER_CROW.get();
+            return HotSounds.ROOSTER_CROWING.get();
         return HotSounds.CHICKEN_AMBIENT.get();
     }
 

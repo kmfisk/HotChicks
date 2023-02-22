@@ -14,7 +14,7 @@ public class HotSounds {
     public static RegistryObject<SoundEvent> CHICKEN_HURT = registerSound("chicken_hurt");
     public static RegistryObject<SoundEvent> CHICKEN_ATTACK = registerSound("chicken_attack");
     public static RegistryObject<SoundEvent> ROOSTER_ATTACK = registerSound("rooster_attack");
-    public static RegistryObject<SoundEvent> ROOSTER_CROW = registerSound("rooster_crow");
+    public static RegistryObject<SoundEvent> ROOSTER_CROWING = registerSound("rooster_crowing");
 
     private static RegistryObject<SoundEvent> registerSound(String name) {
         return REGISTRAR.register(name, () -> new SoundEvent(new ResourceLocation(HotChicks.MOD_ID, name)));

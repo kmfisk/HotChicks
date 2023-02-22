@@ -10,7 +10,7 @@
   "chicken_hurt": {
     "subtitle": "hotchicks.subtitle.chicken_hurt",
     "sounds": [
-      { "name": "hotchicks:chicken_attacked", "volume": 0.5 }
+      { "name": "hotchicks:chicken_hurt", "volume": 0.5 }
     ]
   },
   "chicken_attack": {
@@ -25,10 +25,10 @@
       { "name": "hotchicks:rooster_attacking", "volume": 0.5 }
     ]
   },
-  "rooster_crow": {
-    "subtitle": "hotchicks.subtitle.rooster_crow",
+  "rooster_crowing": {
+    "subtitle": "hotchicks.subtitle.rooster_crowing",
     "sounds": [
-      { "name": "hotchicks:rooster_crow", "volume": 0.5 }
+      { "name": "hotchicks:rooster_crowing", "volume": 0.5 }
     ]
   }
 }
