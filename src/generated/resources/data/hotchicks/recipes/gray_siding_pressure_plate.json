@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hotchicks",
+  "pattern": [
+    "PP"
+  ],
+  "key": {
+    "P": {
+      "item": "hotchicks:gray_siding"
+    }
+  },
+  "result": {
+    "item": "hotchicks:gray_siding_pressure_plate"
+  }
+}

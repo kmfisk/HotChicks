@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hotchicks",
+  "pattern": [
+    "PP"
+  ],
+  "key": {
+    "P": {
+      "item": "hotchicks:blue_barn_planks"
+    }
+  },
+  "result": {
+    "item": "hotchicks:blue_barn_pressure_plate"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/fence_post",
+  "textures": {
+    "texture": "hotchicks:block/red_barn_planks"
+  }
+}

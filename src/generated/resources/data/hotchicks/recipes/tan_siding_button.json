@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "hotchicks:tan_siding"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:tan_siding_button"
+  }
+}

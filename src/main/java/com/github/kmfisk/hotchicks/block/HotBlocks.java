@@ -39,27 +39,36 @@ public class HotBlocks {
     public static final RegistryObject<Block> WATER_BOTTLE = registerWithItem("water_bottle", () -> new WaterBottleBlock(AbstractBlock.Properties.of(Material.CLAY).noOcclusion()));
 
     //    public static final Map<String, RegistryObject<Block>> PLANTERS = new HashMap<>();
-    public static final Map<String, RegistryObject<Block>> BARN_PLANKS = new HashMap<>();
-    public static final Map<String, RegistryObject<Block>> BARN_STAIRS = new HashMap<>();
-    public static final Map<String, RegistryObject<Block>> BARN_SLABS = new HashMap<>();
-    public static final Map<String, RegistryObject<Block>> SIDING_PLANKS = new HashMap<>();
-    public static final Map<String, RegistryObject<Block>> SIDING_STAIRS = new HashMap<>();
-    public static final Map<String, RegistryObject<Block>> SIDING_SLABS = new HashMap<>();
+    public static final Map<String, RegistryObject<Block>> PLANKS = new HashMap<>();
+    public static final Map<String, RegistryObject<Block>> STAIRS = new HashMap<>();
+    public static final Map<String, RegistryObject<Block>> SLABS = new HashMap<>();
+    public static final Map<String, RegistryObject<Block>> PRESSURE_PLATES = new HashMap<>();
+    public static final Map<String, RegistryObject<Block>> BUTTONS = new HashMap<>();
+    public static final Map<String, RegistryObject<Block>> FENCES = new HashMap<>();
+    public static final Map<String, RegistryObject<Block>> FENCE_GATES = new HashMap<>();
 
     static {
         /*for (String woodType : new String[]{"oak", "spruce", "birch", "acacia", "jungle", "dark_oak", "crimson", "warped"})
             PLANTERS.put(woodType, registerWithItem(woodType + "_planter", () -> new Block(AbstractBlock.Properties.of(Material.WOOD))));*/
 
         for (String color : new String[]{"blue", "green", "red", "white"}) {
-            BARN_PLANKS.put(color, registerWithItem(color + "_barn_planks", () -> new Block(AbstractBlock.Properties.of(Material.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD))));
-            BARN_STAIRS.put(color, registerWithItem(color + "_barn_stairs", () -> new StairsBlock(Blocks.OAK_PLANKS::defaultBlockState, AbstractBlock.Properties.copy(Blocks.OAK_PLANKS))));
-            BARN_SLABS.put(color, registerWithItem(color + "_barn_slab", () -> new SlabBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD))));
+            PLANKS.put(color, registerWithItem(color + "_barn_planks", () -> new Block(AbstractBlock.Properties.of(Material.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD))));
+            STAIRS.put(color, registerWithItem(color + "_barn_stairs", () -> new StairsBlock(Blocks.OAK_PLANKS::defaultBlockState, AbstractBlock.Properties.copy(Blocks.OAK_PLANKS))));
+            SLABS.put(color, registerWithItem(color + "_barn_slab", () -> new SlabBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD))));
+            PRESSURE_PLATES.put(color, registerWithItem(color + "_barn_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, AbstractBlock.Properties.of(Material.WOOD).noCollission().strength(0.5F).sound(SoundType.WOOD))));
+            BUTTONS.put(color, registerWithItem(color + "_barn_button", () -> new WoodButtonBlock(AbstractBlock.Properties.of(Material.DECORATION).noCollission().strength(0.5F).sound(SoundType.WOOD))));
+            FENCES.put(color, registerWithItem(color + "_barn_fence", () -> new FenceBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD))));
+            FENCE_GATES.put(color, registerWithItem(color + "_barn_fence_gate", () -> new FenceGateBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD))));
         }
 
         for (String color : new String[]{"dark", "gray", "tan"}) {
-            SIDING_PLANKS.put(color, registerWithItem(color + "_siding", () -> new Block(AbstractBlock.Properties.of(Material.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD))));
-            SIDING_STAIRS.put(color, registerWithItem(color + "_siding_stairs", () -> new StairsBlock(Blocks.OAK_PLANKS::defaultBlockState, AbstractBlock.Properties.copy(Blocks.OAK_PLANKS))));
-            SIDING_SLABS.put(color, registerWithItem(color + "_siding_slab", () -> new SlabBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD))));
+            PLANKS.put(color, registerWithItem(color + "_siding", () -> new Block(AbstractBlock.Properties.of(Material.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD))));
+            STAIRS.put(color, registerWithItem(color + "_siding_stairs", () -> new StairsBlock(Blocks.OAK_PLANKS::defaultBlockState, AbstractBlock.Properties.copy(Blocks.OAK_PLANKS))));
+            SLABS.put(color, registerWithItem(color + "_siding_slab", () -> new SlabBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD))));
+            PRESSURE_PLATES.put(color, registerWithItem(color + "_siding_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, AbstractBlock.Properties.of(Material.WOOD).noCollission().strength(0.5F).sound(SoundType.WOOD))));
+            BUTTONS.put(color, registerWithItem(color + "_siding_button", () -> new WoodButtonBlock(AbstractBlock.Properties.of(Material.DECORATION).noCollission().strength(0.5F).sound(SoundType.WOOD))));
+            FENCES.put(color, registerWithItem(color + "_siding_fence", () -> new FenceBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD))));
+            FENCE_GATES.put(color, registerWithItem(color + "_siding_fence_gate", () -> new FenceGateBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.0F, 3.0F).sound(SoundType.WOOD))));
         }
     }
 

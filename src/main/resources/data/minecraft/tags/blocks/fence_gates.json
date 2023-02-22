@@ -1,6 +1,13 @@
 {
   "replace": false,
   "values": [
-    "hotchicks:hutch_gate"
+    "hotchicks:hutch_gate",
+    "hotchicks:blue_barn_fence_gate",
+    "hotchicks:green_barn_fence_gate",
+    "hotchicks:red_barn_fence_gate",
+    "hotchicks:white_barn_fence_gate",
+    "hotchicks:dark_siding_fence_gate",
+    "hotchicks:gray_siding_fence_gate",
+    "hotchicks:tan_siding_fence_gate"
   ]
 }

@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "hotchicks:blue_barn_planks"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:blue_barn_button"
+  }
+}

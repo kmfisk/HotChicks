@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hotchicks",
+  "pattern": [
+    "P#P",
+    "P#P"
+  ],
+  "key": {
+    "P": {
+      "item": "hotchicks:dark_siding"
+    },
+    "#": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "hotchicks:dark_siding_fence",
+    "count": 3
+  }
+}

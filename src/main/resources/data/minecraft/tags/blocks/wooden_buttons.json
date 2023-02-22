@@ -1,0 +1,12 @@
+{
+  "replace": false,
+  "values": [
+    "hotchicks:blue_barn_button",
+    "hotchicks:green_barn_button",
+    "hotchicks:red_barn_button",
+    "hotchicks:white_barn_button",
+    "hotchicks:dark_siding_button",
+    "hotchicks:gray_siding_button",
+    "hotchicks:tan_siding_button"
+  ]
+}

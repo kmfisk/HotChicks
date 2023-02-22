@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/button",
+  "textures": {
+    "texture": "hotchicks:block/red_barn_planks"
+  }
+}

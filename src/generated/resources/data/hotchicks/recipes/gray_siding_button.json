@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "hotchicks",
+  "ingredients": [
+    {
+      "item": "hotchicks:gray_siding"
+    }
+  ],
+  "result": {
+    "item": "hotchicks:gray_siding_button"
+  }
+}

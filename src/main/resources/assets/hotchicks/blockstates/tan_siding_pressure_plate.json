@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "hotchicks:block/tan_siding_pressure_plate"
+    },
+    "powered=true": {
+      "model": "hotchicks:block/tan_siding_pressure_plate_down"
+    }
+  }
+}

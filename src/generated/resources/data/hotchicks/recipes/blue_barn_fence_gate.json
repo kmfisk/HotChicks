@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hotchicks",
+  "pattern": [
+    "#P#",
+    "#P#"
+  ],
+  "key": {
+    "P": {
+      "item": "hotchicks:blue_barn_planks"
+    },
+    "#": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "hotchicks:blue_barn_fence_gate"
+  }
+}

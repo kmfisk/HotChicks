@@ -42,27 +42,13 @@ public class HotRecipeProvider extends RecipeProvider {
         shapedRecipeResult(consumer, HotBlocks.TRELLIS.get(), 8, ImmutableList.of("NSN", "SNS", "NSN"), ImmutableMap.<Character, Ingredient>builder().put('S', Ingredient.of(Items.STRING)).put('N', Ingredient.of(Items.STICK)).build());
         shapedRecipeResult(consumer, HotBlocks.WATER_BOTTLE.get(), 2, ImmutableList.of("B", "I", "T"), ImmutableMap.<Character, Ingredient>builder().put('B', Ingredient.of(Items.GLASS_BOTTLE)).put('I', Ingredient.of(Blocks.CLAY)).put('T', Ingredient.of(Items.IRON_INGOT)).build());
 
-        barnPlanksRecipes(consumer, HotBlocks.BARN_PLANKS.get("blue").get(), Ingredient.of(HotItems.BLUEBERRIES.get()));
-        stairRecipes(consumer, HotBlocks.BARN_STAIRS.get("blue").get(), Ingredient.of(HotBlocks.BARN_PLANKS.get("blue").get()));
-        slabRecipes(consumer, HotBlocks.BARN_SLABS.get("blue").get(), Ingredient.of(HotBlocks.BARN_PLANKS.get("blue").get()));
-        barnPlanksRecipes(consumer, HotBlocks.BARN_PLANKS.get("green").get(), Ingredient.of(HotItems.KALE.get()));
-        stairRecipes(consumer, HotBlocks.BARN_STAIRS.get("green").get(), Ingredient.of(HotBlocks.BARN_PLANKS.get("green").get()));
-        slabRecipes(consumer, HotBlocks.BARN_SLABS.get("green").get(), Ingredient.of(HotBlocks.BARN_PLANKS.get("green").get()));
-        barnPlanksRecipes(consumer, HotBlocks.BARN_PLANKS.get("red").get(), Ingredient.of(HotItems.STRAWBERRY.get()));
-        stairRecipes(consumer, HotBlocks.BARN_STAIRS.get("red").get(), Ingredient.of(HotBlocks.BARN_PLANKS.get("red").get()));
-        slabRecipes(consumer, HotBlocks.BARN_SLABS.get("red").get(), Ingredient.of(HotBlocks.BARN_PLANKS.get("red").get()));
-        barnPlanksRecipes(consumer, HotBlocks.BARN_PLANKS.get("white").get(), Ingredient.of(Tags.Items.DYES_WHITE));
-        stairRecipes(consumer, HotBlocks.BARN_STAIRS.get("white").get(), Ingredient.of(HotBlocks.BARN_PLANKS.get("white").get()));
-        slabRecipes(consumer, HotBlocks.BARN_SLABS.get("white").get(), Ingredient.of(HotBlocks.BARN_PLANKS.get("white").get()));
-        sidingPlanksRecipes(consumer, HotBlocks.SIDING_PLANKS.get("dark").get(), Ingredient.of(Tags.Items.DYES_BLACK));
-        stairRecipes(consumer, HotBlocks.SIDING_STAIRS.get("dark").get(), Ingredient.of(HotBlocks.SIDING_PLANKS.get("dark").get()));
-        slabRecipes(consumer, HotBlocks.SIDING_SLABS.get("dark").get(), Ingredient.of(HotBlocks.SIDING_PLANKS.get("dark").get()));
-        sidingPlanksRecipes(consumer, HotBlocks.SIDING_PLANKS.get("gray").get(), Ingredient.of(Tags.Items.DYES_GRAY));
-        stairRecipes(consumer, HotBlocks.SIDING_STAIRS.get("gray").get(), Ingredient.of(HotBlocks.SIDING_PLANKS.get("gray").get()));
-        slabRecipes(consumer, HotBlocks.SIDING_SLABS.get("gray").get(), Ingredient.of(HotBlocks.SIDING_PLANKS.get("gray").get()));
-        sidingPlanksRecipes(consumer, HotBlocks.SIDING_PLANKS.get("tan").get(), Ingredient.of(Tags.Items.DYES_LIGHT_GRAY));
-        stairRecipes(consumer, HotBlocks.SIDING_STAIRS.get("tan").get(), Ingredient.of(HotBlocks.SIDING_PLANKS.get("tan").get()));
-        slabRecipes(consumer, HotBlocks.SIDING_SLABS.get("tan").get(), Ingredient.of(HotBlocks.SIDING_PLANKS.get("tan").get()));
+        woodVariantBlocksRecipes(consumer, HotBlocks.PLANKS.get("blue").get(), Ingredient.of(HotItems.BLUEBERRIES.get()), true, HotBlocks.STAIRS.get("blue").get(), HotBlocks.SLABS.get("blue").get(), HotBlocks.PRESSURE_PLATES.get("blue").get(), HotBlocks.BUTTONS.get("blue").get(), HotBlocks.FENCES.get("blue").get(), HotBlocks.FENCE_GATES.get("blue").get());
+        woodVariantBlocksRecipes(consumer, HotBlocks.PLANKS.get("green").get(), Ingredient.of(HotItems.KALE.get()), true, HotBlocks.STAIRS.get("green").get(), HotBlocks.SLABS.get("green").get(), HotBlocks.PRESSURE_PLATES.get("green").get(), HotBlocks.BUTTONS.get("green").get(), HotBlocks.FENCES.get("green").get(), HotBlocks.FENCE_GATES.get("green").get());
+        woodVariantBlocksRecipes(consumer, HotBlocks.PLANKS.get("red").get(), Ingredient.of(HotItems.STRAWBERRY.get()), true, HotBlocks.STAIRS.get("red").get(), HotBlocks.SLABS.get("red").get(), HotBlocks.PRESSURE_PLATES.get("red").get(), HotBlocks.BUTTONS.get("red").get(), HotBlocks.FENCES.get("red").get(), HotBlocks.FENCE_GATES.get("red").get());
+        woodVariantBlocksRecipes(consumer, HotBlocks.PLANKS.get("white").get(), Ingredient.of(Tags.Items.DYES_WHITE), true, HotBlocks.STAIRS.get("white").get(), HotBlocks.SLABS.get("white").get(), HotBlocks.PRESSURE_PLATES.get("white").get(), HotBlocks.BUTTONS.get("white").get(), HotBlocks.FENCES.get("white").get(), HotBlocks.FENCE_GATES.get("white").get());
+        woodVariantBlocksRecipes(consumer, HotBlocks.PLANKS.get("dark").get(), Ingredient.of(Tags.Items.DYES_BLACK), false, HotBlocks.STAIRS.get("dark").get(), HotBlocks.SLABS.get("dark").get(), HotBlocks.PRESSURE_PLATES.get("dark").get(), HotBlocks.BUTTONS.get("dark").get(), HotBlocks.FENCES.get("dark").get(), HotBlocks.FENCE_GATES.get("dark").get());
+        woodVariantBlocksRecipes(consumer, HotBlocks.PLANKS.get("gray").get(), Ingredient.of(Tags.Items.DYES_GRAY), false, HotBlocks.STAIRS.get("gray").get(), HotBlocks.SLABS.get("gray").get(), HotBlocks.PRESSURE_PLATES.get("gray").get(), HotBlocks.BUTTONS.get("gray").get(), HotBlocks.FENCES.get("gray").get(), HotBlocks.FENCE_GATES.get("gray").get());
+        woodVariantBlocksRecipes(consumer, HotBlocks.PLANKS.get("tan").get(), Ingredient.of(Tags.Items.DYES_LIGHT_GRAY), false, HotBlocks.STAIRS.get("tan").get(), HotBlocks.SLABS.get("tan").get(), HotBlocks.PRESSURE_PLATES.get("tan").get(), HotBlocks.BUTTONS.get("tan").get(), HotBlocks.FENCES.get("tan").get(), HotBlocks.FENCE_GATES.get("tan").get());
 
         shapelessRecipeResult(consumer, HotItems.STUD_BOOK.get(), 1, ImmutableList.of(Ingredient.of(Items.BOOK), Ingredient.of(Items.WHEAT_SEEDS), Ingredient.of(Items.GREEN_DYE)));
         shapelessRecipeResult(consumer, HotItems.GLUE.get(), 4, ImmutableList.of(Ingredient.of(Items.WHEAT), Ingredient.of(HotItems.GELATIN.get())));
@@ -164,20 +150,15 @@ public class HotRecipeProvider extends RecipeProvider {
         shapelessRecipeResult(consumer, HotItems.WILD_MUSHROOM_SOUP.get(), 4, ImmutableList.of(Ingredient.of(Items.WATER_BUCKET), Ingredient.of(Tags.Items.MUSHROOMS), Ingredient.of(Tags.Items.MUSHROOMS), Ingredient.of(Tags.Items.MUSHROOMS), Ingredient.of(Items.CARROT), Ingredient.of(Items.POTATO), Ingredient.of(HotItems.GARLIC.get())));
     }
 
-    private static void barnPlanksRecipes(Consumer<IFinishedRecipe> consumer, IItemProvider result, Ingredient dye) {
-        shapelessRecipeResult(consumer, result, 4, ImmutableList.of(dye, Ingredient.of(ItemTags.PLANKS), Ingredient.of(ItemTags.PLANKS), Ingredient.of(ItemTags.PLANKS), Ingredient.of(ItemTags.PLANKS)));
-    }
-
-    private static void sidingPlanksRecipes(Consumer<IFinishedRecipe> consumer, IItemProvider result, Ingredient dye) {
-        shapelessRecipeResult(consumer, result, 8, ImmutableList.of(dye, Ingredient.of(ItemTags.PLANKS), Ingredient.of(ItemTags.PLANKS), Ingredient.of(Items.IRON_NUGGET), Ingredient.of(Items.IRON_NUGGET), Ingredient.of(ItemTags.PLANKS), Ingredient.of(ItemTags.PLANKS), Ingredient.of(Items.IRON_NUGGET), Ingredient.of(Items.IRON_NUGGET)));
-    }
-
-    private static void stairRecipes(Consumer<IFinishedRecipe> consumer, IItemProvider result, Ingredient recipe) {
-        shapedRecipeResult(consumer, result, 4, ImmutableList.of("P  ", "PP ", "PPP"), ImmutableMap.<Character, Ingredient>builder().put('P', recipe).build());
-    }
-
-    private static void slabRecipes(Consumer<IFinishedRecipe> consumer, IItemProvider result, Ingredient recipe) {
-        shapedRecipeResult(consumer, result, 6, ImmutableList.of("PPP"), ImmutableMap.<Character, Ingredient>builder().put('P', recipe).build());
+    private static void woodVariantBlocksRecipes(Consumer<IFinishedRecipe> consumer, IItemProvider planks, Ingredient dye, boolean basic, IItemProvider stairs, IItemProvider slab, IItemProvider pressurePlate, IItemProvider button, IItemProvider fence, IItemProvider fenceGate) {
+        if (basic) shapelessRecipeResult(consumer, planks, 4, ImmutableList.of(dye, Ingredient.of(ItemTags.PLANKS), Ingredient.of(ItemTags.PLANKS), Ingredient.of(ItemTags.PLANKS), Ingredient.of(ItemTags.PLANKS)));
+        else shapelessRecipeResult(consumer, planks, 8, ImmutableList.of(dye, Ingredient.of(ItemTags.PLANKS), Ingredient.of(ItemTags.PLANKS), Ingredient.of(Items.IRON_NUGGET), Ingredient.of(Items.IRON_NUGGET), Ingredient.of(ItemTags.PLANKS), Ingredient.of(ItemTags.PLANKS), Ingredient.of(Items.IRON_NUGGET), Ingredient.of(Items.IRON_NUGGET)));
+        shapedRecipeResult(consumer, stairs, 4, ImmutableList.of("P  ", "PP ", "PPP"), ImmutableMap.<Character, Ingredient>builder().put('P', Ingredient.of(planks)).build());
+        shapedRecipeResult(consumer, slab, 6, ImmutableList.of("PPP"), ImmutableMap.<Character, Ingredient>builder().put('P', Ingredient.of(planks)).build());
+        shapedRecipeResult(consumer, pressurePlate, 1, ImmutableList.of("PP"), ImmutableMap.<Character, Ingredient>builder().put('P', Ingredient.of(planks)).build());
+        shapelessRecipeResult(consumer, button, 1, ImmutableList.of(Ingredient.of(planks)));
+        shapedRecipeResult(consumer, fence, 3, ImmutableList.of("P#P", "P#P"), ImmutableMap.<Character, Ingredient>builder().put('P', Ingredient.of(planks)).put('#', Ingredient.of(Items.STICK)).build());
+        shapedRecipeResult(consumer, fenceGate, 1, ImmutableList.of("#P#", "#P#"), ImmutableMap.<Character, Ingredient>builder().put('P', Ingredient.of(planks)).put('#', Ingredient.of(Items.STICK)).build());
     }
 
     private static void cookRecipes(Consumer<IFinishedRecipe> consumer, IItemProvider result, Ingredient recipe, float experience) {
