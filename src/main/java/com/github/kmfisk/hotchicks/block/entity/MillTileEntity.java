@@ -2,49 +2,74 @@ package com.github.kmfisk.hotchicks.block.entity;
 
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.inventory.MillContainer;
+import com.github.kmfisk.hotchicks.item.HotItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.inventory.container.Container;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableTileEntity;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.IIntArray;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
-import java.util.stream.IntStream;
 
 public class MillTileEntity extends LockableTileEntity implements ISidedInventory, ITickableTileEntity {
+    private static final int[] INPUT_SLOTS = new int[]{0, 1, 2};
+    private static final int[] ALL_SLOTS = new int[]{0, 1, 2, 3};
     protected final NonNullList<ItemStack> items = NonNullList.withSize(7, ItemStack.EMPTY);
     private final SidedInvWrapper sideHandler = new SidedInvWrapper(this, Direction.UP);
-    protected Item resultItem = Items.AIR;
     protected int activeTime;
-    protected int breedingProgress;
-    protected int breedingTotalTime;
+    protected int churningProgress;
+    protected int churningTotalTime;
+    protected final IIntArray dataAccess = new IIntArray() {
+        public int get(int index) {
+            switch (index) {
+                case 0:
+                    return MillTileEntity.this.activeTime;
+                case 1:
+                    return MillTileEntity.this.churningProgress;
+                case 2:
+                    return MillTileEntity.this.churningTotalTime;
+                default:
+                    return 0;
+            }
+        }
+
+        public void set(int index, int value) {
+            switch (index) {
+                case 0:
+                    MillTileEntity.this.activeTime = value;
+                    break;
+                case 1:
+                    MillTileEntity.this.churningProgress = value;
+                    break;
+                case 2:
+                    MillTileEntity.this.churningTotalTime = value;
+            }
+        }
+
+        public int getCount() {
+            return 3;
+        }
+    };
 
     public MillTileEntity() {
         super(HotTileEntities.MILL.get());
-    }
-
-    public MillTileEntity(TileEntityType<?> tileEntityType) {
-        super(tileEntityType);
     }
 
     @Override
@@ -54,7 +79,7 @@ public class MillTileEntity extends LockableTileEntity implements ISidedInventor
 
     @Override
     protected Container createMenu(int id, PlayerInventory playerInventory) {
-        return new MillContainer(id, playerInventory, this);
+        return new MillContainer(id, playerInventory, this, dataAccess);
     }
 
     protected boolean isActive() {
@@ -67,51 +92,114 @@ public class MillTileEntity extends LockableTileEntity implements ISidedInventor
         clearContent();
         ItemStackHelper.loadAllItems(tag, items);
         activeTime = tag.getInt("ActiveTime");
-        breedingProgress = tag.getInt("CookTime");
-        breedingTotalTime = tag.getInt("CookTimeTotal");
-        resultItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(tag.getString("ResultItem")));
+        churningProgress = tag.getInt("CookTime");
+        churningTotalTime = tag.getInt("CookTimeTotal");
     }
 
     @Override
     public CompoundNBT save(CompoundNBT tag) {
         super.save(tag);
         tag.putInt("ActiveTime", activeTime);
-        tag.putInt("CookTime", breedingProgress);
-        tag.putInt("CookTimeTotal", breedingTotalTime);
-        tag.putString("ResultItem", resultItem.getRegistryName().toString());
+        tag.putInt("CookTime", churningProgress);
+        tag.putInt("CookTimeTotal", churningTotalTime);
         ItemStackHelper.saveAllItems(tag, items);
         return tag;
     }
 
-    @Override
-    public void tick() {
-        boolean flag1 = false;
-        if (isActive()) {
-            --activeTime;
-        }
-
-        if (!level.isClientSide) {
-            // todo
-        }
-
-        if (flag1) {
-            setChanged();
-        }
+    private boolean readyToChurn() {
+        return !items.get(0).isEmpty() && !items.get(1).isEmpty() && !items.get(2).isEmpty();
     }
 
     @Override
-    public int[] getSlotsForFace(Direction pSide) {
-        return IntStream.range(0, items.size()).toArray();
+    public void tick() {
+        boolean flag = isActive();
+        boolean flag1 = false;
+        if (isActive()) --activeTime;
+
+        if (!level.isClientSide) {
+            if (isActive() || readyToChurn()) {
+                if (!isActive() && canChurn()) {
+                    activeTime = getTotalChurnTime();
+                    if (isActive()) flag1 = true;
+                }
+
+                if (isActive() && canChurn()) {
+                    ++churningProgress;
+                    if (churningProgress == churningTotalTime) {
+                        churningProgress = 0;
+                        churningTotalTime = getTotalChurnTime();
+                        churn();
+                        flag1 = true;
+                    }
+                } else churningProgress = 0;
+
+            } else if (!isActive() && churningProgress > 0)
+                churningProgress = MathHelper.clamp(churningProgress - 2, 0, churningTotalTime);
+
+            if (flag != isActive()) flag1 = true;
+        }
+
+        if (flag1) setChanged();
+    }
+
+    protected boolean canChurn() {
+        if (readyToChurn()) {
+            ItemStack resultStack = ItemStack.EMPTY;
+
+            boolean isMilk0 = items.get(0).getItem() == HotItems.BOTTLED_MILK.get();
+            boolean isMilk1 = items.get(1).getItem() == HotItems.BOTTLED_MILK.get();
+            boolean isMilk2 = items.get(2).getItem() == HotItems.BOTTLED_MILK.get();
+            if (isMilk0 && isMilk1 && isMilk2) resultStack = new ItemStack(HotItems.BUTTER.get());
+
+            if (resultStack.isEmpty()) {
+                return false;
+            } else {
+                ItemStack resultSlot = items.get(3);
+                if (resultSlot.isEmpty()) return true;
+                else if (!resultSlot.sameItem(resultStack)) return false;
+                else if (resultSlot.getCount() + resultStack.getCount() <= getMaxStackSize() && resultSlot.getCount() + resultStack.getCount() <= resultSlot.getMaxStackSize())
+                    return true;
+                else return resultSlot.getCount() + resultStack.getCount() <= resultStack.getMaxStackSize();
+            }
+
+        } else return false;
+    }
+
+    private void churn() {
+        if (canChurn()) {
+            ItemStack slot0 = items.get(0);
+            ItemStack slot1 = items.get(1);
+            ItemStack slot2 = items.get(2);
+            ItemStack resultStack = new ItemStack(HotItems.BUTTER.get(), 3); // todo: recipes, for now just butter
+            ItemStack resultSlot = items.get(3);
+
+            if (resultSlot.isEmpty()) items.set(3, resultStack.copy());
+            else if (resultSlot.getItem() == resultStack.getItem()) resultSlot.grow(resultStack.getCount());
+
+            slot0.shrink(1);
+            slot1.shrink(1);
+            slot2.shrink(1);
+        }
+    }
+
+    protected int getTotalChurnTime() {
+        return 4800; // todo
+    }
+
+    @Override
+    public int[] getSlotsForFace(Direction side) {
+        if (side == Direction.DOWN) return ALL_SLOTS;
+        else return INPUT_SLOTS;
     }
 
     @Override
     public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
-        return direction == null || direction == Direction.UP;
+        return canPlaceItem(index, stack);
     }
 
     @Override
     public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
-        return direction == Direction.UP;
+        return direction != Direction.DOWN || index == 3;
     }
 
     @Override
@@ -143,8 +231,16 @@ public class MillTileEntity extends LockableTileEntity implements ISidedInventor
 
     @Override
     public void setItem(int index, ItemStack stack) {
+        ItemStack itemStack = items.get(index);
+        boolean flag = !stack.isEmpty() && stack.sameItem(itemStack) && ItemStack.tagMatches(stack, itemStack);
         if (index >= 0 && index < items.size()) {
             items.set(index, stack);
+            if (stack.getCount() > getMaxStackSize()) stack.setCount(getMaxStackSize());
+        }
+
+        if (index < 3 && !flag) {
+            churningTotalTime = getTotalChurnTime();
+            churningProgress = 0;
             setChanged();
         }
     }
@@ -155,8 +251,8 @@ public class MillTileEntity extends LockableTileEntity implements ISidedInventor
     }
 
     @Override
-    public boolean canPlaceItem(int pIndex, ItemStack pStack) {
-        return pIndex <= 2;
+    public boolean canPlaceItem(int index, ItemStack pStack) {
+        return index != 3;
     }
 
     @Override
