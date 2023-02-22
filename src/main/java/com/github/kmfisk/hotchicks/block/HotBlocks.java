@@ -28,6 +28,7 @@ public class HotBlocks {
     public static final RegistryObject<Block> CHEESE_MOLD = registerWithItem("cheese_mold", () -> new CheeseMoldBlock(AbstractBlock.Properties.of(Material.WOOD).strength(0.6F).sound(SoundType.WOOD).noOcclusion()));
     public static final RegistryObject<Block> FOOD_CROCK = registerWithItem("food_crock", () -> new FoodCrockBlock(AbstractBlock.Properties.of(Material.CLAY).noOcclusion()));
 //    public static final RegistryObject<Block> FRUIT_CRATE = registerWithItem("fruit_crate", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
+    public static final RegistryObject<Block> MILL = registerWithItem("mill", () -> new MillBlock(AbstractBlock.Properties.of(Material.WOOD).strength(0.6F).sound(SoundType.WOOD).noOcclusion()));
     public static final RegistryObject<Block> NEST_BOX = registerWithItem("nest_box", () -> new NestBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD)));
     public static final RegistryObject<Block> NEST = registerWithItem("nest", () -> new NestBoxBlock(AbstractBlock.Properties.of(Material.GRASS).strength(0.5F).sound(SoundType.GRASS).noOcclusion()));
     public static final RegistryObject<Block> HUTCH_BARS = registerWithItem("hutch_bars", () -> new HutchBarsBlock(AbstractBlock.Properties.of(Material.HEAVY_METAL, MaterialColor.NONE).strength(2.0F, 3.0F).sound(SoundType.METAL).noOcclusion()));

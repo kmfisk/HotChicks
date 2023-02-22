@@ -68,6 +68,8 @@
 
   "__comment": "Blocks",
   "block.hotchicks.cheese_mold": "Cheese Mold",
+  "block.hotchicks.mill": "Mill",
+  "container.hotchicks.mill": "Mill",
   "block.hotchicks.food_crock": "Food Crock",
   "container.hotchicks.food_crock": "Food Crock",
   "block.hotchicks.water_bottle": "Water Bottle",
