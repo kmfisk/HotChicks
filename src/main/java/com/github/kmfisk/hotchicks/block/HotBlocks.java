@@ -28,7 +28,7 @@ public class HotBlocks {
     public static final RegistryObject<Block> CHEESE_MOLD = registerWithItem("cheese_mold", () -> new CheeseMoldBlock(AbstractBlock.Properties.of(Material.WOOD).strength(0.6F).sound(SoundType.WOOD).noOcclusion()));
     public static final RegistryObject<Block> FOOD_CROCK = registerWithItem("food_crock", () -> new FoodCrockBlock(AbstractBlock.Properties.of(Material.CLAY).noOcclusion()));
 //    public static final RegistryObject<Block> FRUIT_CRATE = registerWithItem("fruit_crate", () -> new Block(AbstractBlock.Properties.of(Material.CLAY)));
-    public static final RegistryObject<Block> MILL = registerWithItem("mill", () -> new MillBlock(AbstractBlock.Properties.of(Material.WOOD).strength(0.6F).sound(SoundType.WOOD).noOcclusion()));
+    public static final RegistryObject<Block> MILL = REGISTRAR.register("mill", () -> new MillBlock(AbstractBlock.Properties.of(Material.WOOD).strength(0.6F).sound(SoundType.WOOD).noOcclusion()));
     public static final RegistryObject<Block> NEST_BOX = registerWithItem("nest_box", () -> new NestBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD)));
     public static final RegistryObject<Block> NEST = registerWithItem("nest", () -> new NestBoxBlock(AbstractBlock.Properties.of(Material.GRASS).strength(0.5F).sound(SoundType.GRASS).noOcclusion()));
     public static final RegistryObject<Block> HUTCH_BARS = registerWithItem("hutch_bars", () -> new HutchBarsBlock(AbstractBlock.Properties.of(Material.HEAVY_METAL, MaterialColor.NONE).strength(2.0F, 3.0F).sound(SoundType.METAL).noOcclusion()));
@@ -83,7 +83,7 @@ public class HotBlocks {
     public static final RegistryObject<Block> WILD_KALE = REGISTRAR.register("wild_kale", () -> new WildCropBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().instabreak().sound(SoundType.GRASS), HotItems.KALE));
 
     // CROP BLOCKS
-    public static final RegistryObject<Block> BANANA_TREE = registerWithItem("banana_tree", () -> new BananaTreeBlock(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH)));
+//    public static final RegistryObject<Block> BANANA_TREE = registerWithItem("banana_tree", () -> new BananaTreeBlock(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH)));
     public static final RegistryObject<Block> BLUEBERRY_BUSH = REGISTRAR.register("blueberry_bush", () -> new BerryBushBlock(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH), HotItems.BLUEBERRIES));
     public static final RegistryObject<Block> CABBAGE_CROP = REGISTRAR.register("cabbage", () -> new StandardCropBlock(AbstractBlock.Properties.of(Material.PLANT).noCollission().randomTicks().instabreak().sound(SoundType.CROP), HotItems.CABBAGE));
     public static final RegistryObject<Block> CORN_CROP = REGISTRAR.register("corn", () -> new TallCropsBlock(AbstractBlock.Properties.of(Material.PLANT).randomTicks().noCollission().sound(SoundType.SWEET_BERRY_BUSH), HotItems.CORN));
@@ -179,7 +179,7 @@ public class HotBlocks {
         RenderTypeLookup.setRenderLayer(LIME_LEAVES.get(), cutoutMipped);
         RenderTypeLookup.setRenderLayer(YUZU_LEAVES.get(), cutoutMipped);
         RenderType cutout = RenderType.cutout();
-        RenderTypeLookup.setRenderLayer(BANANA_TREE.get(), cutout);
+//        RenderTypeLookup.setRenderLayer(BANANA_TREE.get(), cutout);
         RenderTypeLookup.setRenderLayer(CABBAGE_CROP.get(), cutout);
         RenderTypeLookup.setRenderLayer(KALE_CROP.get(), cutout);
         RenderTypeLookup.setRenderLayer(RICE_CROP.get(), cutout);
