@@ -78,10 +78,10 @@ public class HotRecipeProvider extends RecipeProvider {
         shapelessRecipeResult(consumer, Items.COOKED_BEEF, 1, ImmutableList.of(Ingredient.of(HotItems.COOKED_BEEF_STEAK.get())));
         cookRecipes(consumer, HotItems.COOKED_BEEF_STEAK.get(), Ingredient.of(HotItems.BEEF_STEAK.get()), 0.35F);
 
-        namedShapelessRecipeResult(consumer, "rabbit_hide_1", Items.LEATHER, 1, ImmutableList.of(Ingredient.of(HotItems.FAIR_RABBIT_HIDE.get())));
-        namedShapelessRecipeResult(consumer, "rabbit_hide_2", Items.LEATHER, 2, ImmutableList.of(Ingredient.of(HotItems.GOOD_RABBIT_HIDE.get())));
-        namedShapelessRecipeResult(consumer, "rabbit_hide_3", Items.LEATHER, 3, ImmutableList.of(Ingredient.of(HotItems.CHOICE_RABBIT_HIDE.get())));
-        namedShapelessRecipeResult(consumer, "rabbit_hide_4", Items.LEATHER, 4, ImmutableList.of(Ingredient.of(HotItems.PRIME_RABBIT_HIDE.get())));
+        namedShapelessRecipeResult(consumer, "rabbit_hide_1", Items.RABBIT_HIDE, 1, ImmutableList.of(Ingredient.of(HotItems.FAIR_RABBIT_HIDE.get())));
+        namedShapelessRecipeResult(consumer, "rabbit_hide_2", Items.RABBIT_HIDE, 2, ImmutableList.of(Ingredient.of(HotItems.GOOD_RABBIT_HIDE.get())));
+        namedShapelessRecipeResult(consumer, "rabbit_hide_3", Items.RABBIT_HIDE, 3, ImmutableList.of(Ingredient.of(HotItems.CHOICE_RABBIT_HIDE.get())));
+        namedShapelessRecipeResult(consumer, "rabbit_hide_4", Items.RABBIT_HIDE, 4, ImmutableList.of(Ingredient.of(HotItems.PRIME_RABBIT_HIDE.get())));
         namedShapelessRecipeResult(consumer, "cowhide_1", Items.LEATHER, 2, ImmutableList.of(Ingredient.of(HotItems.FAIR_COWHIDE.get())));
         namedShapelessRecipeResult(consumer, "cowhide_2", Items.LEATHER, 4, ImmutableList.of(Ingredient.of(HotItems.GOOD_COWHIDE.get())));
         namedShapelessRecipeResult(consumer, "cowhide_3", Items.LEATHER, 6, ImmutableList.of(Ingredient.of(HotItems.CHOICE_COWHIDE.get())));
