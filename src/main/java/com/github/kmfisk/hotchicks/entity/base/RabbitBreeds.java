@@ -70,13 +70,13 @@ public enum RabbitBreeds {
         if (biomeTypes.contains(BiomeDictionary.Type.JUNGLE))
             possibleVariants.add(randomFromBreed(random, CALIFORNIA));
         if (biomeTypes.contains(BiomeDictionary.Type.CONIFEROUS) && !biomeTypes.contains(BiomeDictionary.Type.SNOWY))
-            possibleVariants.add(randomFromBreed(random, DUTCH));
+            possibleVariants.add(randomFromBreed(random, REX));
         if (biomeTypes.contains(BiomeDictionary.Type.MOUNTAIN) && !biomeTypes.contains(BiomeDictionary.Type.HOT))
             possibleVariants.add(randomFromBreed(random, FLEMISH_GIANT));
         if (biomeTypes.contains(BiomeDictionary.Type.PLAINS) && !biomeTypes.contains(BiomeDictionary.Type.HOT) && !biomeTypes.contains(BiomeDictionary.Type.COLD))
             possibleVariants.add(randomFromBreed(random, NEW_ZEALAND));
         if (biomeTypes.contains(BiomeDictionary.Type.FOREST) && !biomeTypes.contains(BiomeDictionary.Type.SAVANNA) && !biomeTypes.contains(BiomeDictionary.Type.JUNGLE) && !biomeTypes.contains(BiomeDictionary.Type.WET) && !biomeTypes.contains(BiomeDictionary.Type.CONIFEROUS))
-            possibleVariants.add(randomFromBreed(random, REX));
+            possibleVariants.add(randomFromBreed(random, DUTCH));
 
         if (possibleVariants.isEmpty()) return random.nextInt(MAX_VARIANTS) + 1;
         else return possibleVariants.get(random.nextInt(possibleVariants.size()));
