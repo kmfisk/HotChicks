@@ -347,14 +347,6 @@ public class HotChickenEntity extends LivestockEntity {
             }
 
             if (child != null) {
-                ServerPlayerEntity serverplayerentity = getLoveCause();
-                if (serverplayerentity == null && father.getLoveCause() != null)
-                    serverplayerentity = father.getLoveCause();
-                if (serverplayerentity != null) {
-                    serverplayerentity.awardStat(Stats.ANIMALS_BRED);
-                    CriteriaTriggers.BRED_ANIMALS.trigger(serverplayerentity, this, father, child);
-                }
-
                 int breedingCooldown = HotChicksConfig.breedingCooldown.get();
                 setAge(getSex() == Sex.MALE ? 6000 : breedingCooldown);
                 father.setAge(father.getSex() == Sex.MALE ? 6000 : breedingCooldown);
@@ -419,6 +411,14 @@ public class HotChickenEntity extends LivestockEntity {
                 childNBT.putInt("TimeLeft", HotChicksConfig.hatchSpeed.get());
 
                 children.add(childNBT);
+
+                ServerPlayerEntity serverplayerentity = getLoveCause();
+                if (serverplayerentity == null && father.getLoveCause() != null)
+                    serverplayerentity = father.getLoveCause();
+                if (serverplayerentity != null) {
+                    serverplayerentity.awardStat(Stats.ANIMALS_BRED);
+                    CriteriaTriggers.BRED_ANIMALS.trigger(serverplayerentity, this, father, child);
+                }
 
                 level.broadcastEntityEvent(this, (byte) 18);
                 if (level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))
