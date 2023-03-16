@@ -3,11 +3,11 @@ package com.github.kmfisk.hotchicks.entity;
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.base.CowBreeds;
-import com.github.kmfisk.hotchicks.entity.goal.LivestockAvoidPlayerGoal;
 import com.github.kmfisk.hotchicks.entity.goal.LivestockBirthGoal;
-import com.github.kmfisk.hotchicks.entity.goal.LivestockBreedGoal;
+import com.github.kmfisk.hotchicks.entity.goal.LowStatsAttackGoal;
 import com.github.kmfisk.hotchicks.entity.stats.CowStats;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -24,6 +24,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.IServerWorld;
@@ -37,27 +38,29 @@ import javax.annotation.Nullable;
 
 public class HotCowEntity extends LivestockEntity {
     public static final Tags.IOptionalNamedTag<Item> COW_FOODS = ItemTags.createOptional(new ResourceLocation(HotChicks.MOD_ID, "cow_foods"));
+    private LowStatsAttackGoal<PlayerEntity> lowStatsAttackGoal;
 
     public HotCowEntity(EntityType<? extends AnimalEntity> type, World world) {
         super(type, world);
     }
 
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
-        return createMobAttributes().add(Attributes.MAX_HEALTH, 24.0D).add(Attributes.MOVEMENT_SPEED, 0.2D).add(Attributes.ATTACK_DAMAGE, 1.0D);
+        return createMobAttributes().add(Attributes.MAX_HEALTH, 24.0D).add(Attributes.MOVEMENT_SPEED, 0.2D).add(Attributes.ATTACK_DAMAGE, 2.0D);
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
+        this.lowStatsAttackGoal = new LowStatsAttackGoal<>(this, PlayerEntity.class, 40);
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(2, new LivestockBirthGoal(this));
-        this.goalSelector.addGoal(3, new LivestockBreedGoal(this, 1.0D));
-        this.goalSelector.addGoal(4, new LivestockAvoidPlayerGoal<>(this, PlayerEntity.class, 16.0F, 0.8D, 1.33D));
-        this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, false, Ingredient.of(COW_FOODS)));
-        this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1D));
+        this.goalSelector.addGoal(3, new TemptGoal(this, 1.0D, false, Ingredient.of(COW_FOODS)));
+        this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0F, false));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
+        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(7, lowStatsAttackGoal);
     }
 
     @Override
@@ -215,6 +218,14 @@ public class HotCowEntity extends LivestockEntity {
         if (getVariant() <= 30) return CowBreeds.LONGHORN;
 
         return CowBreeds.AUROCHS;
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (!level.isClientSide && isAlive()) {
+            if (lowStatsAttackGoal.getCooldown() > 0) lowStatsAttackGoal.decrementCooldown();
+        }
     }
 
     @Override
@@ -406,5 +417,33 @@ public class HotCowEntity extends LivestockEntity {
             }
         }
         return super.mobInteract(player, hand);
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.COW_AMBIENT;
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
+        return SoundEvents.COW_HURT;
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.COW_DEATH;
+    }
+
+    @Override
+    protected void playStepSound(BlockPos pos, BlockState block) {
+        this.playSound(SoundEvents.COW_STEP, 0.15F, 1.0F);
+    }
+
+    @Override
+    protected float getSoundVolume() {
+        return 0.4F;
     }
 }

@@ -32,6 +32,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.GameRules;
@@ -45,9 +46,13 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 
 import javax.annotation.Nullable;
+import java.util.Iterator;
+import java.util.List;
 
 public class HotChickenEntity extends LivestockEntity {
     public static final Tags.IOptionalNamedTag<Item> CHICKEN_FOODS = ItemTags.createOptional(new ResourceLocation(HotChicks.MOD_ID, "chicken_foods"));
+    private WildAvoidEntityGoal<PlayerEntity> wildAvoidPlayersGoal;
+    private RoostersLowStatsAttackGoal<PlayerEntity> roostersLowStatsAttackGoal;
     public int remainingCooldownBeforeLocatingNewNest = 0;
     private BlockPos nestPos = null;
     public FindNestGoal goToNestGoal;
@@ -63,19 +68,31 @@ public class HotChickenEntity extends LivestockEntity {
     @Override
     protected void registerGoals() {
         super.registerGoals();
+        this.roostersLowStatsAttackGoal = new RoostersLowStatsAttackGoal<>(this, PlayerEntity.class, 120);
         this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(1, new PanicGoal(this, 1.4D));
+        this.goalSelector.addGoal(1, new HensPanicGoal(this, 1.4D));
         this.goalSelector.addGoal(2, new LayEggsGoal(this));
-        this.goalSelector.addGoal(3, new LivestockBreedGoal(this, 1.0D));
-        this.goalSelector.addGoal(4, new LivestockAvoidPlayerGoal<>(this, PlayerEntity.class, 16.0F, 0.8D, 1.33D));
-        this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, false, Ingredient.of(CHICKEN_FOODS)));
-        this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1D));
-        this.goalSelector.addGoal(5, new UpdateNestGoal(this, 8, 2));
+        this.goalSelector.addGoal(3, new HensLowStatsAvoidPlayerGoal<>(this, PlayerEntity.class, 16.0F, 0.8D, 1.33D));
+        this.goalSelector.addGoal(3, new TemptGoal(this, 1.0D, false, Ingredient.of(CHICKEN_FOODS)));
+        this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
+        this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(6, new UpdateNestGoal(this, 8, 2));
         this.goToNestGoal = new FindNestGoal(this, 16);
-        this.goalSelector.addGoal(5, this.goToNestGoal);
-        this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
+        this.goalSelector.addGoal(6, this.goToNestGoal);
+        this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+        this.targetSelector.addGoal(3, new RoostersHurtByTargetGoal(this).setAlertOthers());
+        this.targetSelector.addGoal(7, roostersLowStatsAttackGoal);
+    }
+
+    @Override
+    protected void reassessDomesticGoals() {
+        if (wildAvoidPlayersGoal == null)
+            wildAvoidPlayersGoal = new WildAvoidEntityGoal<>(this, PlayerEntity.class, 16.0F, 0.8D, 1.33D);
+
+        goalSelector.removeGoal(wildAvoidPlayersGoal);
+        if (!isCareRequired()) goalSelector.addGoal(4, wildAvoidPlayersGoal);
     }
 
     @Override
@@ -245,10 +262,10 @@ public class HotChickenEntity extends LivestockEntity {
     @Override
     public void aiStep() {
         super.aiStep();
-        if (!level.isClientSide) {
+        if (!level.isClientSide && isAlive()) {
+            if (roostersLowStatsAttackGoal.getCooldown() > 0) roostersLowStatsAttackGoal.decrementCooldown();
             if (remainingCooldownBeforeLocatingNewNest > 0) --remainingCooldownBeforeLocatingNewNest;
-            if (tickCount % 20 == 0 && !hasValidNestBlock())
-                nestPos = null;
+            if (tickCount % 20 == 0 && !hasValidNestBlock()) nestPos = null;
         }
     }
 
@@ -478,12 +495,93 @@ public class HotChickenEntity extends LivestockEntity {
 
     @Override
     public boolean doHurtTarget(Entity entity) {
-        boolean flag = entity.hurt(DamageSource.mobAttack(this), (float) ((int) getAttributeValue(Attributes.ATTACK_DAMAGE)));
-        if (flag) {
-            doEnchantDamageEffects(this, entity);
+        boolean didHurtTarget = super.doHurtTarget(entity);
+        if (didHurtTarget)
             playSound(getSex() == Sex.MALE ? HotSounds.ROOSTER_ATTACK.get() : HotSounds.CHICKEN_ATTACK.get(), 1.0F, 1.0F);
+
+        return didHurtTarget;
+    }
+
+    static class HensLowStatsAvoidPlayerGoal<T extends LivingEntity> extends LowStatsAvoidEntityGoal<T> {
+        public HensLowStatsAvoidPlayerGoal(HotChickenEntity chickenEntity, Class<T> classToAvoid, float maxDist, double walkSpeedMod, double sprintSpeedMod) {
+            super(chickenEntity, classToAvoid, maxDist, walkSpeedMod, sprintSpeedMod);
         }
 
-        return flag;
+        @Override
+        public boolean canUse() {
+            return livestock.getSex() == Sex.FEMALE && super.canUse();
+        }
+    }
+
+    static class HensPanicGoal extends PanicGoal {
+        private final HotChickenEntity chickenEntity;
+
+        public HensPanicGoal(HotChickenEntity chickenEntity, double speedModifier) {
+            super(chickenEntity, speedModifier);
+            this.chickenEntity = chickenEntity;
+        }
+
+        @Override
+        public boolean canUse() {
+            return chickenEntity.getSex() == Sex.FEMALE && super.canUse();
+        }
+    }
+
+    static class RoostersHurtByTargetGoal extends HurtByTargetGoal {
+        private final HotChickenEntity chickenEntity;
+        private int timestamp;
+
+        public RoostersHurtByTargetGoal(HotChickenEntity chickenEntity, Class<?>... toIgnoreDamage) {
+            super(chickenEntity, toIgnoreDamage);
+            this.chickenEntity = chickenEntity;
+        }
+
+        @Override
+        public boolean canUse() {
+            if (chickenEntity.getLastHurtByMobTimestamp() == timestamp) return false;
+            else return super.canUse();
+        }
+
+        @Override
+        public void start() {
+            if (chickenEntity.getSex() == Sex.MALE) super.start();
+            else {
+                timestamp = chickenEntity.getLastHurtByMobTimestamp();
+                unseenMemoryTicks = 300;
+                alertOthers();
+            }
+        }
+
+        @Override
+        protected void alertOthers() {
+            double followDistance = getFollowDistance();
+            AxisAlignedBB axisAlignedBB = AxisAlignedBB.unitCubeFromLowerCorner(chickenEntity.position()).inflate(followDistance, 10.0D, followDistance);
+            List<HotChickenEntity> list = chickenEntity.level.getLoadedEntitiesOfClass(chickenEntity.getClass(), axisAlignedBB);
+            Iterator iterator = list.iterator();
+
+            while (true) {
+                HotChickenEntity entity;
+                while (true) {
+                    if (!iterator.hasNext()) return;
+
+                    entity = (HotChickenEntity) iterator.next();
+                    if (chickenEntity != entity && entity.getTarget() == null && !entity.isAlliedTo(chickenEntity.getLastHurtByMob()))
+                        if (entity.getSex() == Sex.MALE) break;
+                }
+
+                alertOther(entity, chickenEntity.getLastHurtByMob());
+            }
+        }
+    }
+
+    static class RoostersLowStatsAttackGoal<T extends LivingEntity> extends LowStatsAttackGoal<T> {
+        public RoostersLowStatsAttackGoal(HotChickenEntity chickenEntity, Class<T> targetType, int additionalAttackTime) {
+            super(chickenEntity, targetType, additionalAttackTime);
+        }
+
+        @Override
+        public boolean canUse() {
+            return livestock.getSex() == Sex.MALE && super.canUse();
+        }
     }
 }

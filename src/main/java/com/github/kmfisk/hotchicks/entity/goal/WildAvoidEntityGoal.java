@@ -4,21 +4,21 @@ import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 
-public class LivestockAvoidPlayerGoal<T extends LivingEntity> extends AvoidEntityGoal<T> {
+public class WildAvoidEntityGoal<T extends LivingEntity> extends AvoidEntityGoal<T> {
     private final LivestockEntity livestock;
 
-    public LivestockAvoidPlayerGoal(LivestockEntity livestockEntity, Class<T> classToAvoid, float maxDist, double walkSpeedMod, double sprintSpeedMod) {
+    public WildAvoidEntityGoal(LivestockEntity livestockEntity, Class<T> classToAvoid, float maxDist, double walkSpeedMod, double sprintSpeedMod) {
         super(livestockEntity, classToAvoid, maxDist, walkSpeedMod, sprintSpeedMod);
         this.livestock = livestockEntity;
     }
 
     @Override
     public boolean canUse() {
-        return livestock.getHunger().isLow() && super.canUse();
+        return !livestock.isCareRequired() && super.canUse();
     }
 
     @Override
     public boolean canContinueToUse() {
-        return livestock.getHunger().isLow() && super.canContinueToUse();
+        return !livestock.isCareRequired() && super.canContinueToUse();
     }
 }

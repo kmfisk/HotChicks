@@ -94,7 +94,7 @@ public class HotChicks {
         if (event.includeServer()) dataGenerator.addProvider(new HotRecipeProvider(dataGenerator));
     }
 
-    public static void registerCompostables() {
+    private static void registerCompostables() {
         ComposterBlock.COMPOSTABLES.put(HotItems.CABBAGE.get(), 0.65F);
         ComposterBlock.COMPOSTABLES.put(HotItems.GARLIC.get(), 0.65F);
         ComposterBlock.COMPOSTABLES.put(HotItems.KALE.get(), 0.65F);

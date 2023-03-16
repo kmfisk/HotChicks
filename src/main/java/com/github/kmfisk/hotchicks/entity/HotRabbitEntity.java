@@ -3,9 +3,9 @@ package com.github.kmfisk.hotchicks.entity;
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.base.RabbitBreeds;
-import com.github.kmfisk.hotchicks.entity.goal.LivestockAvoidPlayerGoal;
 import com.github.kmfisk.hotchicks.entity.goal.LivestockBirthGoal;
-import com.github.kmfisk.hotchicks.entity.goal.LivestockBreedGoal;
+import com.github.kmfisk.hotchicks.entity.goal.LowStatsAvoidEntityGoal;
+import com.github.kmfisk.hotchicks.entity.goal.WildAvoidEntityGoal;
 import com.github.kmfisk.hotchicks.entity.stats.RabbitStats;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.*;
@@ -23,7 +23,10 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.IServerWorld;
@@ -37,6 +40,7 @@ import javax.annotation.Nullable;
 
 public class HotRabbitEntity extends LivestockEntity {
     public static final Tags.IOptionalNamedTag<Item> RABBIT_FOODS = ItemTags.createOptional(new ResourceLocation(HotChicks.MOD_ID, "rabbit_foods"));
+    private WildAvoidEntityGoal<PlayerEntity> wildAvoidPlayersGoal;
 
     public HotRabbitEntity(EntityType<? extends AnimalEntity> type, World world) {
         super(type, world);
@@ -52,13 +56,20 @@ public class HotRabbitEntity extends LivestockEntity {
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.4D));
         this.goalSelector.addGoal(2, new LivestockBirthGoal(this));
-        this.goalSelector.addGoal(3, new LivestockBreedGoal(this, 1.0D));
-        this.goalSelector.addGoal(4, new LivestockAvoidPlayerGoal<>(this, PlayerEntity.class, 16.0F, 0.8D, 1.33D));
+        this.goalSelector.addGoal(4, new LowStatsAvoidEntityGoal<>(this, PlayerEntity.class, 16.0F, 0.8D, 1.33D));
         this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, false, Ingredient.of(RABBIT_FOODS)));
-        this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1D));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
+        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+    }
+
+    @Override
+    protected void reassessDomesticGoals() {
+        if (wildAvoidPlayersGoal == null)
+            wildAvoidPlayersGoal = new WildAvoidEntityGoal<>(this, PlayerEntity.class, 16.0F, 0.8D, 1.33D);
+
+        goalSelector.removeGoal(wildAvoidPlayersGoal);
+        if (!isCareRequired()) goalSelector.addGoal(4, wildAvoidPlayersGoal);
     }
 
     @Override
@@ -356,5 +367,23 @@ public class HotRabbitEntity extends LivestockEntity {
     @Override
     public boolean causeFallDamage(float fallDistance, float damageMultiplier) {
         return false;
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return SoundEvents.RABBIT_AMBIENT;
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getHurtSound(DamageSource pDamageSource) {
+        return SoundEvents.RABBIT_HURT;
+    }
+
+    @Nullable
+    @Override
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.RABBIT_DEATH;
     }
 }

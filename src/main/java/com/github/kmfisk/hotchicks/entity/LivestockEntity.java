@@ -5,6 +5,7 @@ import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.base.CareStat;
 import com.github.kmfisk.hotchicks.entity.goal.FindFoodGoal;
 import com.github.kmfisk.hotchicks.entity.goal.FindWaterGoal;
+import com.github.kmfisk.hotchicks.entity.goal.LivestockBreedGoal;
 import com.github.kmfisk.hotchicks.entity.stats.RabbitStats;
 import com.github.kmfisk.hotchicks.entity.stats.Stats;
 import net.minecraft.block.BlockState;
@@ -13,6 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.goal.FollowParentGoal;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.DyeColor;
@@ -71,6 +73,7 @@ public abstract class LivestockEntity extends AnimalEntity {
         super(type, world);
         hunger = new CareStat(this, HUNGER, getMaxCareStat(), getHungerDepletion());
         thirst = new CareStat(this, THIRST, getMaxCareStat(), getThirstDepletion());
+        reassessDomesticGoals();
     }
 
     @Override
@@ -78,6 +81,8 @@ public abstract class LivestockEntity extends AnimalEntity {
         super.registerGoals();
         this.goalSelector.addGoal(2, new FindFoodGoal(this, 16, 2));
         this.goalSelector.addGoal(2, new FindWaterGoal(this, 16, 1));
+        this.goalSelector.addGoal(3, new LivestockBreedGoal(this, 1.0D));
+        this.goalSelector.addGoal(5, new FollowParentGoal(this, 1.1D));
     }
 
     public void defineSynchedData() {
@@ -258,6 +263,11 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     public void setCareRequired() {
         careRequired = true;
+        reassessDomesticGoals();
+    }
+
+    protected void reassessDomesticGoals() {
+
     }
 
     @Override
