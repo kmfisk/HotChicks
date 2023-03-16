@@ -3,6 +3,7 @@ package com.github.kmfisk.hotchicks.entity.base;
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.entity.stats.ChickenStats;
 import com.github.kmfisk.hotchicks.item.HotItems;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.minecraft.item.Item;
 import net.minecraft.util.RegistryKey;
@@ -87,12 +88,10 @@ public enum ChickenBreeds {
             possibleVariants.add(randomFromBreed(random, RHODE_ISLAND_RED));
         if (biomeTypes.contains(BiomeDictionary.Type.FOREST) && biomeTypes.contains(BiomeDictionary.Type.DENSE))
             possibleVariants.add(randomFromBreed(random, BARRED_ROCK));
-        if (biomeTypes.contains(BiomeDictionary.Type.HOT) && biomeTypes.contains(BiomeDictionary.Type.SANDY))
+        if (biomeTypes.contains(BiomeDictionary.Type.CONIFEROUS) && !biomeTypes.contains(BiomeDictionary.Type.SNOWY))
             possibleVariants.add(randomFromBreed(random, ORPINGTON));
         if (biomeTypes.contains(BiomeDictionary.Type.MOUNTAIN) && !biomeTypes.contains(BiomeDictionary.Type.HOT))
-            possibleVariants.add(randomFromBreed(random, AMERAUCANA));
-        if (biomeTypes.contains(BiomeDictionary.Type.JUNGLE))
-            possibleVariants.add(randomFromBreed(random, OLIVE_EGGER));
+            possibleVariants.addAll(ImmutableList.of(randomFromBreed(random, AMERAUCANA), randomFromBreed(random, OLIVE_EGGER)));
         if (biomeTypes.contains(BiomeDictionary.Type.SWAMP))
             possibleVariants.add(randomFromBreed(random, MARANS));
         if (biomeTypes.contains(BiomeDictionary.Type.SNOWY))

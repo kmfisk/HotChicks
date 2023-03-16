@@ -69,7 +69,7 @@ public enum RabbitBreeds {
             possibleVariants.add(randomFromBreed(random, AMERICAN_CHINCHILLA));
         if (biomeTypes.contains(BiomeDictionary.Type.JUNGLE))
             possibleVariants.add(randomFromBreed(random, CALIFORNIA));
-        if (biomeTypes.contains(BiomeDictionary.Type.SAVANNA) || (biomeTypes.contains(BiomeDictionary.Type.HOT) && biomeTypes.contains(BiomeDictionary.Type.SANDY)))
+        if (biomeTypes.contains(BiomeDictionary.Type.CONIFEROUS) && !biomeTypes.contains(BiomeDictionary.Type.SNOWY))
             possibleVariants.add(randomFromBreed(random, DUTCH));
         if (biomeTypes.contains(BiomeDictionary.Type.MOUNTAIN) && !biomeTypes.contains(BiomeDictionary.Type.HOT))
             possibleVariants.add(randomFromBreed(random, FLEMISH_GIANT));
