@@ -65,9 +65,9 @@ public class HotFoods {
     public static final Food CITRUS_COOLER = new Food.Builder().nutrition(6).saturationMod(0.3F).effect(() -> new EffectInstance(Effects.HEAL, 1, 1), 1.0F).build();
 
     // SOUPS
-    public static final Food BEEF_CHILI_SOUP = new Food.Builder().nutrition(5).saturationMod(0.6F).build();
-    public static final Food BEEF_STROGANOFF_SOUP = new Food.Builder().nutrition(6).saturationMod(0.8F).build();
-    public static final Food BRAISED_RABBIT_SOUP = new Food.Builder().nutrition(5).saturationMod(0.8F).build();
+    public static final Food BEEF_CHILI = new Food.Builder().nutrition(5).saturationMod(0.6F).build();
+    public static final Food BEEF_STROGANOFF = new Food.Builder().nutrition(6).saturationMod(0.8F).build();
+    public static final Food BRAISED_RABBIT = new Food.Builder().nutrition(5).saturationMod(0.8F).build();
     public static final Food CHICKEN_NOODLE_SOUP = new Food.Builder().nutrition(3).saturationMod(0.6F).build();
     public static final Food GUMBO_SOUP = new Food.Builder().nutrition(6).saturationMod(0.8F).build();
     public static final Food POTATO_SOUP = new Food.Builder().nutrition(5).saturationMod(0.8F).build();

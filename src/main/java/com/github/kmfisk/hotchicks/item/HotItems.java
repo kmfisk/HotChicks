@@ -159,9 +159,9 @@ public class HotItems {
     public static final RegistryObject<Item> SALMON_RICE_BOWL = REGISTRAR.register("salmon_rice_bowl", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.SALMON_RICE_BOWL)));
     public static final RegistryObject<Item> SHAKSHUKA = REGISTRAR.register("shakshuka", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.SHAKSHUKA)));
     public static final RegistryObject<Item> SHORT_RIB_BBQ = REGISTRAR.register("short_rib_bbq", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.SHORT_RIB_BBQ)));
-    public static final RegistryObject<Item> BEEF_CHILI_SOUP = REGISTRAR.register("beef_chili_soup", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.BEEF_CHILI_SOUP)));
-    public static final RegistryObject<Item> BEEF_STROGANOFF_SOUP = REGISTRAR.register("beef_stroganoff_soup", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.BEEF_STROGANOFF_SOUP)));
-    public static final RegistryObject<Item> BRAISED_RABBIT_SOUP = REGISTRAR.register("braised_rabbit_soup", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.BRAISED_RABBIT_SOUP)));
+    public static final RegistryObject<Item> BEEF_CHILI = REGISTRAR.register("beef_chili", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.BEEF_CHILI)));
+    public static final RegistryObject<Item> BEEF_STROGANOFF = REGISTRAR.register("beef_stroganoff", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.BEEF_STROGANOFF)));
+    public static final RegistryObject<Item> BRAISED_RABBIT = REGISTRAR.register("braised_rabbit", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.BRAISED_RABBIT)));
     public static final RegistryObject<Item> CHICKEN_NOODLE_SOUP = REGISTRAR.register("chicken_noodle_soup", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.CHICKEN_NOODLE_SOUP)));
     public static final RegistryObject<Item> GUMBO_SOUP = REGISTRAR.register("gumbo_soup", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.GUMBO_SOUP)));
     public static final RegistryObject<Item> POTATO_SOUP = REGISTRAR.register("potato_soup", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.POTATO_SOUP)));
