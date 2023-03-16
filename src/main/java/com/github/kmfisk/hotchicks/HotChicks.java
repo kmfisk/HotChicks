@@ -14,6 +14,7 @@ import com.github.kmfisk.hotchicks.item.HotItems;
 import com.github.kmfisk.hotchicks.loot.HotGlobalLootModifier;
 import com.github.kmfisk.hotchicks.worldgen.HotFeature;
 import com.github.kmfisk.hotchicks.worldgen.HotFeatures;
+import net.minecraft.block.ComposterBlock;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -70,7 +71,10 @@ public class HotChicks {
     }
 
     private void setup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(HotFeatures::registerFeatures);
+        event.enqueueWork(() -> {
+            HotFeatures.registerFeatures();
+            registerCompostables();
+        });
         HotEntities.registerSpawnPlacements();
     }
 
@@ -88,5 +92,40 @@ public class HotChicks {
         System.out.println("Generating hotchicks Data!");
         DataGenerator dataGenerator = event.getGenerator();
         if (event.includeServer()) dataGenerator.addProvider(new HotRecipeProvider(dataGenerator));
+    }
+
+    public static void registerCompostables() {
+        ComposterBlock.COMPOSTABLES.put(HotItems.CABBAGE.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.GARLIC.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.KALE.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.LETTUCE.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.OATS.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.CORN.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.MILLET.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.RICE.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.CUCUMBER.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.GRAPES.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.KIWI.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.PEAS.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.TOMATO.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.BANANA.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.BLUEBERRIES.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.COTTON.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.OKRA.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.PEPPERS.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.STRAWBERRY.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.CITRON.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.FIG.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.GRAPEFRUIT.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.LEMON.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.LIME.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.MANDARIN.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.MANGO.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.ORANGE.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.PAPEDA.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.PEACH.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.POMEGRANATE.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.POMELO.get(), 0.65F);
+        ComposterBlock.COMPOSTABLES.put(HotItems.YUZU.get(), 0.65F);
     }
 }
