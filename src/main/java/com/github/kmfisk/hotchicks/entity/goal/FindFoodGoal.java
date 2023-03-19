@@ -48,6 +48,7 @@ public class FindFoodGoal extends MoveToBlockGoal {
                         ItemStack stack = inventory.getItem(i);
                         if (!stack.isEmpty() && entity.isEdibleFood(stack)) {
                             stack.shrink(1);
+                            tileEntity.setChanged();
                             entity.getHunger().increment(1);
                             break;
                         }
