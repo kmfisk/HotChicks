@@ -4,6 +4,7 @@ import net.minecraft.block.*;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.pathfinding.PathType;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -43,5 +44,10 @@ public class HutchBarsBlock extends PaneBlock {
         Block block = state.getBlock();
         boolean flag1 = block instanceof FenceGateBlock && FenceGateBlock.connectsToDirection(state, direction);
         return !isExceptionForConnection(block) && solidSide || block instanceof PaneBlock || block instanceof FenceBlock || flag1 || block.is(BlockTags.WALLS);
+    }
+
+    @Override
+    public boolean isPathfindable(BlockState state, IBlockReader level, BlockPos pos, PathType type) {
+        return false;
     }
 }
