@@ -55,7 +55,7 @@ public class HotCowEntity extends LivestockEntity {
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(2, new LivestockBirthGoal(this));
         this.goalSelector.addGoal(3, new TemptGoal(this, 1.0D, false, Ingredient.of(COW_FOODS)));
-        this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0F, false));
+        this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.25D, false));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
