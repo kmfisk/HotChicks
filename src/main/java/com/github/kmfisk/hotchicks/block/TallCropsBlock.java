@@ -11,6 +11,7 @@ import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
@@ -170,10 +171,10 @@ public class TallCropsBlock extends BushBlock implements IGrowable {
 
     @Override
     public void performBonemeal(ServerWorld level, Random random, BlockPos pos, BlockState state) {
-        int i = Math.min(5, state.getValue(AGE) + 1);
+        int age = Math.min(5, state.getValue(AGE) + MathHelper.nextInt(level.random, 1, 3));
         if (state.canSurvive(level, pos) && state.getValue(AGE) < 5) {
-            level.setBlock(pos, state.setValue(AGE, i), 2);
-            if (i > 1) {
+            level.setBlock(pos, state.setValue(AGE, age), 2);
+            if (age > 1) {
                 BlockPos pos1, pos2;
                 int type1, type2;
                 if (state.getValue(getHeightProperty()) == 0) {
@@ -195,9 +196,9 @@ public class TallCropsBlock extends BushBlock implements IGrowable {
                     type2 = 0;
                 }
 
-                level.setBlock(pos1, defaultBlockState().setValue(AGE, i).setValue(getHeightProperty(), type1), 2);
-                if (i > 2 && hasThirdBlock())
-                    level.setBlock(pos2, defaultBlockState().setValue(AGE, i).setValue(getHeightProperty(), type2), 2);
+                level.setBlock(pos1, defaultBlockState().setValue(AGE, age).setValue(getHeightProperty(), type1), 2);
+                if (age > 2 && hasThirdBlock())
+                    level.setBlock(pos2, defaultBlockState().setValue(AGE, age).setValue(getHeightProperty(), type2), 2);
             }
         }
     }
