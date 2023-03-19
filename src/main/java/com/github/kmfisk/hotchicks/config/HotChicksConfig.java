@@ -9,6 +9,7 @@ public class HotChicksConfig {
     public static ForgeConfigSpec.ConfigValue<Integer> chickenMinGroup;
     public static ForgeConfigSpec.ConfigValue<Integer> chickenMaxGroup;
     public static ForgeConfigSpec.BooleanValue removeVanillaCows;
+    public static ForgeConfigSpec.BooleanValue addCowsToVillages;
     public static ForgeConfigSpec.ConfigValue<Integer> cowSpawnChance;
     public static ForgeConfigSpec.ConfigValue<Integer> cowMinGroup;
     public static ForgeConfigSpec.ConfigValue<Integer> cowMaxGroup;
@@ -45,6 +46,7 @@ public class HotChicksConfig {
         cowMinGroup = builder.define("min", 2);
         cowMaxGroup = builder.define("max", 4);
         removeVanillaCows = builder.define("removeVanilla", true);
+        addCowsToVillages = builder.define("addToVillages", true);
         builder.pop();
         builder.push("Rabbits");
         rabbitSpawnChance = builder.define("chance", 16);

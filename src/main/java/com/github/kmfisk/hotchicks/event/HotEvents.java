@@ -42,8 +42,10 @@ import static com.github.kmfisk.hotchicks.worldgen.HotFeatures.*;
 public class HotEvents {
     @SubscribeEvent
     public static void onLoadComplete(FMLLoadCompleteEvent event) {
-        changeVillageCows(new ResourceLocation("village/common/animals"), 7);
-        changeVillageCows(new ResourceLocation("village/common/butcher_animals"), 3);
+        if (HotChicksConfig.addCowsToVillages.get()) {
+            changeVillageCows(new ResourceLocation("village/common/animals"), 7);
+            changeVillageCows(new ResourceLocation("village/common/butcher_animals"), 3);
+        }
     }
 
     @SubscribeEvent
