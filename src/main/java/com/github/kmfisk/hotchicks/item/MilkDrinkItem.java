@@ -2,10 +2,7 @@ package com.github.kmfisk.hotchicks.item;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
 import net.minecraft.world.World;
-
-import java.util.Iterator;
 
 public class MilkDrinkItem extends DrinkItem {
     public MilkDrinkItem(Properties properties) {

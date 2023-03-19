@@ -409,10 +409,14 @@ public abstract class LivestockEntity extends AnimalEntity {
                 hunger.increment(1);
                 return ActionResultType.sidedSuccess(level.isClientSide);
             }
-        } else if (stack.getItem() == Items.WATER_BUCKET || (stack.getItem() == Items.POTION && PotionUtils.getPotion(stack) == Potions.WATER)) {
-            if (getThirst().getValue() < getThirst().getMax()) {
-                usePlayerItem(player, stack);
-                thirst.increment(stack.getItem() == Items.WATER_BUCKET ? 3 : 1);
+        } else if (getThirst().getValue() < getThirst().getMax()) {
+            if (stack.getItem() == Items.WATER_BUCKET) {
+                if (!player.abilities.instabuild) player.setItemInHand(hand, new ItemStack(Items.BUCKET));
+                thirst.increment(3);
+                return ActionResultType.sidedSuccess(level.isClientSide);
+            } else if (stack.getItem() == Items.POTION && PotionUtils.getPotion(stack) == Potions.WATER) {
+                if (!player.abilities.instabuild) player.setItemInHand(hand, new ItemStack(Items.GLASS_BOTTLE));
+                thirst.increment(1);
                 return ActionResultType.sidedSuccess(level.isClientSide);
             }
         }
