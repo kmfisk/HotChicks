@@ -4,6 +4,7 @@ import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.base.CowBreeds;
 import com.github.kmfisk.hotchicks.entity.base.Temperature;
+import com.github.kmfisk.hotchicks.entity.goal.HotMeleeAttackGoal;
 import com.github.kmfisk.hotchicks.entity.goal.LivestockBirthGoal;
 import com.github.kmfisk.hotchicks.entity.goal.LowStatsAttackGoal;
 import com.github.kmfisk.hotchicks.entity.stats.CowStats;
@@ -56,7 +57,7 @@ public class HotCowEntity extends LivestockEntity {
         this.goalSelector.addGoal(0, new SwimGoal(this));
         this.goalSelector.addGoal(2, new LivestockBirthGoal(this));
         this.goalSelector.addGoal(3, new TemptGoal(this, 1.0D, false, Ingredient.of(COW_FOODS)));
-        this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.25D, false));
+        this.goalSelector.addGoal(5, new HotMeleeAttackGoal(this, 2.5D, 1.25D, false));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));

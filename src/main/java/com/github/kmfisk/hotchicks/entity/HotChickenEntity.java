@@ -76,7 +76,7 @@ public class HotChickenEntity extends LivestockEntity {
         this.goalSelector.addGoal(3, new HensLowStatsAvoidPlayerGoal<>(this, PlayerEntity.class, 16.0F, 0.8D, 1.33D));
         this.goalSelector.addGoal(3, new TemptGoal(this, 1.0D, false, Ingredient.of(CHICKEN_FOODS)));
         this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
-        this.goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.25D, false));
+        this.goalSelector.addGoal(5, new HotMeleeAttackGoal(this, 1.0D, 1.25D, false));
         this.goalSelector.addGoal(6, new UpdateNestGoal(this, 8, 2));
         this.goToNestGoal = new FindNestGoal(this, 16);
         this.goalSelector.addGoal(6, this.goToNestGoal);
