@@ -406,11 +406,21 @@ public abstract class LivestockEntity extends AnimalEntity {
     public ActionResultType mobInteract(PlayerEntity player, Hand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (isEdibleFood(stack)) {
-            if (getHunger().getValue() < getHunger().getMax()) {
+            if (getHealth() < getMaxHealth()) {
+                usePlayerItem(player, stack);
+                heal(1.0F);
+                if (!isCareRequired()) setCareRequired();
+                return ActionResultType.sidedSuccess(level.isClientSide);
+            } else if (getHunger().getValue() < getHunger().getMax()) {
                 usePlayerItem(player, stack);
                 hunger.increment(1);
                 return ActionResultType.sidedSuccess(level.isClientSide);
+            } else if (!isCareRequired()) {
+                usePlayerItem(player, stack);
+                setCareRequired();
+                return ActionResultType.sidedSuccess(level.isClientSide);
             }
+
         } else if (getThirst().getValue() < getThirst().getMax()) {
             if (stack.getItem() == Items.WATER_BUCKET) {
                 if (!player.abilities.instabuild) player.setItemInHand(hand, new ItemStack(Items.BUCKET));
