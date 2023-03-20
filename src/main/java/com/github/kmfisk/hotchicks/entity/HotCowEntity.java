@@ -3,6 +3,7 @@ package com.github.kmfisk.hotchicks.entity;
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.base.CowBreeds;
+import com.github.kmfisk.hotchicks.entity.base.Temperature;
 import com.github.kmfisk.hotchicks.entity.goal.LivestockBirthGoal;
 import com.github.kmfisk.hotchicks.entity.goal.LowStatsAttackGoal;
 import com.github.kmfisk.hotchicks.entity.stats.CowStats;
@@ -115,6 +116,11 @@ public class HotCowEntity extends LivestockEntity {
     @Override
     public String getReadableBreed() {
         return getBreedFromVariant().getLocalizedName().getString();
+    }
+
+    @Override
+    public Temperature getBreedTemperature() {
+        return getBreedFromVariant().getTemperature();
     }
 
     public void setStats(CowStats stats) {
@@ -401,7 +407,7 @@ public class HotCowEntity extends LivestockEntity {
     @Override
     public void spawnChildrenFromPregnancy(ServerWorld level) {
         super.spawnChildrenFromPregnancy(level);
-        setAvailableMilk(getStats().getMilkYieldForStat());
+        setAvailableMilk(getStats().getMilkYieldForStat(this));
     }
 
     @Override

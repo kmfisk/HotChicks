@@ -1,6 +1,10 @@
 package com.github.kmfisk.hotchicks.entity.stats;
 
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
+import com.github.kmfisk.hotchicks.entity.LivestockEntity;
+import com.github.kmfisk.hotchicks.entity.base.Temperature;
+import net.minecraft.util.RangedInteger;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.Random;
 
@@ -26,21 +30,17 @@ public class Stats {
 
     public Stats average(Stats parent2Stats, boolean includeTameness) {
         return new Stats(
-                includeTameness ? average(parent2Stats.tameness, tameness) : tameness,
-                average(parent2Stats.carcassQuality, carcassQuality),
-                average(parent2Stats.growthRate, growthRate)
+                includeTameness ? (int) MathHelper.average(new long[]{parent2Stats.tameness, tameness}) : tameness,
+                (int) MathHelper.average(new long[]{parent2Stats.carcassQuality, carcassQuality}),
+                (int) MathHelper.average(new long[]{parent2Stats.growthRate, growthRate})
         );
-    }
-
-    protected int average(int stat1, int stat2) {
-        return (stat1 + stat2) / 2;
     }
 
     public Stats mutate(double chance) {
         Stats stats = copy();
 
         if (this.rand.nextFloat() <= chance)
-            stats.tameness = this.rand.nextFloat() <= 0.8 ? Math.min(StatType.TAMENESS.max, stats.tameness + 1 + this.rand.nextInt(10)) : Math.max(StatType.TAMENESS.min, stats.tameness - this.rand.nextInt(5) + 1);
+            stats.tameness = this.rand.nextFloat() <= 0.8 ? Math.min(StatType.TAMENESS.getRange().getMaxInclusive(), stats.tameness + 1 + this.rand.nextInt(10)) : Math.max(StatType.TAMENESS.getRange().getMinInclusive(), stats.tameness - this.rand.nextInt(5) + 1);
         stats.carcassQuality = mutate(StatType.CARCASS_QUALITY, stats.carcassQuality, chance);
         stats.growthRate = mutate(StatType.GROWTH_RATE, stats.growthRate, chance);
 
@@ -49,7 +49,7 @@ public class Stats {
 
     protected int mutate(StatType statType, int stat, double chance) {
         if (this.rand.nextFloat() <= chance)
-            stat = this.rand.nextFloat() <= 0.8 ? Math.min(statType.max, stat + 1) : Math.max(statType.min, stat - 1);
+            stat = this.rand.nextFloat() <= 0.8 ? Math.min(statType.getRange().getMaxInclusive(), stat + 1) : Math.max(statType.getRange().getMinInclusive(), stat - 1);
         return stat;
     }
 
@@ -57,40 +57,49 @@ public class Stats {
         int chance = rand.nextInt(100);
         if (chance < 70) return litterSize;
         else if (chance < 95) return litterSize == 0 ? 0 : rand.nextInt(litterSize);
-        else return Math.min(StatType.LITTER_SIZE.max, litterSize + 1);
+        else return Math.min(StatType.LITTER_SIZE.getRange().getMaxInclusive(), litterSize + 1);
     }
 
-    public int getGrowthRateForStat() {
-        return HotChicksConfig.growthSpeed.get() * (5 - growthRate);
+    public float getDebuff(LivestockEntity entity, float mild, float extreme) {
+        if (entity.getHunger().isLow() || entity.getThirst().isLow()) return extreme;
+        Temperature breedTemp = entity.getBreedTemperature();
+        float temperature = entity.level.getBiome(entity.blockPosition()).getBaseTemperature();
+        if (breedTemp.isOutsideComfortLevel(temperature)) return breedTemp.isExtreme(temperature) ? extreme : mild;
+        else return 1.0F;
     }
 
-    public int getEggSpeedForStat() {
-        return HotChicksConfig.eggSpeed.get() * (5 - eggSpeed);
+    public int getGrowthRateForStat(LivestockEntity entity) {
+        int rate = HotChicksConfig.growthSpeed.get() * (5 - growthRate);
+        return (int) (rate * getDebuff(entity, 1.5F, 2.0F));
     }
 
-    public int getMilkYieldForStat() {
-        if (milkYield == 1) return 2;
-        if (milkYield == 2) return 4;
-        if (milkYield == 3) return 8;
-        if (milkYield == 4) return 16;
-        return 0;
+    public int getEggSpeedForStat(LivestockEntity entity) {
+        int speed = HotChicksConfig.eggSpeed.get() * (5 - eggSpeed);
+        return (int) (speed * getDebuff(entity, 1.5F, 2.0F));
+    }
+
+    public int getMilkYieldForStat(LivestockEntity entity) {
+        int yield = (int) Math.pow(2, milkYield);
+        return (int) (yield * getDebuff(entity, 0.25F, 0.5F));
     }
 
     public enum StatType {
-        TAMENESS(0, 100),
-        CARCASS_QUALITY(0, 4),
-        HIDE_QUALITY(0, 4),
-        GROWTH_RATE(0, 4),
-        EGG_SPEED(0, 4),
-        LITTER_SIZE(0, 4),
-        MILK_YIELD(0, 4);
+        TAMENESS(RangedInteger.of(0, 100)),
+        CARCASS_QUALITY(RangedInteger.of(0, 4)),
+        HIDE_QUALITY(RangedInteger.of(0, 4)),
+        GROWTH_RATE(RangedInteger.of(0, 4)),
+        EGG_SPEED(RangedInteger.of(0, 4)),
+        LITTER_SIZE(RangedInteger.of(0, 4)),
+        MILK_YIELD(RangedInteger.of(0, 4));
 
-        public final int min;
-        public final int max;
+        private final RangedInteger range;
 
-        StatType(int min, int max) {
-            this.min = min;
-            this.max = max;
+        StatType(RangedInteger range) {
+            this.range = range;
+        }
+
+        public RangedInteger getRange() {
+            return range;
         }
     }
 }

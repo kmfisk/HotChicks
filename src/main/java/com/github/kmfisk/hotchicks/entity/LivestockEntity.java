@@ -3,6 +3,7 @@ package com.github.kmfisk.hotchicks.entity;
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.base.CareStat;
+import com.github.kmfisk.hotchicks.entity.base.Temperature;
 import com.github.kmfisk.hotchicks.entity.goal.FindFoodGoal;
 import com.github.kmfisk.hotchicks.entity.goal.FindWaterGoal;
 import com.github.kmfisk.hotchicks.entity.goal.LivestockBreedGoal;
@@ -34,7 +35,6 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.DifficultyInstance;
@@ -125,6 +125,8 @@ public abstract class LivestockEntity extends AnimalEntity {
     public abstract void initByBreed(String breed);
 
     public abstract String getReadableBreed();
+
+    public abstract Temperature getBreedTemperature();
 
     public Sex getSex() {
         return Sex.fromBool(entityData.get(SEX));
@@ -325,8 +327,8 @@ public abstract class LivestockEntity extends AnimalEntity {
                 heal(1.0F);
         }
 
-        if (level.isClientSide && ((doHunger && getHunger().isLow()) || (doThirst && getThirst().isLow()))) {
-            if (tickCount % 10 == 0)
+        if (level.isClientSide && tickCount % 10 == 0) {
+            if (((doHunger && getHunger().isLow()) || (doThirst && getThirst().isLow())))
                 level.addParticle(ParticleTypes.SMOKE, getRandomX(1.0D), getRandomY() + 0.5D, getRandomZ(1.0D), random.nextGaussian() * 0.02D, random.nextGaussian() * 0.02D, random.nextGaussian() * 0.02D);
         }
     }
@@ -375,7 +377,7 @@ public abstract class LivestockEntity extends AnimalEntity {
             children.clear();
         }
 
-        setEggTimer(getStats().getEggSpeedForStat());
+        setEggTimer(getStats().getEggSpeedForStat(this));
         return stack;
     }
 
@@ -396,7 +398,7 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     @Override
     public void setBaby(boolean baby) {
-        setAge(baby ? -(getStats().getGrowthRateForStat()) : 0);
+        setAge(baby ? -(getStats().getGrowthRateForStat(this)) : 0);
         setCareRequired();
     }
 
@@ -435,20 +437,6 @@ public abstract class LivestockEntity extends AnimalEntity {
             return ActionResultType.sidedSuccess(level.isClientSide);
         }
 
-        if (!level.isClientSide) {
-            if (stack.getItem() == Items.STICK) {
-                if (player.isDiscrete()) player.displayClientMessage(new StringTextComponent(
-                        "Hunger: " + getHunger().getValue() + " / " + getHunger().getMax() +
-                                " -> " + getHunger().getTicks()), true);
-                else player.displayClientMessage(new StringTextComponent(
-                        "Thirst: " + getThirst().getValue() + " / " + getThirst().getMax() +
-                                " -> " + getThirst().getTicks()), true);
-            } else if (stack.getItem() == Items.BONE) {
-                if (this instanceof HotChickenEntity) player.displayClientMessage(new StringTextComponent(
-                        "Egg timer: " + getEggTimer()), true);
-            }
-        }
-
         ActionResultType actionResultType = super.mobInteract(player, hand);
         if (actionResultType.consumesAction()) setCareRequired();
 
@@ -457,7 +445,8 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     @Override
     protected boolean shouldDropLoot() {
-        return !getHunger().isLow() && !getThirst().isLow() && super.shouldDropLoot();
+        boolean extremeTemps = getBreedTemperature().isExtreme(level.getBiome(blockPosition()).getBaseTemperature());
+        return !getHunger().isLow() && !getThirst().isLow() && !extremeTemps && super.shouldDropLoot();
     }
 
     public static boolean checkLivestockSpawnRules(EntityType<? extends LivestockEntity> entityType, IServerWorld world, SpawnReason spawnReason, BlockPos pos, Random random) {

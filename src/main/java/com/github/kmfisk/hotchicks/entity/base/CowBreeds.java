@@ -17,29 +17,35 @@ import java.util.Random;
 import java.util.Set;
 
 public enum CowBreeds {
-    AUROCHS(50, 0, 0, 0, 1, 1),
-    ANGUS(75, 3, 4, 3, 1, 2),
-    BRAHMA(75, 3, 1, 0, 2, 5),
-    BROWN_SWISS(75, 1, 3, 2, 4, 1),
-    GUERNSEY(75, 1, 2, 4, 3, 2),
-    HEREFORD(75, 3, 3, 2, 0, 4),
-    HIGHLAND(75, 3, 3, 0, 0, 4),
-    HOLSTEIN(75, 2, 2, 0, 4, 4),
-    JERSEY(75, 1, 3, 2, 3, 1),
-    LAKENVELDER(75, 1, 2, 3, 4, 2),
-    LONGHORN(75, 2, 4, 4, 1, 5);
+    AUROCHS(50, 0, 0, 0, 1, Temperature.WARM, 1),
+    ANGUS(75, 3, 4, 3, 1, Temperature.WARM, 2),
+    BRAHMA(75, 3, 1, 0, 2, Temperature.HOT, 5),
+    BROWN_SWISS(75, 1, 3, 2, 4, Temperature.WARM, 1),
+    GUERNSEY(75, 1, 2, 4, 3, Temperature.WARM, 2),
+    HEREFORD(75, 3, 3, 2, 0, Temperature.WARM, 4),
+    HIGHLAND(75, 3, 3, 0, 0, Temperature.COLD, 4),
+    HOLSTEIN(75, 2, 2, 0, 4, Temperature.WARM, 4),
+    JERSEY(75, 1, 3, 2, 3, Temperature.WARM, 1),
+    LAKENVELDER(75, 1, 2, 3, 4, Temperature.COLD, 2),
+    LONGHORN(75, 2, 4, 4, 1, Temperature.HOT, 5);
 
     public static final int MAX_VARIANTS = 30;
     private final CowStats stats;
+    private final Temperature temperature;
     private final int variants;
 
-    CowBreeds(int tameness, int carcassQuality, int hideQuality, int growthRate, int milkYield, int variants) {
+    CowBreeds(int tameness, int carcassQuality, int hideQuality, int growthRate, int milkYield, Temperature temperature, int variants) {
         this.stats = new CowStats(tameness, carcassQuality, hideQuality, growthRate, milkYield);
+        this.temperature = temperature;
         this.variants = variants;
     }
 
     public CowStats getStats() {
         return stats;
+    }
+
+    public Temperature getTemperature() {
+        return temperature;
     }
 
     public int getVariantCountOfBreed() {

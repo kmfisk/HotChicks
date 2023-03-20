@@ -6,6 +6,7 @@ import com.github.kmfisk.hotchicks.block.entity.NestTileEntity;
 import com.github.kmfisk.hotchicks.client.HotSounds;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.base.ChickenBreeds;
+import com.github.kmfisk.hotchicks.entity.base.Temperature;
 import com.github.kmfisk.hotchicks.entity.goal.*;
 import com.github.kmfisk.hotchicks.entity.stats.ChickenStats;
 import com.github.kmfisk.hotchicks.item.HotItems;
@@ -106,7 +107,7 @@ public class HotChickenEntity extends LivestockEntity {
     public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficultyInstance, SpawnReason spawnReason, @Nullable ILivingEntityData entityData, @Nullable CompoundNBT nbt) {
         entityData = super.finalizeSpawn(world, difficultyInstance, spawnReason, entityData, nbt);
         setStats(new ChickenStats(random.nextInt(25) + random.nextInt(35), random.nextInt(3), random.nextInt(3), random.nextInt(3)));
-        if (getSex() == Sex.FEMALE) setEggTimer(getStats().getEggSpeedForStat());
+        if (getSex() == Sex.FEMALE) setEggTimer(getStats().getEggSpeedForStat(this));
         return entityData;
     }
 
@@ -143,6 +144,11 @@ public class HotChickenEntity extends LivestockEntity {
     @Override
     public String getReadableBreed() {
         return getBreedFromVariant().getLocalizedName().getString();
+    }
+
+    @Override
+    public Temperature getBreedTemperature() {
+        return getBreedFromVariant().getTemperature();
     }
 
     public void setStats(ChickenStats stats) {

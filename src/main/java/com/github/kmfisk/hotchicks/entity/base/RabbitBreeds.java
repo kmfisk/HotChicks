@@ -16,25 +16,31 @@ import java.util.Random;
 import java.util.Set;
 
 public enum RabbitBreeds {
-    COTTONTAIL(50, 0, 0, 0, 1, 1),
-    AMERICAN_CHINCHILLA(95, 2, 3, 2, 1, 2),
-    CALIFORNIA(95, 2, 1, 2, 2, 1),
-    DUTCH(95, 1, 1, 1, 4, 6),
-    FLEMISH_GIANT(95, 4, 1, 0, 1, 5),
-    NEW_ZEALAND(95, 3, 1, 3, 3, 3),
-    REX(95, 1, 4, 1, 2, 9);
+    COTTONTAIL(50, 0, 0, 0, 1, Temperature.WARM, 1),
+    AMERICAN_CHINCHILLA(95, 2, 3, 2, 1, Temperature.COLD, 2),
+    CALIFORNIA(95, 2, 1, 2, 2, Temperature.HOT, 1),
+    DUTCH(95, 1, 1, 1, 4, Temperature.WARM, 6),
+    FLEMISH_GIANT(95, 4, 1, 0, 1, Temperature.COLD, 5),
+    NEW_ZEALAND(95, 3, 1, 3, 3, Temperature.WARM, 3),
+    REX(95, 1, 4, 1, 2, Temperature.COLD, 9);
 
     public static final int MAX_VARIANTS = 26;
     private final RabbitStats stats;
+    private final Temperature temperature;
     private final int variants;
 
-    RabbitBreeds(int tameness, int carcassQuality, int hideQuality, int growthRate, int litterSize, int variants) {
+    RabbitBreeds(int tameness, int carcassQuality, int hideQuality, int growthRate, int litterSize, Temperature temperature, int variants) {
         this.stats = new RabbitStats(tameness, carcassQuality, hideQuality, growthRate, litterSize);
+        this.temperature = temperature;
         this.variants = variants;
     }
 
     public RabbitStats getStats() {
         return stats;
+    }
+
+    public Temperature getTemperature() {
+        return temperature;
     }
 
     public int getVariantCountOfBreed() {

@@ -3,6 +3,7 @@ package com.github.kmfisk.hotchicks.entity;
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.base.RabbitBreeds;
+import com.github.kmfisk.hotchicks.entity.base.Temperature;
 import com.github.kmfisk.hotchicks.entity.goal.LivestockBirthGoal;
 import com.github.kmfisk.hotchicks.entity.goal.LowStatsAvoidEntityGoal;
 import com.github.kmfisk.hotchicks.entity.goal.WildAvoidEntityGoal;
@@ -120,6 +121,11 @@ public class HotRabbitEntity extends LivestockEntity {
     @Override
     public String getReadableBreed() {
         return getBreedFromVariant().getLocalizedName().getString();
+    }
+
+    @Override
+    public Temperature getBreedTemperature() {
+        return getBreedFromVariant().getTemperature();
     }
 
     public void setStats(RabbitStats stats) {
