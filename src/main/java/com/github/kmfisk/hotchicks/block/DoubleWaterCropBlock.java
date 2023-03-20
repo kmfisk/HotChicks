@@ -9,9 +9,14 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.Item;
 import net.minecraft.state.IntegerProperty;
+import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.state.properties.DoubleBlockHalf;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
@@ -20,14 +25,9 @@ import net.minecraftforge.common.PlantType;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
-public class TallWaterCropBlock extends TallCropsBlock implements ILiquidContainer {
-    public TallWaterCropBlock(Properties properties, Supplier<? extends Item> item) {
-        super(properties, item);
-    }
-
-    @Override
-    public boolean hasThirdBlock() {
-        return false;
+public class DoubleWaterCropBlock extends DoubleCropBlock implements ILiquidContainer {
+    public DoubleWaterCropBlock(Properties properties, Supplier<? extends Item> item, int upperSegmentAge) {
+        super(properties, item, upperSegmentAge);
     }
 
     @Override
@@ -36,15 +36,25 @@ public class TallWaterCropBlock extends TallCropsBlock implements ILiquidContain
     }
 
     @Override
-    public IntegerProperty getHeightProperty() {
-        return IntegerProperty.create("height", 0, 1);
+    public VoxelShape getShape(BlockState state, IBlockReader level, BlockPos pos, ISelectionContext context) {
+        return VoxelShapes.block(); // todo
     }
 
     @Override
-    public BlockState updateShape(BlockState pState, Direction pFacing, BlockState pFacingState, IWorld pLevel, BlockPos pCurrentPos, BlockPos pFacingPos) {
-        BlockState blockstate = super.updateShape(pState, pFacing, pFacingState, pLevel, pCurrentPos, pFacingPos);
+    public IntegerProperty getAgeProperty() {
+        return BlockStateProperties.AGE_5;
+    }
+
+    @Override
+    public int getMaxAge() {
+        return 5;
+    }
+
+    @Override
+    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld level, BlockPos pos, BlockPos facingPos) {
+        BlockState blockstate = super.updateShape(state, facing, facingState, level, pos, facingPos);
         if (!blockstate.isAir())
-            pLevel.getLiquidTicks().scheduleTick(pCurrentPos, Fluids.WATER, Fluids.WATER.getTickDelay(pLevel));
+            level.getLiquidTicks().scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
 
         return blockstate;
     }
@@ -63,9 +73,9 @@ public class TallWaterCropBlock extends TallCropsBlock implements ILiquidContain
 
     @Override
     public boolean canSurvive(BlockState state, IWorldReader level, BlockPos pos) {
-        if (state.getValue(getHeightProperty()) > 0) {
+        if (state.getValue(SEGMENT) == DoubleBlockHalf.UPPER) {
             BlockState belowState = level.getBlockState(pos.below());
-            return belowState.is(this) && belowState.getValue(getHeightProperty()) == 0;
+            return belowState.is(this) && belowState.getValue(SEGMENT) == DoubleBlockHalf.LOWER;
         } else {
             FluidState fluidstate = level.getFluidState(pos);
             return super.canSurvive(state, level, pos) && fluidstate.is(FluidTags.WATER) && fluidstate.getAmount() == 8;
@@ -74,8 +84,7 @@ public class TallWaterCropBlock extends TallCropsBlock implements ILiquidContain
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        if (state.getValue(getHeightProperty()) > 0) return super.getFluidState(state);
-        else return Fluids.WATER.getSource(false);
+        return state.getValue(SEGMENT) == DoubleBlockHalf.UPPER ? super.getFluidState(state) : Fluids.WATER.getSource(false);
     }
 
     @Override

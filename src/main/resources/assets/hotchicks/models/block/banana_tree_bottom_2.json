@@ -1,0 +1,7 @@
+{
+  "parent": "hotchicks:block/_large_plant",
+  "textures": {
+    "right": "hotchicks:block/banana_bottom_right_2",
+    "left": "hotchicks:block/banana_bottom_left_2"
+  }
+}

@@ -12,7 +12,7 @@
               "conditions":  [
                 {
                   "condition": "minecraft:block_state_property",
-                  "block": "hotchicks:rice",
+                  "block": "hotchicks:banana_tree",
                   "properties": {
                     "age": "5"
                   }
@@ -29,11 +29,11 @@
                   }
                 }
               ],
-              "name": "hotchicks:rice"
+              "name": "hotchicks:banana"
             },
             {
               "type": "minecraft:item",
-              "name": "hotchicks:rice"
+              "name": "hotchicks:banana"
             }
           ]
         }
@@ -41,9 +41,9 @@
       "conditions": [
         {
           "condition": "minecraft:block_state_property",
-          "block": "hotchicks:rice",
+          "block": "hotchicks:banana_tree",
           "properties": {
-            "half": "lower"
+            "segment": "bottom"
           }
         }
       ]

@@ -1,14 +1,15 @@
 package com.github.kmfisk.hotchicks.worldgen;
 
 import com.github.kmfisk.hotchicks.HotChicks;
-import com.github.kmfisk.hotchicks.block.*;
+import com.github.kmfisk.hotchicks.block.BerryBushBlock;
+import com.github.kmfisk.hotchicks.block.HotBlocks;
+import com.github.kmfisk.hotchicks.block.PepperBerryBushBlock;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.WorldGenRegistries;
-import net.minecraft.world.gen.blockplacer.DoublePlantBlockPlacer;
 import net.minecraft.world.gen.blockplacer.SimpleBlockPlacer;
 import net.minecraft.world.gen.blockstateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.blockstateprovider.WeightedBlockStateProvider;
@@ -28,8 +29,8 @@ public class HotFeatures {
             .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE).count(20);
     public static final ConfiguredFeature<?, ?> WILD_RICE = HotFeature.WATER_CROPS.get().configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.RICE_CROP.get().defaultBlockState()), new TallCropsBlockPlacer()).blacklist(ImmutableSet.of(Blocks.WATER.defaultBlockState())).tries(20).xspread(4).yspread(0).zspread(4).noProjection().build())
             .count(FeatureSpread.of(-3, 4)).decorated(Features.Placements.ADD_32).decorated(Features.Placements.TOP_SOLID_HEIGHTMAP_SQUARE);
-//    public static final ConfiguredFeature<?, ?> BANANA_TREE = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.BANANA_TREE.get().defaultBlockState().setValue(BananaTreeBlock.AGE, 1)), new DoublePlantBlockPlacer()).tries(64).noProjection().build())
-//            .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE);
+    public static final ConfiguredFeature<?, ?> BANANA_TREE = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.BANANA_TREE.get().defaultBlockState()), new TallCropsBlockPlacer()).tries(64).noProjection().build())
+            .count(FeatureSpread.of(-3, 4)).decorated(Features.Placements.ADD_32).decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE);
 
     public static final ConfiguredFeature<?, ?> BLUEBERRY_BUSH = Feature.RANDOM_PATCH.configured(new BlockClusterFeatureConfig.Builder(new SimpleBlockStateProvider(HotBlocks.BLUEBERRY_BUSH.get().defaultBlockState().setValue(BerryBushBlock.AGE, 3)), LowLightPlacer.INSTANCE).tries(64).xspread(4).zspread(4).noProjection().build())
             .decorated(Features.Placements.HEIGHTMAP_DOUBLE_SQUARE);
@@ -73,7 +74,7 @@ public class HotFeatures {
         register("corn_patches", CORN);
         register("millet_patches", MILLET);
         register("rice_patches", WILD_RICE);
-//        register("banana_tree", BANANA_TREE);
+        register("banana_tree", BANANA_TREE);
 
         register("blueberry_patches", BLUEBERRY_BUSH);
         register("pepper_patches", PEPPER_BUSH);

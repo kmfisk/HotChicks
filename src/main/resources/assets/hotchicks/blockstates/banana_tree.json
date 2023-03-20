@@ -1,16 +1,57 @@
 {
   "variants": {
-    "half=lower,age=0": {
-      "model": "hotchicks:block/banana_bottom_age0"
+    "age=0": {
+      "model": "hotchicks:block/banana_tree_bottom_0"
     },
-    "half=lower,age=1": {
-      "model": "hotchicks:block/banana_bottom_age1"
+
+    "age=1,segment=bottom": {
+      "model": "hotchicks:block/banana_tree_bottom_1"
     },
-    "half=upper,age=0": {
-      "model": "hotchicks:block/banana_top_age0"
+    "age=1,segment=middle": {
+      "model": "hotchicks:block/banana_tree_middle_1"
     },
-    "half=upper,age=1": {
-      "model": "hotchicks:block/banana_top_age1"
+    "age=1,segment=top": {
+      "model": "hotchicks:block/banana_tree_middle_1"
+    },
+
+    "age=2,segment=bottom": {
+      "model": "hotchicks:block/banana_tree_bottom_2"
+    },
+    "age=2,segment=middle": {
+      "model": "hotchicks:block/banana_tree_middle_2"
+    },
+    "age=2,segment=top": {
+      "model": "hotchicks:block/banana_tree_top_2"
+    },
+
+    "age=3,segment=bottom": {
+      "model": "hotchicks:block/banana_tree_bottom_3"
+    },
+    "age=3,segment=middle": {
+      "model": "hotchicks:block/banana_tree_middle_3"
+    },
+    "age=3,segment=top": {
+      "model": "hotchicks:block/banana_tree_top_3"
+    },
+
+    "age=4,segment=bottom": {
+      "model": "hotchicks:block/banana_tree_bottom_4"
+    },
+    "age=4,segment=middle": {
+      "model": "hotchicks:block/banana_tree_middle_4"
+    },
+    "age=4,segment=top": {
+      "model": "hotchicks:block/banana_tree_top_4"
+    },
+
+    "age=5,segment=bottom": {
+      "model": "hotchicks:block/banana_tree_bottom_5"
+    },
+    "age=5,segment=middle": {
+      "model": "hotchicks:block/banana_tree_middle_5"
+    },
+    "age=5,segment=top": {
+      "model": "hotchicks:block/banana_tree_top_5"
     }
   }
 }
