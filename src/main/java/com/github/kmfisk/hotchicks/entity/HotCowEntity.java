@@ -61,7 +61,7 @@ public class HotCowEntity extends LivestockEntity {
         this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
-        this.targetSelector.addGoal(3, new HurtByTargetGoal(this));
+        this.targetSelector.addGoal(3, new CowsHurtByTargetGoal(this));
         this.targetSelector.addGoal(7, lowStatsAttackGoal);
     }
 
@@ -452,5 +452,20 @@ public class HotCowEntity extends LivestockEntity {
     @Override
     protected float getSoundVolume() {
         return 0.4F;
+    }
+
+    static class CowsHurtByTargetGoal extends HurtByTargetGoal {
+        private final HotCowEntity cowEntity;
+
+        public CowsHurtByTargetGoal(HotCowEntity cowEntity, Class<?>... toIgnoreDamage) {
+            super(cowEntity, toIgnoreDamage);
+            this.cowEntity = cowEntity;
+        }
+
+        @Override
+        public void start() {
+            if (cowEntity.isBaby()) alertOthers();
+            super.start();
+        }
     }
 }

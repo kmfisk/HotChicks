@@ -550,7 +550,7 @@ public class HotChickenEntity extends LivestockEntity {
 
         @Override
         public void start() {
-            if (chickenEntity.getSex() == Sex.MALE) super.start();
+            if (chickenEntity.getSex() == Sex.MALE && !chickenEntity.isBaby()) super.start();
             else {
                 timestamp = chickenEntity.getLastHurtByMobTimestamp();
                 unseenMemoryTicks = 300;
@@ -572,7 +572,7 @@ public class HotChickenEntity extends LivestockEntity {
 
                     entity = (HotChickenEntity) iterator.next();
                     if (chickenEntity != entity && entity.getTarget() == null && !entity.isAlliedTo(chickenEntity.getLastHurtByMob()))
-                        if (entity.getSex() == Sex.MALE) break;
+                        if (entity.getSex() == Sex.MALE || chickenEntity.isBaby()) if (!entity.isBaby()) break;
                 }
 
                 alertOther(entity, chickenEntity.getLastHurtByMob());
