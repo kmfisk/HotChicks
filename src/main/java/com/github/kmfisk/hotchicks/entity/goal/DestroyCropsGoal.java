@@ -50,11 +50,14 @@ public class DestroyCropsGoal extends MoveToBlockGoal {
             BlockPos cropPos = blockPos.above();
             BlockState state = level.getBlockState(cropPos);
             Block block = state.getBlock();
-            if (canRaid && block.is(BlockTags.CROPS) && !(block instanceof TrellisBlock)) {
+            boolean isCrop = block.is(BlockTags.CROPS) || block instanceof SweetBerryBushBlock;
+            if (canRaid && isCrop && !(block instanceof TrellisBlock)) {
+                if (level.getBlockState(blockPos).getBlock().is(Blocks.GRASS_BLOCK))
+                    level.setBlock(blockPos, Blocks.COARSE_DIRT.defaultBlockState(), 2);
+
                 if (block instanceof BerryBushBlock || block instanceof SweetBerryBushBlock) {
                     level.levelEvent(2001, cropPos, Block.getId(state));
                     level.setBlock(cropPos, Blocks.DEAD_BUSH.defaultBlockState(), 2);
-
                 } else level.destroyBlock(cropPos, false, livestock);
 
                 livestock.ate();
@@ -68,7 +71,8 @@ public class DestroyCropsGoal extends MoveToBlockGoal {
     @Override
     protected boolean isValidTarget(IWorldReader level, BlockPos pos) {
         Block block = level.getBlockState(pos.above()).getBlock();
-        if (block.is(BlockTags.CROPS) && !(block instanceof TrellisBlock) && this.wantsToRaid && !this.canRaid) {
+        boolean isCrop = block.is(BlockTags.CROPS) || block instanceof SweetBerryBushBlock;
+        if (isCrop && !(block instanceof TrellisBlock) && this.wantsToRaid && !this.canRaid) {
             this.canRaid = true;
             return true;
         }
