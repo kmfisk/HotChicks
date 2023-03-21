@@ -334,6 +334,12 @@ public abstract class LivestockEntity extends AnimalEntity {
     }
 
     @Override
+    public void ate() {
+        if (getHunger().getValue() < getHunger().getMax()) hunger.increment(1);
+        if (getHealth() < getMaxHealth()) heal(1.0F);
+    }
+
+    @Override
     public boolean canFallInLove() {
         boolean lowHealth = getHealth() < getMaxHealth();
         boolean unhappy = getHunger().isLow() || getThirst().isLow();
@@ -406,21 +412,12 @@ public abstract class LivestockEntity extends AnimalEntity {
     public ActionResultType mobInteract(PlayerEntity player, Hand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (isEdibleFood(stack)) {
-            if (getHealth() < getMaxHealth()) {
+            if (getHealth() < getMaxHealth() || getHunger().getValue() < getHunger().getMax() || !isCareRequired()) {
                 usePlayerItem(player, stack);
-                heal(1.0F);
+                ate();
                 if (!isCareRequired()) setCareRequired();
                 return ActionResultType.sidedSuccess(level.isClientSide);
-            } else if (getHunger().getValue() < getHunger().getMax()) {
-                usePlayerItem(player, stack);
-                hunger.increment(1);
-                return ActionResultType.sidedSuccess(level.isClientSide);
-            } else if (!isCareRequired()) {
-                usePlayerItem(player, stack);
-                setCareRequired();
-                return ActionResultType.sidedSuccess(level.isClientSide);
             }
-
         } else if (getThirst().getValue() < getThirst().getMax()) {
             if (stack.getItem() == Items.WATER_BUCKET) {
                 if (!player.abilities.instabuild) player.setItemInHand(hand, new ItemStack(Items.BUCKET));

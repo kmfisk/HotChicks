@@ -4,6 +4,7 @@ import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.base.RabbitBreeds;
 import com.github.kmfisk.hotchicks.entity.base.Temperature;
+import com.github.kmfisk.hotchicks.entity.goal.DestroyCropsGoal;
 import com.github.kmfisk.hotchicks.entity.goal.LivestockBirthGoal;
 import com.github.kmfisk.hotchicks.entity.goal.LowStatsAvoidEntityGoal;
 import com.github.kmfisk.hotchicks.entity.goal.WildAvoidEntityGoal;
@@ -59,6 +60,7 @@ public class HotRabbitEntity extends LivestockEntity {
         this.goalSelector.addGoal(2, new LivestockBirthGoal(this));
         this.goalSelector.addGoal(4, new LowStatsAvoidEntityGoal<>(this, PlayerEntity.class, 16.0F, 0.8D, 1.33D));
         this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, false, Ingredient.of(RABBIT_FOODS)));
+        this.goalSelector.addGoal(5, new DestroyCropsGoal(this, 0.7F, 16));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 6.0F));
         this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
