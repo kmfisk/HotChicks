@@ -3,10 +3,7 @@ package com.github.kmfisk.hotchicks.entity.goal;
 import com.github.kmfisk.hotchicks.block.BerryBushBlock;
 import com.github.kmfisk.hotchicks.block.TrellisBlock;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SweetBerryBushBlock;
+import net.minecraft.block.*;
 import net.minecraft.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.math.BlockPos;
@@ -52,7 +49,7 @@ public class DestroyCropsGoal extends MoveToBlockGoal {
             Block block = state.getBlock();
             boolean isCrop = block.is(BlockTags.CROPS) || block instanceof SweetBerryBushBlock;
             if (canRaid && isCrop && !(block instanceof TrellisBlock)) {
-                if (level.getBlockState(blockPos).getBlock().is(Blocks.GRASS_BLOCK))
+                if (level.getBlockState(blockPos).getBlock() instanceof GrassBlock)
                     level.setBlock(blockPos, Blocks.COARSE_DIRT.defaultBlockState(), 2);
 
                 if (block instanceof BerryBushBlock || block instanceof SweetBerryBushBlock) {
@@ -64,7 +61,7 @@ public class DestroyCropsGoal extends MoveToBlockGoal {
             }
 
             canRaid = false;
-            nextStartTick = 10;
+            nextStartTick = 400 + livestock.getRandom().nextInt(200);
         }
     }
 
