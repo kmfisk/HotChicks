@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=north": {
       "model": "hotchicks:block/mill"
+    },
+    "facing=east": {
+      "model": "hotchicks:block/mill",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "hotchicks:block/mill",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "hotchicks:block/mill",
+      "y": 270
     }
   }
 }
