@@ -4,6 +4,9 @@ import com.github.kmfisk.hotchicks.item.HotItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.ISidedInventoryProvider;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
@@ -20,13 +23,15 @@ import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.Tags;
 
+import javax.annotation.Nullable;
 import java.util.Random;
 
-public class CheeseMoldBlock extends Block {
+public class CheeseMoldBlock extends Block implements ISidedInventoryProvider {
     public static final Tags.IOptionalNamedTag<Item> MILKS = ItemTags.createOptional(new ResourceLocation("forge", "milks"));
     public static final IntegerProperty AGE = BlockStateProperties.AGE_15;
     private static final VoxelShape INSIDE_1 = box(3.0D, 3.0D, 3.0D, 13.0D, 16.0D, 13.0D);
@@ -112,5 +117,123 @@ public class CheeseMoldBlock extends Block {
     @Override
     public boolean isPathfindable(BlockState state, IBlockReader level, BlockPos pos, PathType type) {
         return false;
+    }
+
+    @Override
+    public ISidedInventory getContainer(BlockState state, IWorld level, BlockPos pos) {
+        int age = state.getValue(AGE);
+        if (age == 15) return new CheeseInventory(state, level, pos, new ItemStack(HotItems.HARD_CHEESE.get()));
+        else if (age > 2) return new CheeseInventory(state, level, pos, new ItemStack(HotItems.SOFT_CHEESE.get()));
+        else return age > 0 ? new MilkInventory() : new EmptyInventory(state, level, pos);
+    }
+
+    static class EmptyInventory extends Inventory implements ISidedInventory {
+        private final BlockState state;
+        private final IWorld level;
+        private final BlockPos pos;
+        private boolean changed;
+
+        public EmptyInventory(BlockState pState, IWorld pLevel, BlockPos pPos) {
+            super(1);
+            this.state = pState;
+            this.level = pLevel;
+            this.pos = pPos;
+        }
+
+        @Override
+        public int getMaxStackSize() {
+            return 1;
+        }
+
+        @Override
+        public int[] getSlotsForFace(Direction side) {
+            return side != Direction.DOWN ? new int[]{0} : new int[0];
+        }
+
+        @Override
+        public boolean canPlaceItemThroughFace(int pIndex, ItemStack pItemStack, @Nullable Direction pDirection) {
+            return !changed && pDirection != Direction.DOWN && Ingredient.of(MILKS).test(pItemStack);
+        }
+
+        @Override
+        public boolean canTakeItemThroughFace(int pIndex, ItemStack pStack, Direction pDirection) {
+            return false;
+        }
+
+        @Override
+        public void setChanged() {
+            ItemStack stack = getItem(0);
+            if (!stack.isEmpty()) {
+                changed = true;
+                level.setBlock(pos, state.setValue(AGE, 1), 3);
+                removeItemNoUpdate(0);
+            }
+        }
+    }
+
+    static class MilkInventory extends Inventory implements ISidedInventory {
+        public MilkInventory() {
+            super(1);
+        }
+
+        @Override
+        public int getMaxStackSize() {
+            return 1;
+        }
+
+        @Override
+        public int[] getSlotsForFace(Direction pSide) {
+            return new int[0];
+        }
+
+        @Override
+        public boolean canPlaceItemThroughFace(int pIndex, ItemStack pItemStack, @Nullable Direction pDirection) {
+            return false;
+        }
+
+        @Override
+        public boolean canTakeItemThroughFace(int pIndex, ItemStack pStack, Direction pDirection) {
+            return false;
+        }
+    }
+
+    static class CheeseInventory extends Inventory implements ISidedInventory {
+        private final BlockState state;
+        private final IWorld level;
+        private final BlockPos pos;
+        private boolean changed;
+
+        public CheeseInventory(BlockState state, IWorld level, BlockPos pos, ItemStack stack) {
+            super(stack);
+            this.state = state;
+            this.level = level;
+            this.pos = pos;
+        }
+
+        @Override
+        public int getMaxStackSize() {
+            return 1;
+        }
+
+        @Override
+        public int[] getSlotsForFace(Direction side) {
+            return side == Direction.DOWN ? new int[]{0} : new int[0];
+        }
+
+        @Override
+        public boolean canPlaceItemThroughFace(int index, ItemStack stack, @Nullable Direction direction) {
+            return false;
+        }
+
+        @Override
+        public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
+            return !changed && direction == Direction.DOWN && (stack.getItem() == HotItems.SOFT_CHEESE.get() || stack.getItem() == HotItems.HARD_CHEESE.get());
+        }
+
+        @Override
+        public void setChanged() {
+            level.setBlock(pos, state.setValue(AGE, 0), 3);
+            changed = true;
+        }
     }
 }
