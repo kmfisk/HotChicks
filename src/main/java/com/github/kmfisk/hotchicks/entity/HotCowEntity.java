@@ -115,6 +115,11 @@ public class HotCowEntity extends LivestockEntity {
     }
 
     @Override
+    public boolean canUseSmallDishes() {
+        return false;
+    }
+
+    @Override
     public String getReadableBreed() {
         return getBreedFromVariant().getLocalizedName().getString();
     }

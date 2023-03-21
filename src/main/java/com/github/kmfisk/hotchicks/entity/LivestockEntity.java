@@ -120,6 +120,10 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     public abstract boolean isEdibleFood(ItemStack stack);
 
+    public boolean canUseSmallDishes() {
+        return true;
+    }
+
     public abstract Stats getStats();
 
     public abstract void initByBreed(String breed);

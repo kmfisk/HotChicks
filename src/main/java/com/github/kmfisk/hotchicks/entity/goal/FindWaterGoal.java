@@ -55,6 +55,6 @@ public class FindWaterGoal extends MoveToBlockGoal {
             return blockState.getValue(TroughBlock.CONTAINS) == TroughFillType.WATER;
         }
 
-        return level.getBlockState(pos).is(HotBlocks.WATER_BOTTLE.get());
+        return entity.canUseSmallDishes() && level.getBlockState(pos).is(HotBlocks.WATER_BOTTLE.get());
     }
 }

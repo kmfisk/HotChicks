@@ -65,7 +65,7 @@ public class FindFoodGoal extends MoveToBlockGoal {
             if (tileEntity instanceof TroughTileEntity)
                 return ((TroughTileEntity) tileEntity).getItems().stream().anyMatch(entity::isEdibleFood);
         }
-        if (level.getBlockState(pos).is(HotBlocks.FOOD_CROCK.get())) {
+        if (entity.canUseSmallDishes() && level.getBlockState(pos).is(HotBlocks.FOOD_CROCK.get())) {
             TileEntity tileEntity = level.getBlockEntity(pos);
             if (tileEntity instanceof FoodCrockTileEntity)
                 return ((FoodCrockTileEntity) tileEntity).getItems().stream().anyMatch(entity::isEdibleFood);
