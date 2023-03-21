@@ -13,6 +13,8 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.controller.JumpController;
+import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.*;
 import net.minecraft.entity.item.ExperienceOrbEntity;
 import net.minecraft.entity.passive.AnimalEntity;
@@ -23,17 +25,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.pathfinding.Path;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.GameRules;
 import net.minecraft.world.IServerWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
@@ -43,9 +50,16 @@ import javax.annotation.Nullable;
 public class HotRabbitEntity extends LivestockEntity {
     public static final Tags.IOptionalNamedTag<Item> RABBIT_FOODS = ItemTags.createOptional(new ResourceLocation(HotChicks.MOD_ID, "rabbit_foods"));
     private WildAvoidEntityGoal<PlayerEntity> wildAvoidPlayersGoal;
+    private int jumpTicks;
+    private int jumpDuration;
+    private boolean wasOnGround;
+    private int jumpDelayTicks;
 
     public HotRabbitEntity(EntityType<? extends AnimalEntity> type, World world) {
         super(type, world);
+        this.jumpControl = new JumpHelperController(this);
+        this.moveControl = new MoveHelperController(this);
+        this.setSpeedModifier(0.0D);
     }
 
     public static AttributeModifierMap.MutableAttribute registerAttributes() {
@@ -377,6 +391,114 @@ public class HotRabbitEntity extends LivestockEntity {
         return false;
     }
 
+    protected float getJumpPower() {
+        if (!horizontalCollision && (!moveControl.hasWanted() || !(moveControl.getWantedY() > getY() + 0.5D))) {
+            Path path = navigation.getPath();
+            if (path != null && !path.isDone()) {
+                Vector3d vector3d = path.getNextEntityPos(this);
+                if (vector3d.y > getY() + 0.5D) return 0.5F;
+            }
+            return moveControl.getSpeedModifier() <= 0.6D ? 0.2F : 0.3F;
+
+        } else return 0.5F;
+    }
+
+    protected void jumpFromGround() {
+        super.jumpFromGround();
+        double d0 = moveControl.getSpeedModifier();
+        if (d0 > 0.0D) {
+            double d1 = getHorizontalDistanceSqr(getDeltaMovement());
+            if (d1 < 0.01D) moveRelative(0.1F, new Vector3d(0.0D, 0.0D, 1.0D));
+        }
+        if (!level.isClientSide) level.broadcastEntityEvent(this, (byte) 1);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public float getJumpCompletion(float partialTick) {
+        return jumpDuration == 0 ? 0.0F : ((float) jumpTicks + partialTick) / (float) jumpDuration;
+    }
+
+    public void setSpeedModifier(double speedModifier) {
+        getNavigation().setSpeedModifier(speedModifier);
+        moveControl.setWantedPosition(moveControl.getWantedX(), moveControl.getWantedY(), moveControl.getWantedZ(), speedModifier);
+    }
+
+    public void setJumping(boolean jumping) {
+        super.setJumping(jumping);
+        if (jumping)
+            playSound(getJumpSound(), getSoundVolume(), ((random.nextFloat() - random.nextFloat()) * 0.2F + 1.0F) * 0.8F);
+    }
+
+    public void startJumping() {
+        setJumping(true);
+        jumpDuration = 10;
+        jumpTicks = 0;
+    }
+
+    @Override
+    protected void customServerAiStep() {
+        super.customServerAiStep();
+        if (jumpDelayTicks > 0) --jumpDelayTicks;
+
+        if (onGround) {
+            if (!wasOnGround) {
+                setJumping(false);
+                checkLandingDelay();
+            }
+
+            JumpHelperController jumpHelperController = (JumpHelperController) jumpControl;
+            if (!jumpHelperController.wantJump()) {
+                if (moveControl.hasWanted() && jumpDelayTicks == 0) {
+                    Path path = navigation.getPath();
+                    Vector3d vector3d = new Vector3d(moveControl.getWantedX(), moveControl.getWantedY(), moveControl.getWantedZ());
+                    if (path != null && !path.isDone()) vector3d = path.getNextEntityPos(this);
+
+                    facePoint(vector3d.x, vector3d.z);
+                    startJumping();
+                }
+            } else if (!jumpHelperController.canJump()) enableJumpControl();
+        }
+
+        wasOnGround = onGround;
+    }
+
+    private void facePoint(double x, double z) {
+        yRot = (float) (MathHelper.atan2(z - getZ(), x - getX()) * (double) (180F / (float) Math.PI)) - 90.0F;
+    }
+
+    private void enableJumpControl() {
+        ((JumpHelperController) jumpControl).setCanJump(true);
+    }
+
+    private void disableJumpControl() {
+        ((JumpHelperController) jumpControl).setCanJump(false);
+    }
+
+    private void setLandingDelay() {
+        if (moveControl.getSpeedModifier() < 2.2D) jumpDelayTicks = 10;
+        else jumpDelayTicks = 1;
+    }
+
+    private void checkLandingDelay() {
+        setLandingDelay();
+        disableJumpControl();
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (jumpTicks != jumpDuration) ++jumpTicks;
+        else if (jumpDuration != 0) {
+            jumpTicks = 0;
+            jumpDuration = 0;
+            setJumping(false);
+        }
+    }
+
+    protected SoundEvent getJumpSound() {
+        return SoundEvents.RABBIT_JUMP;
+    }
+
     @Nullable
     @Override
     protected SoundEvent getAmbientSound() {
@@ -385,7 +507,7 @@ public class HotRabbitEntity extends LivestockEntity {
 
     @Nullable
     @Override
-    protected SoundEvent getHurtSound(DamageSource pDamageSource) {
+    protected SoundEvent getHurtSound(DamageSource damageSource) {
         return SoundEvents.RABBIT_HURT;
     }
 
@@ -393,5 +515,70 @@ public class HotRabbitEntity extends LivestockEntity {
     @Override
     protected SoundEvent getDeathSound() {
         return SoundEvents.RABBIT_DEATH;
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void handleEntityEvent(byte id) {
+        if (id == 1) {
+            spawnSprintParticle();
+            jumpDuration = 10;
+            jumpTicks = 0;
+
+        } else super.handleEntityEvent(id);
+    }
+
+    public static class JumpHelperController extends JumpController {
+        private final HotRabbitEntity rabbit;
+        private boolean canJump;
+
+        public JumpHelperController(HotRabbitEntity rabbit) {
+            super(rabbit);
+            this.rabbit = rabbit;
+        }
+
+        public boolean wantJump() {
+            return jump;
+        }
+
+        public boolean canJump() {
+            return canJump;
+        }
+
+        public void setCanJump(boolean pCanJump) {
+            canJump = pCanJump;
+        }
+
+        public void tick() {
+            if (jump) {
+                rabbit.startJumping();
+                jump = false;
+            }
+        }
+    }
+
+    static class MoveHelperController extends MovementController {
+        private final HotRabbitEntity rabbit;
+        private double nextJumpSpeed;
+
+        public MoveHelperController(HotRabbitEntity rabbit) {
+            super(rabbit);
+            this.rabbit = rabbit;
+        }
+
+        public void tick() {
+            if (rabbit.onGround && !rabbit.jumping && !((HotRabbitEntity.JumpHelperController) rabbit.jumpControl).wantJump())
+                rabbit.setSpeedModifier(0.0D);
+            else if (hasWanted()) rabbit.setSpeedModifier(nextJumpSpeed);
+
+            super.tick();
+        }
+
+        public void setWantedPosition(double x, double y, double z, double speed) {
+            if (rabbit.isInWater()) speed = 1.5D;
+
+            super.setWantedPosition(x, y, z, speed);
+            if (speed > 0.0D) nextJumpSpeed = speed;
+        }
     }
 }
