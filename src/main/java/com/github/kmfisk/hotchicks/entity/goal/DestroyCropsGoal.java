@@ -2,6 +2,7 @@ package com.github.kmfisk.hotchicks.entity.goal;
 
 import com.github.kmfisk.hotchicks.block.BerryBushBlock;
 import com.github.kmfisk.hotchicks.block.TrellisBlock;
+import com.github.kmfisk.hotchicks.block.TripleCropBlock;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import net.minecraft.block.*;
 import net.minecraft.entity.ai.goal.MoveToBlockGoal;
@@ -48,7 +49,8 @@ public class DestroyCropsGoal extends MoveToBlockGoal {
             BlockState state = level.getBlockState(cropPos);
             Block block = state.getBlock();
             boolean isCrop = block.is(BlockTags.CROPS) || block instanceof SweetBerryBushBlock;
-            if (canRaid && isCrop && !(block instanceof TrellisBlock)) {
+            boolean excludedCropTypes = block instanceof TripleCropBlock || block instanceof TrellisBlock;
+            if (canRaid && isCrop && !excludedCropTypes) {
                 if (level.getBlockState(blockPos).getBlock() instanceof GrassBlock)
                     level.setBlock(blockPos, Blocks.COARSE_DIRT.defaultBlockState(), 2);
 
@@ -69,7 +71,8 @@ public class DestroyCropsGoal extends MoveToBlockGoal {
     protected boolean isValidTarget(IWorldReader level, BlockPos pos) {
         Block block = level.getBlockState(pos.above()).getBlock();
         boolean isCrop = block.is(BlockTags.CROPS) || block instanceof SweetBerryBushBlock;
-        if (isCrop && !(block instanceof TrellisBlock) && this.wantsToRaid && !this.canRaid) {
+        boolean excludedCropTypes = block instanceof TripleCropBlock || block instanceof TrellisBlock;
+        if (isCrop && !excludedCropTypes && this.wantsToRaid && !this.canRaid) {
             this.canRaid = true;
             return true;
         }
