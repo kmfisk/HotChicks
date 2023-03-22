@@ -6,11 +6,12 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.SegmentedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class HotCowModel extends SegmentedModel<HotCowEntity> {
+public abstract class HotCowModel extends SegmentedModel<HotCowEntity> {
     public ModelRenderer Body;
     public ModelRenderer Neck;
     public ModelRenderer Tail1;
@@ -53,7 +54,7 @@ public class HotCowModel extends SegmentedModel<HotCowEntity> {
     public ModelRenderer BellFlare;
     public ModelRenderer Tail2;
     public ModelRenderer TailTuft;
-    public ModelRenderer UpperLegtLeft;
+    public ModelRenderer UpperLegLeft;
     public ModelRenderer LowerLegLeft;
     public ModelRenderer UpperLegRight;
     public ModelRenderer LowerLegRight;
@@ -73,11 +74,6 @@ public class HotCowModel extends SegmentedModel<HotCowEntity> {
             parts = ImmutableList.of(Body);
 
         return parts;
-    }
-
-    @Override
-    public void setupAnim(HotCowEntity pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {
-
     }
 
     @Override
@@ -183,10 +179,10 @@ public class HotCowModel extends SegmentedModel<HotCowEntity> {
             this.HandLeft = new ModelRenderer(this, 60, 10);
             this.HandLeft.setPos(0.0F, 5.0F, -4.5F);
             this.HandLeft.addBox(-1.5F, 0.0F, 0.0F, 3.0F, 6.0F, 4.0F, 0.0F, 0.0F, 0.0F);
-            this.UpperLegtLeft = new ModelRenderer(this, 60, 20);
-            this.UpperLegtLeft.setPos(0.0F, 10.0F, -2.5F);
-            this.UpperLegtLeft.addBox(-2.0F, 0.0F, 0.0F, 4.0F, 5.0F, 5.0F, 0.0F, 0.0F, 0.0F);
-            this.setRotateAngle(UpperLegtLeft, 0.500909508638178F, 0.0F, 0.0F);
+            this.UpperLegLeft = new ModelRenderer(this, 60, 20);
+            this.UpperLegLeft.setPos(0.0F, 10.0F, -2.5F);
+            this.UpperLegLeft.addBox(-2.0F, 0.0F, 0.0F, 4.0F, 5.0F, 5.0F, 0.0F, 0.0F, 0.0F);
+            this.setRotateAngle(UpperLegLeft, 0.500909508638178F, 0.0F, 0.0F);
             this.TailTuft = new ModelRenderer(this, 20, 16);
             this.TailTuft.setPos(0.0F, 5.0F, 0.0F);
             this.TailTuft.addBox(-1.0F, 0.0F, -1.0F, 2.0F, 6.0F, 2.0F, 0.0F, 0.0F, 0.0F);
@@ -326,7 +322,7 @@ public class HotCowModel extends SegmentedModel<HotCowEntity> {
             this.Forehead.addChild(this.HornLonghornLeft1);
             this.ArmBaseRight.addChild(this.ArmRight);
             this.ArmLeft.addChild(this.HandLeft);
-            this.ThighLeft.addChild(this.UpperLegtLeft);
+            this.ThighLeft.addChild(this.UpperLegLeft);
             this.Tail2.addChild(this.TailTuft);
             this.Udder.addChild(this.Nipple3);
             this.BellCollar.addChild(this.Bell);
@@ -334,7 +330,7 @@ public class HotCowModel extends SegmentedModel<HotCowEntity> {
             this.ThighRight.addChild(this.UpperLegRight);
             this.ArmRight.addChild(this.HandRight);
             this.Neck.addChild(this.Head);
-            this.UpperLegtLeft.addChild(this.LowerLegLeft);
+            this.UpperLegLeft.addChild(this.LowerLegLeft);
             this.Forehead.addChild(this.HornForwardRight1);
             this.Forehead.addChild(this.HornLonghornRight1);
             this.Neck.addChild(this.BellCollar);
@@ -359,11 +355,23 @@ public class HotCowModel extends SegmentedModel<HotCowEntity> {
 
         @Override
         public void setupAnim(HotCowEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-            super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             this.Neck.yRot = netHeadYaw / (180F / (float) Math.PI) * 0.5F;
-            this.Head.xRot = headPitch / (180F / (float) Math.PI) + -1.14F;
+            this.Head.xRot = headPitch / (180F / (float) Math.PI) - 1.14F;
             this.Head.yRot = netHeadYaw / (180F / (float) Math.PI) * 0.25F;
-            this.Head.zRot = 0;
+
+            float speed = 1.5F;
+            this.ArmBaseLeft.xRot = limbSwingAmount * 1.5f * MathHelper.cos(limbSwing * speed * 0.2F);
+            this.ArmLeft.xRot = 0f;//limbSwingAmount * -0.5f * MathHelper.cos(limbSwing * speed * 0.2F);
+            this.HandLeft.xRot = 0f;//limbSwingAmount * -1.5f * MathHelper.cos(0.5F + limbSwing * speed * 0.2F);
+            this.ArmBaseRight.xRot = limbSwingAmount * -1.5f * MathHelper.cos(limbSwing * speed * 0.2F);
+            this.ArmRight.xRot = 0f;//limbSwingAmount * 0.5f * MathHelper.cos(limbSwing * speed * 0.2F);
+            this.HandRight.xRot = 0f;//limbSwingAmount * 1.5f * MathHelper.cos(1.5f + limbSwing * speed * 0.2F);
+            this.ThighLeft.xRot = limbSwingAmount * 1.0f * MathHelper.cos(2.0F + limbSwing * speed * 0.2F);
+            this.UpperLegLeft.xRot = limbSwingAmount * 1.0f * MathHelper.cos(limbSwing * speed * 0.2F) + 0.5F;
+            this.LowerLegLeft.xRot = limbSwingAmount * -0.5f * MathHelper.cos(limbSwing * speed * 0.2F) - 0.5F;
+            this.ThighRight.xRot = limbSwingAmount * -1.0f * MathHelper.cos(2.0F + limbSwing * speed * 0.2F);
+            this.UpperLegRight.xRot = limbSwingAmount * -1.0f * MathHelper.cos(limbSwing * speed * 0.2F) + 0.5F;
+            this.LowerLegRight.xRot = limbSwingAmount * 0.5f * MathHelper.cos(limbSwing * speed * 0.2F) - 0.5F;
         }
     }
 
@@ -375,7 +383,7 @@ public class HotCowModel extends SegmentedModel<HotCowEntity> {
         @Override
         public void setupAnim(HotCowEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
             super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-            this.Head.xRot = headPitch / (180F / (float)Math.PI) + -1.14F;
+            this.Head.xRot = headPitch / (180F / (float) Math.PI) - 1.14F;
             this.Neck.yRot = netHeadYaw / (180F / (float)Math.PI);
         }
     }
