@@ -18,12 +18,8 @@ public class LayEggsGoal extends Goal {
     @Override
     public boolean canUse() {
         if (chicken.hasNest() && chicken.wantsToLayEggs() && chicken.getNestPos().closerThan(chicken.position(), 1.0D)) {
-            TileEntity tileEntity = chicken.level.getBlockEntity(chicken.getNestPos());
-            if (tileEntity instanceof NestTileEntity) {
-                NestTileEntity nestTileEntity = (NestTileEntity) tileEntity;
-                if (nestTileEntity.getItems().contains(ItemStack.EMPTY)) return true;
-                chicken.setNestPos(null);
-            }
+            if (chicken.doesNestHaveSpace(chicken.getNestPos())) return true;
+            chicken.setNestPos(null);
         }
 
         return false;

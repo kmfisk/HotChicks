@@ -1,6 +1,5 @@
 package com.github.kmfisk.hotchicks.inventory;
 
-import com.github.kmfisk.hotchicks.item.HotEggItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.container.Slot;
@@ -15,11 +14,9 @@ public class NestSlot extends Slot {
     @Override
     public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack) {
         stack.setTag(new CompoundNBT());
-        stack.getOrCreateTag().putBoolean("infertile", true);
         this.setChanged();
         return stack;
     }
-
 
     @Override
     public boolean mayPickup(PlayerEntity playerIn) {
@@ -27,14 +24,8 @@ public class NestSlot extends Slot {
         return super.mayPickup(playerIn);
     }
 
-    /**
-     * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
-     */
+    @Override
     public boolean mayPlace(ItemStack stack) {
-        if (stack.getItem() instanceof HotEggItem) {
-            return !stack.getOrCreateTag().getBoolean("infertile");
-        }
         return false;
     }
-
 }

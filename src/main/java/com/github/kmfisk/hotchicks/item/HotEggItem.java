@@ -27,8 +27,6 @@ public class HotEggItem extends Item {
     public void appendHoverText(ItemStack stack, @Nullable World level, List<ITextComponent> tooltip, ITooltipFlag flag) {
         CompoundNBT tag = stack.getOrCreateTag();
         TextFormatting gray = TextFormatting.GRAY;
-        if (tag.getBoolean("Infertile")) tooltip.add(new StringTextComponent(gray + "Infertile"));
-
         if (tag.contains("CarcassQuality")) {
             tooltip.add(new StringTextComponent(gray + "Carcass Quality: " + tag.getInt("CarcassQuality")));
             tooltip.add(new StringTextComponent(gray + "Growth Rate: " + tag.getInt("GrowthRate")));

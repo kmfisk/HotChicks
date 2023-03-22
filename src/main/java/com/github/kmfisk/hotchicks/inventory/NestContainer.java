@@ -51,7 +51,6 @@ public class NestContainer extends Container {
 
             if (slotStack.getItem() instanceof HotEggItem) {
                 slotStack.setTag(new CompoundNBT());
-                slotStack.getOrCreateTag().putBoolean("Infertile", true);
             }
 
             if (index < 5) {
