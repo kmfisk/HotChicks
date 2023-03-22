@@ -13,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.LockableTileEntity;
 import net.minecraft.util.Direction;
@@ -24,15 +25,14 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nullable;
 
 public class MillTileEntity extends LockableTileEntity implements ISidedInventory, ITickableTileEntity {
-    private static final int[] INPUT_SLOTS = new int[]{0, 1, 2};
-    private static final int[] ALL_SLOTS = new int[]{0, 1, 2, 3};
     protected final NonNullList<ItemStack> items = NonNullList.withSize(7, ItemStack.EMPTY);
-    private final SidedInvWrapper sideHandler = new SidedInvWrapper(this, Direction.UP);
+    private final LazyOptional<? extends IItemHandler>[] sideHandlers = SidedInvWrapper.create(this, Direction.DOWN, Direction.UP, Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
     protected int activeTime;
     protected int churningProgress;
     protected int churningTotalTime;
@@ -183,13 +183,16 @@ public class MillTileEntity extends LockableTileEntity implements ISidedInventor
     }
 
     protected int getTotalChurnTime() {
-        return 4800; // todo
+        return 4800;
     }
 
     @Override
     public int[] getSlotsForFace(Direction side) {
-        if (side == Direction.DOWN) return ALL_SLOTS;
-        else return INPUT_SLOTS;
+        Direction blockFacing = getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
+        if (side == Direction.DOWN) return new int[]{3};
+        else if (side == blockFacing.getClockWise()) return new int[]{0};
+        else if (side == blockFacing.getCounterClockWise()) return new int[]{2};
+        else return new int[]{1};
     }
 
     @Override
@@ -199,7 +202,7 @@ public class MillTileEntity extends LockableTileEntity implements ISidedInventor
 
     @Override
     public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
-        return direction != Direction.DOWN || index == 3;
+        return index == 3;
     }
 
     @Override
@@ -284,8 +287,21 @@ public class MillTileEntity extends LockableTileEntity implements ISidedInventor
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> capability, @Nullable Direction facing) {
-        if (!remove && facing == Direction.UP && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return LazyOptional.of(() -> sideHandler).cast();
+        if (!remove && facing != null && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            switch (facing) {
+                case DOWN:
+                    return sideHandlers[0].cast();
+                case UP:
+                    return sideHandlers[1].cast();
+                case NORTH:
+                    return sideHandlers[2].cast();
+                case EAST:
+                    return sideHandlers[3].cast();
+                case SOUTH:
+                    return sideHandlers[4].cast();
+                case WEST:
+                    return sideHandlers[5].cast();
+            }
         }
         return super.getCapability(capability, facing);
     }
