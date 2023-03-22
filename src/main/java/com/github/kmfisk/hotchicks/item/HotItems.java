@@ -168,7 +168,7 @@ public class HotItems {
     public static final RegistryObject<Item> BEEF_STROGANOFF = REGISTRAR.register("beef_stroganoff", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.BEEF_STROGANOFF).stacksTo(8)));
     public static final RegistryObject<Item> BRAISED_RABBIT = REGISTRAR.register("braised_rabbit", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.BRAISED_RABBIT).stacksTo(8)));
     public static final RegistryObject<Item> CHICKEN_NOODLE_SOUP = REGISTRAR.register("chicken_noodle_soup", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.CHICKEN_NOODLE_SOUP).stacksTo(8)));
-    public static final RegistryObject<Item> GUMBO_SOUP = REGISTRAR.register("gumbo_soup", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.GUMBO_SOUP).stacksTo(8)));
+    public static final RegistryObject<Item> GUMBO = REGISTRAR.register("gumbo", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.GUMBO).stacksTo(8)));
     public static final RegistryObject<Item> POTATO_SOUP = REGISTRAR.register("potato_soup", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.POTATO_SOUP).stacksTo(8)));
     public static final RegistryObject<Item> SPLIT_PEA_SOUP = REGISTRAR.register("split_pea_soup", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.SPLIT_PEA_SOUP).stacksTo(8)));
     public static final RegistryObject<Item> VEGGIE_SOUP = REGISTRAR.register("veggie_soup", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.VEGGIE_SOUP).stacksTo(8)));

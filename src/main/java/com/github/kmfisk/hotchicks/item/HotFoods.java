@@ -69,7 +69,7 @@ public class HotFoods {
     public static final Food BEEF_STROGANOFF = new Food.Builder().nutrition(6).saturationMod(0.8F).build();
     public static final Food BRAISED_RABBIT = new Food.Builder().nutrition(5).saturationMod(0.8F).build();
     public static final Food CHICKEN_NOODLE_SOUP = new Food.Builder().nutrition(3).saturationMod(0.6F).build();
-    public static final Food GUMBO_SOUP = new Food.Builder().nutrition(6).saturationMod(0.8F).build();
+    public static final Food GUMBO = new Food.Builder().nutrition(6).saturationMod(0.8F).build();
     public static final Food POTATO_SOUP = new Food.Builder().nutrition(5).saturationMod(0.8F).build();
     public static final Food SPLIT_PEA_SOUP = new Food.Builder().nutrition(6).saturationMod(0.7F).build();
     public static final Food VEGGIE_SOUP = new Food.Builder().nutrition(5).saturationMod(0.4F).build();
