@@ -71,7 +71,9 @@ public class NestTileEntity extends LockableTileEntity implements ITickableTileE
     @Override
     public ItemStack removeItem(int index, int count) {
         setChanged();
-        return ItemStackHelper.removeItem(this.items, index, count);
+        ItemStack stack = ItemStackHelper.removeItem(this.items, index, count);
+        if (stack.getItem() instanceof HotEggItem) stack.setTag(new CompoundNBT());
+        return stack;
     }
 
     @Override
