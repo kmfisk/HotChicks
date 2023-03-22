@@ -6,6 +6,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.renderer.entity.model.SegmentedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.util.math.MathHelper;
 
 public class HotRabbitModel extends SegmentedModel<HotRabbitEntity> {
     public ModelRenderer Hips;
@@ -31,6 +32,7 @@ public class HotRabbitModel extends SegmentedModel<HotRabbitEntity> {
     public ModelRenderer FootLeft;
     public ModelRenderer LegRight;
     public ModelRenderer FootRight;
+    private float jumpRotation;
     private Iterable<ModelRenderer> parts;
 
     public HotRabbitModel() {
@@ -188,7 +190,23 @@ public class HotRabbitModel extends SegmentedModel<HotRabbitEntity> {
 
     @Override
     public void setupAnim(HotRabbitEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+        float f = ageInTicks - (float) entity.tickCount;
         this.Head.xRot = headPitch / (180F / (float) Math.PI) + 0.006F;
         this.Head.yRot = netHeadYaw / (180F / (float) Math.PI);
+        this.jumpRotation = MathHelper.sin(entity.getJumpCompletion(f) * (float) Math.PI);
+        this.ThighLeft.xRot = this.jumpRotation * 0.87266463f - 0.091F;
+        this.ThighRight.xRot = this.jumpRotation * 0.87266463f - 0.091F;
+        this.FootLeft.xRot = this.jumpRotation * 0.87266463f - 0.637F;
+        this.FootRight.xRot = this.jumpRotation * 0.87266463f - 0.637F;
+        this.ArmLeft.xRot = -this.jumpRotation * 0.6981317f + 0.43F;
+        this.ArmRight.xRot = -this.jumpRotation * 0.6981317f + 0.43F;
+        this.HandLeft.xRot = this.jumpRotation * 0.6981317f;
+        this.HandRight.xRot = this.jumpRotation * 0.6981317f;
+    }
+
+    @Override
+    public void prepareMobModel(HotRabbitEntity entity, float limbSwing, float limbSwingAmount, float partialTick) {
+        super.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTick);
+        this.jumpRotation = MathHelper.sin(entity.getJumpCompletion(partialTick) * (float) Math.PI);
     }
 }
