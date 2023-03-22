@@ -414,6 +414,9 @@ public abstract class LivestockEntity extends AnimalEntity {
 
     @Override
     public ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+        ActionResultType actionResultType = super.mobInteract(player, hand);
+        if (actionResultType.consumesAction()) setCareRequired();
+
         ItemStack stack = player.getItemInHand(hand);
         if (isEdibleFood(stack)) {
             if (getHealth() < getMaxHealth() || getHunger().getValue() < getHunger().getMax() || !isCareRequired()) {
@@ -447,9 +450,6 @@ public abstract class LivestockEntity extends AnimalEntity {
             setTagged(false);
             return ActionResultType.sidedSuccess(level.isClientSide);
         }
-
-        ActionResultType actionResultType = super.mobInteract(player, hand);
-        if (actionResultType.consumesAction()) setCareRequired();
 
         return actionResultType;
     }
