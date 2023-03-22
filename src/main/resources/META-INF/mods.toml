@@ -1,37 +1,23 @@
-modLoader="javafml" #mandatory
-loaderVersion="[36.2,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
-license="All rights reserved"
-issueTrackerURL="https://github.com/kmfisk/HotChicks/issues" #optional
+modLoader="javafml"
+loaderVersion="[36.2,)"
+license="LGPL-3.0"
+issueTrackerURL="https://github.com/kmfisk/HotChicks/issues"
 
-[[mods]] #mandatory
-    modId="hotchicks" #mandatory
-    version="${file.jarVersion}" #mandatory
-    displayName="Click for Hot Chicks" #mandatory
-    #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
-    displayURL="https://github.com/kmfisk/HotChicks/wiki" #optional
-    logoFile="icon.png" #optional
-    credits="Huge thank you to the following people for their contributions!! RyanHCode, moose/elan, and barca." #optional
-    authors="kmfisk, Mnesikos" #optional
-    description='''
-    click for hot chicks is a really nice mod with a really awful name.
+[[mods]]
+    modId="hotchicks"
+    version="${file.jarVersion}"
+    displayName="Click for Hot Chicks"
+    #updateJSONURL="https://change.me.example.invalid/updates.json"
+    displayURL="https://github.com/kmfisk/HotChicks/wiki"
+    logoFile="icon.png"
+    credits="RyanHCode, moose/elan, barca"
+    authors="kmfisk, Mnesikos"
+    description='''Find ancestor livestock animals to care for and selectively breed into domestic variants, new crops to help feed you and your animals, and craft fun new blocks and items including barn blocks and an assortment of foods!'''
 
-    release 1 is going to be focused on breeding and raising healthy, happy chickens. there are 8 domestic chicken breeds that you can breed from the wild ancestor, the red junglefowl.
-
-    to get chickens, find a pair of junglefowl (they spawn in dark forests, jungles, and other lush forest biomes) and breed them. check their tameness stat with a stud book, and breed birds with higher and higher tameness till you get to 85%: once you do, you'll get a domestic chicken! junglefowl can drop meat and lay eggs, but don't drop much and don't lay fun, valuable colors.
-
-    you'll need a nest or nest box for your chickens to lay eggs in. breed the two you'd like to have a chick, and leave the egg in the nest for a full minecraft day - removing it makes it unviable, so be careful! if you do remove an egg, you can always use it for cooking and crafting.
-
-    what chicken breed you get depends on the biome you're in: different biomes make for differently adapted breeds with different base stats. chickens have stats that decide how much meat, how many eggs, and what color eggs they make, so keep that in mind when you decide what you want to breed. leghorns lay lots of eggs, but rhode islands reds have better meat. stats generally average between the parents, with a chance for random "mutation."
-
-    you can also find crops to feed yourself and your birds. wild versions of crops spawn uncommonly: just break one, and plant the food you get on farmland or on a crafted trellis block.
-
-    there's more to come from hot chicks, so keep your eyes open!
-    '''
-
-[[dependencies.hotchicks]] #optional
-    modId="forge" #mandatory
-    mandatory=true #mandatory
-    versionRange="[36.2,)" #mandatory
+[[dependencies.hotchicks]]
+    modId="forge"
+    mandatory=true
+    versionRange="[36.2,)"
     ordering="NONE"
     side="BOTH"
 
