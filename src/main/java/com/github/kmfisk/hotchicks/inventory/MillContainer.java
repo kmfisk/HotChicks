@@ -40,6 +40,8 @@ public class MillContainer extends Container {
         for (int i1 = 0; i1 < 9; ++i1) {
             this.addSlot(new Slot(playerInventory, i1, 8 + i1 * 18, 142));
         }
+
+        this.addDataSlots(data);
     }
 
     @Override
@@ -73,8 +75,8 @@ public class MillContainer extends Container {
 
     @OnlyIn(Dist.CLIENT)
     public int getChurnProgress() {
-        int i = data.get(1);
-        int j = data.get(2);
-        return j != 0 && i != 0 ? i * 24 / j : 0;
+        int progress = this.data.get(1);
+        int total = this.data.get(2);
+        return total != 0 && progress != 0 ? progress * 24 / total : 0;
     }
 }

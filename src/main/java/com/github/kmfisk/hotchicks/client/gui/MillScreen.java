@@ -36,7 +36,7 @@ public class MillScreen extends ContainerScreen<MillContainer> {
         int j = (this.height - this.imageHeight) / 2;
         this.blit(matrixStack, i, j, 0, 0, this.imageWidth, this.imageHeight);
 
-        int l = this.menu.getChurnProgress();
-        this.blit(matrixStack, i + 99, j + 35, 176, 14, l + 1, 16);
+        int progress = this.menu.getChurnProgress();
+        this.blit(matrixStack, i + 99, j + 35, 176, 14, progress + 1, 16);
     }
 }
