@@ -190,9 +190,15 @@ public class HotRabbitModel extends SegmentedModel<HotRabbitEntity> {
 
     @Override
     public void setupAnim(HotRabbitEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        float f = ageInTicks - (float) entity.tickCount;
         this.Head.xRot = headPitch / (180F / (float) Math.PI) + 0.006F;
         this.Head.yRot = netHeadYaw / (180F / (float) Math.PI);
+
+        if (limbSwingAmount <= 0.05F && !entity.isInWater()) {
+            // idle anims here
+        }
+
+        // below is the current movement anim... it's different from usual anims due to the jumping code
+        float f = ageInTicks - (float) entity.tickCount;
         this.jumpRotation = MathHelper.sin(entity.getJumpCompletion(f) * (float) Math.PI);
         this.ThighLeft.xRot = this.jumpRotation * 0.87266463f - 0.091F;
         this.ThighRight.xRot = this.jumpRotation * 0.87266463f - 0.091F;

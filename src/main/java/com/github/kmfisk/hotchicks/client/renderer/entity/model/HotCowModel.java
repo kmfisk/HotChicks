@@ -359,6 +359,11 @@ public abstract class HotCowModel extends SegmentedModel<HotCowEntity> {
             this.Head.xRot = headPitch / (180F / (float) Math.PI) - 1.14F;
             this.Head.yRot = netHeadYaw / (180F / (float) Math.PI) * 0.25F;
 
+            if (limbSwingAmount <= 0.05F && !entity.isInWater()) {
+                // idle anims here
+            }
+
+            // below is the current movement anim
             float speed = 1.5F;
             this.ArmBaseLeft.xRot = limbSwingAmount * 1.5f * MathHelper.cos(limbSwing * speed * 0.2F);
             this.ArmLeft.xRot = 0f;//limbSwingAmount * -0.5f * MathHelper.cos(limbSwing * speed * 0.2F);
@@ -385,6 +390,8 @@ public abstract class HotCowModel extends SegmentedModel<HotCowEntity> {
             super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
             this.Head.xRot = headPitch / (180F / (float) Math.PI) - 1.14F;
             this.Neck.yRot = netHeadYaw / (180F / (float)Math.PI);
+
+            // babies use the adult stuff already
         }
     }
 
