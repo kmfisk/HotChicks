@@ -3,25 +3,25 @@ package com.github.kmfisk.hotchicks.block.entity;
 import com.github.kmfisk.hotchicks.block.TroughBlock;
 import com.github.kmfisk.hotchicks.block.TroughFillType;
 import com.github.kmfisk.hotchicks.inventory.TroughContainer;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.state.properties.ChestType;
-import net.minecraft.tileentity.LockableTileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.state.properties.ChestType;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -31,7 +31,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nullable;
 import java.util.stream.IntStream;
 
-public class TroughTileEntity extends LockableTileEntity implements ISidedInventory {
+public class TroughTileEntity extends BaseContainerBlockEntity implements WorldlyContainer {
     private final NonNullList<ItemStack> items;
     private final SidedInvWrapper sideHandler = new SidedInvWrapper(this, Direction.UP);
 
@@ -45,7 +45,7 @@ public class TroughTileEntity extends LockableTileEntity implements ISidedInvent
     }
 
     @Override
-    protected Container createMenu(int id, PlayerInventory playerInventory) {
+    protected AbstractContainerMenu createMenu(int id, Inventory playerInventory) {
         if (getContainerSize() == 6) return TroughContainer.createGenericDouble(id, playerInventory, this);
         else return TroughContainer.createGenericSingle(id, playerInventory, this);
     }
@@ -68,13 +68,13 @@ public class TroughTileEntity extends LockableTileEntity implements ISidedInvent
     @Override
     public ItemStack removeItem(int index, int count) {
         setChanged();
-        return ItemStackHelper.removeItem(items, index, count);
+        return ContainerHelper.removeItem(items, index, count);
     }
 
     @Override
     public ItemStack removeItemNoUpdate(int index) {
         setChanged();
-        return ItemStackHelper.takeItem(items, index);
+        return ContainerHelper.takeItem(items, index);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class TroughTileEntity extends LockableTileEntity implements ISidedInvent
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         return true;
     }
 
@@ -97,32 +97,32 @@ public class TroughTileEntity extends LockableTileEntity implements ISidedInvent
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT nbt) {
+    public void load(BlockState state, CompoundTag nbt) {
         super.load(state, nbt);
         clearContent();
-        ItemStackHelper.loadAllItems(nbt, items);
+        ContainerHelper.loadAllItems(nbt, items);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT nbt) {
+    public CompoundTag save(CompoundTag nbt) {
         super.save(nbt);
-        ItemStackHelper.saveAllItems(nbt, items);
+        ContainerHelper.saveAllItems(nbt, items);
         return nbt;
     }
 
     @Nullable
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(getBlockPos(), 1, getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(getBlockPos(), 1, getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         handleUpdateTag(getBlockState(), pkt.getTag());
     }
 
@@ -185,8 +185,8 @@ public class TroughTileEntity extends LockableTileEntity implements ISidedInvent
     }
 
     @Override
-    protected ITextComponent getDefaultName() {
-        return new TranslationTextComponent(Util.makeDescriptionId("container", ForgeRegistries.BLOCKS.getKey(getBlockState().getBlock())));
+    protected Component getDefaultName() {
+        return new TranslatableComponent(Util.makeDescriptionId("container", ForgeRegistries.BLOCKS.getKey(getBlockState().getBlock())));
     }
 
     @Override

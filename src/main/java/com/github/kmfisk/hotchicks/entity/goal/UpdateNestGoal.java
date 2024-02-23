@@ -2,8 +2,8 @@ package com.github.kmfisk.hotchicks.entity.goal;
 
 import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.core.BlockPos;
 
 public class UpdateNestGoal extends Goal {
     private final HotChickenEntity chicken;
@@ -35,7 +35,7 @@ public class UpdateNestGoal extends Goal {
         int j = this.verticalSearchRange;
         chicken.remainingCooldownBeforeLocatingNewNest = 200;
         BlockPos chickenPos = chicken.blockPosition();
-        BlockPos.Mutable blockpos$mutable = new BlockPos.Mutable();
+        BlockPos.MutableBlockPos blockpos$mutable = new BlockPos.MutableBlockPos();
         for (int k = verticalSearchStart; k <= j; k = k > 0 ? -k : 1 - k) {
             for (int l = 0; l < i; ++l) {
                 for (int i1 = 0; i1 <= l; i1 = i1 > 0 ? -i1 : 1 - i1) {

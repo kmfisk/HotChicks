@@ -3,72 +3,83 @@ package com.github.kmfisk.hotchicks.block;
 import com.github.kmfisk.hotchicks.block.entity.HotTileEntities;
 import com.github.kmfisk.hotchicks.block.entity.NestTileEntity;
 import net.minecraft.block.*;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.server.ServerWorld;
 
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class NestBlock extends ContainerBlock {
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+
+public class NestBlock extends BaseEntityBlock {
     public static final DirectionProperty PROPERTY_FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty PROPERTY_EGGS = BooleanProperty.create("eggs");
-    protected static final VoxelShape WEST_SHAPE = VoxelShapes.join(VoxelShapes.block(), box(1.0D, 1.0D, 1.0D, 16.0D, 15.0D, 15.0D), IBooleanFunction.ONLY_FIRST);
-    protected static final VoxelShape EAST_SHAPE = VoxelShapes.join(VoxelShapes.block(), box(0.0D, 1.0D, 1.0D, 15.0D, 15.0D, 15.0D), IBooleanFunction.ONLY_FIRST);
-    protected static final VoxelShape NORTH_SHAPE = VoxelShapes.join(VoxelShapes.block(), box(1.0D, 1.0D, 1.0D, 15.0D, 15.0D, 16.0D), IBooleanFunction.ONLY_FIRST);
-    protected static final VoxelShape SOUTH_SHAPE = VoxelShapes.join(VoxelShapes.block(), box(1.0D, 1.0D, 0.0D, 15.0D, 15.0D, 15.0D), IBooleanFunction.ONLY_FIRST);
+    protected static final VoxelShape WEST_SHAPE = Shapes.join(Shapes.block(), box(1.0D, 1.0D, 1.0D, 16.0D, 15.0D, 15.0D), BooleanOp.ONLY_FIRST);
+    protected static final VoxelShape EAST_SHAPE = Shapes.join(Shapes.block(), box(0.0D, 1.0D, 1.0D, 15.0D, 15.0D, 15.0D), BooleanOp.ONLY_FIRST);
+    protected static final VoxelShape NORTH_SHAPE = Shapes.join(Shapes.block(), box(1.0D, 1.0D, 1.0D, 15.0D, 15.0D, 16.0D), BooleanOp.ONLY_FIRST);
+    protected static final VoxelShape SOUTH_SHAPE = Shapes.join(Shapes.block(), box(1.0D, 1.0D, 0.0D, 15.0D, 15.0D, 15.0D), BooleanOp.ONLY_FIRST);
 
-    public NestBlock(AbstractBlock.Properties properties) {
+    public NestBlock(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(PROPERTY_FACING, Direction.NORTH).setValue(PROPERTY_EGGS, false));
     }
 
     @Override
-    public VoxelShape getBlockSupportShape(BlockState state, IBlockReader reader, BlockPos pos) {
+    public VoxelShape getBlockSupportShape(BlockState state, BlockGetter reader, BlockPos pos) {
         return shape(state);
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return shape(state);
     }
 
     @Override
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
         if (world.isClientSide) {
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else {
-            TileEntity tileentity = world.getBlockEntity(pos);
+            BlockEntity tileentity = world.getBlockEntity(pos);
             if (tileentity instanceof NestTileEntity) player.openMenu((NestTileEntity) tileentity);
 
-            return ActionResultType.CONSUME;
+            return InteractionResult.CONSUME;
         }
     }
 
     @Override
-    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
-            TileEntity tileentity = world.getBlockEntity(pos);
-            if (tileentity instanceof IInventory) {
-                InventoryHelper.dropContents(world, pos, (IInventory) tileentity);
+            BlockEntity tileentity = world.getBlockEntity(pos);
+            if (tileentity instanceof Container) {
+                Containers.dropContents(world, pos, (Container) tileentity);
                 world.updateNeighbourForOutputSignal(pos, this);
             }
 
@@ -77,23 +88,23 @@ public class NestBlock extends ContainerBlock {
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(PROPERTY_FACING, PROPERTY_EGGS);
     }
 
     @Override
-    public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Nullable
     @Override
-    public TileEntity newBlockEntity(IBlockReader world) {
+    public BlockEntity newBlockEntity(BlockGetter world) {
         return HotTileEntities.NEST.get().create();
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         return defaultBlockState().setValue(PROPERTY_FACING, context.getHorizontalDirection()).setValue(PROPERTY_EGGS, false);
     }
 
@@ -113,8 +124,8 @@ public class NestBlock extends ContainerBlock {
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, World world, BlockPos pos) {
-        return Container.getRedstoneSignalFromBlockEntity(world.getBlockEntity(pos));
+    public int getAnalogOutputSignal(BlockState blockState, Level world, BlockPos pos) {
+        return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(world.getBlockEntity(pos));
     }
 
     private VoxelShape shape(BlockState state) {

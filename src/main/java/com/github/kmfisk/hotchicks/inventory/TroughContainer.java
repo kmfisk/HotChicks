@@ -1,43 +1,43 @@
 package com.github.kmfisk.hotchicks.inventory;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
-public class TroughContainer extends Container {
-    private IInventory inventory;
+public class TroughContainer extends AbstractContainerMenu {
+    private Container inventory;
 
-    public static TroughContainer createGenericSingle(int id, PlayerInventory player, IInventory blockEntity) {
+    public static TroughContainer createGenericSingle(int id, Inventory player, Container blockEntity) {
         return new TroughContainer(HotContainerTypes.TROUGH_SINGLE.get(), id, blockEntity, player, 3);
     }
 
-    public static TroughContainer createGenericSingle(int id, PlayerInventory player) {
-        return new TroughContainer(HotContainerTypes.TROUGH_SINGLE.get(), id, new Inventory(3), player, 3);
+    public static TroughContainer createGenericSingle(int id, Inventory player) {
+        return new TroughContainer(HotContainerTypes.TROUGH_SINGLE.get(), id, new SimpleContainer(3), player, 3);
     }
 
 
-    public static TroughContainer createGenericDouble(int id, PlayerInventory player, IInventory blockEntity) {
+    public static TroughContainer createGenericDouble(int id, Inventory player, Container blockEntity) {
         return new TroughContainer(HotContainerTypes.TROUGH_DOUBLE.get(), id, blockEntity, player, 6);
     }
 
-    public static TroughContainer createGenericDouble(int id, PlayerInventory player) {
-        return new TroughContainer(HotContainerTypes.TROUGH_DOUBLE.get(), id, new Inventory(6), player, 6);
+    public static TroughContainer createGenericDouble(int id, Inventory player) {
+        return new TroughContainer(HotContainerTypes.TROUGH_DOUBLE.get(), id, new SimpleContainer(6), player, 6);
     }
 
-    public static TroughContainer createGenericDoubleMetal(int id, PlayerInventory player) {
-        return new TroughContainer(HotContainerTypes.TROUGH_DOUBLE_METAL.get(), id, new Inventory(12), player, 12);
+    public static TroughContainer createGenericDoubleMetal(int id, Inventory player) {
+        return new TroughContainer(HotContainerTypes.TROUGH_DOUBLE_METAL.get(), id, new SimpleContainer(12), player, 12);
     }
 
-    public static TroughContainer createGenericDoubleMetal(int id, PlayerInventory player, IInventory blockEntity) {
+    public static TroughContainer createGenericDoubleMetal(int id, Inventory player, Container blockEntity) {
         return new TroughContainer(HotContainerTypes.TROUGH_DOUBLE_METAL.get(), id, blockEntity, player, 12);
     }
 
-    private TroughContainer(ContainerType<?> type, int id, IInventory blockEntity, PlayerInventory player, int slot) {
+    private TroughContainer(MenuType<?> type, int id, Container blockEntity, Inventory player, int slot) {
         this(type, id, player, blockEntity, slot);
     }
 
@@ -47,7 +47,7 @@ public class TroughContainer extends Container {
 
     public int slot = 0;
 
-    private TroughContainer(ContainerType<?> type, int id, PlayerInventory playerInventory, IInventory inventory, int slot) {
+    private TroughContainer(MenuType<?> type, int id, Inventory playerInventory, Container inventory, int slot) {
         super(type, id);
         this.slot = slot;
         this.inventory = inventory;
@@ -86,7 +86,7 @@ public class TroughContainer extends Container {
     /**
      * Determines whether supplied player can use this container
      */
-    public boolean stillValid(PlayerEntity playerIn) {
+    public boolean stillValid(Player playerIn) {
         return this.inventory.stillValid(playerIn);
     }
 
@@ -94,7 +94,7 @@ public class TroughContainer extends Container {
      * Handle when the stack in slot {@code index} is shift-clicked. Normally this moves the stack between the player
      * inventory and the other inventory(s).
      */
-    public ItemStack quickMoveStack(PlayerEntity playerIn, int index) {
+    public ItemStack quickMoveStack(Player playerIn, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
         if (slot != null && slot.hasItem()) {
@@ -121,7 +121,7 @@ public class TroughContainer extends Container {
     /**
      * Called when the container is closed.
      */
-    public void removed(PlayerEntity playerIn) {
+    public void removed(Player playerIn) {
         super.removed(playerIn);
         this.inventory.stopOpen(playerIn);
     }

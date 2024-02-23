@@ -1,35 +1,35 @@
 package com.github.kmfisk.hotchicks.block;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CropsBlock;
-import net.minecraft.item.Item;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
 
 import java.util.function.Supplier;
 
-public abstract class HotCropBlock extends CropsBlock {
+public abstract class HotCropBlock extends CropBlock {
     private final Supplier<? extends Item> item;
 
-    public HotCropBlock(AbstractBlock.Properties properties, Supplier<? extends Item> item) {
+    public HotCropBlock(BlockBehaviour.Properties properties, Supplier<? extends Item> item) {
         super(properties);
         this.item = item;
     }
 
     @Override
-    protected IItemProvider getBaseSeedId() {
+    protected ItemLike getBaseSeedId() {
         return item.get();
     }
 
     @Override
-    public abstract VoxelShape getShape(BlockState state, IBlockReader level, BlockPos pos, ISelectionContext context);
+    public abstract VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context);
 
     @Override
     public abstract IntegerProperty getAgeProperty();
@@ -38,7 +38,7 @@ public abstract class HotCropBlock extends CropsBlock {
     public abstract int getMaxAge();
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(getAgeProperty());
     }
 }

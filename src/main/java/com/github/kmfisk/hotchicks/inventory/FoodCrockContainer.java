@@ -1,21 +1,21 @@
 package com.github.kmfisk.hotchicks.inventory;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
-public class FoodCrockContainer extends Container {
-    private final IInventory inventory;
+public class FoodCrockContainer extends AbstractContainerMenu {
+    private final Container inventory;
 
-    public FoodCrockContainer(int containerId, PlayerInventory playerInventory) {
-        this(containerId, playerInventory, new Inventory(36));
+    public FoodCrockContainer(int containerId, Inventory playerInventory) {
+        this(containerId, playerInventory, new SimpleContainer(36));
     }
 
-    public FoodCrockContainer(int containerId, PlayerInventory playerInventory, IInventory inventory) {
+    public FoodCrockContainer(int containerId, Inventory playerInventory, Container inventory) {
         super(HotContainerTypes.FOOD_CROCK.get(), containerId);
         this.inventory = inventory;
 
@@ -35,12 +35,12 @@ public class FoodCrockContainer extends Container {
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         return inventory.stillValid(player);
     }
 
     @Override
-    public ItemStack quickMoveStack(PlayerEntity player, int index) {
+    public ItemStack quickMoveStack(Player player, int index) {
         ItemStack resultStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
         if (slot != null && slot.hasItem()) {
@@ -59,7 +59,7 @@ public class FoodCrockContainer extends Container {
     }
 
     @Override
-    public void removed(PlayerEntity player) {
+    public void removed(Player player) {
         super.removed(player);
         inventory.stopOpen(player);
     }

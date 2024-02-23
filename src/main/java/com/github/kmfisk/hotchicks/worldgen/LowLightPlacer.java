@@ -1,11 +1,11 @@
 package com.github.kmfisk.hotchicks.worldgen;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.gen.blockplacer.BlockPlacer;
-import net.minecraft.world.gen.blockplacer.BlockPlacerType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.levelgen.feature.blockplacers.BlockPlacer;
+import net.minecraft.world.level.levelgen.feature.blockplacers.BlockPlacerType;
 
 import java.util.Random;
 
@@ -17,7 +17,7 @@ public class LowLightPlacer extends BlockPlacer {
         return BlockPlacerType.SIMPLE_BLOCK_PLACER;
     }
 
-    public void place(IWorld world, BlockPos pos, BlockState state, Random random) {
+    public void place(LevelAccessor world, BlockPos pos, BlockState state, Random random) {
         if (world.getRawBrightness(pos, 0) < 13)
             world.setBlock(pos, state, 2);
     }

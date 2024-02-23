@@ -2,10 +2,10 @@ package com.github.kmfisk.hotchicks.loot;
 
 import com.github.kmfisk.hotchicks.item.HotItems;
 import com.google.gson.JsonObject;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
 
@@ -13,7 +13,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 public class HotLootImporter extends LootModifier {
-    public HotLootImporter(final ILootCondition[] conditionsIn) {
+    public HotLootImporter(final LootItemCondition[] conditionsIn) {
         super(conditionsIn);
     }
 
@@ -42,7 +42,7 @@ public class HotLootImporter extends LootModifier {
 
     public static class Serializer extends GlobalLootModifierSerializer<HotLootImporter> {
         @Override
-        public HotLootImporter read(ResourceLocation location, JsonObject object, ILootCondition[] ailootcondition) {
+        public HotLootImporter read(ResourceLocation location, JsonObject object, LootItemCondition[] ailootcondition) {
             return new HotLootImporter(ailootcondition);
         }
 

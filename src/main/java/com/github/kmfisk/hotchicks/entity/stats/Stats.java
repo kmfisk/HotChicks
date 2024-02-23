@@ -3,8 +3,8 @@ package com.github.kmfisk.hotchicks.entity.stats;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import com.github.kmfisk.hotchicks.entity.base.Temperature;
-import net.minecraft.util.RangedInteger;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.IntRange;
+import net.minecraft.util.Mth;
 
 import java.util.Random;
 
@@ -30,9 +30,9 @@ public class Stats {
 
     public Stats average(Stats parent2Stats, boolean includeTameness) {
         return new Stats(
-                includeTameness ? (int) MathHelper.average(new long[]{parent2Stats.tameness, tameness}) : tameness,
-                (int) MathHelper.average(new long[]{parent2Stats.carcassQuality, carcassQuality}),
-                (int) MathHelper.average(new long[]{parent2Stats.growthRate, growthRate})
+                includeTameness ? (int) Mth.average(new long[]{parent2Stats.tameness, tameness}) : tameness,
+                (int) Mth.average(new long[]{parent2Stats.carcassQuality, carcassQuality}),
+                (int) Mth.average(new long[]{parent2Stats.growthRate, growthRate})
         );
     }
 
@@ -84,21 +84,21 @@ public class Stats {
     }
 
     public enum StatType {
-        TAMENESS(RangedInteger.of(0, 100)),
-        CARCASS_QUALITY(RangedInteger.of(0, 4)),
-        HIDE_QUALITY(RangedInteger.of(0, 4)),
-        GROWTH_RATE(RangedInteger.of(0, 4)),
-        EGG_SPEED(RangedInteger.of(0, 4)),
-        LITTER_SIZE(RangedInteger.of(0, 4)),
-        MILK_YIELD(RangedInteger.of(0, 4));
+        TAMENESS(IntRange.of(0, 100)),
+        CARCASS_QUALITY(IntRange.of(0, 4)),
+        HIDE_QUALITY(IntRange.of(0, 4)),
+        GROWTH_RATE(IntRange.of(0, 4)),
+        EGG_SPEED(IntRange.of(0, 4)),
+        LITTER_SIZE(IntRange.of(0, 4)),
+        MILK_YIELD(IntRange.of(0, 4));
 
-        private final RangedInteger range;
+        private final IntRange range;
 
-        StatType(RangedInteger range) {
+        StatType(IntRange range) {
             this.range = range;
         }
 
-        public RangedInteger getRange() {
+        public IntRange getRange() {
             return range;
         }
     }

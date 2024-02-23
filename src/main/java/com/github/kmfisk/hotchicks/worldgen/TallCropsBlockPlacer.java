@@ -2,16 +2,16 @@ package com.github.kmfisk.hotchicks.worldgen;
 
 import com.github.kmfisk.hotchicks.block.DoubleCropBlock;
 import com.github.kmfisk.hotchicks.block.TripleCropBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.state.properties.DoubleBlockHalf;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.gen.blockplacer.BlockPlacerType;
-import net.minecraft.world.gen.blockplacer.ColumnBlockPlacer;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.levelgen.feature.blockplacers.BlockPlacerType;
+import net.minecraft.world.level.levelgen.feature.blockplacers.ColumnPlacer;
 
 import java.util.Random;
 
-public class TallCropsBlockPlacer extends ColumnBlockPlacer {
+public class TallCropsBlockPlacer extends ColumnPlacer {
     public TallCropsBlockPlacer() {
         super(0, 0);
     }
@@ -20,7 +20,7 @@ public class TallCropsBlockPlacer extends ColumnBlockPlacer {
         return BlockPlacerType.COLUMN_PLACER;
     }
 
-    public void place(IWorld world, BlockPos pos, BlockState state, Random random) {
+    public void place(LevelAccessor world, BlockPos pos, BlockState state, Random random) {
         if (state.getBlock() instanceof TripleCropBlock) {
             TripleCropBlock tripleCropBlock = (TripleCropBlock) state.getBlock();
             world.setBlock(pos, state.setValue(tripleCropBlock.getAgeProperty(), tripleCropBlock.getMaxAge()).setValue(TripleCropBlock.SEGMENT, TripleCropBlock.TripleBlockSegment.BOTTOM), 2);

@@ -1,6 +1,6 @@
 package com.github.kmfisk.hotchicks.entity.stats;
 
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 
 public class RabbitStats extends Stats {
     public RabbitStats(int tameness, int carcassQuality, int hideQuality, int growthRate, int litterSize) {
@@ -22,9 +22,9 @@ public class RabbitStats extends Stats {
         return new RabbitStats(
                 stats.tameness,
                 stats.carcassQuality,
-                (int) MathHelper.average(new long[]{parent2RabbitStats.hideQuality, hideQuality}),
+                (int) Mth.average(new long[]{parent2RabbitStats.hideQuality, hideQuality}),
                 stats.growthRate,
-                (int) MathHelper.average(new long[]{parent2RabbitStats.litterSize, litterSize})
+                (int) Mth.average(new long[]{parent2RabbitStats.litterSize, litterSize})
         );
     }
 

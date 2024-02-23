@@ -1,10 +1,10 @@
 package com.github.kmfisk.hotchicks.block;
 
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringRepresentable;
 
 import java.util.Random;
 
-public enum PepperType implements IStringSerializable {
+public enum PepperType implements StringRepresentable {
     ORANGE("orange"),
     YELLOW("yellow"),
     RED("red"),

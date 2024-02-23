@@ -1,13 +1,13 @@
 package com.github.kmfisk.hotchicks.entity.goal;
 
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 public class LivestockBirthGoal extends Goal {
     protected final LivestockEntity mother;
-    protected final World level;
+    protected final Level level;
 
     public LivestockBirthGoal(LivestockEntity livestockEntity) {
         this.mother = livestockEntity;
@@ -30,6 +30,6 @@ public class LivestockBirthGoal extends Goal {
         --gestationTimer;
         mother.setGestationTimer(gestationTimer);
 
-        if (mother.getGestationTimer() <= 0) mother.spawnChildrenFromPregnancy((ServerWorld) level);
+        if (mother.getGestationTimer() <= 0) mother.spawnChildrenFromPregnancy((ServerLevel) level);
     }
 }

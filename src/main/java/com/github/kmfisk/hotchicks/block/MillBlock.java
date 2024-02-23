@@ -2,29 +2,37 @@ package com.github.kmfisk.hotchicks.block;
 
 import com.github.kmfisk.hotchicks.block.entity.HotTileEntities;
 import com.github.kmfisk.hotchicks.block.entity.MillTileEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
-public class MillBlock extends ContainerBlock {
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+
+public class MillBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     private static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D);
 
@@ -34,27 +42,27 @@ public class MillBlock extends ContainerBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader level, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    public ActionResultType use(BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (level.isClientSide)
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
 
         else {
-            TileEntity entity = level.getBlockEntity(pos);
+            BlockEntity entity = level.getBlockEntity(pos);
             if (entity instanceof MillTileEntity)
                 player.openMenu((MillTileEntity) entity);
 
-            return ActionResultType.CONSUME;
+            return InteractionResult.CONSUME;
         }
     }
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction enumFacing = context.getHorizontalDirection().getOpposite();
         return super.getStateForPlacement(context).setValue(FACING, enumFacing);
     }
@@ -70,11 +78,11 @@ public class MillBlock extends ContainerBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, World level, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
-            TileEntity tileEntity = level.getBlockEntity(pos);
-            if (tileEntity instanceof IInventory) {
-                InventoryHelper.dropContents(level, pos, (IInventory) tileEntity);
+            BlockEntity tileEntity = level.getBlockEntity(pos);
+            if (tileEntity instanceof Container) {
+                Containers.dropContents(level, pos, (Container) tileEntity);
                 level.updateNeighbourForOutputSignal(pos, this);
             }
 
@@ -84,17 +92,17 @@ public class MillBlock extends ContainerBlock {
 
     @Nullable
     @Override
-    public TileEntity newBlockEntity(IBlockReader level) {
+    public BlockEntity newBlockEntity(BlockGetter level) {
         return HotTileEntities.MILL.get().create();
     }
 
     @Override
-    public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 }

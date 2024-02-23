@@ -6,11 +6,11 @@ import com.github.kmfisk.hotchicks.client.renderer.entity.model.HotChickenModel;
 import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import com.github.kmfisk.hotchicks.entity.base.ChickenBreeds;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -27,7 +27,7 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
     public final HotChickenModel henSilkieModel;
     public final HotChickenModel chickModel;
 
-    public HotChickenRenderer(EntityRendererManager rendererManager) {
+    public HotChickenRenderer(EntityRenderDispatcher rendererManager) {
         super(rendererManager, new HotChickenModel.Hen(), 0.3F);
         this.addLayer(new ChickenBandLayer(this));
         roosterModel = new HotChickenModel.Rooster();
@@ -38,7 +38,7 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
     }
 
     @Override
-    public void render(HotChickenEntity chicken, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
+    public void render(HotChickenEntity chicken, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
         boolean isChild = chicken.isBaby();
         if (isChild)
             model = chickModel;
@@ -51,7 +51,7 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
     }
 
     @Override
-    protected void scale(HotChickenEntity chicken, MatrixStack matrixStack, float partialTicks) {
+    protected void scale(HotChickenEntity chicken, PoseStack matrixStack, float partialTicks) {
         ChickenBreeds chickenBreed = chicken.getBreedFromVariant();
         if (chickenBreed.equals(ChickenBreeds.LEGHORN)) matrixStack.scale(0.9F, 0.9F, 0.9F);
         if (chicken.isBaby()) matrixStack.scale(0.5F, 0.5F, 0.5F);

@@ -1,6 +1,6 @@
 package com.github.kmfisk.hotchicks.entity.stats;
 
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
 
 public class ChickenStats extends Stats {
     public ChickenStats(int tameness, int carcassQuality, int growthRate, int eggSpeed) {
@@ -20,7 +20,7 @@ public class ChickenStats extends Stats {
 
         return new ChickenStats(
                 stats.tameness, stats.carcassQuality, stats.growthRate,
-                (int) MathHelper.average(new long[]{parent2ChickenStats.eggSpeed, eggSpeed})
+                (int) Mth.average(new long[]{parent2ChickenStats.eggSpeed, eggSpeed})
         );
     }
 

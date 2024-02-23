@@ -4,25 +4,25 @@ import com.github.kmfisk.hotchicks.block.NestBlock;
 import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
 import com.github.kmfisk.hotchicks.inventory.NestContainer;
 import com.github.kmfisk.hotchicks.item.HotEggItem;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.ISidedInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.LockableTileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.Util;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -32,11 +32,11 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nullable;
 import java.util.stream.IntStream;
 
-public class NestTileEntity extends LockableTileEntity implements ITickableTileEntity, ISidedInventory {
+public class NestTileEntity extends BaseContainerBlockEntity implements TickableBlockEntity, WorldlyContainer {
     private final NonNullList<ItemStack> items = NonNullList.withSize(5, ItemStack.EMPTY);
     private final SidedInvWrapper sideHandler = new SidedInvWrapper(this, Direction.UP);
 
-    public NestTileEntity(TileEntityType<?> type) {
+    public NestTileEntity(BlockEntityType<?> type) {
         super(type);
     }
 
@@ -45,7 +45,7 @@ public class NestTileEntity extends LockableTileEntity implements ITickableTileE
     }
 
     @Override
-    public Container createMenu(int id, PlayerInventory player) {
+    public AbstractContainerMenu createMenu(int id, Inventory player) {
         return new NestContainer(id, player, this);
     }
 
@@ -71,15 +71,15 @@ public class NestTileEntity extends LockableTileEntity implements ITickableTileE
     @Override
     public ItemStack removeItem(int index, int count) {
         setChanged();
-        ItemStack stack = ItemStackHelper.removeItem(this.items, index, count);
-        if (stack.getItem() instanceof HotEggItem) stack.setTag(new CompoundNBT());
+        ItemStack stack = ContainerHelper.removeItem(this.items, index, count);
+        if (stack.getItem() instanceof HotEggItem) stack.setTag(new CompoundTag());
         return stack;
     }
 
     @Override
     public ItemStack removeItemNoUpdate(int index) {
         setChanged();
-        return ItemStackHelper.takeItem(this.items, index);
+        return ContainerHelper.takeItem(this.items, index);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class NestTileEntity extends LockableTileEntity implements ITickableTileE
     }
 
     @Override
-    public boolean stillValid(PlayerEntity pPlayer) {
+    public boolean stillValid(Player pPlayer) {
         return true;
     }
 
@@ -102,32 +102,32 @@ public class NestTileEntity extends LockableTileEntity implements ITickableTileE
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT nbt) {
+    public void load(BlockState state, CompoundTag nbt) {
         super.load(state, nbt);
         clearContent();
-        ItemStackHelper.loadAllItems(nbt, items);
+        ContainerHelper.loadAllItems(nbt, items);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT nbt) {
+    public CompoundTag save(CompoundTag nbt) {
         super.save(nbt);
-        ItemStackHelper.saveAllItems(nbt, items);
+        ContainerHelper.saveAllItems(nbt, items);
         return nbt;
     }
 
     @Nullable
     @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(getBlockPos(), 1, getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(getBlockPos(), 1, getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return save(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         handleUpdateTag(getBlockState(), pkt.getTag());
     }
 
@@ -154,8 +154,8 @@ public class NestTileEntity extends LockableTileEntity implements ITickableTileE
     }
 
     @Override
-    protected ITextComponent getDefaultName() {
-        return new TranslationTextComponent(Util.makeDescriptionId("container", ForgeRegistries.BLOCKS.getKey(getBlockState().getBlock())));
+    protected Component getDefaultName() {
+        return new TranslatableComponent(Util.makeDescriptionId("container", ForgeRegistries.BLOCKS.getKey(getBlockState().getBlock())));
     }
 
     @Override
@@ -175,7 +175,7 @@ public class NestTileEntity extends LockableTileEntity implements ITickableTileE
             if (item.getItem() instanceof HotEggItem && !item.isEmpty()) {
                 hasEgg = true;
                 if (item.hasTag() && item.getTag().contains("TimeLeft")) {
-                    CompoundNBT itemTag = item.getTag();
+                    CompoundTag itemTag = item.getTag();
                     int timeLeft = itemTag.getInt("TimeLeft") - 1;
                     if (timeLeft <= 0) {
                         HotChickenEntity chicken = (HotChickenEntity) EntityType.loadEntityRecursive(itemTag, level, entity -> entity);

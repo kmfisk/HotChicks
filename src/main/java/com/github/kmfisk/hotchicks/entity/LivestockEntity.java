@@ -9,67 +9,67 @@ import com.github.kmfisk.hotchicks.entity.goal.FindWaterGoal;
 import com.github.kmfisk.hotchicks.entity.goal.LivestockBreedGoal;
 import com.github.kmfisk.hotchicks.entity.stats.RabbitStats;
 import com.github.kmfisk.hotchicks.entity.stats.Stats;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ILivingEntityData;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.ai.goal.FollowParentGoal;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.DyeItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.potion.Potions;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.goal.FollowParentGoal;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.TextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.network.chat.BaseComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 import java.util.Locale;
 import java.util.Random;
 
-public abstract class LivestockEntity extends AnimalEntity {
-    public static final DataParameter<Boolean> SEX = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.BOOLEAN);
-    public static final DataParameter<Integer> VARIANT = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
-    public static final DataParameter<Byte> TAG_COLOR = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.BYTE);
-    public static final DataParameter<Integer> TAMENESS = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
-    public static final DataParameter<Integer> CARCASS_QUALITY = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
-    public static final DataParameter<Integer> HIDE_QUALITY = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
-    public static final DataParameter<Integer> GROWTH_RATE = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
-    public static final DataParameter<Integer> EGG_SPEED = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
-    public static final DataParameter<Integer> EGG_TIMER = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
-    public static final DataParameter<Integer> LITTER_SIZE = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
-    public static final DataParameter<Integer> MILK_YIELD = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
-    public static final DataParameter<Integer> AVAILABLE_MILK = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
-    public static final DataParameter<Integer> GESTATION_TIMER = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
-    public static final DataParameter<Integer> HUNGER = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
-    public static final DataParameter<Integer> THIRST = EntityDataManager.defineId(LivestockEntity.class, DataSerializers.INT);
-    protected final ListNBT children = new ListNBT();
+public abstract class LivestockEntity extends Animal {
+    public static final EntityDataAccessor<Boolean> SEX = SynchedEntityData.defineId(LivestockEntity.class, EntityDataSerializers.BOOLEAN);
+    public static final EntityDataAccessor<Integer> VARIANT = SynchedEntityData.defineId(LivestockEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Byte> TAG_COLOR = SynchedEntityData.defineId(LivestockEntity.class, EntityDataSerializers.BYTE);
+    public static final EntityDataAccessor<Integer> TAMENESS = SynchedEntityData.defineId(LivestockEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> CARCASS_QUALITY = SynchedEntityData.defineId(LivestockEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> HIDE_QUALITY = SynchedEntityData.defineId(LivestockEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> GROWTH_RATE = SynchedEntityData.defineId(LivestockEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> EGG_SPEED = SynchedEntityData.defineId(LivestockEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> EGG_TIMER = SynchedEntityData.defineId(LivestockEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> LITTER_SIZE = SynchedEntityData.defineId(LivestockEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> MILK_YIELD = SynchedEntityData.defineId(LivestockEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> AVAILABLE_MILK = SynchedEntityData.defineId(LivestockEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> GESTATION_TIMER = SynchedEntityData.defineId(LivestockEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> HUNGER = SynchedEntityData.defineId(LivestockEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> THIRST = SynchedEntityData.defineId(LivestockEntity.class, EntityDataSerializers.INT);
+    protected final ListTag children = new ListTag();
     private final CareStat hunger;
     private final CareStat thirst;
     private boolean careRequired;
 
-    public LivestockEntity(EntityType<? extends AnimalEntity> type, World world) {
+    public LivestockEntity(EntityType<? extends Animal> type, Level world) {
         super(type, world);
         hunger = new CareStat(this, HUNGER, getMaxCareStat(), getHungerDepletion());
         thirst = new CareStat(this, THIRST, getMaxCareStat(), getThirstDepletion());
@@ -98,7 +98,7 @@ public abstract class LivestockEntity extends AnimalEntity {
     }
 
     @Override
-    public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficultyInstance, SpawnReason spawnReason, @Nullable ILivingEntityData entityData, @Nullable CompoundNBT nbt) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficultyInstance, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag nbt) {
         setSex(Sex.fromBool(random.nextFloat() <= getMaleRatio()));
         setVariant(0);
         return super.finalizeSpawn(world, difficultyInstance, spawnReason, entityData, nbt);
@@ -239,7 +239,7 @@ public abstract class LivestockEntity extends AnimalEntity {
         return entityData.get(AVAILABLE_MILK);
     }
 
-    public ListNBT getChildren() {
+    public ListTag getChildren() {
         return children;
     }
 
@@ -277,7 +277,7 @@ public abstract class LivestockEntity extends AnimalEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT nbt) {
+    public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putBoolean("Sex", getSex().toBool());
         nbt.putInt("Variant", getVariant());
@@ -293,7 +293,7 @@ public abstract class LivestockEntity extends AnimalEntity {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT nbt) {
+    public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         setSex(Sex.fromBool(nbt.getBoolean("Sex")));
         setVariant(nbt.getInt("Variant"));
@@ -314,7 +314,7 @@ public abstract class LivestockEntity extends AnimalEntity {
     }
 
     @Override
-    public void onSyncedDataUpdated(DataParameter<?> key) {
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
         if (VARIANT.equals(key)) refreshDimensions();
         super.onSyncedDataUpdated(key);
     }
@@ -352,7 +352,7 @@ public abstract class LivestockEntity extends AnimalEntity {
     }
 
     @Override
-    public boolean canMate(AnimalEntity otherAnimal) {
+    public boolean canMate(Animal otherAnimal) {
         if (otherAnimal.getType() != getType()) return false;
         else {
             LivestockEntity livestockEntity = (LivestockEntity) otherAnimal;
@@ -362,7 +362,7 @@ public abstract class LivestockEntity extends AnimalEntity {
     }
 
     @Override
-    public void spawnChildFromBreeding(ServerWorld level, AnimalEntity mate) {
+    public void spawnChildFromBreeding(ServerLevel level, Animal mate) {
         if (mate instanceof LivestockEntity && ((LivestockEntity) mate).getSex() == Sex.MALE) {
             LivestockEntity partner = (LivestockEntity) mate;
             if (getStats() instanceof RabbitStats) {
@@ -379,7 +379,7 @@ public abstract class LivestockEntity extends AnimalEntity {
         }
     }
 
-    public abstract void createChild(ServerWorld level, LivestockEntity parent);
+    public abstract void createChild(ServerLevel level, LivestockEntity parent);
 
     public ItemStack addChildrenDataToItem(ItemStack stack) {
         if (hasChildrenToSpawn()) {
@@ -391,9 +391,9 @@ public abstract class LivestockEntity extends AnimalEntity {
         return stack;
     }
 
-    public void spawnChildrenFromPregnancy(ServerWorld level) {
+    public void spawnChildrenFromPregnancy(ServerLevel level) {
         for (int i = 0; i < children.size(); i++) {
-            CompoundNBT childNBT = children.getCompound(i);
+            CompoundTag childNBT = children.getCompound(i);
             Entity child = EntityType.loadEntityRecursive(childNBT, level, entity -> entity);
             if (child != null) {
                 child.moveTo(getX(), getY(), getZ(), 0.0F, 0.0F);
@@ -413,8 +413,8 @@ public abstract class LivestockEntity extends AnimalEntity {
     }
 
     @Override
-    public ActionResultType mobInteract(PlayerEntity player, Hand hand) {
-        ActionResultType actionResultType = super.mobInteract(player, hand);
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
+        InteractionResult actionResultType = super.mobInteract(player, hand);
         if (actionResultType.consumesAction()) setCareRequired();
 
         ItemStack stack = player.getItemInHand(hand);
@@ -423,17 +423,17 @@ public abstract class LivestockEntity extends AnimalEntity {
                 usePlayerItem(player, stack);
                 ate();
                 if (!isCareRequired()) setCareRequired();
-                return ActionResultType.sidedSuccess(level.isClientSide);
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
         } else if (getThirst().getValue() < getThirst().getMax()) {
             if (stack.getItem() == Items.WATER_BUCKET) {
                 if (!player.abilities.instabuild) player.setItemInHand(hand, new ItemStack(Items.BUCKET));
                 thirst.increment(3);
-                return ActionResultType.sidedSuccess(level.isClientSide);
+                return InteractionResult.sidedSuccess(level.isClientSide);
             } else if (stack.getItem() == Items.POTION && PotionUtils.getPotion(stack) == Potions.WATER) {
                 if (!player.abilities.instabuild) player.setItemInHand(hand, new ItemStack(Items.GLASS_BOTTLE));
                 thirst.increment(1);
-                return ActionResultType.sidedSuccess(level.isClientSide);
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
         }
 
@@ -444,11 +444,11 @@ public abstract class LivestockEntity extends AnimalEntity {
                 setTagColor(dyeColor);
                 if (!player.abilities.instabuild) stack.shrink(1);
                 setCareRequired();
-                return ActionResultType.sidedSuccess(level.isClientSide);
+                return InteractionResult.sidedSuccess(level.isClientSide);
             }
         } else if (isTagged() && stack.getItem() == Items.SHEARS) {
             setTagged(false);
-            return ActionResultType.sidedSuccess(level.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
 
         return actionResultType;
@@ -460,7 +460,7 @@ public abstract class LivestockEntity extends AnimalEntity {
         return !getHunger().isLow() && !getThirst().isLow() && !extremeTemps && super.shouldDropLoot();
     }
 
-    public static boolean checkLivestockSpawnRules(EntityType<? extends LivestockEntity> entityType, IServerWorld world, SpawnReason spawnReason, BlockPos pos, Random random) {
+    public static boolean checkLivestockSpawnRules(EntityType<? extends LivestockEntity> entityType, ServerLevelAccessor world, MobSpawnType spawnReason, BlockPos pos, Random random) {
         BlockState blockState = world.getBlockState(pos.below());
         return (blockState.is(Blocks.GRASS_BLOCK) || blockState.is(Blocks.SNOW) || blockState.is(BlockTags.ICE)
                 || Tags.Blocks.SAND.contains(blockState.getBlock()) || Tags.Blocks.DIRT.contains(blockState.getBlock()))
@@ -468,8 +468,8 @@ public abstract class LivestockEntity extends AnimalEntity {
     }
 
     protected Biome getBiome() {
-        int x = MathHelper.floor(getX());
-        int z = MathHelper.floor(getZ());
+        int x = Mth.floor(getX());
+        int z = Mth.floor(getZ());
         return level.getBiome(new BlockPos(x, 0, z));
     }
 
@@ -485,8 +485,8 @@ public abstract class LivestockEntity extends AnimalEntity {
             return this == MALE;
         }
 
-        public TextComponent getLocalizedName() {
-            return new TranslationTextComponent("data." + HotChicks.MOD_ID + ".sex." + name().toLowerCase(Locale.ROOT));
+        public BaseComponent getLocalizedName() {
+            return new TranslatableComponent("data." + HotChicks.MOD_ID + ".sex." + name().toLowerCase(Locale.ROOT));
         }
     }
 }

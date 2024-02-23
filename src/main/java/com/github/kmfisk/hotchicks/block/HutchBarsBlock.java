@@ -1,24 +1,32 @@
 package com.github.kmfisk.hotchicks.block;
 
 import net.minecraft.block.*;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.pathfinding.PathType;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
 
-public class HutchBarsBlock extends PaneBlock {
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FenceBlock;
+import net.minecraft.world.level.block.FenceGateBlock;
+import net.minecraft.world.level.block.IronBarsBlock;
+import net.minecraft.world.level.block.state.BlockState;
+
+public class HutchBarsBlock extends IronBarsBlock {
     public HutchBarsBlock(Properties properties) {
         super(properties);
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        IBlockReader iblockreader = context.getLevel();
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        BlockGetter iblockreader = context.getLevel();
         BlockPos blockpos = context.getClickedPos();
         FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
         BlockPos blockpos1 = blockpos.north();
@@ -33,7 +41,7 @@ public class HutchBarsBlock extends PaneBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld level, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos) {
         if (state.getValue(WATERLOGGED))
             level.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
 
@@ -43,11 +51,11 @@ public class HutchBarsBlock extends PaneBlock {
     public boolean canAttachTo(BlockState state, boolean solidSide, Direction direction) {
         Block block = state.getBlock();
         boolean flag1 = block instanceof FenceGateBlock && FenceGateBlock.connectsToDirection(state, direction);
-        return !isExceptionForConnection(block) && solidSide || block instanceof PaneBlock || block instanceof FenceBlock || flag1 || block.is(BlockTags.WALLS);
+        return !isExceptionForConnection(block) && solidSide || block instanceof IronBarsBlock || block instanceof FenceBlock || flag1 || block.is(BlockTags.WALLS);
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, IBlockReader level, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType type) {
         return false;
     }
 }

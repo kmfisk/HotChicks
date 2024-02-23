@@ -7,20 +7,26 @@ import com.github.kmfisk.hotchicks.tags.HotItemTags;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonObject;
-import net.minecraft.block.Blocks;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.data.*;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.CookingRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.SimpleCookingSerializer;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.IItemProvider;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.Tags;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 
 public class HotRecipeProvider extends RecipeProvider {
     public HotRecipeProvider(DataGenerator generator) {
@@ -28,7 +34,7 @@ public class HotRecipeProvider extends RecipeProvider {
     }
 
     @Override
-    protected void buildShapelessRecipes(Consumer<IFinishedRecipe> consumer) {
+    protected void buildShapelessRecipes(Consumer<FinishedRecipe> consumer) {
         shapedRecipeResult(consumer, HotBlocks.CHEESE_MOLD.get(), 1, ImmutableList.of("NBN"), ImmutableMap.<Character, Ingredient>builder().put('N', Ingredient.of(Items.IRON_NUGGET)).put('B', Ingredient.of(Blocks.BARREL)).build());
         shapedRecipeResult(consumer, HotBlocks.FOOD_CROCK.get(), 2, ImmutableList.of("FCF", " F "), ImmutableMap.<Character, Ingredient>builder().put('F', Ingredient.of(Items.CLAY_BALL)).put('C', Ingredient.of(Items.BOWL)).build());
         shapedRecipeResult(consumer, HotBlocks.HUTCH_GATE.get(), 2, ImmutableList.of("SCS", "SFS", "SCS"), ImmutableMap.<Character, Ingredient>builder().put('F', Ingredient.of(Items.IRON_NUGGET)).put('S', Ingredient.of(Items.STICK)).put('C', Ingredient.of(Items.IRON_INGOT)).build());
@@ -150,7 +156,7 @@ public class HotRecipeProvider extends RecipeProvider {
         shapelessRecipeResult(consumer, HotItems.WILD_MUSHROOM_SOUP.get(), 4, ImmutableList.of(Ingredient.of(Items.WATER_BUCKET), Ingredient.of(Tags.Items.MUSHROOMS), Ingredient.of(Tags.Items.MUSHROOMS), Ingredient.of(Tags.Items.MUSHROOMS), Ingredient.of(Items.CARROT), Ingredient.of(Items.POTATO), Ingredient.of(HotItems.GARLIC.get())));
     }
 
-    private static void woodVariantBlocksRecipes(Consumer<IFinishedRecipe> consumer, IItemProvider planks, Ingredient dye, boolean basic, IItemProvider stairs, IItemProvider slab, IItemProvider pressurePlate, IItemProvider button, IItemProvider fence, IItemProvider fenceGate) {
+    private static void woodVariantBlocksRecipes(Consumer<FinishedRecipe> consumer, ItemLike planks, Ingredient dye, boolean basic, ItemLike stairs, ItemLike slab, ItemLike pressurePlate, ItemLike button, ItemLike fence, ItemLike fenceGate) {
         if (basic) shapelessRecipeResult(consumer, planks, 4, ImmutableList.of(dye, Ingredient.of(ItemTags.PLANKS), Ingredient.of(ItemTags.PLANKS), Ingredient.of(ItemTags.PLANKS), Ingredient.of(ItemTags.PLANKS)));
         else shapelessRecipeResult(consumer, planks, 8, ImmutableList.of(dye, Ingredient.of(ItemTags.PLANKS), Ingredient.of(ItemTags.PLANKS), Ingredient.of(Items.IRON_NUGGET), Ingredient.of(Items.IRON_NUGGET), Ingredient.of(ItemTags.PLANKS), Ingredient.of(ItemTags.PLANKS), Ingredient.of(Items.IRON_NUGGET), Ingredient.of(Items.IRON_NUGGET)));
         shapedRecipeResult(consumer, stairs, 4, ImmutableList.of("P  ", "PP ", "PPP"), ImmutableMap.<Character, Ingredient>builder().put('P', Ingredient.of(planks)).build());
@@ -161,13 +167,13 @@ public class HotRecipeProvider extends RecipeProvider {
         shapedRecipeResult(consumer, fenceGate, 1, ImmutableList.of("#P#", "#P#"), ImmutableMap.<Character, Ingredient>builder().put('P', Ingredient.of(planks)).put('#', Ingredient.of(Items.STICK)).build());
     }
 
-    private static void cookRecipes(Consumer<IFinishedRecipe> consumer, IItemProvider result, Ingredient recipe, float experience) {
+    private static void cookRecipes(Consumer<FinishedRecipe> consumer, ItemLike result, Ingredient recipe, float experience) {
         consumer.accept(smeltingRecipeResult(result, recipe, experience, 200));
-        consumer.accept(cookingRecipeResult("smoking", result, recipe, experience, 100, IRecipeSerializer.SMOKING_RECIPE));
-        consumer.accept(cookingRecipeResult("campfire", result, recipe, experience, 600, IRecipeSerializer.CAMPFIRE_COOKING_RECIPE));
+        consumer.accept(cookingRecipeResult("smoking", result, recipe, experience, 100, RecipeSerializer.SMOKING_RECIPE));
+        consumer.accept(cookingRecipeResult("campfire", result, recipe, experience, 600, RecipeSerializer.CAMPFIRE_COOKING_RECIPE));
     }
 
-    public static void shapedRecipeResult(Consumer<IFinishedRecipe> consumer, IItemProvider iItemProvider, int outputNum, List<String> recipe, Map<Character, Ingredient> recipeMapKey) {
+    public static void shapedRecipeResult(Consumer<FinishedRecipe> consumer, ItemLike iItemProvider, int outputNum, List<String> recipe, Map<Character, Ingredient> recipeMapKey) {
         consumer.accept(new ShapedRecipeBuilder(iItemProvider, outputNum).new Result(
                 iItemProvider.asItem().getRegistryName(),
                 iItemProvider.asItem(),
@@ -185,11 +191,11 @@ public class HotRecipeProvider extends RecipeProvider {
         });
     }
 
-    public static void shapelessRecipeResult(Consumer<IFinishedRecipe> consumer, IItemProvider iItemProvider, int outputNum, List<Ingredient> recipe) {
+    public static void shapelessRecipeResult(Consumer<FinishedRecipe> consumer, ItemLike iItemProvider, int outputNum, List<Ingredient> recipe) {
         namedShapelessRecipeResult(consumer, iItemProvider.asItem().getRegistryName().getPath(), iItemProvider, outputNum, recipe);
     }
 
-    public static void namedShapelessRecipeResult(Consumer<IFinishedRecipe> consumer, String id, IItemProvider iItemProvider, int outputNum, List<Ingredient> recipe) {
+    public static void namedShapelessRecipeResult(Consumer<FinishedRecipe> consumer, String id, ItemLike iItemProvider, int outputNum, List<Ingredient> recipe) {
         consumer.accept(new ShapelessRecipeBuilder.Result(
                 new ResourceLocation(HotChicks.MOD_ID, id),
                 iItemProvider.asItem(),
@@ -206,8 +212,8 @@ public class HotRecipeProvider extends RecipeProvider {
         });
     }
 
-    public static CookingRecipeBuilder.Result smeltingRecipeResult(IItemProvider iItemProvider, Ingredient recipe, float experience, int cookingTime) {
-        return new CookingRecipeBuilder.Result(
+    public static SimpleCookingRecipeBuilder.Result smeltingRecipeResult(ItemLike iItemProvider, Ingredient recipe, float experience, int cookingTime) {
+        return new SimpleCookingRecipeBuilder.Result(
                 iItemProvider.asItem().getRegistryName(),
                 HotChicks.MOD_ID,
                 recipe,
@@ -216,7 +222,7 @@ public class HotRecipeProvider extends RecipeProvider {
                 cookingTime,
                 null,
                 null,
-                IRecipeSerializer.SMELTING_RECIPE
+                RecipeSerializer.SMELTING_RECIPE
         ) {
             @Override
             public JsonObject serializeAdvancement() {
@@ -225,8 +231,8 @@ public class HotRecipeProvider extends RecipeProvider {
         };
     }
 
-    public static CookingRecipeBuilder.Result cookingRecipeResult(String cookingMethod, IItemProvider iItemProvider, Ingredient recipe, float experience, int cookingTime, CookingRecipeSerializer<?> cookingSerializer) {
-        return new CookingRecipeBuilder.Result(
+    public static SimpleCookingRecipeBuilder.Result cookingRecipeResult(String cookingMethod, ItemLike iItemProvider, Ingredient recipe, float experience, int cookingTime, SimpleCookingSerializer<?> cookingSerializer) {
+        return new SimpleCookingRecipeBuilder.Result(
                 new ResourceLocation(HotChicks.MOD_ID, iItemProvider.asItem().getRegistryName().getPath() + "_" + cookingMethod),
                 HotChicks.MOD_ID,
                 recipe,

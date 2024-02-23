@@ -1,23 +1,23 @@
 package com.github.kmfisk.hotchicks.inventory;
 
 import com.github.kmfisk.hotchicks.item.HotEggItem;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 
-public class NestContainer extends Container {
-    private final IInventory inventory;
+public class NestContainer extends AbstractContainerMenu {
+    private final Container inventory;
 
-    public NestContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, new Inventory(5));
+    public NestContainer(int id, Inventory playerInventory) {
+        this(id, playerInventory, new SimpleContainer(5));
     }
 
-    public NestContainer(int id, PlayerInventory playerInventory, IInventory inventory) {
+    public NestContainer(int id, Inventory playerInventory, Container inventory) {
         super(HotContainerTypes.NEST.get(), id);
         this.inventory = inventory;
 
@@ -37,12 +37,12 @@ public class NestContainer extends Container {
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         return inventory.stillValid(player);
     }
 
     @Override
-    public ItemStack quickMoveStack(PlayerEntity player, int index) {
+    public ItemStack quickMoveStack(Player player, int index) {
         ItemStack resultStack = ItemStack.EMPTY;
         Slot slot = slots.get(index);
         if (slot != null && slot.hasItem()) {
@@ -50,7 +50,7 @@ public class NestContainer extends Container {
             resultStack = slotStack.copy();
 
             if (slotStack.getItem() instanceof HotEggItem) {
-                slotStack.setTag(new CompoundNBT());
+                slotStack.setTag(new CompoundTag());
             }
 
             if (index < 5) {
@@ -72,7 +72,7 @@ public class NestContainer extends Container {
     }
 
     @Override
-    public void removed(PlayerEntity player) {
+    public void removed(Player player) {
         super.removed(player);
         inventory.stopOpen(player);
     }

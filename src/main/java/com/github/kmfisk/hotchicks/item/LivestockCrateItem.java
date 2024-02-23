@@ -2,30 +2,32 @@ package com.github.kmfisk.hotchicks.item;
 
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.EntityTypeTags;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
 import java.util.List;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class LivestockCrateItem extends Item {
     public static final Tags.IOptionalNamedTag<EntityType<?>> CRATEABLE_ENTITIES = EntityTypeTags.createOptional(new ResourceLocation(HotChicks.MOD_ID, "crateables"));
@@ -35,33 +37,33 @@ public class LivestockCrateItem extends Item {
     }
 
     @Override
-    public ActionResultType interactLivingEntity(ItemStack stack, PlayerEntity player, LivingEntity target, Hand hand) {
+    public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
         if (stack.hasTag() && stack.getTag().contains("id")) {
-            player.displayClientMessage(new TranslationTextComponent("chat.hotchicks.livestock_crate.full"), true);
-            return ActionResultType.PASS;
+            player.displayClientMessage(new TranslatableComponent("chat.hotchicks.livestock_crate.full"), true);
+            return InteractionResult.PASS;
         }
 
-        if (target instanceof TameableEntity && ((TameableEntity) target).isTame() && ((TameableEntity) target).getOwner() != player)
-            return ActionResultType.PASS;
+        if (target instanceof TamableAnimal && ((TamableAnimal) target).isTame() && ((TamableAnimal) target).getOwner() != player)
+            return InteractionResult.PASS;
 
         else if (target.getType().is(CRATEABLE_ENTITIES)) {
-            if (player.level.isClientSide) return ActionResultType.SUCCESS;
+            if (player.level.isClientSide) return InteractionResult.SUCCESS;
             ItemStack capturedEntityItem = caughtEntityItem(target, player);
             player.setItemInHand(hand, capturedEntityItem);
-            return ActionResultType.CONSUME;
+            return InteractionResult.CONSUME;
 
         } else
-            player.displayClientMessage(new TranslationTextComponent("chat.hotchicks.livestock_crate.fail"), true);
+            player.displayClientMessage(new TranslatableComponent("chat.hotchicks.livestock_crate.fail"), true);
 
         return super.interactLivingEntity(stack, player, target, hand);
     }
 
-    private ItemStack caughtEntityItem(LivingEntity target, PlayerEntity player) {
+    private ItemStack caughtEntityItem(LivingEntity target, Player player) {
         target.stopRiding();
         target.ejectPassengers();
         target.revive();
 
-        CompoundNBT tags = new CompoundNBT();
+        CompoundTag tags = new CompoundTag();
         target.save(tags);
 
         ResourceLocation key = EntityType.getKey(target.getType());
@@ -71,7 +73,7 @@ public class LivestockCrateItem extends Item {
             tags.putString("LivestockBreed", ((LivestockEntity) target).getReadableBreed());
 
         target.remove();
-        player.displayClientMessage(new TranslationTextComponent("chat.hotchicks.livestock_crate.capture", target.getDisplayName()), true);
+        player.displayClientMessage(new TranslatableComponent("chat.hotchicks.livestock_crate.capture", target.getDisplayName()), true);
 
         ItemStack newStack = new ItemStack(this);
         newStack.setTag(tags);
@@ -79,20 +81,20 @@ public class LivestockCrateItem extends Item {
     }
 
     @Override
-    public ActionResultType useOn(ItemUseContext context) {
-        PlayerEntity player = context.getPlayer();
+    public InteractionResult useOn(UseOnContext context) {
+        Player player = context.getPlayer();
         if (player != null) {
-            World level = context.getLevel();
+            Level level = context.getLevel();
             ItemStack stack = context.getItemInHand();
             if (!stack.hasTag() || (stack.hasTag() && !stack.getTag().contains("id"))) {
-                player.displayClientMessage(new TranslationTextComponent("chat.hotchicks.livestock_crate.empty"), true);
-                return ActionResultType.PASS;
+                player.displayClientMessage(new TranslatableComponent("chat.hotchicks.livestock_crate.empty"), true);
+                return InteractionResult.PASS;
             }
 
             if (!level.isClientSide) {
                 BlockPos pos = new BlockPos(context.getClickedPos()).relative(context.getClickedFace());
 
-                CompoundNBT tags = stack.getTag();
+                CompoundTag tags = stack.getTag();
                 tags.remove("Passengers");
                 tags.remove("Leash");
                 tags.remove("OwnerName");
@@ -107,28 +109,28 @@ public class LivestockCrateItem extends Item {
                     stack.shrink(1);
                     player.setItemInHand(context.getHand(), new ItemStack(this));
 
-                    player.displayClientMessage(new TranslationTextComponent("chat.hotchicks.livestock_crate.release", entity.getDisplayName()), true);
+                    player.displayClientMessage(new TranslatableComponent("chat.hotchicks.livestock_crate.release", entity.getDisplayName()), true);
                 }
             }
 
-            return ActionResultType.sidedSuccess(level.isClientSide);
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
 
         return super.useOn(context);
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable World level, List<ITextComponent> tooltip, ITooltipFlag flag) {
-        CompoundNBT nbt = stack.getTag();
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
+        CompoundTag nbt = stack.getTag();
         if (nbt != null && nbt.contains("id")) {
             if (nbt.contains("DisplayName"))
-                tooltip.add(new StringTextComponent("\"" + nbt.getString("DisplayName") + "\"").withStyle(TextFormatting.BLUE));
+                tooltip.add(new TextComponent("\"" + nbt.getString("DisplayName") + "\"").withStyle(ChatFormatting.BLUE));
 
             String livestockBreed = nbt.contains("LivestockBreed") ? nbt.getString("LivestockBreed") + " " : "";
-            ITextComponent entityId = new TranslationTextComponent(Util.makeDescriptionId("entity", new ResourceLocation(nbt.getString("id"))));
-            tooltip.add(new StringTextComponent(livestockBreed).append(entityId).withStyle(TextFormatting.AQUA));
+            Component entityId = new TranslatableComponent(Util.makeDescriptionId("entity", new ResourceLocation(nbt.getString("id"))));
+            tooltip.add(new TextComponent(livestockBreed).append(entityId).withStyle(ChatFormatting.AQUA));
 
         } else
-            tooltip.add(new TranslationTextComponent("tooltip.hotchicks.livestock_crate.empty").withStyle(TextFormatting.AQUA));
+            tooltip.add(new TranslatableComponent("tooltip.hotchicks.livestock_crate.empty").withStyle(ChatFormatting.AQUA));
     }
 }

@@ -2,11 +2,11 @@ package com.github.kmfisk.hotchicks.entity.goal;
 
 import com.github.kmfisk.hotchicks.block.entity.NestTileEntity;
 import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.server.level.ServerLevel;
 
 public class LayEggsGoal extends Goal {
     private final HotChickenEntity chicken;
@@ -32,7 +32,7 @@ public class LayEggsGoal extends Goal {
 
     @Override
     public void start() {
-        TileEntity tileEntity = chicken.level.getBlockEntity(chicken.getNestPos());
+        BlockEntity tileEntity = chicken.level.getBlockEntity(chicken.getNestPos());
         if (tileEntity instanceof NestTileEntity) {
             NestTileEntity nestTileEntity = (NestTileEntity) tileEntity;
 
@@ -45,7 +45,7 @@ public class LayEggsGoal extends Goal {
                             double d3 = chicken.getRandom().nextGaussian() * 0.02D;
                             double d1 = chicken.getRandom().nextGaussian() * 0.02D;
                             double d2 = chicken.getRandom().nextGaussian() * 0.02D;
-                            ((ServerWorld) chicken.level).sendParticles(ParticleTypes.HEART, (double) chicken.getNestPos().getX() + 0.5D, chicken.getNestPos().getY(), (double) chicken.getNestPos().getZ() + 0.5D, 1, d3, d1, d2, 0.15F);
+                            ((ServerLevel) chicken.level).sendParticles(ParticleTypes.HEART, (double) chicken.getNestPos().getX() + 0.5D, chicken.getNestPos().getY(), (double) chicken.getNestPos().getZ() + 0.5D, 1, d3, d1, d2, 0.15F);
                         }
                     }
                     break;

@@ -1,26 +1,26 @@
 package com.github.kmfisk.hotchicks.inventory;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIntArray;
-import net.minecraft.util.IntArray;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class MillContainer extends Container {
-    private final IInventory inventory;
-    private final IIntArray data;
+public class MillContainer extends AbstractContainerMenu {
+    private final Container inventory;
+    private final ContainerData data;
 
-    public MillContainer(int id, PlayerInventory playerInventory) {
-        this(id, playerInventory, new Inventory(4), new IntArray(3));
+    public MillContainer(int id, Inventory playerInventory) {
+        this(id, playerInventory, new SimpleContainer(4), new SimpleContainerData(3));
     }
 
-    public MillContainer(int id, PlayerInventory playerInventory, IInventory inventory, IIntArray data) {
+    public MillContainer(int id, Inventory playerInventory, Container inventory, ContainerData data) {
         super(HotContainerTypes.MILL.get(), id);
         this.inventory = inventory;
         this.data = data;
@@ -45,12 +45,12 @@ public class MillContainer extends Container {
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         return inventory.stillValid(player);
     }
 
     @Override
-    public ItemStack quickMoveStack(PlayerEntity player, int index) {
+    public ItemStack quickMoveStack(Player player, int index) {
         ItemStack resultStack = ItemStack.EMPTY;
         Slot slot = slots.get(index);
         if (slot != null && slot.hasItem()) {
@@ -68,7 +68,7 @@ public class MillContainer extends Container {
     }
 
     @Override
-    public void removed(PlayerEntity player) {
+    public void removed(Player player) {
         super.removed(player);
         inventory.stopOpen(player);
     }

@@ -1,17 +1,17 @@
 package com.github.kmfisk.hotchicks.block.trees;
 
 import com.github.kmfisk.hotchicks.worldgen.HotFeatures;
-import net.minecraft.block.trees.Tree;
-import net.minecraft.world.gen.feature.BaseTreeFeatureConfig;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.level.block.grower.AbstractTreeGrower;
+import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class GrapefruitTree extends Tree {
+public class GrapefruitTree extends AbstractTreeGrower {
     @Nullable
     @Override
-    protected ConfiguredFeature<BaseTreeFeatureConfig, ?> getConfiguredFeature(Random random, boolean bees) {
+    protected ConfiguredFeature<TreeConfiguration, ?> getConfiguredFeature(Random random, boolean bees) {
         return HotFeatures.GRAPEFRUIT;
     }
 }

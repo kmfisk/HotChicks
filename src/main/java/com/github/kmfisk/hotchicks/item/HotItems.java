@@ -4,10 +4,10 @@ import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.block.HotBlocks;
 import com.github.kmfisk.hotchicks.entity.HotEntities;
 import net.minecraft.block.ComposterBlock;
-import net.minecraft.item.BlockNamedItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.item.SoupItem;
+import net.minecraft.world.item.ItemNameBlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.BowlFoodItem;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -88,16 +88,16 @@ public class HotItems {
     public static final RegistryObject<Item> POOR_COWHIDE = REGISTRAR.register("poor_cowhide", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
 
     // BASIC CROPS
-    public static final RegistryObject<Item> CABBAGE = REGISTRAR.register("cabbage", () -> new BlockNamedItem(HotBlocks.CABBAGE_CROP.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.CABBAGE)));
-    public static final RegistryObject<Item> GARLIC = REGISTRAR.register("garlic", () -> new BlockNamedItem(HotBlocks.GARLIC_CROP.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.GARLIC)));
-    public static final RegistryObject<Item> KALE = REGISTRAR.register("kale", () -> new BlockNamedItem(HotBlocks.KALE_CROP.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.KALE)));
-    public static final RegistryObject<Item> LETTUCE = REGISTRAR.register("lettuce", () -> new BlockNamedItem(HotBlocks.LETTUCE_CROP.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.LETTUCE)));
-    public static final RegistryObject<Item> OATS = REGISTRAR.register("oats", () -> new BlockNamedItem(HotBlocks.OATS_CROP.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> CABBAGE = REGISTRAR.register("cabbage", () -> new ItemNameBlockItem(HotBlocks.CABBAGE_CROP.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.CABBAGE)));
+    public static final RegistryObject<Item> GARLIC = REGISTRAR.register("garlic", () -> new ItemNameBlockItem(HotBlocks.GARLIC_CROP.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.GARLIC)));
+    public static final RegistryObject<Item> KALE = REGISTRAR.register("kale", () -> new ItemNameBlockItem(HotBlocks.KALE_CROP.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.KALE)));
+    public static final RegistryObject<Item> LETTUCE = REGISTRAR.register("lettuce", () -> new ItemNameBlockItem(HotBlocks.LETTUCE_CROP.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.LETTUCE)));
+    public static final RegistryObject<Item> OATS = REGISTRAR.register("oats", () -> new ItemNameBlockItem(HotBlocks.OATS_CROP.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
 
     // TALL CROPS
-    public static final RegistryObject<Item> CORN = REGISTRAR.register("corn", () -> new BlockNamedItem(HotBlocks.CORN_CROP.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.CORN)));
-    public static final RegistryObject<Item> MILLET = REGISTRAR.register("millet", () -> new BlockNamedItem(HotBlocks.MILLET_CROP.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
-    public static final RegistryObject<Item> RICE = REGISTRAR.register("rice", () -> new BlockNamedItem(HotBlocks.RICE_CROP.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> CORN = REGISTRAR.register("corn", () -> new ItemNameBlockItem(HotBlocks.CORN_CROP.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.CORN)));
+    public static final RegistryObject<Item> MILLET = REGISTRAR.register("millet", () -> new ItemNameBlockItem(HotBlocks.MILLET_CROP.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> RICE = REGISTRAR.register("rice", () -> new ItemNameBlockItem(HotBlocks.RICE_CROP.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
 
     // TRELLIS CROPS
     public static final RegistryObject<Item> CUCUMBER = REGISTRAR.register("cucumber", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.CUCUMBER)));
@@ -107,12 +107,12 @@ public class HotItems {
     public static final RegistryObject<Item> TOMATO = REGISTRAR.register("tomato", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.TOMATOES)));
 
     // BUSH CROPS
-    public static final RegistryObject<Item> BANANA = REGISTRAR.register("banana", () -> new BlockNamedItem(HotBlocks.BANANA_TREE.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.BANANA)));
-    public static final RegistryObject<Item> BLUEBERRIES = REGISTRAR.register("blueberries", () -> new BlockNamedItem(HotBlocks.BLUEBERRY_BUSH.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.BLUEBERRY)));
-    public static final RegistryObject<Item> COTTON = REGISTRAR.register("cotton", () -> new BlockNamedItem(HotBlocks.COTTON_BUSH.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
-    public static final RegistryObject<Item> OKRA = REGISTRAR.register("okra", () -> new BlockNamedItem(HotBlocks.OKRA_BUSH.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.OKRA)));
-    public static final RegistryObject<Item> PEPPERS = REGISTRAR.register("peppers", () -> new BlockNamedItem(HotBlocks.PEPPER_BUSH.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.PEPPERS)));
-    public static final RegistryObject<Item> STRAWBERRY = REGISTRAR.register("strawberry", () -> new BlockNamedItem(HotBlocks.STRAWBERRY_BUSH.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.STRAWBERRY)));
+    public static final RegistryObject<Item> BANANA = REGISTRAR.register("banana", () -> new ItemNameBlockItem(HotBlocks.BANANA_TREE.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.BANANA)));
+    public static final RegistryObject<Item> BLUEBERRIES = REGISTRAR.register("blueberries", () -> new ItemNameBlockItem(HotBlocks.BLUEBERRY_BUSH.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.BLUEBERRY)));
+    public static final RegistryObject<Item> COTTON = REGISTRAR.register("cotton", () -> new ItemNameBlockItem(HotBlocks.COTTON_BUSH.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP)));
+    public static final RegistryObject<Item> OKRA = REGISTRAR.register("okra", () -> new ItemNameBlockItem(HotBlocks.OKRA_BUSH.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.OKRA)));
+    public static final RegistryObject<Item> PEPPERS = REGISTRAR.register("peppers", () -> new ItemNameBlockItem(HotBlocks.PEPPER_BUSH.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.PEPPERS)));
+    public static final RegistryObject<Item> STRAWBERRY = REGISTRAR.register("strawberry", () -> new ItemNameBlockItem(HotBlocks.STRAWBERRY_BUSH.get(), new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.STRAWBERRY)));
 
     // TREE FRUITS
     public static final RegistryObject<Item> CITRON = REGISTRAR.register("citron", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.CITRON)));
@@ -147,20 +147,20 @@ public class HotItems {
     public static final RegistryObject<Item> CABBAGE_ROLLS = REGISTRAR.register("cabbage_rolls", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.CABBAGE_ROLLS).stacksTo(4)));
     public static final RegistryObject<Item> CHEESE_PLATE = REGISTRAR.register("cheese_plate", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.CHEESE_PLATE).stacksTo(4)));
     public static final RegistryObject<Item> FARMERS_BREAKFAST = REGISTRAR.register("farmers_breakfast", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.FARMERS_BREAKFAST).stacksTo(4)));
-    public static final RegistryObject<Item> FRUIT_BOWL = REGISTRAR.register("fruit_bowl", () -> new SoupItem(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.FRUIT_BOWL).stacksTo(4).craftRemainder(Items.BOWL)));
+    public static final RegistryObject<Item> FRUIT_BOWL = REGISTRAR.register("fruit_bowl", () -> new BowlFoodItem(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.FRUIT_BOWL).stacksTo(4).craftRemainder(Items.BOWL)));
     public static final RegistryObject<Item> GLAZED_PORK_CHOP = REGISTRAR.register("glazed_pork_chop", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.GLAZED_PORK_CHOP).stacksTo(4)));
     public static final RegistryObject<Item> KIMCHI = REGISTRAR.register("kimchi", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.KIMCHI)));
     public static final RegistryObject<Item> LETTUCE_WRAP = REGISTRAR.register("lettuce_wrap", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.LETTUCE_WRAP).stacksTo(4)));
-    public static final RegistryObject<Item> OATMEAL = REGISTRAR.register("oatmeal", () -> new SoupItem(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.OATMEAL).stacksTo(4).craftRemainder(Items.BOWL)));
+    public static final RegistryObject<Item> OATMEAL = REGISTRAR.register("oatmeal", () -> new BowlFoodItem(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.OATMEAL).stacksTo(4).craftRemainder(Items.BOWL)));
     public static final RegistryObject<Item> PAVLOVA = REGISTRAR.register("pavlova", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.PAVLOVA).stacksTo(16)));
     public static final RegistryObject<Item> PICKLES = REGISTRAR.register("pickles", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.PICKLES)));
     public static final RegistryObject<Item> PORK_CUTLET = REGISTRAR.register("pork_cutlet", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.PORK_CUTLET).stacksTo(4)));
     public static final RegistryObject<Item> RABBIT_TACOS = REGISTRAR.register("rabbit_tacos", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.RABBIT_TACOS).stacksTo(4)));
-    public static final RegistryObject<Item> CHICKEN_SALAD = REGISTRAR.register("chicken_salad", () -> new SoupItem(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.CHICKEN_SALAD).stacksTo(8).craftRemainder(Items.BOWL)));
-    public static final RegistryObject<Item> CHINESE_CHICKEN_SALAD = REGISTRAR.register("chinese_chicken_salad", () -> new SoupItem(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.CHINESE_CHICKEN_SALAD).stacksTo(8).craftRemainder(Items.BOWL)));
-    public static final RegistryObject<Item> DANDELION_SALAD = REGISTRAR.register("dandelion_salad", () -> new SoupItem(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.DANDELION_SALAD).stacksTo(8).craftRemainder(Items.BOWL)));
-    public static final RegistryObject<Item> GARDEN_SALAD = REGISTRAR.register("garden_salad", () -> new SoupItem(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.GARDEN_SALAD).stacksTo(8).craftRemainder(Items.BOWL)));
-    public static final RegistryObject<Item> POWER_SALAD = REGISTRAR.register("power_salad", () -> new SoupItem(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.POWER_SALAD).stacksTo(8).craftRemainder(Items.BOWL)));
+    public static final RegistryObject<Item> CHICKEN_SALAD = REGISTRAR.register("chicken_salad", () -> new BowlFoodItem(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.CHICKEN_SALAD).stacksTo(8).craftRemainder(Items.BOWL)));
+    public static final RegistryObject<Item> CHINESE_CHICKEN_SALAD = REGISTRAR.register("chinese_chicken_salad", () -> new BowlFoodItem(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.CHINESE_CHICKEN_SALAD).stacksTo(8).craftRemainder(Items.BOWL)));
+    public static final RegistryObject<Item> DANDELION_SALAD = REGISTRAR.register("dandelion_salad", () -> new BowlFoodItem(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.DANDELION_SALAD).stacksTo(8).craftRemainder(Items.BOWL)));
+    public static final RegistryObject<Item> GARDEN_SALAD = REGISTRAR.register("garden_salad", () -> new BowlFoodItem(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.GARDEN_SALAD).stacksTo(8).craftRemainder(Items.BOWL)));
+    public static final RegistryObject<Item> POWER_SALAD = REGISTRAR.register("power_salad", () -> new BowlFoodItem(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.POWER_SALAD).stacksTo(8).craftRemainder(Items.BOWL)));
     public static final RegistryObject<Item> SALMON_RICE_BOWL = REGISTRAR.register("salmon_rice_bowl", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.SALMON_RICE_BOWL).stacksTo(4)));
     public static final RegistryObject<Item> SHAKSHUKA = REGISTRAR.register("shakshuka", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.SHAKSHUKA).stacksTo(4)));
     public static final RegistryObject<Item> SHORT_RIB_BBQ = REGISTRAR.register("short_rib_bbq", () -> new Item(new Item.Properties().tab(HotChicks.HOT_CHICKS_GROUP).food(HotFoods.SHORT_RIB_BBQ).stacksTo(4)));

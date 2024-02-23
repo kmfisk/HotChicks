@@ -1,9 +1,9 @@
 package com.github.kmfisk.hotchicks.tags;
 
 import com.github.kmfisk.hotchicks.HotChicks;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.Tags;
 
 public class HotItemTags {

@@ -3,59 +3,61 @@ package com.github.kmfisk.hotchicks.block;
 import com.github.kmfisk.hotchicks.block.entity.HotTileEntities;
 import com.github.kmfisk.hotchicks.block.entity.TroughTileEntity;
 import com.github.kmfisk.hotchicks.inventory.TroughContainer;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ChestBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.DoubleSidedInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityMerger;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.CompoundContainer;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.DoubleBlockCombiner;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class MetalTroughBlock extends TroughBlock {
-    private static final TileEntityMerger.ICallback<TroughTileEntity, Optional<INamedContainerProvider>> METAL_CONTAINER_MERGER = new TileEntityMerger.ICallback<TroughTileEntity, Optional<INamedContainerProvider>>() {
+    private static final DoubleBlockCombiner.Combiner<TroughTileEntity, Optional<MenuProvider>> METAL_CONTAINER_MERGER = new DoubleBlockCombiner.Combiner<TroughTileEntity, Optional<MenuProvider>>() {
         @Override
-        public Optional<INamedContainerProvider> acceptDouble(final TroughTileEntity tileEntity, final TroughTileEntity tileEntity1) {
-            final IInventory iinventory = new DoubleSidedInventory(tileEntity, tileEntity1);
-            return Optional.of(new INamedContainerProvider() {
+        public Optional<MenuProvider> acceptDouble(final TroughTileEntity tileEntity, final TroughTileEntity tileEntity1) {
+            final Container iinventory = new CompoundContainer(tileEntity, tileEntity1);
+            return Optional.of(new MenuProvider() {
                 @Nullable
                 @Override
-                public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity player) {
+                public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
                     if (tileEntity.canOpen(player) && tileEntity1.canOpen(player))
                         return TroughContainer.createGenericDoubleMetal(id, playerInventory, iinventory);
                     else return null;
                 }
 
                 @Override
-                public ITextComponent getDisplayName() {
+                public Component getDisplayName() {
                     if (tileEntity.hasCustomName()) return tileEntity.getDisplayName();
                     else
-                        return new TranslationTextComponent(Util.makeDescriptionId("container_double", ForgeRegistries.BLOCKS.getKey(tileEntity.getBlockState().getBlock())));
+                        return new TranslatableComponent(Util.makeDescriptionId("container_double", ForgeRegistries.BLOCKS.getKey(tileEntity.getBlockState().getBlock())));
                 }
             });
         }
 
         @Override
-        public Optional<INamedContainerProvider> acceptSingle(TroughTileEntity tileEntity) {
+        public Optional<MenuProvider> acceptSingle(TroughTileEntity tileEntity) {
             return Optional.of(tileEntity);
         }
 
         @Override
-        public Optional<INamedContainerProvider> acceptNone() {
+        public Optional<MenuProvider> acceptNone() {
             return Optional.empty();
         }
     };
@@ -65,23 +67,23 @@ public class MetalTroughBlock extends TroughBlock {
     }
 
     @Override
-    public TileEntityMerger.ICallbackWrapper<? extends TroughTileEntity> combine(BlockState state, World level, BlockPos pos, boolean override) {
-        BiPredicate<IWorld, BlockPos> bipredicate;
+    public DoubleBlockCombiner.NeighborCombineResult<? extends TroughTileEntity> combine(BlockState state, Level level, BlockPos pos, boolean override) {
+        BiPredicate<LevelAccessor, BlockPos> bipredicate;
         if (override) bipredicate = (level1, pos1) -> false;
         else bipredicate = ChestBlock::isChestBlockedAt;
 
-        return TileEntityMerger.combineWithNeigbour(HotTileEntities.METAL_TROUGH.get(), MetalTroughBlock::getChestMergerType, MetalTroughBlock::getDirectionToAttached, FACING, state, level, pos, bipredicate);
+        return DoubleBlockCombiner.combineWithNeigbour(HotTileEntities.METAL_TROUGH.get(), MetalTroughBlock::getChestMergerType, MetalTroughBlock::getDirectionToAttached, FACING, state, level, pos, bipredicate);
     }
 
     @Nullable
     @Override
-    public INamedContainerProvider getMenuProvider(BlockState state, World level, BlockPos pos) {
+    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
         return this.combine(state, level, pos, false).apply(METAL_CONTAINER_MERGER).orElse(null);
     }
 
     @Nullable
     @Override
-    public TileEntity newBlockEntity(IBlockReader level) {
+    public BlockEntity newBlockEntity(BlockGetter level) {
         return HotTileEntities.METAL_TROUGH.get().create();
     }
 }

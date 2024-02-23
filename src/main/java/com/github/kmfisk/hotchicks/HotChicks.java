@@ -14,10 +14,10 @@ import com.github.kmfisk.hotchicks.item.HotItems;
 import com.github.kmfisk.hotchicks.loot.HotGlobalLootModifier;
 import com.github.kmfisk.hotchicks.worldgen.HotFeature;
 import com.github.kmfisk.hotchicks.worldgen.HotFeatures;
-import net.minecraft.block.ComposterBlock;
+import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -35,7 +35,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 public class HotChicks {
     public static final String MOD_ID = "hotchicks";
 
-    public static final ItemGroup HOT_CHICKS_GROUP = new ItemGroup(HotChicks.MOD_ID + ".hot_chicks_group") {
+    public static final CreativeModeTab HOT_CHICKS_GROUP = new CreativeModeTab(HotChicks.MOD_ID + ".hot_chicks_group") {
         @Override
         public ItemStack makeIcon() {
             return new ItemStack(HotItems.WHITE_EGG.get());

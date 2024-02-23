@@ -1,8 +1,8 @@
 package com.github.kmfisk.hotchicks.block;
 
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringRepresentable;
 
-public enum TroughFillType implements IStringSerializable {
+public enum TroughFillType implements StringRepresentable {
     NONE("none"),
     WATER("water"),
     FEED("feed");

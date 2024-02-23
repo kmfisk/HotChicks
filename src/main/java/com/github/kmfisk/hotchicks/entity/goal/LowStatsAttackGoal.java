@@ -1,8 +1,8 @@
 package com.github.kmfisk.hotchicks.entity.goal;
 
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 
 public class LowStatsAttackGoal<T extends LivingEntity> extends NearestAttackableTargetGoal<T> {
     protected final LivestockEntity livestock;

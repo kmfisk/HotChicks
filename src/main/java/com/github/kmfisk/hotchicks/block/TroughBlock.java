@@ -4,48 +4,65 @@ import com.github.kmfisk.hotchicks.block.entity.HotTileEntities;
 import com.github.kmfisk.hotchicks.block.entity.TroughTileEntity;
 import com.github.kmfisk.hotchicks.inventory.TroughContainer;
 import net.minecraft.block.*;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.DoubleSidedInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.state.properties.ChestType;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityMerger;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.CompoundContainer;
+import net.minecraft.world.Container;
+import net.minecraft.world.Containers;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.ChestType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.DoubleBlockCombiner;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 
-public class TroughBlock extends ContainerBlock {
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
+import net.minecraft.Util;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
+
+public class TroughBlock extends BaseEntityBlock {
     public static final EnumProperty<TroughFillType> CONTAINS = EnumProperty.create("contains", TroughFillType.class);
 
-    public static final DirectionProperty FACING = HorizontalBlock.FACING;
+    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public static final EnumProperty<ChestType> TYPE = BlockStateProperties.CHEST_TYPE;
 
     private static final VoxelShape INSIDE_SINGLE = box(2.0D, 4.0D, 2.0D, 14.0D, 16.0D, 14.0D);
@@ -54,11 +71,11 @@ public class TroughBlock extends ContainerBlock {
     private static final VoxelShape INSIDE_WEST = box(0.0D, 4.0D, 2.0D, 14.0D, 16.0D, 14.0D);
     private static final VoxelShape INSIDE_EAST = box(2.0D, 4.0D, 2.0D, 16.0D, 16.0D, 14.0D);
 
-    protected static final VoxelShape SHAPE_SINGLE = VoxelShapes.join(box(0, 0, 0, 16, 12, 16), VoxelShapes.or(box(0.0D, 0.0D, 4.0D, 16.0D, 2.0D, 12.0D), box(4.0D, 0.0D, 0.0D, 12.0D, 2.0D, 16.0D), box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D), INSIDE_SINGLE), IBooleanFunction.ONLY_FIRST);
-    protected static final VoxelShape SHAPE_NORTH = VoxelShapes.join(box(0, 0, 0, 16, 12, 16), VoxelShapes.or(box(0.0D, 0.0D, 4.0D, 16.0D, 2.0D, 12.0D), box(4.0D, 0.0D, 0.0D, 12.0D, 2.0D, 16.0D), box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D), INSIDE_NORTH), IBooleanFunction.ONLY_FIRST);
-    protected static final VoxelShape SHAPE_SOUTH = VoxelShapes.join(box(0, 0, 0, 16, 12, 16), VoxelShapes.or(box(0.0D, 0.0D, 4.0D, 16.0D, 2.0D, 12.0D), box(4.0D, 0.0D, 0.0D, 12.0D, 2.0D, 16.0D), box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D), INSIDE_SOUTH), IBooleanFunction.ONLY_FIRST);
-    protected static final VoxelShape SHAPE_WEST = VoxelShapes.join(box(0, 0, 0, 16, 12, 16), VoxelShapes.or(box(0.0D, 0.0D, 4.0D, 16.0D, 2.0D, 12.0D), box(4.0D, 0.0D, 0.0D, 12.0D, 2.0D, 16.0D), box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D), INSIDE_WEST), IBooleanFunction.ONLY_FIRST);
-    protected static final VoxelShape SHAPE_EAST = VoxelShapes.join(box(0, 0, 0, 16, 12, 16), VoxelShapes.or(box(0.0D, 0.0D, 4.0D, 16.0D, 2.0D, 12.0D), box(4.0D, 0.0D, 0.0D, 12.0D, 2.0D, 16.0D), box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D), INSIDE_EAST), IBooleanFunction.ONLY_FIRST);
+    protected static final VoxelShape SHAPE_SINGLE = Shapes.join(box(0, 0, 0, 16, 12, 16), Shapes.or(box(0.0D, 0.0D, 4.0D, 16.0D, 2.0D, 12.0D), box(4.0D, 0.0D, 0.0D, 12.0D, 2.0D, 16.0D), box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D), INSIDE_SINGLE), BooleanOp.ONLY_FIRST);
+    protected static final VoxelShape SHAPE_NORTH = Shapes.join(box(0, 0, 0, 16, 12, 16), Shapes.or(box(0.0D, 0.0D, 4.0D, 16.0D, 2.0D, 12.0D), box(4.0D, 0.0D, 0.0D, 12.0D, 2.0D, 16.0D), box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D), INSIDE_NORTH), BooleanOp.ONLY_FIRST);
+    protected static final VoxelShape SHAPE_SOUTH = Shapes.join(box(0, 0, 0, 16, 12, 16), Shapes.or(box(0.0D, 0.0D, 4.0D, 16.0D, 2.0D, 12.0D), box(4.0D, 0.0D, 0.0D, 12.0D, 2.0D, 16.0D), box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D), INSIDE_SOUTH), BooleanOp.ONLY_FIRST);
+    protected static final VoxelShape SHAPE_WEST = Shapes.join(box(0, 0, 0, 16, 12, 16), Shapes.or(box(0.0D, 0.0D, 4.0D, 16.0D, 2.0D, 12.0D), box(4.0D, 0.0D, 0.0D, 12.0D, 2.0D, 16.0D), box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D), INSIDE_WEST), BooleanOp.ONLY_FIRST);
+    protected static final VoxelShape SHAPE_EAST = Shapes.join(box(0, 0, 0, 16, 12, 16), Shapes.or(box(0.0D, 0.0D, 4.0D, 16.0D, 2.0D, 12.0D), box(4.0D, 0.0D, 0.0D, 12.0D, 2.0D, 16.0D), box(2.0D, 0.0D, 2.0D, 14.0D, 2.0D, 14.0D), INSIDE_EAST), BooleanOp.ONLY_FIRST);
 
     //MERGERS
     /*private static final TileEntityMerger.ICallback<TroughTileEntity, Optional<IInventory>> INVENTORY_MERGER = new TileEntityMerger.ICallback<TroughTileEntity, Optional<IInventory>>() {
@@ -77,35 +94,35 @@ public class TroughBlock extends ContainerBlock {
             return Optional.empty();
         }
     };*/
-    private static final TileEntityMerger.ICallback<TroughTileEntity, Optional<INamedContainerProvider>> CONTAINER_MERGER = new TileEntityMerger.ICallback<TroughTileEntity, Optional<INamedContainerProvider>>() {
+    private static final DoubleBlockCombiner.Combiner<TroughTileEntity, Optional<MenuProvider>> CONTAINER_MERGER = new DoubleBlockCombiner.Combiner<TroughTileEntity, Optional<MenuProvider>>() {
         @Override
-        public Optional<INamedContainerProvider> acceptDouble(final TroughTileEntity tileEntity, final TroughTileEntity tileEntity1) {
-            final IInventory iinventory = new DoubleSidedInventory(tileEntity, tileEntity1);
-            return Optional.of(new INamedContainerProvider() {
+        public Optional<MenuProvider> acceptDouble(final TroughTileEntity tileEntity, final TroughTileEntity tileEntity1) {
+            final Container iinventory = new CompoundContainer(tileEntity, tileEntity1);
+            return Optional.of(new MenuProvider() {
                 @Nullable
                 @Override
-                public Container createMenu(int id, PlayerInventory playerInventory, PlayerEntity player) {
+                public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
                     if (tileEntity.canOpen(player) && tileEntity1.canOpen(player))
                         return TroughContainer.createGenericDouble(id, playerInventory, iinventory);
                     else return null;
                 }
 
                 @Override
-                public ITextComponent getDisplayName() {
+                public Component getDisplayName() {
                     if (tileEntity.hasCustomName()) return tileEntity.getDisplayName();
                     else
-                        return new TranslationTextComponent(Util.makeDescriptionId("container_double", ForgeRegistries.BLOCKS.getKey(tileEntity.getBlockState().getBlock())));
+                        return new TranslatableComponent(Util.makeDescriptionId("container_double", ForgeRegistries.BLOCKS.getKey(tileEntity.getBlockState().getBlock())));
                 }
             });
         }
 
         @Override
-        public Optional<INamedContainerProvider> acceptSingle(TroughTileEntity tileEntity) {
+        public Optional<MenuProvider> acceptSingle(TroughTileEntity tileEntity) {
             return Optional.of(tileEntity);
         }
 
         @Override
-        public Optional<INamedContainerProvider> acceptNone() {
+        public Optional<MenuProvider> acceptNone() {
             return Optional.empty();
         }
     };
@@ -114,10 +131,10 @@ public class TroughBlock extends ContainerBlock {
         super(properties);
     }
 
-    public static TileEntityMerger.Type getChestMergerType(BlockState state) {
+    public static DoubleBlockCombiner.BlockType getChestMergerType(BlockState state) {
         ChestType chesttype = state.getValue(TYPE);
-        if (chesttype == ChestType.SINGLE) return TileEntityMerger.Type.SINGLE;
-        else return chesttype == ChestType.RIGHT ? TileEntityMerger.Type.FIRST : TileEntityMerger.Type.SECOND;
+        if (chesttype == ChestType.SINGLE) return DoubleBlockCombiner.BlockType.SINGLE;
+        else return chesttype == ChestType.RIGHT ? DoubleBlockCombiner.BlockType.FIRST : DoubleBlockCombiner.BlockType.SECOND;
     }
 
    /* @Nullable
@@ -125,16 +142,16 @@ public class TroughBlock extends ContainerBlock {
         return chest.combine(state, level, pos, override).apply(INVENTORY_MERGER).orElse(null);
     }*/
 
-    public TileEntityMerger.ICallbackWrapper<? extends TroughTileEntity> combine(BlockState state, World level, BlockPos pos, boolean override) {
-        BiPredicate<IWorld, BlockPos> bipredicate;
+    public DoubleBlockCombiner.NeighborCombineResult<? extends TroughTileEntity> combine(BlockState state, Level level, BlockPos pos, boolean override) {
+        BiPredicate<LevelAccessor, BlockPos> bipredicate;
         if (override) bipredicate = (level1, pos1) -> false;
         else bipredicate = ChestBlock::isChestBlockedAt;
 
-        return TileEntityMerger.combineWithNeigbour(HotTileEntities.TROUGH.get(), TroughBlock::getChestMergerType, TroughBlock::getDirectionToAttached, FACING, state, level, pos, bipredicate);
+        return DoubleBlockCombiner.combineWithNeigbour(HotTileEntities.TROUGH.get(), TroughBlock::getChestMergerType, TroughBlock::getDirectionToAttached, FACING, state, level, pos, bipredicate);
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld level, BlockPos pos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos pos, BlockPos facingPos) {
         if (facingState.is(this) && facing.getAxis().isHorizontal()) {
             ChestType facingChestType = facingState.getValue(TYPE);
             if (state.getValue(TYPE) == ChestType.SINGLE && facingChestType != ChestType.SINGLE && state.getValue(FACING) == facingState.getValue(FACING) && getDirectionToAttached(facingState) == facing.getOpposite())
@@ -146,7 +163,7 @@ public class TroughBlock extends ContainerBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader level, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         if (state.getValue(TYPE) == ChestType.SINGLE) {
             return SHAPE_SINGLE;
         } else {
@@ -176,13 +193,13 @@ public class TroughBlock extends ContainerBlock {
      * Returns facing pointing to a chest to form a double chest with, null otherwise
      */
     @Nullable
-    private Direction getDirectionToAttach(BlockItemUseContext context, Direction direction) {
+    private Direction getDirectionToAttach(BlockPlaceContext context, Direction direction) {
         BlockState blockstate = context.getLevel().getBlockState(context.getClickedPos().relative(direction));
         return blockstate.is(this) && blockstate.getValue(TYPE) == ChestType.SINGLE ? blockstate.getValue(FACING) : null;
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         ChestType chesttype = ChestType.SINGLE;
         Direction direction = context.getHorizontalDirection().getOpposite();
         boolean flag = context.isSecondaryUseActive();
@@ -206,20 +223,20 @@ public class TroughBlock extends ContainerBlock {
     }
 
     @Override
-    public void setPlacedBy(World level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         if (stack.hasCustomHoverName()) {
-            TileEntity tileentity = level.getBlockEntity(pos);
+            BlockEntity tileentity = level.getBlockEntity(pos);
             if (tileentity instanceof TroughTileEntity)
                 ((TroughTileEntity) tileentity).setCustomName(stack.getHoverName());
         }
     }
 
     @Override
-    public void onRemove(BlockState state, World level, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
-            TileEntity tileentity = level.getBlockEntity(pos);
-            if (tileentity instanceof IInventory) {
-                InventoryHelper.dropContents(level, pos, (IInventory) tileentity);
+            BlockEntity tileentity = level.getBlockEntity(pos);
+            if (tileentity instanceof Container) {
+                Containers.dropContents(level, pos, (Container) tileentity);
                 level.updateNeighbourForOutputSignal(pos, this);
             }
 
@@ -239,22 +256,22 @@ public class TroughBlock extends ContainerBlock {
 
     @Nullable
     @Override
-    public INamedContainerProvider getMenuProvider(BlockState state, World level, BlockPos pos) {
+    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
         return this.combine(state, level, pos, false).apply(CONTAINER_MERGER).orElse(null);
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, TYPE, CONTAINS);
     }
 
     @Override
-    public boolean isPathfindable(BlockState state, IBlockReader level, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter level, BlockPos pos, PathComputationType type) {
         return false;
     }
 
     @Override
-    public ActionResultType use(BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack itemstack = player.getItemInHand(hand);
 
         Item item = itemstack.getItem();
@@ -270,8 +287,8 @@ public class TroughBlock extends ContainerBlock {
                 level.setBlockAndUpdate(connectedSlot, connectedState.setValue(CONTAINS, TroughFillType.WATER));
             }
 
-            level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            return ActionResultType.sidedSuccess(level.isClientSide);
+            level.playSound(null, pos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
+            return InteractionResult.sidedSuccess(level.isClientSide);
 
         } else if (item == Items.BUCKET && contains == TroughFillType.WATER) {
             player.setItemInHand(hand, new ItemStack(Items.WATER_BUCKET));
@@ -286,25 +303,25 @@ public class TroughBlock extends ContainerBlock {
                 level.setBlockAndUpdate(connectedSlot, connectedState.setValue(TroughBlock.CONTAINS, TroughFillType.NONE));
             }
 
-            level.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
-            return ActionResultType.sidedSuccess(level.isClientSide);
+            level.playSound(null, pos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+            return InteractionResult.sidedSuccess(level.isClientSide);
 
         } else if (contains != TroughFillType.WATER) {
-            if (level.isClientSide) return ActionResultType.SUCCESS;
+            if (level.isClientSide) return InteractionResult.SUCCESS;
             else {
-                INamedContainerProvider inamedcontainerprovider = this.getMenuProvider(state, level, pos);
+                MenuProvider inamedcontainerprovider = this.getMenuProvider(state, level, pos);
                 if (inamedcontainerprovider != null) player.openMenu(inamedcontainerprovider);
 
-                return ActionResultType.CONSUME;
+                return InteractionResult.CONSUME;
             }
         }
 
-        return ActionResultType.sidedSuccess(level.isClientSide);
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Nullable
     @Override
-    public TileEntity newBlockEntity(IBlockReader level) {
+    public BlockEntity newBlockEntity(BlockGetter level) {
         return HotTileEntities.TROUGH.get().create();
     }
 
@@ -314,12 +331,12 @@ public class TroughBlock extends ContainerBlock {
     }
 
     @Override
-    public int getAnalogOutputSignal(BlockState blockState, World level, BlockPos pos) {
-        return Container.getRedstoneSignalFromBlockEntity(level.getBlockEntity(pos));
+    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos pos) {
+        return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(level.getBlockEntity(pos));
     }
 
     @Override
-    public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 }

@@ -5,9 +5,9 @@ import com.github.kmfisk.hotchicks.client.renderer.entity.HotChickenRenderer;
 import com.github.kmfisk.hotchicks.client.renderer.entity.HotCowRenderer;
 import com.github.kmfisk.hotchicks.client.renderer.entity.HotRabbitRenderer;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.util.Tuple;
-import net.minecraft.world.gen.Heightmap;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -21,13 +21,19 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.SpawnPlacements;
+
 public class HotEntities {
     public static final DeferredRegister<EntityType<?>> REGISTRAR = DeferredRegister.create(ForgeRegistries.ENTITIES, HotChicks.MOD_ID);
-    private static final List<Tuple<Supplier<EntityType<? extends LivingEntity>>, Supplier<AttributeModifierMap.MutableAttribute>>> ATTRIBUTES = new ArrayList<>();
+    private static final List<Tuple<Supplier<EntityType<? extends LivingEntity>>, Supplier<AttributeSupplier.Builder>>> ATTRIBUTES = new ArrayList<>();
     private static final List<Tuple<Supplier<EntityType<?>>, Supplier<IRenderFactory<?>>>> RENDERERS = new ArrayList<>();
 //    public static final List<Tuple<RegistryObject<EntityType<?>>, List<SpawnInfo>>> SPAWNS = new ArrayList<>();
 
-    public static RegistryObject<EntityType<HotChickenEntity>> CHICKEN = new Builder<>(HotChickenEntity::new, EntityClassification.CREATURE)
+    public static RegistryObject<EntityType<HotChickenEntity>> CHICKEN = new Builder<>(HotChickenEntity::new, MobCategory.CREATURE)
             .attributes(HotChickenEntity::registerAttributes)
             .renderer(() -> HotChickenRenderer::new)
             /*.spawn(new SpawnInfo((type) -> type.contains(BiomeDictionary.Type.JUNGLE) || (type.contains(BiomeDictionary.Type.SPOOKY) && type.contains(BiomeDictionary.Type.FOREST)),
@@ -35,7 +41,7 @@ public class HotEntities {
             .data(hotChickenEntityBuilder -> hotChickenEntityBuilder.sized(0.4f, 0.7f).clientTrackingRange(10))
             .build(REGISTRAR, "chicken");
 
-    public static RegistryObject<EntityType<HotRabbitEntity>> RABBIT = new Builder<>(HotRabbitEntity::new, EntityClassification.CREATURE)
+    public static RegistryObject<EntityType<HotRabbitEntity>> RABBIT = new Builder<>(HotRabbitEntity::new, MobCategory.CREATURE)
             .attributes(HotRabbitEntity::registerAttributes)
             .renderer(() -> HotRabbitRenderer::new)
             /*.spawn(new SpawnInfo((type) -> type.contains(BiomeDictionary.Type.PLAINS) || (type.contains(BiomeDictionary.Type.CONIFEROUS) && !type.contains(BiomeDictionary.Type.MOUNTAIN) && !type.contains(BiomeDictionary.Type.SNOWY)),
@@ -43,20 +49,20 @@ public class HotEntities {
             .data(hotRabbitEntityBuilder -> hotRabbitEntityBuilder.sized(0.6f, 0.5f).clientTrackingRange(10))
             .build(REGISTRAR, "rabbit");
 
-    public static RegistryObject<EntityType<HotCowEntity>> COW = new Builder<>(HotCowEntity::new, EntityClassification.CREATURE)
+    public static RegistryObject<EntityType<HotCowEntity>> COW = new Builder<>(HotCowEntity::new, MobCategory.CREATURE)
             .attributes(HotCowEntity::registerAttributes)
             .renderer(() -> HotCowRenderer::new)
             .data(hotCowEntityBuilder -> hotCowEntityBuilder.sized(1.6f, 2.2f).clientTrackingRange(10))
             .build(REGISTRAR, "cow");
 
     public static void registerSpawnPlacements() {
-        EntitySpawnPlacementRegistry.register(CHICKEN.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING, LivestockEntity::checkLivestockSpawnRules);
-        EntitySpawnPlacementRegistry.register(RABBIT.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, LivestockEntity::checkLivestockSpawnRules);
-        EntitySpawnPlacementRegistry.register(COW.get(), EntitySpawnPlacementRegistry.PlacementType.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, LivestockEntity::checkLivestockSpawnRules);
+        SpawnPlacements.register(CHICKEN.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING, LivestockEntity::checkLivestockSpawnRules);
+        SpawnPlacements.register(RABBIT.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, LivestockEntity::checkLivestockSpawnRules);
+        SpawnPlacements.register(COW.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, LivestockEntity::checkLivestockSpawnRules);
     }
 
-    public static void registerAttributes(BiConsumer<EntityType<? extends LivingEntity>, AttributeModifierMap.MutableAttribute> register) {
-        for (Tuple<Supplier<EntityType<? extends LivingEntity>>, Supplier<AttributeModifierMap.MutableAttribute>> attribute : ATTRIBUTES) {
+    public static void registerAttributes(BiConsumer<EntityType<? extends LivingEntity>, AttributeSupplier.Builder> register) {
+        for (Tuple<Supplier<EntityType<? extends LivingEntity>>, Supplier<AttributeSupplier.Builder>> attribute : ATTRIBUTES) {
             register.accept(attribute.getA().get(), attribute.getB().get());
         }
         ATTRIBUTES.clear();
@@ -75,19 +81,19 @@ public class HotEntities {
     }
 
     public static class Builder<T extends Entity> {
-        private final EntityType.IFactory<T> factory;
-        private final EntityClassification category;
-        private Supplier<AttributeModifierMap.MutableAttribute> attributes;
+        private final EntityType.EntityFactory<T> factory;
+        private final MobCategory category;
+        private Supplier<AttributeSupplier.Builder> attributes;
         private Supplier<IRenderFactory<? super T>> renderer;
         private Consumer<EntityType.Builder<T>> builderConsumer;
 //        private final List<SpawnInfo> spawnInfos = new ArrayList<>();
 
-        public Builder(EntityType.IFactory<T> factory, EntityClassification category) {
+        public Builder(EntityType.EntityFactory<T> factory, MobCategory category) {
             this.factory = factory;
             this.category = category;
         }
 
-        public Builder<T> attributes(Supplier<AttributeModifierMap.MutableAttribute> attributes) {
+        public Builder<T> attributes(Supplier<AttributeSupplier.Builder> attributes) {
             this.attributes = attributes;
             return this;
         }

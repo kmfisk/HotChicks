@@ -2,24 +2,26 @@ package com.github.kmfisk.hotchicks.block;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.HorizontalBlock;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 
 import javax.annotation.Nullable;
 import java.util.Map;
 
-public class WaterBottleBlock extends HorizontalBlock {
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
+public class WaterBottleBlock extends HorizontalDirectionalBlock {
     private static final Map<Direction, VoxelShape> AABBS = Maps.newEnumMap(
             ImmutableMap.of(
                     Direction.NORTH, Block.box(5.0D, 2.0D, 10.5D, 11.0D, 15.5D, 16.0D),
@@ -34,12 +36,12 @@ public class WaterBottleBlock extends HorizontalBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader level, BlockPos pPos, ISelectionContext pContext) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pPos, CollisionContext pContext) {
         return AABBS.get(state.getValue(FACING));
     }
 
     @Override
-    public boolean canSurvive(BlockState state, IWorldReader level, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
         Direction direction = state.getValue(FACING);
         BlockPos oppositePos = pos.relative(direction.getOpposite());
         BlockState oppositeState = level.getBlockState(oppositePos);
@@ -48,9 +50,9 @@ public class WaterBottleBlock extends HorizontalBlock {
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState blockState = defaultBlockState();
-        IWorldReader level = context.getLevel();
+        LevelReader level = context.getLevel();
         BlockPos clickedPos = context.getClickedPos();
         Direction[] nearestLookingDirections = context.getNearestLookingDirections();
 
@@ -66,12 +68,12 @@ public class WaterBottleBlock extends HorizontalBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, IWorld level, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos) {
         return facing.getOpposite() == state.getValue(FACING) && !state.canSurvive(level, currentPos) ? Blocks.AIR.defaultBlockState() : state;
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 }

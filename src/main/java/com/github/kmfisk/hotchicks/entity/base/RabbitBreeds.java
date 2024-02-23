@@ -3,11 +3,11 @@ package com.github.kmfisk.hotchicks.entity.base;
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.entity.stats.RabbitStats;
 import com.google.common.collect.Lists;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.TextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.BaseComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 
 import java.util.List;
@@ -70,7 +70,7 @@ public enum RabbitBreeds {
     public static int randomBasedOnBiome(Random random, Biome biome) {
         List<Integer> possibleVariants = Lists.newArrayList();
 
-        Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(RegistryKey.create(Registry.BIOME_REGISTRY, biome.getRegistryName()));
+        Set<BiomeDictionary.Type> biomeTypes = BiomeDictionary.getTypes(ResourceKey.create(Registry.BIOME_REGISTRY, biome.getRegistryName()));
         if (biomeTypes.contains(BiomeDictionary.Type.COLD))
             possibleVariants.add(randomFromBreed(random, AMERICAN_CHINCHILLA));
         if (biomeTypes.contains(BiomeDictionary.Type.JUNGLE))
@@ -88,7 +88,7 @@ public enum RabbitBreeds {
         else return possibleVariants.get(random.nextInt(possibleVariants.size()));
     }
 
-    public TextComponent getLocalizedName() {
-        return new TranslationTextComponent("breed." + HotChicks.MOD_ID + ".rabbit." + name().toLowerCase(Locale.ROOT));
+    public BaseComponent getLocalizedName() {
+        return new TranslatableComponent("breed." + HotChicks.MOD_ID + ".rabbit." + name().toLowerCase(Locale.ROOT));
     }
 }

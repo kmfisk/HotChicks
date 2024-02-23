@@ -11,35 +11,35 @@ import com.github.kmfisk.hotchicks.entity.goal.*;
 import com.github.kmfisk.hotchicks.entity.stats.ChickenStats;
 import com.github.kmfisk.hotchicks.item.HotItems;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.particles.ParticleTypes;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -50,39 +50,57 @@ import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
 
+import net.minecraft.world.entity.AgableMob;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LeapAtTargetGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.PanicGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.TemptGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+
 public class HotChickenEntity extends LivestockEntity {
     public static final Tags.IOptionalNamedTag<Item> CHICKEN_FOODS = ItemTags.createOptional(new ResourceLocation(HotChicks.MOD_ID, "chicken_foods"));
-    private WildAvoidEntityGoal<PlayerEntity> wildAvoidPlayersGoal;
-    private RoostersLowStatsAttackGoal<PlayerEntity> roostersLowStatsAttackGoal;
+    private WildAvoidEntityGoal<Player> wildAvoidPlayersGoal;
+    private RoostersLowStatsAttackGoal<Player> roostersLowStatsAttackGoal;
     public int remainingCooldownBeforeLocatingNewNest = 0;
     private BlockPos nestPos = null;
     public FindNestGoal goToNestGoal;
 
-    public HotChickenEntity(EntityType<? extends AnimalEntity> type, World world) {
+    public HotChickenEntity(EntityType<? extends Animal> type, Level world) {
         super(type, world);
     }
 
-    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+    public static AttributeSupplier.Builder registerAttributes() {
         return createMobAttributes().add(Attributes.MAX_HEALTH, 8.0D).add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.ATTACK_DAMAGE, 2.0D);
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.roostersLowStatsAttackGoal = new RoostersLowStatsAttackGoal<>(this, PlayerEntity.class, 120);
-        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.roostersLowStatsAttackGoal = new RoostersLowStatsAttackGoal<>(this, Player.class, 120);
+        this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new HensPanicGoal(this, 1.4D));
         this.goalSelector.addGoal(2, new LayEggsGoal(this));
-        this.goalSelector.addGoal(3, new HensLowStatsAvoidPlayerGoal<>(this, PlayerEntity.class, 16.0F, 0.8D, 1.33D));
+        this.goalSelector.addGoal(3, new HensLowStatsAvoidPlayerGoal<>(this, Player.class, 16.0F, 0.8D, 1.33D));
         this.goalSelector.addGoal(3, new TemptGoal(this, 1.0D, false, Ingredient.of(CHICKEN_FOODS)));
         this.goalSelector.addGoal(4, new LeapAtTargetGoal(this, 0.4F));
         this.goalSelector.addGoal(5, new HotMeleeAttackGoal(this, 1.0D, 1.25D, false));
         this.goalSelector.addGoal(6, new UpdateNestGoal(this, 8, 2));
         this.goToNestGoal = new FindNestGoal(this, 16);
         this.goalSelector.addGoal(6, this.goToNestGoal);
-        this.goalSelector.addGoal(7, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(7, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(3, new RoostersHurtByTargetGoal(this).setAlertOthers());
         this.targetSelector.addGoal(7, roostersLowStatsAttackGoal);
     }
@@ -90,7 +108,7 @@ public class HotChickenEntity extends LivestockEntity {
     @Override
     protected void reassessDomesticGoals() {
         if (wildAvoidPlayersGoal == null)
-            wildAvoidPlayersGoal = new WildAvoidEntityGoal<>(this, PlayerEntity.class, 16.0F, 0.8D, 1.33D);
+            wildAvoidPlayersGoal = new WildAvoidEntityGoal<>(this, Player.class, 16.0F, 0.8D, 1.33D);
 
         goalSelector.removeGoal(wildAvoidPlayersGoal);
         if (!isCareRequired()) goalSelector.addGoal(4, wildAvoidPlayersGoal);
@@ -104,7 +122,7 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     @Override
-    public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficultyInstance, SpawnReason spawnReason, @Nullable ILivingEntityData entityData, @Nullable CompoundNBT nbt) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficultyInstance, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag nbt) {
         entityData = super.finalizeSpawn(world, difficultyInstance, spawnReason, entityData, nbt);
         setStats(new ChickenStats(random.nextInt(25) + random.nextInt(35), random.nextInt(3), random.nextInt(3), random.nextInt(3)));
         if (getSex() == Sex.FEMALE) setEggTimer(getStats().getEggSpeedForStat(this));
@@ -206,17 +224,17 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT nbt) {
+    public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
-        if (hasNest()) nbt.put("NestPos", NBTUtil.writeBlockPos(getNestPos()));
+        if (hasNest()) nbt.put("NestPos", NbtUtils.writeBlockPos(getNestPos()));
         nbt.putInt("EggSpeed", getEggSpeed());
         nbt.putInt("EggTimer", getEggTimer());
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT nbt) {
+    public void readAdditionalSaveData(CompoundTag nbt) {
         nestPos = null;
-        if (nbt.contains("NestPos")) nestPos = NBTUtil.readBlockPos(nbt.getCompound("NestPos"));
+        if (nbt.contains("NestPos")) nestPos = NbtUtils.readBlockPos(nbt.getCompound("NestPos"));
         super.readAdditionalSaveData(nbt);
         setEggSpeed(nbt.getInt("EggSpeed"));
         setEggTimer(nbt.getInt("EggTimer"));
@@ -241,7 +259,7 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     public boolean doesNestHaveSpace(BlockPos nestPos) {
-        TileEntity tileEntity = level.getBlockEntity(nestPos);
+        BlockEntity tileEntity = level.getBlockEntity(nestPos);
         if (tileEntity instanceof NestTileEntity)
             return ((NestTileEntity) tileEntity).getItems().stream().anyMatch(ItemStack::isEmpty);
         else return false;
@@ -278,7 +296,7 @@ public class HotChickenEntity extends LivestockEntity {
     private boolean hasValidNestBlock() {
         if (!hasNest()) return false;
         else {
-            TileEntity tileEntity = level.getBlockEntity(nestPos);
+            BlockEntity tileEntity = level.getBlockEntity(nestPos);
             return tileEntity instanceof NestTileEntity && doesNestHaveSpace(nestPos);
         }
     }
@@ -290,7 +308,7 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     @Override
-    protected float getStandingEyeHeight(Pose pose, EntitySize size) {
+    protected float getStandingEyeHeight(Pose pose, EntityDimensions size) {
         return isBaby() ? size.height * 0.48F : size.height * 0.92F;
     }
 
@@ -314,12 +332,12 @@ public class HotChickenEntity extends LivestockEntity {
 
     @Nullable
     @Override
-    public AgeableEntity getBreedOffspring(ServerWorld world, AgeableEntity entity) {
+    public AgableMob getBreedOffspring(ServerLevel world, AgableMob entity) {
         return HotEntities.CHICKEN.get().create(world);
     }
 
     @Override
-    protected void onOffspringSpawnedFromEgg(PlayerEntity player, MobEntity entity) {
+    protected void onOffspringSpawnedFromEgg(Player player, Mob entity) {
         if (entity instanceof HotChickenEntity) {
             HotChickenEntity child = (HotChickenEntity) entity;
 
@@ -354,7 +372,7 @@ public class HotChickenEntity extends LivestockEntity {
     }
 
     @Override
-    public void createChild(ServerWorld level, LivestockEntity livestockEntity) {
+    public void createChild(ServerLevel level, LivestockEntity livestockEntity) {
         if (livestockEntity instanceof HotChickenEntity) {
             HotChickenEntity father = (HotChickenEntity) livestockEntity;
             HotChickenEntity child = (HotChickenEntity) getBreedOffspring(level, father);
@@ -428,14 +446,14 @@ public class HotChickenEntity extends LivestockEntity {
                 child.setStats(stats);
                 child.setSex(Sex.fromBool(random.nextBoolean()));
 
-                CompoundNBT childNBT = new CompoundNBT();
+                CompoundTag childNBT = new CompoundTag();
                 child.save(childNBT);
                 childNBT.putString("Breed", getReadableBreed());
                 childNBT.putInt("TimeLeft", HotChicksConfig.hatchSpeed.get());
 
                 children.add(childNBT);
 
-                ServerPlayerEntity serverplayerentity = getLoveCause();
+                ServerPlayer serverplayerentity = getLoveCause();
                 if (serverplayerentity == null && father.getLoveCause() != null)
                     serverplayerentity = father.getLoveCause();
                 if (serverplayerentity != null) {
@@ -445,7 +463,7 @@ public class HotChickenEntity extends LivestockEntity {
 
                 level.broadcastEntityEvent(this, (byte) 18);
                 if (level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))
-                    level.addFreshEntity(new ExperienceOrbEntity(level, getX(), getY(), getZ(), random.nextInt(7) + 1));
+                    level.addFreshEntity(new ExperienceOrb(level, getX(), getY(), getZ(), random.nextInt(7) + 1));
             }
         }
     }
@@ -561,7 +579,7 @@ public class HotChickenEntity extends LivestockEntity {
         @Override
         protected void alertOthers() {
             double followDistance = getFollowDistance();
-            AxisAlignedBB axisAlignedBB = AxisAlignedBB.unitCubeFromLowerCorner(chickenEntity.position()).inflate(followDistance, 10.0D, followDistance);
+            AABB axisAlignedBB = AABB.unitCubeFromLowerCorner(chickenEntity.position()).inflate(followDistance, 10.0D, followDistance);
             List<HotChickenEntity> list = chickenEntity.level.getLoadedEntitiesOfClass(chickenEntity.getClass(), axisAlignedBB);
             Iterator iterator = list.iterator();
 

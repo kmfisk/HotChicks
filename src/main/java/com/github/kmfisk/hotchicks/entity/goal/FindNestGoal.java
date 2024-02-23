@@ -2,13 +2,15 @@ package com.github.kmfisk.hotchicks.entity.goal;
 
 import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
 import com.google.common.collect.Lists;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.pathfinding.Path;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.core.BlockPos;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.List;
+
+import net.minecraft.world.entity.ai.goal.Goal.Flag;
 
 public class FindNestGoal extends Goal {
     private final HotChickenEntity chicken;

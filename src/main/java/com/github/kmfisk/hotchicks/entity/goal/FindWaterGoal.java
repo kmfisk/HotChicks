@@ -5,10 +5,10 @@ import com.github.kmfisk.hotchicks.block.TroughBlock;
 import com.github.kmfisk.hotchicks.block.TroughFillType;
 import com.github.kmfisk.hotchicks.block.WaterBottleBlock;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.ai.goal.MoveToBlockGoal;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelReader;
 
 public class FindWaterGoal extends MoveToBlockGoal {
     private final LivestockEntity entity;
@@ -49,7 +49,7 @@ public class FindWaterGoal extends MoveToBlockGoal {
     }
 
     @Override
-    protected boolean isValidTarget(IWorldReader level, BlockPos pos) {
+    protected boolean isValidTarget(LevelReader level, BlockPos pos) {
         if (level.getBlockState(pos).is(HotBlocks.WOODEN_TROUGH.get()) || level.getBlockState(pos).is(HotBlocks.METAL_TROUGH.get())) {
             BlockState blockState = level.getBlockState(pos);
             return blockState.getValue(TroughBlock.CONTAINS) == TroughFillType.WATER;

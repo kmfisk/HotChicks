@@ -1,25 +1,25 @@
 package com.github.kmfisk.hotchicks.inventory;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.item.Items;
 
 public class TroughSlot extends Slot {
-    public TroughSlot(IInventory inventoryIn, int index, int xPosition, int yPosition) {
+    public TroughSlot(Container inventoryIn, int index, int xPosition, int yPosition) {
         super(inventoryIn, index, xPosition, yPosition);
     }
 
     @Override
-    public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack) {
+    public ItemStack onTake(Player thePlayer, ItemStack stack) {
         this.setChanged();
         return stack;
     }
 
 
     @Override
-    public boolean mayPickup(PlayerEntity playerIn) {
+    public boolean mayPickup(Player playerIn) {
         this.setChanged();
         return super.mayPickup(playerIn);
     }

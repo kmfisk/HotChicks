@@ -5,12 +5,18 @@ import com.github.kmfisk.hotchicks.block.TrellisBlock;
 import com.github.kmfisk.hotchicks.block.TripleCropBlock;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import net.minecraft.block.*;
-import net.minecraft.entity.ai.goal.MoveToBlockGoal;
+import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.ForgeEventFactory;
+
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.GrassBlock;
+import net.minecraft.world.level.block.SweetBerryBushBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class DestroyCropsGoal extends MoveToBlockGoal {
     private final LivestockEntity livestock;
@@ -44,7 +50,7 @@ public class DestroyCropsGoal extends MoveToBlockGoal {
         super.tick();
         livestock.getLookControl().setLookAt((double) blockPos.getX() + 0.5D, blockPos.getY() + 1, (double) blockPos.getZ() + 0.5D, 10.0F, (float) livestock.getMaxHeadXRot());
         if (isReachedTarget()) {
-            World level = livestock.level;
+            Level level = livestock.level;
             BlockPos cropPos = blockPos.above();
             BlockState state = level.getBlockState(cropPos);
             Block block = state.getBlock();
@@ -68,7 +74,7 @@ public class DestroyCropsGoal extends MoveToBlockGoal {
     }
 
     @Override
-    protected boolean isValidTarget(IWorldReader level, BlockPos pos) {
+    protected boolean isValidTarget(LevelReader level, BlockPos pos) {
         Block block = level.getBlockState(pos.above()).getBlock();
         boolean isCrop = block.is(BlockTags.CROPS) || block instanceof SweetBerryBushBlock;
         boolean excludedCropTypes = block instanceof TripleCropBlock || block instanceof TrellisBlock;

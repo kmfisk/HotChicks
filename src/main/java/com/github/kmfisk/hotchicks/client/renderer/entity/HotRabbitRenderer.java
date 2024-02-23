@@ -6,11 +6,11 @@ import com.github.kmfisk.hotchicks.client.renderer.entity.model.HotRabbitModel;
 import com.github.kmfisk.hotchicks.entity.HotRabbitEntity;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import com.github.kmfisk.hotchicks.entity.base.RabbitBreeds;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -22,18 +22,18 @@ public class HotRabbitRenderer extends MobRenderer<HotRabbitEntity, HotRabbitMod
     public static final String[] NEW_ZEALANDS = new String[]{"broken", "red", "white"};
     public static final String[] REXES = new String[]{"black", "black_otter", "broken", "chocolate", "chocolate_otter", "red", "red_otter", "tan", "white"};
 
-    public HotRabbitRenderer(EntityRendererManager rendererManager) {
+    public HotRabbitRenderer(EntityRenderDispatcher rendererManager) {
         super(rendererManager, new HotRabbitModel(), 0.3F);
         this.addLayer(new RabbitTagLayer(this));
     }
 
     @Override
-    public void render(HotRabbitEntity rabbit, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
+    public void render(HotRabbitEntity rabbit, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
         super.render(rabbit, entityYaw, partialTicks, matrixStack, buffer, packedLight);
     }
 
     @Override
-    protected void scale(HotRabbitEntity rabbit, MatrixStack matrixStack, float partialTicks) {
+    protected void scale(HotRabbitEntity rabbit, PoseStack matrixStack, float partialTicks) {
         RabbitBreeds rabbitBreed = rabbit.getBreedFromVariant();
         float scale;
         switch (rabbitBreed) {

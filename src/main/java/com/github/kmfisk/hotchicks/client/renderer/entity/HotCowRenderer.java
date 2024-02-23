@@ -6,11 +6,11 @@ import com.github.kmfisk.hotchicks.client.renderer.entity.model.HotCowModel;
 import com.github.kmfisk.hotchicks.entity.HotCowEntity;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import com.github.kmfisk.hotchicks.entity.base.CowBreeds;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -25,7 +25,7 @@ public class HotCowRenderer extends MobRenderer<HotCowEntity, HotCowModel> {
     public final HotCowModel adultModel;
     public final HotCowModel calfModel;
 
-    public HotCowRenderer(EntityRendererManager rendererManager) {
+    public HotCowRenderer(EntityRenderDispatcher rendererManager) {
         super(rendererManager, new HotCowModel.Adult(), 1.0F);
         this.addLayer(new CowBellLayer(this));
         adultModel = new HotCowModel.Adult();
@@ -33,13 +33,13 @@ public class HotCowRenderer extends MobRenderer<HotCowEntity, HotCowModel> {
     }
 
     @Override
-    public void render(HotCowEntity cow, float entityYaw, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int packedLight) {
+    public void render(HotCowEntity cow, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
         model = cow.isBaby() ? calfModel : adultModel;
         super.render(cow, entityYaw, partialTicks, matrixStack, buffer, packedLight);
     }
 
     @Override
-    protected void scale(HotCowEntity cow, MatrixStack matrixStack, float partialTicks) {
+    protected void scale(HotCowEntity cow, PoseStack matrixStack, float partialTicks) {
         CowBreeds cowBreed = cow.getBreedFromVariant();
         float scale;
         switch (cowBreed) {

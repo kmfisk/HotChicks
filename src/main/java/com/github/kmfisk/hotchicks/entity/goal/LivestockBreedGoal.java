@@ -1,20 +1,20 @@
 package com.github.kmfisk.hotchicks.entity.goal;
 
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
-import net.minecraft.entity.EntityPredicate;
-import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 
 public class LivestockBreedGoal extends Goal {
-    private static final EntityPredicate PARTNER_TARGETING = (new EntityPredicate()).range(8.0D).allowInvulnerable().allowSameTeam().allowUnseeable();
+    private static final TargetingConditions PARTNER_TARGETING = (new TargetingConditions()).range(8.0D).allowInvulnerable().allowSameTeam().allowUnseeable();
     protected final LivestockEntity animal;
     private final Class<? extends LivestockEntity> partnerClass;
-    protected final World level;
+    protected final Level level;
     protected LivestockEntity partner;
     private int loveTime;
     private final double speedModifier;
@@ -78,6 +78,6 @@ public class LivestockBreedGoal extends Goal {
     }
 
     protected void breed() {
-        partner.spawnChildFromBreeding((ServerWorld) level, animal);
+        partner.spawnChildFromBreeding((ServerLevel) level, animal);
     }
 }

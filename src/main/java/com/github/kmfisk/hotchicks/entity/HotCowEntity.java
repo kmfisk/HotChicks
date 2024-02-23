@@ -9,58 +9,79 @@ import com.github.kmfisk.hotchicks.entity.goal.LivestockBirthGoal;
 import com.github.kmfisk.hotchicks.entity.goal.LowStatsAttackGoal;
 import com.github.kmfisk.hotchicks.entity.stats.CowStats;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.AgableMob;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.TemptGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.item.ItemUtils;
+
 public class HotCowEntity extends LivestockEntity {
     public static final Tags.IOptionalNamedTag<Item> COW_FOODS = ItemTags.createOptional(new ResourceLocation(HotChicks.MOD_ID, "cow_foods"));
-    private LowStatsAttackGoal<PlayerEntity> lowStatsAttackGoal;
+    private LowStatsAttackGoal<Player> lowStatsAttackGoal;
 
-    public HotCowEntity(EntityType<? extends AnimalEntity> type, World world) {
+    public HotCowEntity(EntityType<? extends Animal> type, Level world) {
         super(type, world);
     }
 
-    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+    public static AttributeSupplier.Builder registerAttributes() {
         return createMobAttributes().add(Attributes.MAX_HEALTH, 24.0D).add(Attributes.MOVEMENT_SPEED, 0.2D).add(Attributes.ATTACK_DAMAGE, 2.0D);
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.lowStatsAttackGoal = new LowStatsAttackGoal<>(this, PlayerEntity.class, 40);
-        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.lowStatsAttackGoal = new LowStatsAttackGoal<>(this, Player.class, 40);
+        this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(2, new LivestockBirthGoal(this));
         this.goalSelector.addGoal(3, new TemptGoal(this, 1.0D, false, Ingredient.of(COW_FOODS)));
         this.goalSelector.addGoal(5, new HotMeleeAttackGoal(this, 3.0D, 1.25D, false));
-        this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(3, new CowsHurtByTargetGoal(this));
         this.targetSelector.addGoal(7, lowStatsAttackGoal);
     }
@@ -75,7 +96,7 @@ public class HotCowEntity extends LivestockEntity {
     }
 
     @Override
-    public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficultyInstance, SpawnReason spawnReason, @Nullable ILivingEntityData entityData, @Nullable CompoundNBT nbt) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficultyInstance, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag nbt) {
         if (nbt != null && nbt.contains("VillageSpawn") && nbt.getInt("VillageSpawn") != 0) initFromVillageSpawn();
         else {
             entityData = super.finalizeSpawn(world, difficultyInstance, spawnReason, entityData, nbt);
@@ -199,7 +220,7 @@ public class HotCowEntity extends LivestockEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT nbt) {
+    public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("HideQuality", getHideQuality());
         nbt.putInt("MilkYield", getMilkYield());
@@ -208,7 +229,7 @@ public class HotCowEntity extends LivestockEntity {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT nbt) {
+    public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         setHideQuality(nbt.getInt("HideQuality"));
         setMilkYield(nbt.getInt("MilkYield"));
@@ -264,7 +285,7 @@ public class HotCowEntity extends LivestockEntity {
     }
 
     @Override
-    protected float getStandingEyeHeight(Pose pose, EntitySize size) {
+    protected float getStandingEyeHeight(Pose pose, EntityDimensions size) {
         return size.height * 0.74F;
     }
 
@@ -275,12 +296,12 @@ public class HotCowEntity extends LivestockEntity {
 
     @Nullable
     @Override
-    public AgeableEntity getBreedOffspring(ServerWorld world, AgeableEntity entity) {
+    public AgableMob getBreedOffspring(ServerLevel world, AgableMob entity) {
         return HotEntities.COW.get().create(world);
     }
 
     @Override
-    protected void onOffspringSpawnedFromEgg(PlayerEntity player, MobEntity entity) {
+    protected void onOffspringSpawnedFromEgg(Player player, Mob entity) {
         if (entity instanceof HotCowEntity) {
             HotCowEntity child = (HotCowEntity) entity;
 
@@ -316,7 +337,7 @@ public class HotCowEntity extends LivestockEntity {
     }
 
     @Override
-    public void createChild(ServerWorld level, LivestockEntity livestockEntity) {
+    public void createChild(ServerLevel level, LivestockEntity livestockEntity) {
         if (livestockEntity instanceof HotCowEntity) {
             HotCowEntity father = (HotCowEntity) livestockEntity;
             HotCowEntity child = (HotCowEntity) getBreedOffspring(level, father);
@@ -389,13 +410,13 @@ public class HotCowEntity extends LivestockEntity {
                 child.setStats(stats);
                 child.setSex(Sex.fromBool(random.nextBoolean()));
 
-                CompoundNBT childNBT = new CompoundNBT();
+                CompoundTag childNBT = new CompoundTag();
                 child.save(childNBT);
 
                 children.add(childNBT);
                 setGestationTimer(HotChicksConfig.gestationSpeed.get());
 
-                ServerPlayerEntity serverplayerentity = getLoveCause();
+                ServerPlayer serverplayerentity = getLoveCause();
                 if (serverplayerentity == null && father.getLoveCause() != null)
                     serverplayerentity = father.getLoveCause();
                 if (serverplayerentity != null) {
@@ -405,27 +426,27 @@ public class HotCowEntity extends LivestockEntity {
 
                 level.broadcastEntityEvent(this, (byte) 18);
                 if (level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))
-                    level.addFreshEntity(new ExperienceOrbEntity(level, getX(), getY(), getZ(), random.nextInt(7) + 1));
+                    level.addFreshEntity(new ExperienceOrb(level, getX(), getY(), getZ(), random.nextInt(7) + 1));
             }
         }
     }
 
     @Override
-    public void spawnChildrenFromPregnancy(ServerWorld level) {
+    public void spawnChildrenFromPregnancy(ServerLevel level) {
         super.spawnChildrenFromPregnancy(level);
         setAvailableMilk(getStats().getMilkYieldForStat(this));
     }
 
     @Override
-    public ActionResultType mobInteract(PlayerEntity player, Hand hand) {
+    public InteractionResult mobInteract(Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (!isBaby() && stack.getItem() == Items.BUCKET) {
             if (getSex() == Sex.FEMALE && getAvailableMilk() > 0) {
                 player.playSound(SoundEvents.COW_MILK, 1.0F, 1.0F);
-                ItemStack filledResult = DrinkHelper.createFilledResult(stack, player, Items.MILK_BUCKET.getDefaultInstance());
+                ItemStack filledResult = ItemUtils.createFilledResult(stack, player, Items.MILK_BUCKET.getDefaultInstance());
                 player.setItemInHand(hand, filledResult);
                 setAvailableMilk(Math.max(0, getAvailableMilk() - 1));
-                return ActionResultType.sidedSuccess(this.level.isClientSide);
+                return InteractionResult.sidedSuccess(this.level.isClientSide);
             }
         }
         return super.mobInteract(player, hand);

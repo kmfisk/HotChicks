@@ -1,18 +1,18 @@
 package com.github.kmfisk.hotchicks.entity.base;
 
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
 
 public final class CareStat {
     private final LivestockEntity entity;
-    private final DataParameter<Integer> data;
+    private final EntityDataAccessor<Integer> data;
     private final int max;
     private final int depleteTimer;
     private int ticks;
     private int saturationTimer;
 
-    public CareStat(LivestockEntity entity, DataParameter<Integer> data, int max, int depleteTimer) {
+    public CareStat(LivestockEntity entity, EntityDataAccessor<Integer> data, int max, int depleteTimer) {
         this.entity = entity;
         this.data = data;
         this.max = max;
@@ -50,14 +50,14 @@ public final class CareStat {
         return getValue() <= getMax() / 2;
     }
 
-    public CompoundNBT toTag() {
-        CompoundNBT tag = new CompoundNBT();
+    public CompoundTag toTag() {
+        CompoundTag tag = new CompoundTag();
         tag.putInt("Value", entity.getEntityData().get(data));
         tag.putInt("Saturation", saturationTimer);
         return tag;
     }
 
-    public void fromTag(CompoundNBT tag) {
+    public void fromTag(CompoundTag tag) {
         entity.getEntityData().set(data, tag.getInt("Value"));
         saturationTimer = tag.getInt("Saturation");
     }

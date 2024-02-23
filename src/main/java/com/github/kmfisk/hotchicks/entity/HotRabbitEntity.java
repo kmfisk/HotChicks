@@ -11,34 +11,34 @@ import com.github.kmfisk.hotchicks.entity.goal.WildAvoidEntityGoal;
 import com.github.kmfisk.hotchicks.entity.stats.RabbitStats;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.controller.JumpController;
-import net.minecraft.entity.ai.controller.MovementController;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.JumpControl;
+import net.minecraft.world.entity.ai.control.MoveControl;
 import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.pathfinding.Path;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.IServerWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -47,43 +47,57 @@ import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.world.entity.AgableMob;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.PanicGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.TemptGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+
 public class HotRabbitEntity extends LivestockEntity {
     public static final Tags.IOptionalNamedTag<Item> RABBIT_FOODS = ItemTags.createOptional(new ResourceLocation(HotChicks.MOD_ID, "rabbit_foods"));
-    private WildAvoidEntityGoal<PlayerEntity> wildAvoidPlayersGoal;
+    private WildAvoidEntityGoal<Player> wildAvoidPlayersGoal;
     private int jumpTicks;
     private int jumpDuration;
     private boolean wasOnGround;
     private int jumpDelayTicks;
 
-    public HotRabbitEntity(EntityType<? extends AnimalEntity> type, World world) {
+    public HotRabbitEntity(EntityType<? extends Animal> type, Level world) {
         super(type, world);
         this.jumpControl = new JumpHelperController(this);
         this.moveControl = new MoveHelperController(this);
         this.setSpeedModifier(0.0D);
     }
 
-    public static AttributeModifierMap.MutableAttribute registerAttributes() {
+    public static AttributeSupplier.Builder registerAttributes() {
         return createMobAttributes().add(Attributes.MAX_HEALTH, 8.0D).add(Attributes.MOVEMENT_SPEED, 0.25D).add(Attributes.ATTACK_DAMAGE, 1.0D);
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.4D));
         this.goalSelector.addGoal(2, new LivestockBirthGoal(this));
-        this.goalSelector.addGoal(4, new LowStatsAvoidEntityGoal<>(this, PlayerEntity.class, 16.0F, 0.8D, 1.33D));
+        this.goalSelector.addGoal(4, new LowStatsAvoidEntityGoal<>(this, Player.class, 16.0F, 0.8D, 1.33D));
         this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, false, Ingredient.of(RABBIT_FOODS)));
         this.goalSelector.addGoal(5, new DestroyCropsGoal(this, 0.7F, 16));
-        this.goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
-        this.goalSelector.addGoal(8, new LookAtGoal(this, PlayerEntity.class, 6.0F));
-        this.goalSelector.addGoal(8, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0D));
+        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
     }
 
     @Override
     protected void reassessDomesticGoals() {
         if (wildAvoidPlayersGoal == null)
-            wildAvoidPlayersGoal = new WildAvoidEntityGoal<>(this, PlayerEntity.class, 16.0F, 0.8D, 1.33D);
+            wildAvoidPlayersGoal = new WildAvoidEntityGoal<>(this, Player.class, 16.0F, 0.8D, 1.33D);
 
         goalSelector.removeGoal(wildAvoidPlayersGoal);
         if (!isCareRequired()) goalSelector.addGoal(4, wildAvoidPlayersGoal);
@@ -98,7 +112,7 @@ public class HotRabbitEntity extends LivestockEntity {
     }
 
     @Override
-    public ILivingEntityData finalizeSpawn(IServerWorld world, DifficultyInstance difficultyInstance, SpawnReason spawnReason, @Nullable ILivingEntityData entityData, @Nullable CompoundNBT nbt) {
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor world, DifficultyInstance difficultyInstance, MobSpawnType spawnReason, @Nullable SpawnGroupData entityData, @Nullable CompoundTag nbt) {
         entityData = super.finalizeSpawn(world, difficultyInstance, spawnReason, entityData, nbt);
         setStats(new RabbitStats(random.nextInt(25) + random.nextInt(35), random.nextInt(3), random.nextInt(3), random.nextInt(3), random.nextInt(3)));
         return entityData;
@@ -195,7 +209,7 @@ public class HotRabbitEntity extends LivestockEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT nbt) {
+    public void addAdditionalSaveData(CompoundTag nbt) {
         super.addAdditionalSaveData(nbt);
         nbt.putInt("HideQuality", getHideQuality());
         nbt.putInt("LitterSize", getLitterSize());
@@ -203,7 +217,7 @@ public class HotRabbitEntity extends LivestockEntity {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT nbt) {
+    public void readAdditionalSaveData(CompoundTag nbt) {
         super.readAdditionalSaveData(nbt);
         setHideQuality(nbt.getInt("HideQuality"));
         setLitterSize(nbt.getInt("LitterSize"));
@@ -240,7 +254,7 @@ public class HotRabbitEntity extends LivestockEntity {
     }
 
     @Override
-    protected float getStandingEyeHeight(Pose pose, EntitySize size) {
+    protected float getStandingEyeHeight(Pose pose, EntityDimensions size) {
         return size.height * 0.65F;
     }
 
@@ -251,12 +265,12 @@ public class HotRabbitEntity extends LivestockEntity {
 
     @Nullable
     @Override
-    public AgeableEntity getBreedOffspring(ServerWorld world, AgeableEntity entity) {
+    public AgableMob getBreedOffspring(ServerLevel world, AgableMob entity) {
         return HotEntities.RABBIT.get().create(world);
     }
 
     @Override
-    protected void onOffspringSpawnedFromEgg(PlayerEntity player, MobEntity entity) {
+    protected void onOffspringSpawnedFromEgg(Player player, Mob entity) {
         if (entity instanceof HotRabbitEntity) {
             HotRabbitEntity child = (HotRabbitEntity) entity;
 
@@ -292,7 +306,7 @@ public class HotRabbitEntity extends LivestockEntity {
     }
 
     @Override
-    public void createChild(ServerWorld level, LivestockEntity livestockEntity) {
+    public void createChild(ServerLevel level, LivestockEntity livestockEntity) {
         if (livestockEntity instanceof HotRabbitEntity) {
             HotRabbitEntity father = (HotRabbitEntity) livestockEntity;
             HotRabbitEntity child = (HotRabbitEntity) getBreedOffspring(level, father);
@@ -365,13 +379,13 @@ public class HotRabbitEntity extends LivestockEntity {
                 child.setStats(stats);
                 child.setSex(Sex.fromBool(random.nextBoolean()));
 
-                CompoundNBT childNBT = new CompoundNBT();
+                CompoundTag childNBT = new CompoundTag();
                 child.save(childNBT);
 
                 children.add(childNBT);
                 setGestationTimer(HotChicksConfig.gestationSpeed.get());
 
-                ServerPlayerEntity serverplayerentity = getLoveCause();
+                ServerPlayer serverplayerentity = getLoveCause();
                 if (serverplayerentity == null && father.getLoveCause() != null)
                     serverplayerentity = father.getLoveCause();
                 if (serverplayerentity != null) {
@@ -381,7 +395,7 @@ public class HotRabbitEntity extends LivestockEntity {
 
                 level.broadcastEntityEvent(this, (byte) 18);
                 if (level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))
-                    level.addFreshEntity(new ExperienceOrbEntity(level, getX(), getY(), getZ(), random.nextInt(7) + 1));
+                    level.addFreshEntity(new ExperienceOrb(level, getX(), getY(), getZ(), random.nextInt(7) + 1));
             }
         }
     }
@@ -395,7 +409,7 @@ public class HotRabbitEntity extends LivestockEntity {
         if (!horizontalCollision && (!moveControl.hasWanted() || !(moveControl.getWantedY() > getY() + 0.5D))) {
             Path path = navigation.getPath();
             if (path != null && !path.isDone()) {
-                Vector3d vector3d = path.getNextEntityPos(this);
+                Vec3 vector3d = path.getNextEntityPos(this);
                 if (vector3d.y > getY() + 0.5D) return 0.5F;
             }
             return moveControl.getSpeedModifier() <= 0.6D ? 0.2F : 0.3F;
@@ -408,7 +422,7 @@ public class HotRabbitEntity extends LivestockEntity {
         double d0 = moveControl.getSpeedModifier();
         if (d0 > 0.0D) {
             double d1 = getHorizontalDistanceSqr(getDeltaMovement());
-            if (d1 < 0.01D) moveRelative(0.1F, new Vector3d(0.0D, 0.0D, 1.0D));
+            if (d1 < 0.01D) moveRelative(0.1F, new Vec3(0.0D, 0.0D, 1.0D));
         }
         if (!level.isClientSide) level.broadcastEntityEvent(this, (byte) 1);
     }
@@ -450,7 +464,7 @@ public class HotRabbitEntity extends LivestockEntity {
             if (!jumpHelperController.wantJump()) {
                 if (moveControl.hasWanted() && jumpDelayTicks == 0) {
                     Path path = navigation.getPath();
-                    Vector3d vector3d = new Vector3d(moveControl.getWantedX(), moveControl.getWantedY(), moveControl.getWantedZ());
+                    Vec3 vector3d = new Vec3(moveControl.getWantedX(), moveControl.getWantedY(), moveControl.getWantedZ());
                     if (path != null && !path.isDone()) vector3d = path.getNextEntityPos(this);
 
                     facePoint(vector3d.x, vector3d.z);
@@ -463,7 +477,7 @@ public class HotRabbitEntity extends LivestockEntity {
     }
 
     private void facePoint(double x, double z) {
-        yRot = (float) (MathHelper.atan2(z - getZ(), x - getX()) * (double) (180F / (float) Math.PI)) - 90.0F;
+        yRot = (float) (Mth.atan2(z - getZ(), x - getX()) * (double) (180F / (float) Math.PI)) - 90.0F;
     }
 
     private void enableJumpControl() {
@@ -528,7 +542,7 @@ public class HotRabbitEntity extends LivestockEntity {
         } else super.handleEntityEvent(id);
     }
 
-    public static class JumpHelperController extends JumpController {
+    public static class JumpHelperController extends JumpControl {
         private final HotRabbitEntity rabbit;
         private boolean canJump;
 
@@ -557,7 +571,7 @@ public class HotRabbitEntity extends LivestockEntity {
         }
     }
 
-    static class MoveHelperController extends MovementController {
+    static class MoveHelperController extends MoveControl {
         private final HotRabbitEntity rabbit;
         private double nextJumpSpeed;
 

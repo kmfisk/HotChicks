@@ -1,8 +1,8 @@
 package com.github.kmfisk.hotchicks.entity.goal;
 
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 
 public class WildAvoidEntityGoal<T extends LivingEntity> extends AvoidEntityGoal<T> {
     private final LivestockEntity livestock;

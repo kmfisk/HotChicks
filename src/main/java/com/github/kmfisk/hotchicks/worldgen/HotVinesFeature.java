@@ -2,30 +2,30 @@ package com.github.kmfisk.hotchicks.worldgen;
 
 import com.github.kmfisk.hotchicks.block.CropVineBlock;
 import com.mojang.serialization.Codec;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ISeedReader;
-import net.minecraft.world.gen.ChunkGenerator;
-import net.minecraft.world.gen.Heightmap;
-import net.minecraft.world.gen.feature.BlockClusterFeatureConfig;
-import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
+import net.minecraft.world.level.levelgen.feature.Feature;
 
 import java.util.Random;
 
-public class HotVinesFeature extends Feature<BlockClusterFeatureConfig> {
-    public HotVinesFeature(Codec<BlockClusterFeatureConfig> codec) {
+public class HotVinesFeature extends Feature<RandomPatchConfiguration> {
+    public HotVinesFeature(Codec<RandomPatchConfiguration> codec) {
         super(codec);
     }
 
     @Override
-    public boolean place(ISeedReader level, ChunkGenerator chunkGenerator, Random random, BlockPos pos, BlockClusterFeatureConfig config) {
+    public boolean place(WorldGenLevel level, ChunkGenerator chunkGenerator, Random random, BlockPos pos, RandomPatchConfiguration config) {
         BlockPos pos1;
-        if (config.project) pos1 = level.getHeightmapPos(Heightmap.Type.WORLD_SURFACE_WG, pos);
+        if (config.project) pos1 = level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE_WG, pos);
         else pos1 = pos;
 
         int i = 0;
-        BlockPos.Mutable blockPos = pos1.mutable();
+        BlockPos.MutableBlockPos blockPos = pos1.mutable();
 
         for (Direction direction : Direction.values()) {
             for (int j = 0; j < config.tries; ++j) {
