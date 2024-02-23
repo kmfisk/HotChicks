@@ -1,6 +1,7 @@
 package com.github.kmfisk.hotchicks.item;
 
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LiquidBlock;
@@ -34,7 +35,7 @@ import net.minecraft.world.item.Item.Properties;
 public class HotSpawnEggItem extends ForgeSpawnEggItem {
     private final String breed;
 
-    public HotSpawnEggItem(String breed, Supplier<? extends EntityType<?>> type, Properties props) {
+    public HotSpawnEggItem(String breed, Supplier<? extends EntityType<? extends Mob>> type, Properties props) {
         super(type, 0xFFFFFF, 0xFFFFFF, props);
         this.breed = breed;
     }
@@ -93,7 +94,7 @@ public class HotSpawnEggItem extends ForgeSpawnEggItem {
                 if (entity == null) return InteractionResultHolder.pass(itemstack);
                 else {
                     if (entity instanceof LivestockEntity) ((LivestockEntity) entity).initByBreed(breed);
-                    if (!player.abilities.instabuild) itemstack.shrink(1);
+                    if (!player.getAbilities().instabuild) itemstack.shrink(1);
 
                     player.awardStat(Stats.ITEM_USED.get(this));
                     return InteractionResultHolder.consume(itemstack);

@@ -83,7 +83,7 @@ public class MetalTroughBlock extends TroughBlock {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockGetter level) {
-        return HotTileEntities.METAL_TROUGH.get().create();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return HotTileEntities.METAL_TROUGH.get().create(pos, state);
     }
 }

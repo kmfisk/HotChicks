@@ -78,7 +78,7 @@ public class FoodCrockBlock extends BaseEntityBlock {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockGetter reader) {
-        return HotTileEntities.FOOD_CROCK.get().create();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return HotTileEntities.FOOD_CROCK.get().create(pos, state);
     }
 }

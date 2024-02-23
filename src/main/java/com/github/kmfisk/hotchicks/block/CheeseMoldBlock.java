@@ -84,7 +84,7 @@ public class CheeseMoldBlock extends Block implements WorldlyContainerHolder {
         int age = state.getValue(AGE);
         if (age == 0 && Ingredient.of(MILKS).test(itemStack)) {
             if (!level.isClientSide) {
-                if (!player.abilities.instabuild) itemStack.shrink(1);
+                if (!player.getAbilities().instabuild) itemStack.shrink(1);
                 level.playSound(null, pos, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
                 level.setBlock(pos, state.setValue(AGE, 1), 2);
                 level.updateNeighbourForOutputSignal(pos, this);
@@ -98,7 +98,7 @@ public class CheeseMoldBlock extends Block implements WorldlyContainerHolder {
                 cheese = new ItemStack(HotItems.SOFT_CHEESE.get());
             } else cheese = new ItemStack(HotItems.HARD_CHEESE.get());
 
-            if (!player.inventory.add(cheese)) player.drop(cheese, false);
+            if (!player.getInventory().add(cheese)) player.drop(cheese, false);
             level.playSound(null, pos, SoundEvents.COMPOSTER_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
             level.setBlock(pos, state.setValue(AGE, 0), 2);
             level.updateNeighbourForOutputSignal(pos, this);

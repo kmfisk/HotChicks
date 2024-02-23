@@ -23,6 +23,6 @@ public class DrinkItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        return ItemUtils.useDrink(level, player, hand);
+        return ItemUtils.startUsingInstantly(level, player, hand);
     }
 }

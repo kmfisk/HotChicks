@@ -3,25 +3,29 @@ package com.github.kmfisk.hotchicks.block.entity;
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.inventory.MillContainer;
 import com.github.kmfisk.hotchicks.item.HotItems;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.WorldlyContainer;
-import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.core.NonNullList;
-import net.minecraft.util.Mth;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.util.Mth;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.StackedContentsCompatible;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -30,7 +34,7 @@ import net.minecraftforge.items.wrapper.SidedInvWrapper;
 
 import javax.annotation.Nullable;
 
-public class MillTileEntity extends BaseContainerBlockEntity implements WorldlyContainer, TickableBlockEntity {
+public class MillTileEntity extends BaseContainerBlockEntity implements WorldlyContainer, StackedContentsCompatible {
     protected final NonNullList<ItemStack> items = NonNullList.withSize(7, ItemStack.EMPTY);
     private final LazyOptional<? extends IItemHandler>[] sideHandlers = SidedInvWrapper.create(this, Direction.DOWN, Direction.UP, Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
     protected int activeTime;
@@ -68,8 +72,8 @@ public class MillTileEntity extends BaseContainerBlockEntity implements WorldlyC
         }
     };
 
-    public MillTileEntity() {
-        super(HotTileEntities.MILL.get());
+    public MillTileEntity(BlockPos pos, BlockState state) {
+        super(HotTileEntities.MILL.get(), pos, state);
     }
 
     @Override
@@ -87,8 +91,8 @@ public class MillTileEntity extends BaseContainerBlockEntity implements WorldlyC
     }
 
     @Override
-    public void load(BlockState state, CompoundTag tag) {
-        super.load(state, tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         clearContent();
         ContainerHelper.loadAllItems(tag, items);
         activeTime = tag.getInt("ActiveTime");
@@ -110,8 +114,7 @@ public class MillTileEntity extends BaseContainerBlockEntity implements WorldlyC
         return !items.get(0).isEmpty() && !items.get(1).isEmpty() && !items.get(2).isEmpty();
     }
 
-    @Override
-    public void tick() {
+    public void serverTick() {
         boolean flag = isActive();
         boolean flag1 = false;
         if (isActive()) --activeTime;
@@ -277,12 +280,12 @@ public class MillTileEntity extends BaseContainerBlockEntity implements WorldlyC
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        handleUpdateTag(getBlockState(), pkt.getTag());
+        handleUpdateTag(pkt.getTag());
     }
 
     @Override
-    public void handleUpdateTag(BlockState state, CompoundTag tag) {
-        load(state, tag);
+    public void handleUpdateTag(CompoundTag tag) {
+        load(tag);
     }
 
     @Override
@@ -304,5 +307,12 @@ public class MillTileEntity extends BaseContainerBlockEntity implements WorldlyC
             }
         }
         return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public void fillStackedContents(StackedContents stackedContents) {
+        for (ItemStack itemstack : items) {
+            stackedContents.accountStack(itemstack);
+        }
     }
 }

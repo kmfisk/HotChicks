@@ -1,23 +1,19 @@
 package com.github.kmfisk.hotchicks.block;
 
-import net.minecraft.block.*;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
 import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 
 public class HutchBarsBlock extends IronBarsBlock {
     public HutchBarsBlock(Properties properties) {
@@ -51,7 +47,7 @@ public class HutchBarsBlock extends IronBarsBlock {
     public boolean canAttachTo(BlockState state, boolean solidSide, Direction direction) {
         Block block = state.getBlock();
         boolean flag1 = block instanceof FenceGateBlock && FenceGateBlock.connectsToDirection(state, direction);
-        return !isExceptionForConnection(block) && solidSide || block instanceof IronBarsBlock || block instanceof FenceBlock || flag1 || block.is(BlockTags.WALLS);
+        return !isExceptionForConnection(state) && solidSide || block instanceof IronBarsBlock || block instanceof FenceBlock || flag1 || state.is(BlockTags.WALLS);
     }
 
     @Override

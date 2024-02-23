@@ -4,25 +4,27 @@ import com.github.kmfisk.hotchicks.block.NestBlock;
 import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
 import com.github.kmfisk.hotchicks.inventory.NestContainer;
 import com.github.kmfisk.hotchicks.item.HotEggItem;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.WorldlyContainer;
-import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.TickableBlockEntity;
-import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.Util;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.Util;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.StackedContentsCompatible;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -32,16 +34,16 @@ import net.minecraftforge.registries.ForgeRegistries;
 import javax.annotation.Nullable;
 import java.util.stream.IntStream;
 
-public class NestTileEntity extends BaseContainerBlockEntity implements TickableBlockEntity, WorldlyContainer {
+public class NestTileEntity extends BaseContainerBlockEntity implements WorldlyContainer, StackedContentsCompatible {
     private final NonNullList<ItemStack> items = NonNullList.withSize(5, ItemStack.EMPTY);
     private final SidedInvWrapper sideHandler = new SidedInvWrapper(this, Direction.UP);
 
-    public NestTileEntity(BlockEntityType<?> type) {
-        super(type);
+    public NestTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
     }
 
-    public NestTileEntity() {
-        super(HotTileEntities.NEST.get());
+    public NestTileEntity(BlockPos pos, BlockState state) {
+        super(HotTileEntities.NEST.get(), pos, state);
     }
 
     @Override
@@ -102,8 +104,8 @@ public class NestTileEntity extends BaseContainerBlockEntity implements Tickable
     }
 
     @Override
-    public void load(BlockState state, CompoundTag nbt) {
-        super.load(state, nbt);
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
         clearContent();
         ContainerHelper.loadAllItems(nbt, items);
     }
@@ -128,7 +130,7 @@ public class NestTileEntity extends BaseContainerBlockEntity implements Tickable
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        handleUpdateTag(getBlockState(), pkt.getTag());
+        handleUpdateTag(pkt.getTag());
     }
 
     @Override
@@ -163,8 +165,7 @@ public class NestTileEntity extends BaseContainerBlockEntity implements Tickable
         return false;
     }
 
-    @Override
-    public void tick() {
+    public void serverTick() {
         if (level == null) return;
         if (level.isClientSide()) return;
 
@@ -202,5 +203,12 @@ public class NestTileEntity extends BaseContainerBlockEntity implements Tickable
             return LazyOptional.of(() -> sideHandler).cast();
         }
         return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public void fillStackedContents(StackedContents stackedContents) {
+        for (ItemStack itemstack : items) {
+            stackedContents.accountStack(itemstack);
+        }
     }
 }

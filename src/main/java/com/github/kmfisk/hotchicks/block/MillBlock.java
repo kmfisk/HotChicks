@@ -4,6 +4,9 @@ import com.github.kmfisk.hotchicks.block.entity.HotTileEntities;
 import com.github.kmfisk.hotchicks.block.entity.MillTileEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.entity.player.Player;
@@ -39,6 +42,15 @@ public class MillBlock extends BaseEntityBlock {
     public MillBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> entityType) {
+        if (level.isClientSide) return null;
+        else return (level1, pos, state1, tile) -> {
+            if (tile instanceof MillTileEntity tileEntity) tileEntity.serverTick();
+        };
     }
 
     @Override
@@ -92,8 +104,8 @@ public class MillBlock extends BaseEntityBlock {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockGetter level) {
-        return HotTileEntities.MILL.get().create();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return HotTileEntities.MILL.get().create(pos, state);
     }
 
     @Override

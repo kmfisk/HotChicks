@@ -27,7 +27,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.GatherDataEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
@@ -57,7 +56,7 @@ public class HotChicks {
 
         bus.addListener(this::setup);
         bus.addListener(this::registerAttributes);
-        bus.addListener(this::gatherData);
+//        bus.addListener(this::gatherData);
 
         bus.addListener(this::setupClient);
         bus.addListener(HotEvents::onLoadComplete);
@@ -73,7 +72,7 @@ public class HotChicks {
     private void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             HotFeatures.registerFeatures();
-            registerCompostables();
+//            registerCompostables();
         });
         HotEntities.registerSpawnPlacements();
     }
@@ -88,13 +87,13 @@ public class HotChicks {
         HotEntities.registerAttributes((type, builder) -> event.put(type, builder.build()));
     }
 
-    private void gatherData(final GatherDataEvent event) {
+    /*private void gatherData(final GatherDataEvent event) {
         System.out.println("Generating hotchicks Data!");
         DataGenerator dataGenerator = event.getGenerator();
         if (event.includeServer()) dataGenerator.addProvider(new HotRecipeProvider(dataGenerator));
-    }
+    }*/
 
-    private static void registerCompostables() {
+    /*private static void registerCompostables() {
         ComposterBlock.COMPOSTABLES.put(HotItems.CABBAGE.get(), 0.65F);
         ComposterBlock.COMPOSTABLES.put(HotItems.GARLIC.get(), 0.65F);
         ComposterBlock.COMPOSTABLES.put(HotItems.KALE.get(), 0.65F);
@@ -127,5 +126,5 @@ public class HotChicks {
         ComposterBlock.COMPOSTABLES.put(HotItems.POMEGRANATE.get(), 0.65F);
         ComposterBlock.COMPOSTABLES.put(HotItems.POMELO.get(), 0.65F);
         ComposterBlock.COMPOSTABLES.put(HotItems.YUZU.get(), 0.65F);
-    }
+    }*/
 }

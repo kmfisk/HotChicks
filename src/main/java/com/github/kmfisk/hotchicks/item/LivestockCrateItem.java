@@ -72,7 +72,7 @@ public class LivestockCrateItem extends Item {
         if (target instanceof LivestockEntity)
             tags.putString("LivestockBreed", ((LivestockEntity) target).getReadableBreed());
 
-        target.remove();
+        target.discard();
         player.displayClientMessage(new TranslatableComponent("chat.hotchicks.livestock_crate.capture", target.getDisplayName()), true);
 
         ItemStack newStack = new ItemStack(this);

@@ -4,14 +4,10 @@ import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.client.renderer.entity.HotChickenRenderer;
 import com.github.kmfisk.hotchicks.client.renderer.entity.HotCowRenderer;
 import com.github.kmfisk.hotchicks.client.renderer.entity.HotRabbitRenderer;
-import net.minecraft.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraftforge.fml.RegistryObject;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.thread.EffectiveSide;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 
