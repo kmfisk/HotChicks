@@ -36,17 +36,17 @@ public class TroughScreen extends AbstractContainerScreen<TroughContainer> {
     }
 
     protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         int mod = 0;
         if (container.slot == 3) {
-            this.minecraft.getTextureManager().bind(SINGLE_TEXTURE);
+            RenderSystem.setShaderTexture(0, SINGLE_TEXTURE);
         } else if (container.slot == 6) {
-            this.minecraft.getTextureManager().bind(DOUBLE_TEXTURE);
+            RenderSystem.setShaderTexture(0, DOUBLE_TEXTURE);
         } else if (container.slot == 12) {
             mod = 0;
-            this.minecraft.getTextureManager().bind(new ResourceLocation(HotChicks.MOD_ID, "textures/gui/trough_large_metal.png"));
+            RenderSystem.setShaderTexture(0, new ResourceLocation(HotChicks.MOD_ID, "textures/gui/trough_large_metal.png"));
         } else {
-            this.minecraft.getTextureManager().bind(DOUBLE_TEXTURE);
+            RenderSystem.setShaderTexture(0, DOUBLE_TEXTURE);
         }
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - imageHeight + mod) / 2;
