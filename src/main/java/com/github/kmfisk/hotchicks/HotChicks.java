@@ -5,9 +5,10 @@ import com.github.kmfisk.hotchicks.block.entity.HotTileEntities;
 import com.github.kmfisk.hotchicks.client.ColorEvents;
 import com.github.kmfisk.hotchicks.client.HotSounds;
 import com.github.kmfisk.hotchicks.client.renderer.entity.HotChickenRenderer;
+import com.github.kmfisk.hotchicks.client.renderer.entity.HotCowRenderer;
 import com.github.kmfisk.hotchicks.client.renderer.entity.model.HotChickenModel;
+import com.github.kmfisk.hotchicks.client.renderer.entity.model.HotCowModel;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
-import com.github.kmfisk.hotchicks.data.HotRecipeProvider;
 import com.github.kmfisk.hotchicks.entity.HotEntities;
 import com.github.kmfisk.hotchicks.entity.merchant.villager.HotVillagerTrades;
 import com.github.kmfisk.hotchicks.event.HotEvents;
@@ -16,12 +17,9 @@ import com.github.kmfisk.hotchicks.item.HotItems;
 import com.github.kmfisk.hotchicks.loot.HotGlobalLootModifier;
 import com.github.kmfisk.hotchicks.worldgen.HotFeature;
 import com.github.kmfisk.hotchicks.worldgen.HotFeatures;
-import net.minecraft.world.level.block.ComposterBlock;
-import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -95,6 +93,8 @@ public class HotChicks {
         event.registerLayerDefinition(HotChickenRenderer.ROOSTER, HotChickenModel.Rooster::createBodyLayer);
         event.registerLayerDefinition(HotChickenRenderer.ROOSTER_SILKIE, HotChickenModel.RoosterSilkie::createBodyLayer);
         event.registerLayerDefinition(HotChickenRenderer.CHICK, HotChickenModel.Chick::createBodyLayer);
+        event.registerLayerDefinition(HotCowRenderer.COW, HotCowModel.Adult::createBodyLayer);
+        event.registerLayerDefinition(HotCowRenderer.CALF, HotCowModel.Calf::createBodyLayer);
     }
 
     private void registerAttributes(final EntityAttributeCreationEvent event) {

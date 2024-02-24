@@ -7,8 +7,9 @@ import com.github.kmfisk.hotchicks.entity.HotCowEntity;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import com.github.kmfisk.hotchicks.entity.base.CowBreeds;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -16,6 +17,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class HotCowRenderer extends MobRenderer<HotCowEntity, HotCowModel> {
+    public static final ModelLayerLocation COW = new ModelLayerLocation(new ResourceLocation(HotChicks.MOD_ID, "cow"), "cow");
+    public static final ModelLayerLocation CALF = new ModelLayerLocation(new ResourceLocation(HotChicks.MOD_ID, "calf"), "calf");
     public static final String[] ANGUS_LAKENVELDER = new String[]{"black", "red"};
     public static final String[] BRAHMA = new String[]{"black", "gray", "red", "tan", "white"};
     public static final String[] GUERNSEY = new String[]{"red", "tan"};
@@ -25,11 +28,11 @@ public class HotCowRenderer extends MobRenderer<HotCowEntity, HotCowModel> {
     public final HotCowModel adultModel;
     public final HotCowModel calfModel;
 
-    public HotCowRenderer(EntityRenderDispatcher rendererManager) {
-        super(rendererManager, new HotCowModel.Adult(), 1.0F);
+    public HotCowRenderer(EntityRendererProvider.Context context) {
+        super(context, new HotCowModel.Adult(context.bakeLayer(COW)), 1.0F);
         this.addLayer(new CowBellLayer(this));
-        adultModel = new HotCowModel.Adult();
-        calfModel = new HotCowModel.Calf();
+        adultModel = new HotCowModel.Adult(context.bakeLayer(COW));
+        calfModel = new HotCowModel.Calf(context.bakeLayer(CALF));
     }
 
     @Override

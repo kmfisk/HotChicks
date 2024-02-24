@@ -9,6 +9,7 @@ import com.github.kmfisk.hotchicks.entity.base.RabbitBreeds;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -22,8 +23,8 @@ public class HotRabbitRenderer extends MobRenderer<HotRabbitEntity, HotRabbitMod
     public static final String[] NEW_ZEALANDS = new String[]{"broken", "red", "white"};
     public static final String[] REXES = new String[]{"black", "black_otter", "broken", "chocolate", "chocolate_otter", "red", "red_otter", "tan", "white"};
 
-    public HotRabbitRenderer(EntityRenderDispatcher rendererManager) {
-        super(rendererManager, new HotRabbitModel(), 0.3F);
+    public HotRabbitRenderer(EntityRendererProvider.Context context) {
+        super(context, new HotRabbitModel(), 0.3F);
         this.addLayer(new RabbitTagLayer(this));
     }
 
