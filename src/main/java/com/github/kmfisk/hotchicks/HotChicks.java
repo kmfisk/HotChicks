@@ -11,6 +11,7 @@ import com.github.kmfisk.hotchicks.client.renderer.entity.model.HotChickenModel;
 import com.github.kmfisk.hotchicks.client.renderer.entity.model.HotCowModel;
 import com.github.kmfisk.hotchicks.client.renderer.entity.model.HotRabbitModel;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
+import com.github.kmfisk.hotchicks.data.HotRecipeProvider;
 import com.github.kmfisk.hotchicks.entity.HotEntities;
 import com.github.kmfisk.hotchicks.entity.merchant.villager.HotVillagerTrades;
 import com.github.kmfisk.hotchicks.event.HotEvents;
@@ -19,6 +20,7 @@ import com.github.kmfisk.hotchicks.item.HotItems;
 import com.github.kmfisk.hotchicks.loot.HotGlobalLootModifier;
 import com.github.kmfisk.hotchicks.worldgen.HotFeature;
 import com.github.kmfisk.hotchicks.worldgen.HotFeatures;
+import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -34,6 +36,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
 @Mod(HotChicks.MOD_ID)
 public class HotChicks {
@@ -61,7 +64,7 @@ public class HotChicks {
 
         bus.addListener(this::setup);
         bus.addListener(this::registerAttributes);
-//        bus.addListener(this::gatherData);
+        bus.addListener(this::gatherData);
 
         bus.addListener(this::setupClient);
         bus.addListener(HotEvents::onLoadComplete);
@@ -104,11 +107,11 @@ public class HotChicks {
         HotEntities.registerAttributes((type, builder) -> event.put(type, builder.build()));
     }
 
-    /*private void gatherData(final GatherDataEvent event) {
+    private void gatherData(final GatherDataEvent event) {
         System.out.println("Generating hotchicks Data!");
         DataGenerator dataGenerator = event.getGenerator();
         if (event.includeServer()) dataGenerator.addProvider(new HotRecipeProvider(dataGenerator));
-    }*/
+    }
 
     /*private static void registerCompostables() {
         ComposterBlock.COMPOSTABLES.put(HotItems.CABBAGE.get(), 0.65F);

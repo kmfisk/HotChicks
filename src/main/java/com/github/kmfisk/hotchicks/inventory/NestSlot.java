@@ -1,10 +1,10 @@
 package com.github.kmfisk.hotchicks.inventory;
 
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 
 public class NestSlot extends Slot {
     public NestSlot(Container inventoryIn, int index, int xPosition, int yPosition) {
@@ -12,10 +12,9 @@ public class NestSlot extends Slot {
     }
 
     @Override
-    public ItemStack onTake(Player thePlayer, ItemStack stack) {
+    public void onTake(Player player, ItemStack stack) {
         stack.setTag(new CompoundTag());
-        this.setChanged();
-        return stack;
+        super.onTake(player, stack);
     }
 
     @Override

@@ -34,7 +34,7 @@ public class HotRecipeProvider extends RecipeProvider {
     }
 
     @Override
-    protected void buildShapelessRecipes(Consumer<FinishedRecipe> consumer) {
+    protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
         shapedRecipeResult(consumer, HotBlocks.CHEESE_MOLD.get(), 1, ImmutableList.of("NBN"), ImmutableMap.<Character, Ingredient>builder().put('N', Ingredient.of(Items.IRON_NUGGET)).put('B', Ingredient.of(Blocks.BARREL)).build());
         shapedRecipeResult(consumer, HotBlocks.FOOD_CROCK.get(), 2, ImmutableList.of("FCF", " F "), ImmutableMap.<Character, Ingredient>builder().put('F', Ingredient.of(Items.CLAY_BALL)).put('C', Ingredient.of(Items.BOWL)).build());
         shapedRecipeResult(consumer, HotBlocks.HUTCH_GATE.get(), 2, ImmutableList.of("SCS", "SFS", "SCS"), ImmutableMap.<Character, Ingredient>builder().put('F', Ingredient.of(Items.IRON_NUGGET)).put('S', Ingredient.of(Items.STICK)).put('C', Ingredient.of(Items.IRON_INGOT)).build());
