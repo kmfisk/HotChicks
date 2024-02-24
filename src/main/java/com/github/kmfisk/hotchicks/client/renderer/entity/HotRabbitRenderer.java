@@ -7,8 +7,8 @@ import com.github.kmfisk.hotchicks.entity.HotRabbitEntity;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import com.github.kmfisk.hotchicks.entity.base.RabbitBreeds;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -17,6 +17,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class HotRabbitRenderer extends MobRenderer<HotRabbitEntity, HotRabbitModel> {
+    public static final ModelLayerLocation RABBIT = new ModelLayerLocation(new ResourceLocation(HotChicks.MOD_ID, "rabbit"), "rabbit");
     public static final String[] AMERICAN_CHINCHILLAS = new String[]{"gray", "silver"};
     public static final String[] DUTCHES = new String[]{"black", "blue", "brown", "chocolate", "tri", "yellow"};
     public static final String[] FLEMISH_GIANTS = new String[]{"black", "blue", "brown", "steel_gray", "white"};
@@ -24,7 +25,7 @@ public class HotRabbitRenderer extends MobRenderer<HotRabbitEntity, HotRabbitMod
     public static final String[] REXES = new String[]{"black", "black_otter", "broken", "chocolate", "chocolate_otter", "red", "red_otter", "tan", "white"};
 
     public HotRabbitRenderer(EntityRendererProvider.Context context) {
-        super(context, new HotRabbitModel(), 0.3F);
+        super(context, new HotRabbitModel(context.bakeLayer(RABBIT)), 0.3F);
         this.addLayer(new RabbitTagLayer(this));
     }
 

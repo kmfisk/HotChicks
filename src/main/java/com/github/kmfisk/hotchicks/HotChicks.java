@@ -6,8 +6,10 @@ import com.github.kmfisk.hotchicks.client.ColorEvents;
 import com.github.kmfisk.hotchicks.client.HotSounds;
 import com.github.kmfisk.hotchicks.client.renderer.entity.HotChickenRenderer;
 import com.github.kmfisk.hotchicks.client.renderer.entity.HotCowRenderer;
+import com.github.kmfisk.hotchicks.client.renderer.entity.HotRabbitRenderer;
 import com.github.kmfisk.hotchicks.client.renderer.entity.model.HotChickenModel;
 import com.github.kmfisk.hotchicks.client.renderer.entity.model.HotCowModel;
+import com.github.kmfisk.hotchicks.client.renderer.entity.model.HotRabbitModel;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.HotEntities;
 import com.github.kmfisk.hotchicks.entity.merchant.villager.HotVillagerTrades;
@@ -95,6 +97,7 @@ public class HotChicks {
         event.registerLayerDefinition(HotChickenRenderer.CHICK, HotChickenModel.Chick::createBodyLayer);
         event.registerLayerDefinition(HotCowRenderer.COW, HotCowModel.Adult::createBodyLayer);
         event.registerLayerDefinition(HotCowRenderer.CALF, HotCowModel.Calf::createBodyLayer);
+        event.registerLayerDefinition(HotRabbitRenderer.RABBIT, HotRabbitModel::createBodyLayer);
     }
 
     private void registerAttributes(final EntityAttributeCreationEvent event) {
