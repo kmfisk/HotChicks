@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[37,)"
+loaderVersion="[40,)"
 license="LGPL-3.0"
 issueTrackerURL="https://github.com/kmfisk/HotChicks/issues"
 
@@ -17,13 +17,13 @@ issueTrackerURL="https://github.com/kmfisk/HotChicks/issues"
 [[dependencies.hotchicks]]
     modId="forge"
     mandatory=true
-    versionRange="[37,)"
+    versionRange="[40,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.hotchicks]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.17.1,1.18)"
+    versionRange="[1.18.2,1.19)"
     ordering="NONE"
     side="BOTH"
