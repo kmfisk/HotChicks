@@ -4,6 +4,8 @@ import com.github.kmfisk.hotchicks.block.HotBlocks;
 import com.github.kmfisk.hotchicks.block.entity.HotTileEntities;
 import com.github.kmfisk.hotchicks.client.ColorEvents;
 import com.github.kmfisk.hotchicks.client.HotSounds;
+import com.github.kmfisk.hotchicks.client.renderer.entity.HotChickenRenderer;
+import com.github.kmfisk.hotchicks.client.renderer.entity.model.HotChickenModel;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.data.HotRecipeProvider;
 import com.github.kmfisk.hotchicks.entity.HotEntities;
@@ -19,9 +21,12 @@ import net.minecraft.data.DataGenerator;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -81,6 +86,15 @@ public class HotChicks {
         HotEntities.registerRenderers();
         HotBlocks.setRenderLayers();
         HotContainerTypes.registerFactories();
+    }
+
+    @SubscribeEvent
+    public static void registerLayerDefinition(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(HotChickenRenderer.HEN, HotChickenModel.Hen::createBodyLayer);
+        event.registerLayerDefinition(HotChickenRenderer.HEN_SILKIE, HotChickenModel.HenSilkie::createBodyLayer);
+        event.registerLayerDefinition(HotChickenRenderer.ROOSTER, HotChickenModel.Rooster::createBodyLayer);
+        event.registerLayerDefinition(HotChickenRenderer.ROOSTER_SILKIE, HotChickenModel.RoosterSilkie::createBodyLayer);
+        event.registerLayerDefinition(HotChickenRenderer.CHICK, HotChickenModel.Chick::createBodyLayer);
     }
 
     private void registerAttributes(final EntityAttributeCreationEvent event) {

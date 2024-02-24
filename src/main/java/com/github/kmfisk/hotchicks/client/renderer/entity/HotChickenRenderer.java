@@ -7,8 +7,10 @@ import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import com.github.kmfisk.hotchicks.entity.base.ChickenBreeds;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -16,6 +18,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChickenModel> {
+    public static final ModelLayerLocation HEN = new ModelLayerLocation(new ResourceLocation(HotChicks.MOD_ID, "hen"), "hen");
+    public static final ModelLayerLocation HEN_SILKIE = new ModelLayerLocation(new ResourceLocation(HotChicks.MOD_ID, "hen_silkie"), "hen_silkie");
+    public static final ModelLayerLocation ROOSTER = new ModelLayerLocation(new ResourceLocation(HotChicks.MOD_ID, "rooster"), "rooster");
+    public static final ModelLayerLocation ROOSTER_SILKIE = new ModelLayerLocation(new ResourceLocation(HotChicks.MOD_ID, "rooster_silkie"), "rooster_silkie");
+    public static final ModelLayerLocation CHICK = new ModelLayerLocation(new ResourceLocation(HotChicks.MOD_ID, "chick"), "chick");
     public static final String[] AMERAUCANAS = new String[]{"black", "blue", "blue_wheaten", "brown", "buff", "lavender", "light_brown"};
     public static final String[] MARANS = new String[]{"black_birchen", "black_copper", "cuckoo", "gold_cuckoo"};
     public static final String[] ORPINGTONS = new String[]{"black", "blue", "buff", "white"};
@@ -27,14 +34,14 @@ public class HotChickenRenderer extends MobRenderer<HotChickenEntity, HotChicken
     public final HotChickenModel henSilkieModel;
     public final HotChickenModel chickModel;
 
-    public HotChickenRenderer(EntityRenderDispatcher rendererManager) {
-        super(rendererManager, new HotChickenModel.Hen(), 0.3F);
+    public HotChickenRenderer(EntityRendererProvider.Context context) {
+        super(context, new HotChickenModel.Hen(context.bakeLayer(HEN)), 0.3F);
         this.addLayer(new ChickenBandLayer(this));
-        roosterModel = new HotChickenModel.Rooster();
-        roosterSilkieModel = new HotChickenModel.RoosterSilkie();
-        henModel = new HotChickenModel.Hen();
-        henSilkieModel = new HotChickenModel.HenSilkie();
-        chickModel = new HotChickenModel.Chick();
+        roosterModel = new HotChickenModel.Rooster(context.bakeLayer(ROOSTER));
+        roosterSilkieModel = new HotChickenModel.RoosterSilkie(context.bakeLayer(ROOSTER_SILKIE));
+        henModel = new HotChickenModel.Hen(context.bakeLayer(HEN));
+        henSilkieModel = new HotChickenModel.HenSilkie(context.bakeLayer(HEN_SILKIE));
+        chickModel = new HotChickenModel.Chick(context.bakeLayer(CHICK));
     }
 
     @Override
