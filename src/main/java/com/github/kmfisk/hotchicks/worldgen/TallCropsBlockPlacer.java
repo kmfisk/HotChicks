@@ -2,6 +2,7 @@ package com.github.kmfisk.hotchicks.worldgen;
 
 import com.github.kmfisk.hotchicks.block.DoubleCropBlock;
 import com.github.kmfisk.hotchicks.block.TripleCropBlock;
+import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.core.BlockPos;
@@ -13,7 +14,7 @@ import java.util.Random;
 
 public class TallCropsBlockPlacer extends ColumnPlacer {
     public TallCropsBlockPlacer() {
-        super(0, 0);
+        super(ConstantInt.of(0));
     }
 
     protected BlockPlacerType<?> type() {
