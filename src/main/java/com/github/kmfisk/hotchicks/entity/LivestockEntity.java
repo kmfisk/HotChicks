@@ -9,12 +9,25 @@ import com.github.kmfisk.hotchicks.entity.goal.FindWaterGoal;
 import com.github.kmfisk.hotchicks.entity.goal.LivestockBreedGoal;
 import com.github.kmfisk.hotchicks.entity.stats.RabbitStats;
 import com.github.kmfisk.hotchicks.entity.stats.Stats;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.BaseComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Mth;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
 import net.minecraft.world.entity.ai.goal.FollowParentGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
@@ -22,26 +35,13 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
-import net.minecraft.network.chat.BaseComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.DifficultyInstance;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.Tags;
 
 import javax.annotation.Nullable;
@@ -420,18 +420,18 @@ public abstract class LivestockEntity extends Animal {
         ItemStack stack = player.getItemInHand(hand);
         if (isEdibleFood(stack)) {
             if (getHealth() < getMaxHealth() || getHunger().getValue() < getHunger().getMax() || !isCareRequired()) {
-                usePlayerItem(player, stack);
+                usePlayerItem(player, hand, stack);
                 ate();
                 if (!isCareRequired()) setCareRequired();
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
         } else if (getThirst().getValue() < getThirst().getMax()) {
             if (stack.getItem() == Items.WATER_BUCKET) {
-                if (!player.abilities.instabuild) player.setItemInHand(hand, new ItemStack(Items.BUCKET));
+                if (!player.getAbilities().instabuild) player.setItemInHand(hand, new ItemStack(Items.BUCKET));
                 thirst.increment(3);
                 return InteractionResult.sidedSuccess(level.isClientSide);
             } else if (stack.getItem() == Items.POTION && PotionUtils.getPotion(stack) == Potions.WATER) {
-                if (!player.abilities.instabuild) player.setItemInHand(hand, new ItemStack(Items.GLASS_BOTTLE));
+                if (!player.getAbilities().instabuild) player.setItemInHand(hand, new ItemStack(Items.GLASS_BOTTLE));
                 thirst.increment(1);
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }
@@ -442,7 +442,7 @@ public abstract class LivestockEntity extends Animal {
             if (!isTagged() || dyeColor != getTagColor()) {
                 setTagged(true);
                 setTagColor(dyeColor);
-                if (!player.abilities.instabuild) stack.shrink(1);
+                if (!player.getAbilities().instabuild) stack.shrink(1);
                 setCareRequired();
                 return InteractionResult.sidedSuccess(level.isClientSide);
             }

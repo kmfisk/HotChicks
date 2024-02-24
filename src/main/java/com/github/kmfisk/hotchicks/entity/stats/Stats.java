@@ -3,7 +3,6 @@ package com.github.kmfisk.hotchicks.entity.stats;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
 import com.github.kmfisk.hotchicks.entity.base.Temperature;
-import net.minecraft.util.IntRange;
 import net.minecraft.util.Mth;
 
 import java.util.Random;
@@ -40,7 +39,7 @@ public class Stats {
         Stats stats = copy();
 
         if (this.rand.nextFloat() <= chance)
-            stats.tameness = this.rand.nextFloat() <= 0.8 ? Math.min(StatType.TAMENESS.getRange().getMaxInclusive(), stats.tameness + 1 + this.rand.nextInt(10)) : Math.max(StatType.TAMENESS.getRange().getMinInclusive(), stats.tameness - this.rand.nextInt(5) + 1);
+            stats.tameness = this.rand.nextFloat() <= 0.8 ? Math.min(StatType.TAMENESS.getMax(), stats.tameness + 1 + this.rand.nextInt(10)) : Math.max(StatType.TAMENESS.getMin(), stats.tameness - this.rand.nextInt(5) + 1);
         stats.carcassQuality = mutate(StatType.CARCASS_QUALITY, stats.carcassQuality, chance);
         stats.growthRate = mutate(StatType.GROWTH_RATE, stats.growthRate, chance);
 
@@ -49,7 +48,7 @@ public class Stats {
 
     protected int mutate(StatType statType, int stat, double chance) {
         if (this.rand.nextFloat() <= chance)
-            stat = this.rand.nextFloat() <= 0.8 ? Math.min(statType.getRange().getMaxInclusive(), stat + 1) : Math.max(statType.getRange().getMinInclusive(), stat - 1);
+            stat = this.rand.nextFloat() <= 0.8 ? Math.min(statType.getMax(), stat + 1) : Math.max(statType.getMin(), stat - 1);
         return stat;
     }
 
@@ -57,7 +56,7 @@ public class Stats {
         int chance = rand.nextInt(100);
         if (chance < 70) return litterSize;
         else if (chance < 95) return litterSize == 0 ? 0 : rand.nextInt(litterSize);
-        else return Math.min(StatType.LITTER_SIZE.getRange().getMaxInclusive(), litterSize + 1);
+        else return Math.min(StatType.LITTER_SIZE.getMax(), litterSize + 1);
     }
 
     public float getDebuff(LivestockEntity entity, float mild, float extreme) {
@@ -84,22 +83,28 @@ public class Stats {
     }
 
     public enum StatType {
-        TAMENESS(IntRange.of(0, 100)),
-        CARCASS_QUALITY(IntRange.of(0, 4)),
-        HIDE_QUALITY(IntRange.of(0, 4)),
-        GROWTH_RATE(IntRange.of(0, 4)),
-        EGG_SPEED(IntRange.of(0, 4)),
-        LITTER_SIZE(IntRange.of(0, 4)),
-        MILK_YIELD(IntRange.of(0, 4));
+        TAMENESS(0, 100),
+        CARCASS_QUALITY(0, 4),
+        HIDE_QUALITY(0, 4),
+        GROWTH_RATE(0, 4),
+        EGG_SPEED(0, 4),
+        LITTER_SIZE(0, 4),
+        MILK_YIELD(0, 4);
 
-        private final IntRange range;
+        private final int min;
+        private final int max;
 
-        StatType(IntRange range) {
-            this.range = range;
+        StatType(int min, int max) {
+            this.min = min;
+            this.max = max;
         }
 
-        public IntRange getRange() {
-            return range;
+        public int getMin() {
+            return min;
+        }
+
+        public int getMax() {
+            return max;
         }
     }
 }

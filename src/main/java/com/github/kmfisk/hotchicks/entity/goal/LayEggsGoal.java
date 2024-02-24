@@ -2,11 +2,11 @@ package com.github.kmfisk.hotchicks.entity.goal;
 
 import com.github.kmfisk.hotchicks.block.entity.NestTileEntity;
 import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.server.level.ServerLevel;
 
 public class LayEggsGoal extends Goal {
     private final HotChickenEntity chicken;

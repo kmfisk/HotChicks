@@ -1,11 +1,9 @@
 package com.github.kmfisk.hotchicks.entity;
 
 import com.github.kmfisk.hotchicks.HotChicks;
-import com.github.kmfisk.hotchicks.client.renderer.entity.HotChickenRenderer;
-import com.github.kmfisk.hotchicks.client.renderer.entity.HotCowRenderer;
-import com.github.kmfisk.hotchicks.client.renderer.entity.HotRabbitRenderer;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.util.Tuple;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -17,21 +15,13 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.SpawnPlacements;
-
 public class HotEntities {
     public static final DeferredRegister<EntityType<?>> REGISTRAR = DeferredRegister.create(ForgeRegistries.ENTITIES, HotChicks.MOD_ID);
     private static final List<Tuple<Supplier<EntityType<? extends LivingEntity>>, Supplier<AttributeSupplier.Builder>>> ATTRIBUTES = new ArrayList<>();
-    private static final List<Tuple<Supplier<EntityType<?>>, Supplier<IRenderFactory<?>>>> RENDERERS = new ArrayList<>();
 //    public static final List<Tuple<RegistryObject<EntityType<?>>, List<SpawnInfo>>> SPAWNS = new ArrayList<>();
 
     public static RegistryObject<EntityType<HotChickenEntity>> CHICKEN = new Builder<>(HotChickenEntity::new, MobCategory.CREATURE)
             .attributes(HotChickenEntity::registerAttributes)
-            .renderer(() -> HotChickenRenderer::new)
             /*.spawn(new SpawnInfo((type) -> type.contains(BiomeDictionary.Type.JUNGLE) || (type.contains(BiomeDictionary.Type.SPOOKY) && type.contains(BiomeDictionary.Type.FOREST)),
                     2, 4, 10))*/
             .data(hotChickenEntityBuilder -> hotChickenEntityBuilder.sized(0.4f, 0.7f).clientTrackingRange(10))
@@ -39,7 +29,6 @@ public class HotEntities {
 
     public static RegistryObject<EntityType<HotRabbitEntity>> RABBIT = new Builder<>(HotRabbitEntity::new, MobCategory.CREATURE)
             .attributes(HotRabbitEntity::registerAttributes)
-            .renderer(() -> HotRabbitRenderer::new)
             /*.spawn(new SpawnInfo((type) -> type.contains(BiomeDictionary.Type.PLAINS) || (type.contains(BiomeDictionary.Type.CONIFEROUS) && !type.contains(BiomeDictionary.Type.MOUNTAIN) && !type.contains(BiomeDictionary.Type.SNOWY)),
                     2, 4, 10))*/
             .data(hotRabbitEntityBuilder -> hotRabbitEntityBuilder.sized(0.6f, 0.5f).clientTrackingRange(10))
@@ -47,7 +36,6 @@ public class HotEntities {
 
     public static RegistryObject<EntityType<HotCowEntity>> COW = new Builder<>(HotCowEntity::new, MobCategory.CREATURE)
             .attributes(HotCowEntity::registerAttributes)
-            .renderer(() -> HotCowRenderer::new)
             .data(hotCowEntityBuilder -> hotCowEntityBuilder.sized(1.6f, 2.2f).clientTrackingRange(10))
             .build(REGISTRAR, "cow");
 
@@ -64,13 +52,6 @@ public class HotEntities {
         ATTRIBUTES.clear();
     }
 
-    public static void registerRenderers() {
-        for (Tuple<Supplier<EntityType<?>>, Supplier<IRenderFactory<?>>> renderer : RENDERERS) {
-            RenderingRegistry.registerEntityRenderingHandler(renderer.getA().get(), cast(renderer.getB().get()));
-        }
-        RENDERERS.clear();
-    }
-
     @SuppressWarnings("unchecked")
     private static <T, F> T cast(F from) {
         return (T) from;
@@ -80,7 +61,6 @@ public class HotEntities {
         private final EntityType.EntityFactory<T> factory;
         private final MobCategory category;
         private Supplier<AttributeSupplier.Builder> attributes;
-        private Supplier<IRenderFactory<? super T>> renderer;
         private Consumer<EntityType.Builder<T>> builderConsumer;
 //        private final List<SpawnInfo> spawnInfos = new ArrayList<>();
 
@@ -91,11 +71,6 @@ public class HotEntities {
 
         public Builder<T> attributes(Supplier<AttributeSupplier.Builder> attributes) {
             this.attributes = attributes;
-            return this;
-        }
-
-        public Builder<T> renderer(Supplier<IRenderFactory<? super T>> renderer) {
-            this.renderer = renderer;
             return this;
         }
 
@@ -118,10 +93,6 @@ public class HotEntities {
 
             if (attributes != null) {
                 ATTRIBUTES.add(new Tuple<>(cast(type), attributes));
-            }
-
-            if (EffectiveSide.get().isClient() && renderer != null) {
-                RENDERERS.add(new Tuple<>(cast(type), cast(renderer)));
             }
 
             /*if (!spawnInfos.isEmpty()) {

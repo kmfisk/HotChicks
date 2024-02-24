@@ -10,35 +10,34 @@ import com.github.kmfisk.hotchicks.entity.goal.LowStatsAvoidEntityGoal;
 import com.github.kmfisk.hotchicks.entity.goal.WildAvoidEntityGoal;
 import com.github.kmfisk.hotchicks.entity.stats.RabbitStats;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.entity.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.stats.Stats;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.util.Mth;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.JumpControl;
 import net.minecraft.world.entity.ai.control.MoveControl;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.pathfinder.Path;
-import net.minecraft.stats.Stats;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
@@ -46,20 +45,6 @@ import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 
 import javax.annotation.Nullable;
-
-import net.minecraft.world.entity.AgableMob;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.SpawnGroupData;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.PanicGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.TemptGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 
 public class HotRabbitEntity extends LivestockEntity {
     public static final Tags.IOptionalNamedTag<Item> RABBIT_FOODS = ItemTags.createOptional(new ResourceLocation(HotChicks.MOD_ID, "rabbit_foods"));
@@ -87,7 +72,7 @@ public class HotRabbitEntity extends LivestockEntity {
         this.goalSelector.addGoal(1, new PanicGoal(this, 1.4D));
         this.goalSelector.addGoal(2, new LivestockBirthGoal(this));
         this.goalSelector.addGoal(4, new LowStatsAvoidEntityGoal<>(this, Player.class, 16.0F, 0.8D, 1.33D));
-        this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, false, Ingredient.of(RABBIT_FOODS)));
+        this.goalSelector.addGoal(4, new TemptGoal(this, 1.0D, Ingredient.of(RABBIT_FOODS), false));
         this.goalSelector.addGoal(5, new DestroyCropsGoal(this, 0.7F, 16));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 6.0F));
@@ -265,7 +250,7 @@ public class HotRabbitEntity extends LivestockEntity {
 
     @Nullable
     @Override
-    public AgableMob getBreedOffspring(ServerLevel world, AgableMob entity) {
+    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
         return HotEntities.RABBIT.get().create(world);
     }
 
@@ -401,7 +386,7 @@ public class HotRabbitEntity extends LivestockEntity {
     }
 
     @Override
-    public boolean causeFallDamage(float fallDistance, float damageMultiplier) {
+    public boolean causeFallDamage(float fallDistance, float damageMultiplier, DamageSource source) {
         return false;
     }
 
@@ -421,7 +406,7 @@ public class HotRabbitEntity extends LivestockEntity {
         super.jumpFromGround();
         double d0 = moveControl.getSpeedModifier();
         if (d0 > 0.0D) {
-            double d1 = getHorizontalDistanceSqr(getDeltaMovement());
+            double d1 = getDeltaMovement().horizontalDistanceSqr();
             if (d1 < 0.01D) moveRelative(0.1F, new Vec3(0.0D, 0.0D, 1.0D));
         }
         if (!level.isClientSide) level.broadcastEntityEvent(this, (byte) 1);
@@ -477,7 +462,7 @@ public class HotRabbitEntity extends LivestockEntity {
     }
 
     private void facePoint(double x, double z) {
-        yRot = (float) (Mth.atan2(z - getZ(), x - getX()) * (double) (180F / (float) Math.PI)) - 90.0F;
+        this.setYRot((float) (Mth.atan2(z - this.getZ(), x - this.getX()) * (double) (180F / (float) Math.PI)) - 90.0F);
     }
 
     private void enableJumpControl() {

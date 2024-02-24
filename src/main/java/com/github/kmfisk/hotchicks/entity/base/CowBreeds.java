@@ -4,10 +4,10 @@ import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.entity.stats.CowStats;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
 

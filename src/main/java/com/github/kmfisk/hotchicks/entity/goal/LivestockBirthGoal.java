@@ -1,9 +1,9 @@
 package com.github.kmfisk.hotchicks.entity.goal;
 
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
 
 public class LivestockBirthGoal extends Goal {
     protected final LivestockEntity mother;

@@ -1,17 +1,17 @@
 package com.github.kmfisk.hotchicks.entity.goal;
 
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.level.Level;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 
 public class LivestockBreedGoal extends Goal {
-    private static final TargetingConditions PARTNER_TARGETING = (new TargetingConditions()).range(8.0D).allowInvulnerable().allowSameTeam().allowUnseeable();
+    private static final TargetingConditions PARTNER_TARGETING = TargetingConditions.forNonCombat().range(8.0D).ignoreLineOfSight();
     protected final LivestockEntity animal;
     private final Class<? extends LivestockEntity> partnerClass;
     protected final Level level;
@@ -63,7 +63,7 @@ public class LivestockBreedGoal extends Goal {
 
     @Nullable
     private LivestockEntity getNearbyMate() {
-        List<LivestockEntity> list = level.getNearbyEntities(partnerClass, PARTNER_TARGETING, animal, animal.getBoundingBox().inflate(8.0D));
+        List<? extends LivestockEntity> list = level.getNearbyEntities(partnerClass, PARTNER_TARGETING, animal, animal.getBoundingBox().inflate(8.0D));
         double d0 = Double.MAX_VALUE;
         LivestockEntity animalentity = null;
 

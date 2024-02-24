@@ -2,8 +2,8 @@ package com.github.kmfisk.hotchicks.entity.goal;
 
 import com.github.kmfisk.hotchicks.entity.HotChickenEntity;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
-import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.ai.goal.Goal;
 
 public class UpdateNestGoal extends Goal {
     private final HotChickenEntity chicken;

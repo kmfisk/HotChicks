@@ -4,19 +4,17 @@ import com.github.kmfisk.hotchicks.block.BerryBushBlock;
 import com.github.kmfisk.hotchicks.block.TrellisBlock;
 import com.github.kmfisk.hotchicks.block.TripleCropBlock;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
-import net.minecraft.block.*;
-import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.ForgeEventFactory;
-
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.GrassBlock;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.event.ForgeEventFactory;
 
 public class DestroyCropsGoal extends MoveToBlockGoal {
     private final LivestockEntity livestock;
@@ -54,7 +52,7 @@ public class DestroyCropsGoal extends MoveToBlockGoal {
             BlockPos cropPos = blockPos.above();
             BlockState state = level.getBlockState(cropPos);
             Block block = state.getBlock();
-            boolean isCrop = block.is(BlockTags.CROPS) || block instanceof SweetBerryBushBlock;
+            boolean isCrop = state.is(BlockTags.CROPS) || block instanceof SweetBerryBushBlock;
             boolean excludedCropTypes = block instanceof TripleCropBlock || block instanceof TrellisBlock;
             if (canRaid && isCrop && !excludedCropTypes) {
                 if (level.getBlockState(blockPos).getBlock() instanceof GrassBlock)
@@ -75,8 +73,9 @@ public class DestroyCropsGoal extends MoveToBlockGoal {
 
     @Override
     protected boolean isValidTarget(LevelReader level, BlockPos pos) {
-        Block block = level.getBlockState(pos.above()).getBlock();
-        boolean isCrop = block.is(BlockTags.CROPS) || block instanceof SweetBerryBushBlock;
+        BlockState state = level.getBlockState(pos.above());
+        Block block = state.getBlock();
+        boolean isCrop = state.is(BlockTags.CROPS) || block instanceof SweetBerryBushBlock;
         boolean excludedCropTypes = block instanceof TripleCropBlock || block instanceof TrellisBlock;
         if (isCrop && !excludedCropTypes && this.wantsToRaid && !this.canRaid) {
             this.canRaid = true;

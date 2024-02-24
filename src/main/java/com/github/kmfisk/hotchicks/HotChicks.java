@@ -86,9 +86,16 @@ public class HotChicks {
     }
 
     private void setupClient(final FMLClientSetupEvent event) {
-        HotEntities.registerRenderers();
+//        HotEntities.registerRenderers();
         HotBlocks.setRenderLayers();
         HotContainerTypes.registerFactories();
+    }
+
+    @SubscribeEvent
+    public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(HotEntities.CHICKEN.get(), HotChickenRenderer::new);
+        event.registerEntityRenderer(HotEntities.RABBIT.get(), HotRabbitRenderer::new);
+        event.registerEntityRenderer(HotEntities.COW.get(), HotCowRenderer::new);
     }
 
     @SubscribeEvent

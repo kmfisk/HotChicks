@@ -5,10 +5,10 @@ import com.github.kmfisk.hotchicks.block.TroughBlock;
 import com.github.kmfisk.hotchicks.block.TroughFillType;
 import com.github.kmfisk.hotchicks.block.WaterBottleBlock;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class FindWaterGoal extends MoveToBlockGoal {
     private final LivestockEntity entity;

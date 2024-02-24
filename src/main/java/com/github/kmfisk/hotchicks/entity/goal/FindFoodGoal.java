@@ -4,12 +4,12 @@ import com.github.kmfisk.hotchicks.block.HotBlocks;
 import com.github.kmfisk.hotchicks.block.entity.FoodCrockTileEntity;
 import com.github.kmfisk.hotchicks.block.entity.TroughTileEntity;
 import com.github.kmfisk.hotchicks.entity.LivestockEntity;
-import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
-import net.minecraft.world.Container;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class FindFoodGoal extends MoveToBlockGoal {
     private final LivestockEntity entity;

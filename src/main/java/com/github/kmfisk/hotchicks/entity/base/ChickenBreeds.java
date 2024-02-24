@@ -5,14 +5,13 @@ import com.github.kmfisk.hotchicks.entity.stats.ChickenStats;
 import com.github.kmfisk.hotchicks.item.HotItems;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import net.minecraft.world.item.Item;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.BaseComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.common.BiomeDictionary;
-import net.minecraftforge.fml.RegistryObject;
 
 import java.util.List;
 import java.util.Locale;

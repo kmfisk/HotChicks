@@ -9,55 +9,40 @@ import com.github.kmfisk.hotchicks.entity.goal.LivestockBirthGoal;
 import com.github.kmfisk.hotchicks.entity.goal.LowStatsAttackGoal;
 import com.github.kmfisk.hotchicks.entity.stats.CowStats;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.entity.*;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.world.entity.ExperienceOrb;
-import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.*;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 
 import javax.annotation.Nullable;
-
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AgableMob;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.SpawnGroupData;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.TemptGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
-import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
-import net.minecraft.world.item.ItemUtils;
 
 public class HotCowEntity extends LivestockEntity {
     public static final Tags.IOptionalNamedTag<Item> COW_FOODS = ItemTags.createOptional(new ResourceLocation(HotChicks.MOD_ID, "cow_foods"));
@@ -77,7 +62,7 @@ public class HotCowEntity extends LivestockEntity {
         this.lowStatsAttackGoal = new LowStatsAttackGoal<>(this, Player.class, 40);
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(2, new LivestockBirthGoal(this));
-        this.goalSelector.addGoal(3, new TemptGoal(this, 1.0D, false, Ingredient.of(COW_FOODS)));
+        this.goalSelector.addGoal(3, new TemptGoal(this, 1.0D, Ingredient.of(COW_FOODS), false));
         this.goalSelector.addGoal(5, new HotMeleeAttackGoal(this, 3.0D, 1.25D, false));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Player.class, 6.0F));
@@ -296,7 +281,7 @@ public class HotCowEntity extends LivestockEntity {
 
     @Nullable
     @Override
-    public AgableMob getBreedOffspring(ServerLevel world, AgableMob entity) {
+    public AgeableMob getBreedOffspring(ServerLevel world, AgeableMob entity) {
         return HotEntities.COW.get().create(world);
     }
 
