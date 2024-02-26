@@ -79,7 +79,7 @@ public class HotChicks {
 
     private void setup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            HotFeatures.registerFeatures();
+//            HotFeatures.registerFeatures();
 //            registerCompostables();
         });
         HotEntities.registerSpawnPlacements();

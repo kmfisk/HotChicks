@@ -13,8 +13,8 @@ import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConf
 
 import java.util.Random;
 
-public class HotVinesFeature extends Feature<RandomPatchConfiguration> {
-    public HotVinesFeature(Codec<RandomPatchConfiguration> codec) {
+public class HotVinesFeature /*extends Feature<RandomPatchConfiguration>*/ {
+    /*public HotVinesFeature(Codec<RandomPatchConfiguration> codec) {
         super(codec);
     }
 
@@ -32,15 +32,15 @@ public class HotVinesFeature extends Feature<RandomPatchConfiguration> {
         BlockPos.MutableBlockPos blockPos = pos1.mutable();
 
         for (Direction direction : Direction.values()) {
-            for (int j = 0; j < context.config().tries; ++j) {
+            for (int j = 0; j < context.config().tries(); ++j) {
                 blockPos.set(pos1);
-                blockPos.move(random.nextInt(context.config().xspread + 1) - random.nextInt(context.config().xspread + 1), random.nextInt(context.config().yspread + 1) - random.nextInt(context.config().yspread + 1), random.nextInt(context.config().zspread + 1) - random.nextInt(context.config().zspread + 1));
+                blockPos.move(random.nextInt(context.config().xzSpread() + 1) - random.nextInt(context.config().xzSpread() + 1), random.nextInt(context.config().ySpread() + 1) - random.nextInt(context.config().ySpread() + 1), random.nextInt(context.config().xzSpread() + 1) - random.nextInt(context.config().xzSpread() + 1));
 
                 BlockState blockState = level.getBlockState(blockPos);
                 BlockState facingState = level.getBlockState(blockPos.relative(direction));
 
                 if ((level.isEmptyBlock(blockPos) || context.config().canReplace && blockState.getMaterial().isReplaceable()) && (context.config().whitelist.isEmpty() || context.config().whitelist.contains(facingState.getBlock())) && !context.config().blacklist.contains(facingState)) {
-                    if (direction != Direction.DOWN /*&& CropVineBlock.isAcceptableNeighbour(level, blockPos, direction.getOpposite())*/) {
+                    if (direction != Direction.DOWN *//*&& CropVineBlock.isAcceptableNeighbour(level, blockPos, direction.getOpposite())*//*) {
                         BlockState vine = context.config().stateProvider.getState(random, pos).setValue(CropVineBlock.getPropertyForFace(direction), true);
                         if (vine.canSurvive(level, blockPos)) {
                             context.config().blockPlacer.place(level, blockPos, vine, random);
@@ -53,5 +53,5 @@ public class HotVinesFeature extends Feature<RandomPatchConfiguration> {
         }
 
         return i > 0;
-    }
+    }*/
 }

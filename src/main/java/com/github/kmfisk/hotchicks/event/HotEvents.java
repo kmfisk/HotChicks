@@ -3,6 +3,7 @@ package com.github.kmfisk.hotchicks.event;
 import com.github.kmfisk.hotchicks.HotChicks;
 import com.github.kmfisk.hotchicks.config.HotChicksConfig;
 import com.github.kmfisk.hotchicks.entity.HotEntities;
+import com.github.kmfisk.hotchicks.worldgen.HotPlacements;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,14 +16,11 @@ import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraft.data.worldgen.Features;
-import net.minecraft.world.level.levelgen.feature.structures.StructureTemplatePool;
 import net.minecraft.data.worldgen.Pools;
-import net.minecraft.world.level.levelgen.feature.structures.StructurePoolElement;
-import net.minecraft.world.level.levelgen.feature.structures.SinglePoolElement;
 import net.minecraft.data.worldgen.PlainVillagePools;
-import net.minecraft.world.level.levelgen.placement.FrequencyWithExtraChanceDecoratorConfiguration;
-import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
+import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
+import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
+import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -86,75 +84,75 @@ public class HotEvents {
             if (biomeTypes.contains(BiomeDictionary.Type.FOREST)) {
                 if (!biomeTypes.contains(BiomeDictionary.Type.SAVANNA) && !biomeTypes.contains(BiomeDictionary.Type.JUNGLE) && !biomeTypes.contains(BiomeDictionary.Type.WET) && !biomeTypes.contains(BiomeDictionary.Type.CONIFEROUS)) {
                     event.getSpawns().getSpawner(MobCategory.CREATURE).add(chickenSpawner);
-                    event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> RED_APPLE.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, 0.1f, 1))));
-                    event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> PEACH.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, 0.05f, 1))));
-                    event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> WILD_RICE);
-                    event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> STRAWBERRY_BUSH);
-                    event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> PEPPER_BUSH);
-                    event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> WILD_GRAPE);
-                    event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> WILD_PEA);
+                    event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, HotPlacements.RED_APPLE);//.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, 0.1f, 1))));
+                    event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, HotPlacements.PEACH);//.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, 0.05f, 1))));
+//                    event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, WILD_RICE_PF);
+//                    event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> STRAWBERRY_BUSH);
+//                    event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> PEPPER_BUSH);
+//                    event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> WILD_GRAPE);
+//                    event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> WILD_PEA);
                 }
                 if (biomeTypes.contains(BiomeDictionary.Type.DENSE)) {
-                    event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> WILD_KIWI);
+//                    event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> WILD_KIWI);
                 }
             }
 
             if (biomeTypes.contains(BiomeDictionary.Type.MOUNTAIN) && !biomeTypes.contains(BiomeDictionary.Type.HOT)) {
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> MANDARIN.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, 0.05f, 1))));
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> BLUEBERRY_BUSH);
+                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, HotPlacements.MANDARIN);//.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, 0.05f, 1))));
+//                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> BLUEBERRY_BUSH);
             }
 
             if (biomeTypes.contains(BiomeDictionary.Type.SAVANNA)) {
                 event.getSpawns().getSpawner(MobCategory.CREATURE).add(cowSpawner);
                 event.getSpawns().getSpawner(MobCategory.CREATURE).add(rabbitSpawner);
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> PEACH.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, 0.02f, 1))));
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> POMEGRANATE.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, 0.02f, 1))));
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> FIG.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, 0.1f, 1))));
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> CITRON.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, 0.1f, 1))));
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> WILD_OATS);
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> WILD_GARLIC);
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> MILLET);
+                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, HotPlacements.PEACH);//.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, 0.02f, 1))));
+                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, HotPlacements.POMEGRANATE);//.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, 0.02f, 1))));
+                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, HotPlacements.FIG);//.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, 0.1f, 1))));
+                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, HotPlacements.CITRON);//.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, 0.1f, 1))));
+//                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> WILD_OATS);
+//                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> WILD_GARLIC);
+//                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> MILLET);
             }
 
             if (biomeTypes.contains(BiomeDictionary.Type.JUNGLE)) {
                 event.getSpawns().getSpawner(MobCategory.CREATURE).add(chickenSpawner);
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> MANGO.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, 0.1f, 1))));
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> POMEGRANATE.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, 0.1f, 1))));
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> FIG.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(1, 0.1f, 1))));
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> POMELO.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(1, 0.1f, 1))));
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> PAPEDA.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(1, 0.1f, 1))));
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> BANANA_TREE);
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> PEPPER_BUSH);
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> WILD_KIWI);
+                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, HotPlacements.MANGO);//.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, 0.1f, 1))));
+                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, HotPlacements.POMEGRANATE);//.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(0, 0.1f, 1))));
+                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, HotPlacements.FIG);//.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(1, 0.1f, 1))));
+                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, HotPlacements.POMELO);//.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(1, 0.1f, 1))));
+                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, HotPlacements.PAPEDA);//.decorated(Features.Decorators.HEIGHTMAP_SQUARE).decorated(FeatureDecorator.COUNT_EXTRA.configured(new FrequencyWithExtraChanceDecoratorConfiguration(1, 0.1f, 1))));
+//                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> BANANA_TREE);
+//                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> PEPPER_BUSH);
+//                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> WILD_KIWI);
             }
 
             if (biomeTypes.contains(BiomeDictionary.Type.PLAINS)) {
                 if (!biomeTypes.contains(BiomeDictionary.Type.HOT) && !biomeTypes.contains(BiomeDictionary.Type.COLD)) {
                     event.getSpawns().getSpawner(MobCategory.CREATURE).add(cowSpawner);
                     event.getSpawns().getSpawner(MobCategory.CREATURE).add(rabbitSpawner);
-                    event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> CORN);
-                    event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> WILD_OATS);
-                    event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> WILD_TOMATO);
+//                    event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> CORN);
+//                    event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> WILD_OATS);
+//                    event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> WILD_TOMATO);
                 }
             }
 
             if (biomeTypes.contains(BiomeDictionary.Type.CONIFEROUS) && !biomeTypes.contains(BiomeDictionary.Type.SNOWY)) {
                 event.getSpawns().getSpawner(MobCategory.CREATURE).add(chickenSpawner);
                 event.getSpawns().getSpawner(MobCategory.CREATURE).add(rabbitSpawner);
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> BLUEBERRY_BUSH);
+//                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> BLUEBERRY_BUSH);
             }
 
             if (biomeTypes.contains(BiomeDictionary.Type.SANDY) && biomeTypes.contains(BiomeDictionary.Type.HOT)) {
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> MILLET);
+//                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> MILLET);
             }
 
             if (biomeTypes.contains(BiomeDictionary.Type.SWAMP)) {
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> WILD_RICE);
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> WILD_KALE);
+//                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> WILD_RICE);
+//                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> WILD_KALE);
             }
 
             if (biomeTypes.contains(BiomeDictionary.Type.RIVER)) {
-                event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION).add(() -> WILD_RICE);
+//                event.getGeneration().addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, () -> WILD_RICE);
             }
         }
     }

@@ -9,6 +9,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class HotFeature {
     public static final DeferredRegister<Feature<?>> REGISTRAR = DeferredRegister.create(ForgeRegistries.FEATURES, HotChicks.MOD_ID);
-    public static final RegistryObject<Feature<RandomPatchConfiguration>> CROP_VINES = REGISTRAR.register("crop_vines", () -> new HotVinesFeature(RandomPatchConfiguration.CODEC));
-    public static final RegistryObject<Feature<RandomPatchConfiguration>> WATER_CROPS = REGISTRAR.register("water_crops", () -> new HotWaterCropFeature(RandomPatchConfiguration.CODEC));
+//    public static final RegistryObject<Feature<RandomPatchConfiguration>> CROP_VINES = REGISTRAR.register("crop_vines", () -> new HotVinesFeature(RandomPatchConfiguration.CODEC));
+//    public static final RegistryObject<Feature<RandomPatchConfiguration>> WATER_CROPS = REGISTRAR.register("water_crops", () -> new HotWaterCropFeature(RandomPatchConfiguration.CODEC));
 }

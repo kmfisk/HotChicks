@@ -13,8 +13,8 @@ import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConf
 
 import java.util.Random;
 
-public class HotWaterCropFeature extends Feature<RandomPatchConfiguration> {
-    public HotWaterCropFeature(Codec<RandomPatchConfiguration> codec) {
+public class HotWaterCropFeature /*extends Feature<RandomPatchConfiguration>*/ {
+    /*public HotWaterCropFeature(Codec<RandomPatchConfiguration> codec) {
         super(codec);
     }
 
@@ -50,5 +50,5 @@ public class HotWaterCropFeature extends Feature<RandomPatchConfiguration> {
         }
 
         return l > 0;
-    }
+    }*/
 }

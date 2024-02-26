@@ -4,13 +4,11 @@ import com.mojang.serialization.Codec;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.levelgen.feature.blockplacers.BlockPlacer;
-import net.minecraft.world.level.levelgen.feature.blockplacers.BlockPlacerType;
 
 import java.util.Random;
 
-public class LowLightPlacer extends BlockPlacer {
-    public static final Codec<LowLightPlacer> CODEC;
+public class LowLightPlacer /*extends BlockPlacer*/ {
+    /*public static final Codec<LowLightPlacer> CODEC;
     public static final LowLightPlacer INSTANCE = new LowLightPlacer();
 
     protected BlockPlacerType<?> type() {
@@ -24,5 +22,5 @@ public class LowLightPlacer extends BlockPlacer {
 
     static {
         CODEC = Codec.unit(() -> INSTANCE);
-    }
+    }*/
 }

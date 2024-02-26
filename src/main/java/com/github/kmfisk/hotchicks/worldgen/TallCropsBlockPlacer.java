@@ -7,13 +7,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.levelgen.feature.blockplacers.BlockPlacerType;
-import net.minecraft.world.level.levelgen.feature.blockplacers.ColumnPlacer;
 
 import java.util.Random;
 
-public class TallCropsBlockPlacer extends ColumnPlacer {
-    public TallCropsBlockPlacer() {
+public class TallCropsBlockPlacer /*extends ColumnPlacer*/ {
+    /*public TallCropsBlockPlacer() {
         super(ConstantInt.of(0));
     }
 
@@ -34,5 +32,5 @@ public class TallCropsBlockPlacer extends ColumnPlacer {
             world.setBlock(pos.above(), state.setValue(doubleCropBlock.getAgeProperty(), doubleCropBlock.getMaxAge()).setValue(DoubleCropBlock.SEGMENT, DoubleBlockHalf.UPPER), 2);
 
         }
-    }
+    }*/
 }
