@@ -22,6 +22,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -43,7 +44,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.Tags;
 import net.minecraftforge.event.entity.living.BabyEntitySpawnEvent;
 
 import javax.annotation.Nullable;
@@ -51,7 +51,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class HotChickenEntity extends LivestockEntity {
-    public static final Tags.IOptionalNamedTag<Item> CHICKEN_FOODS = ItemTags.createOptional(new ResourceLocation(HotChicks.MOD_ID, "chicken_foods"));
+    public static final TagKey<Item> CHICKEN_FOODS = ItemTags.create(new ResourceLocation(HotChicks.MOD_ID, "chicken_foods"));
     private WildAvoidEntityGoal<Player> wildAvoidPlayersGoal;
     private RoostersLowStatsAttackGoal<Player> roostersLowStatsAttackGoal;
     public int remainingCooldownBeforeLocatingNewNest = 0;
