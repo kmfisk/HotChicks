@@ -21,8 +21,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.StackedContentsCompatible;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -101,13 +99,12 @@ public class MillTileEntity extends BaseContainerBlockEntity implements WorldlyC
     }
 
     @Override
-    public CompoundTag save(CompoundTag tag) {
-        super.save(tag);
+    public void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putInt("ActiveTime", activeTime);
         tag.putInt("CookTime", churningProgress);
         tag.putInt("CookTimeTotal", churningTotalTime);
         ContainerHelper.saveAllItems(tag, items);
-        return tag;
     }
 
     private boolean readyToChurn() {
@@ -270,12 +267,12 @@ public class MillTileEntity extends BaseContainerBlockEntity implements WorldlyC
     @Nullable
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(getBlockPos(), 1, getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
     public CompoundTag getUpdateTag() {
-        return save(new CompoundTag());
+        return saveWithFullMetadata();
     }
 
     @Override
