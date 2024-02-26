@@ -62,7 +62,7 @@ public class Stats {
     public float getDebuff(LivestockEntity entity, float mild, float extreme) {
         if (entity.getHunger().isLow() || entity.getThirst().isLow()) return extreme;
         Temperature breedTemp = entity.getBreedTemperature();
-        float temperature = entity.level.getBiome(entity.blockPosition()).getBaseTemperature();
+        float temperature = entity.level.getBiome(entity.blockPosition()).value().getBaseTemperature();
         if (breedTemp.isOutsideComfortLevel(temperature)) return breedTemp.isExtreme(temperature) ? extreme : mild;
         else return 1.0F;
     }

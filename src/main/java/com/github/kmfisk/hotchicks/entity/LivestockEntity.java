@@ -456,21 +456,21 @@ public abstract class LivestockEntity extends Animal {
 
     @Override
     protected boolean shouldDropLoot() {
-        boolean extremeTemps = getBreedTemperature().isExtreme(level.getBiome(blockPosition()).getBaseTemperature());
+        boolean extremeTemps = getBreedTemperature().isExtreme(level.getBiome(blockPosition()).value().getBaseTemperature());
         return !getHunger().isLow() && !getThirst().isLow() && !extremeTemps && super.shouldDropLoot();
     }
 
     public static boolean checkLivestockSpawnRules(EntityType<? extends LivestockEntity> entityType, ServerLevelAccessor world, MobSpawnType spawnReason, BlockPos pos, Random random) {
         BlockState blockState = world.getBlockState(pos.below());
-        return (blockState.is(Blocks.GRASS_BLOCK) || blockState.is(Blocks.SNOW) || blockState.is(BlockTags.ICE)
-                || Tags.Blocks.SAND.contains(blockState.getBlock()) || Tags.Blocks.DIRT.contains(blockState.getBlock()))
+        return (blockState.is(Blocks.GRASS_BLOCK) || blockState.is(BlockTags.SNOW) || blockState.is(BlockTags.ICE)
+                || blockState.is(BlockTags.SAND) || blockState.is(BlockTags.DIRT))
                 && world.getRawBrightness(pos, 0) > 8;
     }
 
     protected Biome getBiome() {
         int x = Mth.floor(getX());
         int z = Mth.floor(getZ());
-        return level.getBiome(new BlockPos(x, 0, z));
+        return level.getBiome(new BlockPos(x, 0, z)).value();
     }
 
     public enum Sex {

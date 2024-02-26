@@ -17,7 +17,7 @@ public class LayEggsGoal extends Goal {
 
     @Override
     public boolean canUse() {
-        if (chicken.hasNest() && chicken.wantsToLayEggs() && chicken.getNestPos().closerThan(chicken.position(), 1.0D)) {
+        if (chicken.hasNest() && chicken.wantsToLayEggs() && chicken.getNestPos().closerToCenterThan(chicken.position(), 1.0D)) {
             if (chicken.doesNestHaveSpace(chicken.getNestPos())) return true;
             chicken.setNestPos(null);
         }
