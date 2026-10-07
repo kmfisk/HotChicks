@@ -19,13 +19,15 @@ import com.github.kmfisk.hotchicks.inventory.HotContainerTypes;
 import com.github.kmfisk.hotchicks.item.HotItems;
 import com.github.kmfisk.hotchicks.loot.HotGlobalLootModifier;
 import com.github.kmfisk.hotchicks.worldgen.HotFeature;
-import com.github.kmfisk.hotchicks.worldgen.HotFeatures;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -36,18 +38,19 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 
 @Mod(HotChicks.MOD_ID)
 public class HotChicks {
     public static final String MOD_ID = "hotchicks";
 
-    public static final CreativeModeTab HOT_CHICKS_GROUP = new CreativeModeTab(HotChicks.MOD_ID + ".hot_chicks_group") {
-        @Override
-        public ItemStack makeIcon() {
-            return new ItemStack(HotItems.WHITE_EGG.get());
-        }
-    };
+    public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, HotChicks.MOD_ID);
+    public static final RegistryObject<CreativeModeTab> HOT_CHICKS_GROUP = CREATIVE_MODE_TABS.register(HotChicks.MOD_ID + ".hot_chicks_group", () -> CreativeModeTab.builder()
+            .title(Component.translatable("itemGroup." + MOD_ID + ".hot_chicks_group"))
+            .icon(() -> HotItems.BLUE_EGG.get().getDefaultInstance())
+            .displayItems(((itemDisplayParameters, output) -> HotItems.REGISTRAR.getEntries().forEach(item -> output.accept(item.get()))))
+            .build());
 
     public HotChicks() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -115,9 +118,8 @@ public class HotChicks {
     }
 
     private void gatherData(final GatherDataEvent event) {
-        System.out.println("Generating hotchicks Data!");
         DataGenerator dataGenerator = event.getGenerator();
-        if (event.includeServer()) dataGenerator.addProvider(new HotRecipeProvider(dataGenerator));
+        dataGenerator.addProvider(event.includeServer(), new HotRecipeProvider(dataGenerator.getPackOutput()));
     }
 
     /*private static void registerCompostables() {
